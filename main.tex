@@ -1,0 +1,294 @@
+%\documentclass[conference]{IEEEtran}
+\documentclass{article}
+
+
+%\usepackage{geometry}
+%\geometry{letterpaper}
+%\usepackage{graphicx}
+%\usepackage{amssymb}
+%\usepackage{epstopdf}
+\usepackage{amssymb}
+%\renewcommand{\baselinestretch}{1.8}
+\usepackage{tikz}
+\usetikzlibrary{shapes, shadows,arrows}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\usepackage[left=2cm, right=2cm, top=4cm, bottom=2cm]{geometry}
+
+
+%----------Comments-----------
+\newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
+
+
+\title{Improvement over Ligero}
+%\author{\IEEEauthorblockN{Protik}}
+\begin{document}
+\tikzstyle{line} = [draw,-latex']
+\tikzstyle{block}=[draw, rectangle]
+\maketitle
+\begin{abstract}
+	%\mycomment{Add an intro line on Ligero (with its citation, if possible)}
+%In Ligero, a witness is encoded into a matrix $U$ of size $m\times n$.
+%\mycomment{What is $m$ and $n$?} We are trying to use the same idea, but instead of encode to a matrix, we will encode to a box ( matrix of 3 dimension: $m\times n\times p$), where each matrix( slice of $U$) in a particular direction will be a codeword, and to do that consider $pm$ many polynomials of degree $<k$. So linearity will hold row as well as column wise. And We will be using homomorphic commitments. Giving a proof in this way we are hoping to get a ZK proof, where proof size will be $O(|C|^{\frac{1}{3}})$.\\
+
+Zero knowledge is an intriguing area of research from the prospect of theory as well as application, where a party, prover \textit{P}, tries to convince verifier \textit{V} that a statement $x$( instance of an NP language) is correct using a witness $w$ such that $M(x,w)=1$. Let $C$ be the circuit representation of $M$ and $|C|$ is the size of $C$ i.e. the no. of gates in $C$. The work of Ligero in this problem proposed a solution where proof size is $O(|C|^{1/2})$. They solve the problem by converting a NP language to it's corresponding circuit satisfiability problem. $w\in \mathbb{F}^{ml}$ be the extended witness which is the secret input to the prover. Prover \textit{P} encodes $w$ to a matrix $U$ of size $m\times n$, where $m, n, l = O(\sqrt{|C|})$ and $n>l$. In Ligero's protocol first check is for to ensure that the matrix $U$ is a correct encoding, that is done by testing interleaved. Then they check that all the outcomes of all the gates( addition and multiplication) are correct or not, and to do that they introduce two checks, linear constraint and quadratic constraint. We are using the same approach of Ligero, but our encoding is different. Instead of matrix we will encode $w$ to a box( matrix of 3 dimensions), to keep the familiarity of notation we will consider $w\in \mathbb{F}^{pml}$ and the size of the box $U$ is $p\times m\times n$, where $p, m, n, l = O(\sqrt[3]{|C|})$ and $n>l$. To encode $w$ we are going to construct $pm$ many polynomials(univariate) such that each of them has degree at most $s$, where $s$ is some suitable number between $l$ and $n$. 
+\\
+
+%\mycomment{Adding a version below.}
+%The work of Ligero[citation] proposed ... In Ligero, a witness $x$ is encoded into a matrix $U$ of dimension $m \times n$, where $m$ and $n$ denote - and - respectively. Our idea is similar to theirs apart from the witness being encoded to a {\em box}. A box is a 3-dimensional matrix ($m \times n \times p$) where --(add technical details of box here). This ensures linearity of (what?) along both rows and columns. We hope that the aforementioned encoding along with homomorphic commitments lead to a ZK proof, whose size will be $O(|C|^{\frac{1}{3}})$.
+\end{abstract}
+%Let $x$ be the witness which encoded to $U$ where $m$ is the no. of rows, $n$ is the no. of columns in a slice (one vertical matrix), and there are $p$ many slices.\\
+%Initially consider $m=n$\\
+
+
+\section{Construction}
+
+
+
+
+%\textbf{Encoding:} 
+\paragraph{Encoding:}
+Let, $x\in \mathbb{F}^{pml}$ %\mycomment{what is $pml$?add the details}
+be the secret. We will encode $x$ to $U\in \mathbb{F}^{pmn}$ in the following way.\\
+Let
+%---------------------------------------
+$$x = 
+\begin{bmatrix}
+x_{111} & x_{112} & \cdots & x_{11l}\\
+x_{121} & x_{122} & \cdots & x_{12l}\\
+\vdots\\
+x_{1m1} & x_{1m2} & \cdots & x_{1ml}\\
+\vdots\\
+x_{pm1} & x_{pm2} & \cdots & x_{pml}
+\end{bmatrix}
+$$
+%---------------------------------------
+
+Construct polynomials $p_{ij}(\cdot)$ %\mycomment{$p_{ij}(\cdot)$ use the cdot }
+of degree $< s$ such that 
+$ p_{ij}(\zeta_k)=x_{ijk} ~~\forall i\in [p], j\in [m], k\in [l]$.\\
+Define:  $U$ %$\widetilde{U}$ \mycomment{$\widetilde{U}$ is not used below}
+%---------------------------------------
+$$U[i]=
+\begin{bmatrix}
+	p_{i1}(\eta_1) & p_{i1}(\eta_2) & \cdots & p_{i1}(\eta_n)\\
+	p_{i2}(\eta_1) & p_{i2}(\eta_2) & \cdots & p_{i2}(\eta_n)\\
+	\vdots\\
+	p_{im}(\eta_1) & p_{im}(\eta_2) & \cdots & p_{im}(\eta_n)\\
+\end{bmatrix}
+$$
+%---------------------------------------
+and $U=[U[1], U[2], \cdots, U[p]]$.
+
+So, $U$ is a box with $p$ slices and each slice has $m$ rows and $n$ columns.
+
+\paragraph{Commitment:} Let $com$ be an homomorphic commitment scheme which commits a vector. Define:
+%--------------------------------------- 
+$$com(U)= [c_1,c_2,\cdots , c_p]^T=
+ \begin{bmatrix} 
+c[1,1] & c[1,2] & \cdots & c[1,n] \\
+c[2,1] & c[2,2] & \cdots & c[2,n] \\
+\vdots\\
+c[p,1] & c[p,2] & \cdots & c[p,n]
+\end{bmatrix}
+=C$$
+%---------------------------------------
+where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ and let $c$ is the Merkle tree root of $C$ where leaves are entries of $C$.
+
+\paragraph{Protocol for Testing Interleaved:}
+\textit{P} and \textit{V} does the following:
+
+\begin{figure}[htb!]
+	\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(1,-2);
+		\node[below of=P, xshift=-1em, yshift=-3em]{$\widetilde{U}=\sum\limits_{i\in [p]}r_i U[i]$};
+		\node[below of=P, xshift=-1em, yshift=-5em]{$\tilde{c}=com(\widetilde{U})$};
+		%---------------------
+		\draw[->](1,-3.5)-- node[yshift=0.5em]{$\tilde{c}$}(7,-3.5);
+		%\draw[->](7,-4.5)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-4.5);
+		\draw[->](7,-4.5)-- node[yshift=0.5em]{$\gamma\in_R \mathbb{F}^m$}(1,-4.5);
+		\node[below of=P, yshift=-16em]{$w=\gamma^T \widetilde{U}$};
+		\draw[->](1,-5.5)-- node[yshift=0.6em]{$w$}(7,-5.5);
+		\draw[->](7,-6.5)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-6.5);
+		\draw[->](1,-7.5)-- node[yshift=0.6em]{$\widetilde{U}[k]$ with the randomness to commit it:$ k\in Q$}(7,-7.5);
+		\draw[->](1,-7.5)-- node[yshift=-0.5em]{$C[k]: k \in Q$ and corresponding Merkle paths}(7,-7.5);
+	\end{tikzpicture}
+	\caption{Protocol for Testing Interleaved}
+\end{figure}
+
+\textit{P} and \textit{V} follows the protocol in Figure 1 and then
+\textit{V} checks the following:
+\begin{itemize}
+	\item[(a)] Validation of $C[j]$ with respect to $c$.
+	\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
+	\item[(c)] $w\in L$, $L$ is the set of codewords.
+	\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_j$ $\forall k\in Q'$
+	\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
+\end{itemize}
+
+\textbf{Completeness:} It is easy to see that if \textit{P} has correct witness, for any choice of $r, Q, \gamma, Q'$ of \textit{V}, \textit{P} can response for which \textit{V} accepts.\\
+
+\textbf{Soundness:} The following lemma ensures the soundness:
+%\textbf{Lemma}
+ \begin{lemma} Suppose $d(U^*,L^{mp})>e$, where $e$ is some positive integer such that $e<\frac{d}{3}$\mycomment{(what is the bound of $e$)}, $U^*$ is not a correct encoding then any adversarial prover strategy succeeds with probability at most $(1-\frac{e}{2n})^{\kappa}+\frac{d}{|\mathbb{F}|}+neg(\kappa)$.
+ \end{lemma}
+ 
+ \begin{proof}
+ 	Let $\overline{U}= \sum\limits_{i\in[p]}r_iU^{*}[i]$.\\
+	Then with probability $\geq 1-\frac{d}{|\mathbb{F}|}, \overline{U}$ satisfies $d(\overline{U},L^m)>e$.\\
+	Let $\overline{c}$ be the commitment for $\overline{U}$, that implies $\overline{c}=r^T\overline{C}$, by the homomorphic property of the commitment scheme, where $\overline{C}$ is the commitment of $\overline{U}$.\\
+	\textbf{Define: } Let $c,c'$ be two vectors, the distance between these two vectors is denoted by $d(c,c')$ and defined by the number of positions where $c$ and $c'$ differs.\\
+	\textbf{case 1:} $d(\overline{c},\tilde{c})\geq \frac{e}{2}$ where $\tilde{c}= r^TC$, where $C$ is the commitment of $U$, nearest element of $U^*$ in $L^{mp}$.\\
+	Prover's success probability $\leq \frac{\binom{n-e/2}{t}}{\binom{n}{t}}\approx(1-\frac{e}{2n})^t\approx(1-\frac{e}{2n})^k$ since $t=O(k)$\\
+	\textbf{case 2:} $d(\overline{c},\tilde{c})< \frac{e}{2}$.\\
+	Let, $\overline{\Delta}=\Delta(\overline{U}, L^m)$, positions where $\overline{U}$ is different from the nearest correct code slice.\\
+	and let $\partial=\Delta(\overline{c},\tilde{c})$\\
+	We have, $\overline{\Delta}>e$ and $\partial<\frac{e}{2}$, 
+	$\Rightarrow |\overline{\Delta}\setminus \partial| \geq \frac{e}{2}$.\\
+	Therefore, for $j\in \overline{\Delta}\setminus \partial$, $\overline{c}_j=\tilde{c}_j \Rightarrow \overline{U}[j]=\widetilde{U}[j]$\\
+	Therefore probability of prover's success in the check (d) is $(1-\frac{e}{2n})^t\approx(1-\frac{e}{2n})^k$ since $t=O(k)$\\
+	So the soundness error is $(1-\frac{e}{2n})^{\kappa}+\frac{d}{|\mathbb{F}|}+neg(\kappa)$.
+ \end{proof}
+ 
+ %\textbf{Zero knowledge:} The prover is sending $w$ to the verifier, so we want to modify $w$ in such a way that a correct $w$ should pass the check, but it should not reveal anything about $\widetilde{U}$, for that reason we will consider $\widetilde{U}$ to be a matrix of size $(m+1)\times n$, where the new row is a codeword.\\
+% Now to hide $U$ from $\widetilde{U}$ we will blind by adjoining a new slice to $U$ of size $(m+1)\times n$, which will have weight 1, in computing $\widetilde{U}$. So, final modification in $U$ is $U[i]$ is a matrix of size $(m+1)\times n$ where first $m$ rows are same as defined above and the $(m+1)th$ row is all zeros, for all $i\in[p]$ and $U[p+1]$ is a random code slice of size $(m+1)\times n$.\\
+ 
+ \textbf{Communication Complexity:} 
+ \begin{itemize}
+ 	\item \underline{Proof Size}: constant size Merkle root, commitment vector with n components, with each component is of constant size, say $\lambda$, together $(n+1)\lambda$, $t$ many $C[j]$ and Merkle paths, size is $t(p.\lambda + \log n)$, $n$ sized vector $w$, $t$ many $\widetilde{U}[j]$ and randomness of total size $t(n+\alpha)$, where size of the randomness is $\alpha$.\\
+	Therefore size of the proof is $\lambda(n+1)+t(p\lambda+\log n)+n+t(n+\alpha)= O(\sqrt[3]{|C|})$
+	\item \underline{Verifier's Complexity}: $O(tm(M+E))$, where $M$ is the cost of multiplication and $E$ is the complexity of exponentiation. So, in this construction $O(\sqrt[3]{|C|})$ many cryptographic(elliptic curve) operations are required.
+	\item \underline{Prover's complexity}: To construct commitment matrix $|C|$ may exponentiation, to construct $\widetilde{U}$, $|C|$ many multiplication, and to construct $w$, $mn$ many multiplication.\\
+	So total complexity of the Prover is $mnM+|C|(M+E)=O(|C|(M+E))$
+  \end{itemize}
+ 
+\vspace*{50pt}
+\paragraph{Protocol for checking Linear Constraint:} $x$ such that $Ax=b$ \\
+\textit{P} and \textit{V} does the following:
+\vspace*{40pt}
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pml}$}(1,-2);
+		\node[below of=P, yshift=-4em]{Define: $r=\overline{r}^TA$};
+		\node[below of=P, yshift=-5.5em]{Construct polynomials $r_{ij}(.)$ of deg $< l$};
+		\node[below of=P, yshift=-7.5em]{Define $q_j(.)=\sum\limits_{i\in[p]} r_{ij}(.).p_{ij}(.)$ $\forall j\in [m]$};
+		\node[below of=P, yshift=-9em]{Define matrix $\overline{q}=(q_{ij})_{m\times n}$, where $q_{ij}=q_i(\eta_j)$};
+		\node[below of=P, yshift=-10.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$, $h=s+l-1$}; 
+		\node[below of=P, yshift=-12em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$};
+	%--------------------
+		\draw[->](1,-7)-- node[yshift=1em]{$\{d_i:i\in[h]\}, q(.)=\sum\limits_{j\in [m]}q_j(.)$}(7,-7);
+		\draw[->](7,-8)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-8);
+		\draw[->](1,-9)-- node[yshift=0.5em]{$\overline{q}[k] \& C[k]: k \in Q$ and Merkle paths for $c$}(7,-9);
+		\draw[->](7,-10)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-10);
+		\draw[->](1,-11)-- node[yshift=0.5em]{$U[.,j,k]:j\in Q', k\in Q $ and randomness}(7,-11);
+	\end{tikzpicture}
+	\caption{Protocol for checking Linear Constraint}
+\end{figure}
+
+\textit{V} checks that:
+\begin{itemize}
+	\item[(a)] Validation of $C[k]$ with respect to $c$. 
+	\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
+	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<1,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
+	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+	\item[(e)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U[i,.,k]>=U[i,j,k]$
+	\item[(f)] $\sum\limits_{i\in[p]} r_{ij}(\eta_k) U[i,j,k]=\overline{q}[k]_j$ $\forall k\in Q$ and $j\in Q'$\\
+\end{itemize}
+
+\textbf{Completeness:} If the prover encodes the correct $x$ which satisfies $Ax=b$, then all the above checks will be passed, which ensures the completeness property.\\
+
+\textbf{Soundness:} The following lemma ensures the soundness:
+
+\begin{lemma}
+	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$ encoding $x\in \mathbb{F}^{pml}$ such that $Ax=b$. Then, for any malicious \textit{P} strategy, $U^*$ is rejected by \textit{V} except with at most $((e +k +l)/n)^{\kappa} +1/|\mathbb{F}|+neg(\kappa)$ probability.
+\end{lemma}
+
+\begin{proof}
+	Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
+	 Otherwise, \textit{P} must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore \textit{P} can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
+	 Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
+\end{proof}
+
+\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so \textit{P} will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
+
+%To achieve zero knowledge, we need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s. For to do that we are going to modify $U$.\\
+%Define: $q'_j(\cdot)=q_j(\cdot)+r_{{blind}_j}(\cdot)$ $\forall j\in [m]$, where $r_{{blind}_j}(\cdot)$ are polynomials of degree $<k+l-1$ and $r_{{blind}_j}(\zeta_c)=0$ $\forall c\in[l], j\in [m]$.\\
+%and finally, define $q(\cdot)= \sum\limits_{j\in[m]}q'_j(\cdot)+r_{blind}(\cdot)$, where $r_{blind}(\cdot)$ is polynomial of degree $<k+l-1$ and $r_{blind}(\zeta_c)=0$ $\forall c\in[l]$.\\
+%So modify $U$ in the following way, say $U'$, Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1](j,k)=r_{{blind}_j}(\eta_k)$ $\forall j\in[m], k\in [n]$ and $U'[p+1](m+1,k)=r_blind(\eta_k)$ $\forall k\in[n]$.\\
+\textbf{Communication Complexity:}
+\begin{itemize}
+	\item \underline{Proof Size}: First \textit{P} sends Merkle root, which is of constant size, say $\lambda$,  then sends $(k+l-1)$ many commitments of constant size and $(k+l-1)$ many coefficients of $q$, therefore, $(\lambda+1)\times (k+l-1)$. $t\times m$ to send $t$ columns of $\overline{q}$ and $t \times p\lambda$ for $t$ columns of $C$, and for Merkle paths $t \times \log (pn)$. Finally $t^2$ many vectors from $U$ including the randomness to commit \textit{P} needs to send $t^2(p+\alpha)$. So, total size of the proof is $\sqrt[3]{|C|}$.
+	\item \underline{Verifier's Complexity:} $l$ many polynomial evaluation of degree at most $(s+l-1)$, for that number of multiplication is $O(l(s+l-1))$,\\
+	Checking commitments by IP using Bulletproofs, $(s+l-1)\sqrt{m}$ many exponentiations.\\
+	$t(s+l-1)$ many multiplications.\\
+	Checking commitments by IP using Bulletproofs, $t\sqrt{p}$ many exponentiations.\\
+	and finally $tp$ many multiplications.\\
+	In total: $l(s+l-1)+t(s+l-1)+tp$ multiplications and $(s+l-1)\sqrt{m}+t\sqrt{p}$ many exponentiations
+	
+	\item \underline{Prover's Complexity:}
+	
+\end{itemize}
+%\vspace*{3.25cm}
+\paragraph{Protocol for checking Quadratic Constraint:} $x,y,z$ suc that $x\odot y+a\odot z =b$\\
+\textit{P} and \textit{V} does the following:
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
+		\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
+		\node[below of=P, yshift=-6.5em]{Define: $q_{j}(.)=\sum\limits_{i\in[p]} r_i.p_{ij}(.)$ $\forall j\in [m]$};
+		\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{ij})_{m\times n}$, where $q_{ij}=q_i(\eta_j)$};
+		\node[below of=P, yshift=-9.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$ $h=2s-1$};
+		\node[below of=P, yshift=-11em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$ };
+		\draw[->](1,-6)-- node[yshift=1em]{$\{d_i:i\in[h]\}$}(7,-6);
+		\draw[->](7,-7)-- node[yshift=1em]{$\gamma \in_R \mathbb{F}^m$}(1,-7);
+		\draw[->](1,-8)-- node[yshift=1em]{$q(.)=\sum\limits_{j\in[m]} \gamma_j.q_j(.)$}(7,-8);
+		\draw[->](7,-9)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-9);
+		\draw[->](1,-10)-- node[yshift=0.5em]{$\overline{q}[k] \& C^{\delta}[k]: k \in Q$ and Merkle paths for $c^{\delta}: 		\delta\in\{x,y,z\}$}(7,-10);
+		\draw[->](7,-11)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-11);
+		\draw[->](1,-12)-- node[yshift=0.5em]{$U^{\delta}[.,j,k]:j\in Q', k\in Q, \delta\in\{x,y,z\}$ and randomness}(7,-12);
+	\end{tikzpicture}
+\caption{Protocol for checking Quadratic constraint}
+\end{figure}
+
+\textit{V} checks that:
+\begin{itemize}
+	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, where $\delta\in\{x,y,z\}$. 
+	\item[(b)] $\forall k\in[l], q(\zeta_k)=0$
+	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<\gamma,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
+	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+	\item[(e)] Check $U^{\delta}[.,j,k]$ with respect to $C^{\delta}[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U^{\delta}[i,.,k]>=U^{\delta}[i,j,k]$, where $\delta\in\{x,y,z\}$. 
+	\item[(f)] $\sum\limits_{i\in[p]} r_{i}[U^x[i,j,k].U^y[i,j,k]+U^a[i,j,k].U^z[i,j,k]-U^b[i,j,k]]=\overline{q}[k]_j$ $\forall k\in Q$ and $j\in Q'$\\
+\end{itemize}
+
+\textbf{Completeness:} If the prover encodes the correct $x,y,z$ which satisfy $x\odot y + a\odot z=b$, then all the above checks will be passed, which ensures the completeness property.\\
+
+\textbf{Soundness:} The following lemma ensures the soundness:
+
+\begin{lemma}
+		
+\end{lemma}
+
+\textbf{Zero Knowledge:}
+
+\textbf{Communication Complexity:}
+
+
+
+\end{document}
