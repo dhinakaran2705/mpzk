@@ -13,7 +13,7 @@
 \usetikzlibrary{shapes, shadows,arrows}
 \usepackage{amsmath}
 \usepackage{amsthm}
-
+\usepackage{placeins}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -25,7 +25,7 @@
 \newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
 
 
-\title{Improvement over Ligero}
+\title{Zero-Knowledge Proof Systems with Distributed Proof Generation}
 %\author{\IEEEauthorblockN{Protik}}
 \begin{document}
 \tikzstyle{line} = [draw,-latex']
@@ -57,16 +57,7 @@ Let, $x\in \mathbb{F}^{pml}$ %\mycomment{what is $pml$?add the details}
 be the secret. We will encode $x$ to $U\in \mathbb{F}^{pmn}$ in the following way.\\
 Let
 %---------------------------------------
-$$x = 
-\begin{bmatrix}
-x_{111} & x_{112} & \cdots & x_{11l}\\
-x_{121} & x_{122} & \cdots & x_{12l}\\
-\vdots\\
-x_{1m1} & x_{1m2} & \cdots & x_{1ml}\\
-\vdots\\
-x_{pm1} & x_{pm2} & \cdots & x_{pml}
-\end{bmatrix}
-$$
+
 %---------------------------------------
 
 Construct polynomials $p_{ij}(\cdot)$ %\mycomment{$p_{ij}(\cdot)$ use the cdot }
@@ -128,10 +119,10 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \textit{P} and \textit{V} follows the protocol in Figure 1 and then
 \textit{V} checks the following:
 \begin{itemize}
-	\item[(a)] Validation of $C[j]$ with respect to $c$.
+	\item[(a)] Validation of $C[k]$ with respect to $c$.
 	\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
 	\item[(c)] $w\in L$, $L$ is the set of codewords.
-	\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_j$ $\forall k\in Q'$
+	\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_k$ $\forall k\in Q'$
 	\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
 \end{itemize}
 
@@ -253,7 +244,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
 		\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
 		\node[below of=P, yshift=-6.5em]{Define: $q_{j}(.)=\sum\limits_{i\in[p]} r_i.p_{ij}(.)$ $\forall j\in [m]$};
-		\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{ij})_{m\times n}$, where $q_{ij}=q_i(\eta_j)$};
+		\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{jk})_{m\times n}$, where $q_{jk}=q_j(\eta_k)$};
 		\node[below of=P, yshift=-9.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$ $h=2s-1$};
 		\node[below of=P, yshift=-11em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$ };
 		\draw[->](1,-6)-- node[yshift=1em]{$\{d_i:i\in[h]\}$}(7,-6);
@@ -270,7 +261,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \textit{V} checks that:
 \begin{itemize}
 	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, where $\delta\in\{x,y,z\}$. 
-	\item[(b)] $\forall k\in[l], q(\zeta_k)=0$
+	\item[(b)] $\forall c\in[l], q(\zeta_c)=0$
 	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<\gamma,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
 	\item[(e)] Check $U^{\delta}[.,j,k]$ with respect to $C^{\delta}[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U^{\delta}[i,.,k]>=U^{\delta}[i,j,k]$, where $\delta\in\{x,y,z\}$. 
@@ -288,7 +279,350 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \textbf{Zero Knowledge:}
 
 \textbf{Communication Complexity:}
+%-------------------------------------------------------------------------------------
+\section{Multi-Prover Setting}
+
+Let, $P_1,P_2,\cdots,P_N$ provers are there. Let $w$ be the extended witness which is additively distributed and $w_{\nu}$ is the share of the witness of the $\nu$th party $\Rightarrow \sum\limits_{\nu \in [N]}w_{\nu}=w$\\
+$P_{\nu}$ encodes $w_{\nu}$ in the following way:\\
+Let $w_{\nu}\in \mathbb{F}^{pml}$, then we can write 
+
+%---------------------------------------------------------------
+$$w_{\nu} = 
+\begin{bmatrix}
+w_{\nu}[111] & w_{\nu}[112] & \cdots & w_{nu}[11l]\\
+w_{\nu}[121] & w_{\nu}[122] & \cdots & w_{\nu}[12l]\\
+\vdots\\
+w_{\nu}[1m1] & w_{\nu}[1m2] & \cdots & w_{\nu}[1ml]\\
+\vdots\\
+w_{\nu}[pm1] & w_{\nu}[pm2] & \cdots & w_{\nu}[pml]
+\end{bmatrix}
+$$
+%---------------------------------------------------------------
+Construct `$pm$' many polynomials of degree $<s$ such that $p_{ij}(\zeta_c)=w_{\nu}[i,j,c]\forall i\in [p] j\in [m] c\in[l]$\\
+Define: 
+%---------------------------------------------------------------
+$$U^{w_{\nu}}[i]=
+\begin{bmatrix}
+p_{i1}^{w_{\nu}}(\eta_1) & \cdots & p_{i1}^{w_{\nu}}(\eta_n)\\
+p_{i2}^{w_{\nu}}(\eta_1) & \cdots & p_{i2}^{w_{\nu}}(\eta_n)\\
+\vdots\\
+p_{im}^{w_{\nu}}(\eta_1) & \cdots & p_{im}^{w_{\nu}}(\eta_n)\\
+\end{bmatrix}
+$$
+%---------------------------------------------------------------
+Define: $$U^{w_{\nu}}=[U^{w_{\nu}}[1] \cdots U^{w_{\nu}}[p]]$$\\
+%---------------------------------------------------------------
+Let $U=\sum\limits_{\nu \in [N]} U^{w_{\nu}}$.\\
+Note that $U$ decodes to $w$. So let's call this $U^w$\\
+Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as mentioned in sectioin 1. Therefore by the homomorphic property of the commitment scheme $C^w=\sum\limits_{\nu \in [N]} C^{w_{\nu}}$.\\
+%---------------------------------------------------------------
+\paragraph{Protocol for Testing Interleaved:}
+\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+\begin{figure}[htb!]
+	\centering
+	\begin{tikzpicture}
+		\node[block] (A) {$P_{\nu}$};
+		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=1em]{$C^{w_{\nu}}$}(7,-1);
+		\node[below of=P, xshift=-1em, yshift=-2em]{$C^w=\sum\limits_{\nu \in [N]}C^{w_{\nu}}$, $c$ is the Merkle root of $C^w$};
+		\draw[->](8,-3)-- node[yshift=1em]{$c$}(15,-3);
+		\draw[->](15,-4)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(8,-4);
+		\draw[->](7,-5)-- node[yshift=0.5em]{$r$}(1,-5);
+		\node[below of=A, xshift=-1em, yshift=-5cm]{$\widetilde{U}^{w_{\nu}}=\sum\limits_{i\in [p]}r_i U^{w_{\nu}}[i]$};
+		\draw[->](1,-6.5)-- node[yshift=0.6em]{$\widetilde{U}^{w_{\nu}}$}(7,-6.5);
+		\node[below of=P, xshift=-1em, yshift=-17em]{$\widetilde{U}=\sum\limits_{\nu \in [N]}\widetilde{U}^{w_{\nu}}$};
+		\node[below of=P, xshift=-1em, yshift=-18.5em]{$\tilde{c}=r^TC$};
+		\draw[->](8,-8)-- node[yshift=0.5em]{$\tilde{c}$}(15,-8);
+		\draw[->](15,-9)-- node[yshift=0.5em]{$\gamma \in_R \mathbb{F}^m$}(8,-9);
+		\node[below of=P, xshift=-1em, yshift=-24em]{$w=\gamma^T \widetilde{U}$};
+		\draw[->](8,-10)-- node[yshift=0.6em]{$w$}(15,-10);
+		\draw[->](15,-11)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(8,-11);
+		\draw[->](8,-12)-- node[yshift=0.6em]{$\widetilde{U}[k]$ with the randomness to commit it:$ k\in Q$}(15,-12);
+		\draw[->](8,-12)-- node[yshift=-0.5em]{$C[k]: k \in Q$ and corresponding Merkle paths}(15,-12);
+	\end{tikzpicture}
+	\caption{Protocol for Testing Interleaved}
+\end{figure}
+
+\textit{V} checks that:\\
+\begin{itemize}
+	\item[(a)] Validation of $C[k]$ with respect to the Merkle root $c$.
+	\item[(b)] $\tilde{c}_k=\sum\limits_{i\in[p]}r_iC_{ik}$ $\forall k\in Q$
+	\item[(c)] $w\in L$, $L$ is the set of codewords of size $\mathbb{F}^n$
+	\item[(d)] $\sum\limits_{j\in [m]}\gamma_j \widetilde{U}_{jk}=w_k$ $\forall k\in Q$
+	\item[(e)] $Open(\tilde{c}_k)=\widetilde{U}[k]$ $\forall k\in Q$
+\end{itemize}
+
+\paragraph{Protocol for Linear constraint:} Let $Ax=b$, where $A\in \mathbb{F}^{pml\times pml}$ and $b\in \mathbb{F}^{pml}$ are publicly known and $x$ is the secret which is additively distributed among the provers, say $x_{\nu}$ is the share of the $\nu$th prover.\\
+$P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{\nu}$.\\
+\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (A) {$P_{\nu}$};
+		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=1em]{$C^{\nu}$}(7,-1);
+		\node[below of=P, xshift=-1em, yshift=-2em]{$C=\sum\limits_{\nu \in [N]}C^{\nu}$, $c$ is the Merkle root of $C$};
+		\draw[->](8,-3)-- node[yshift=1em]{$c$}(15,-3);
+		\draw[->](15,-4)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pml}$}(8,-4);
+		\node[below of=P, xshift=-1em, yshift=-10em]{$r=\overline{r}^TA$};
+		\draw[->](7,-5)-- node[yshift=0.5em]{$r$}(1,-5);
+		\node[below of=A, yshift=-13em]{$q_j^{\nu}(\cdot)=\sum\limits_{i\in[p]}r_{ij}(\cdot)p_{ij}^{\nu}(\cdot)$ $\forall j\in[m]$};
+		\node[below of=A, yshift=-15em]{$com(q_1(\eta_{j'}),\cdots,q_m(\eta_{j'}))=d_{j'}\forall j'\in [h]$};
+		\node[below of=A, yshift=-17.5em]{$q^{\nu}(\cdot)=\sum\limits_{j\in [m]}q^{\nu}_j(\cdot)$};
+		\draw[->](1,-8)-- node[yshift=0.6em]{$\{d_{j'}^{\nu}\}_{j'\in[h]}, q^{\nu}(\cdot)$}(7,-8);
+		\node[below of=P, xshift=-1em, yshift=-22em]{$q(\cdot)=\sum\limits_{\nu \in [N]}q^{\nu}(\cdot)$};
+		\node[below of=P, xshift=-1em, yshift=-24em]{$d_{j'}=\sum\limits_{\nu \in [N]}d_{j'}^{\nu}$};
+		\draw[->](8,-10)-- node[yshift=0.6em]{$\{d_{j'}\}_{j'\in[h]}, q(\cdot)$}(15,-10);
+		\draw[->](15,-11)-- node[xshift=-1em, yshift=0.5em]{$Q\subset _R [m]\times [n] : |Q|=t \& j_1\neq j_2$ and $k_1\neq k_2 \forall (j_1,k_1),(j_2,k_2)\in Q$}(8,-11);
+		\draw[->](7,-12)-- node[xshift=-1em, yshift=0.5em]{$Q\subset _R [m]\times [n] : |Q|=t \& j_1\neq j_2$ and $k_1\neq k_2 \forall (j_1,k_1),(j_2,k_2)\in Q$}(1,-12);
+		\draw[->](1,-13)-- node[yshift=0.6em]{$\{\{q^{\nu}_j(\eta_k)\}_{j\in[m]}:\forall k$, for some $j, (j,k)\in Q\}$}(7,-13);
+		\node[below of=P, yshift=-36em]{$\overline{q}[k]=\{\sum\limits_{\nu \in [N]} q^{\nu}_j(\eta_k)\}_{j\in[m]}$};
+		\draw[->](8,-15)-- node[yshift=0.6em]{$\overline{q}[k], C[k] \& U[\cdot,j,k] \forall k: (j,k)\in Q$}(15,-15);
+		%\draw[->](8,-12)-- node[yshift=0.6em]{$\widetilde{U}[k]$ with the randomness to commit it:$ k\in Q$}(15,-12);
+		%\draw[->](8,-12)-- node[yshift=-0.5em]{$C[k]: k \in Q$ and corresponding Merkle paths}(15,-12);				
+	\end{tikzpicture}
+	\caption{Protocol for Linear Constraint}
+\end{figure}
+
+%\mycomment{P sends Q to $P_{\nu}$ and from the reply P computes $\overline{q}[k]$}
+\textit{V} checks that:\\
+\begin{itemize}
+	\item[(a)] Validation of $C[k]$ with respect to the Merkle root $c$.
+	\item[(b)] $\sum\limits_{c\in[l]} q(\zeta_c)=\overline{r}^Tb$.
+	\item[(c)] Check $q(\cdot)$ using $d_1,\cdots, d_h$ by InnerProduct argument using Bullet Proofs: $<1, \overline{q}[j']>= q(\eta_{j'})$ $\forall j'\in [h]$ where, commitment of $\overline{q}[j']$ is $d_{j'}$.
+	\item[(d)] Reveal($\sum\limits_{j'\in[h]} T_{j'k}d_{j'})=q(\eta_k) \forall k\in[n]$, where $T$ is a public matrix of dimension $n\times h$ such that $T([p(\eta_1),\cdots,p(\eta_h)]^T)=([p(\eta_1),\cdots,p(\eta_n)]^T)$ for all polynomial of degree $<h$.
+	\item[(e)] Check $U[\cdot,j,k]$ with respect to $C[k]$ $\forall (j,k)\in Q$ by InnerProduct argument using Bullet Proofs: $<e_j,U[i,\cdot,k]>=U[i,j,k]$.
+	\item[(f)] $\sum\limits_{i\in [p]} r_{ij}(\eta_k)U[i,j,k]=\overline{q}[k]_j$ $\forall (j,k)\in Q$.
+\end{itemize}
+
+\paragraph{Protocol for quadratic constraint:} Let $x\odot y+a\odot z=b$, where $a,b$ are public and $x,y,z$ are secrets. $x_{\nu}, y_{\nu}, z_{\nu}$ are the shares of $P_{\nu}$. $P_{\nu}$ encodes $x_{\nu},y_{\nu},z_{\nu}$ to $U^{x_{\nu}},U^{y_{\nu}}, U^{z_{\nu}}$ respectively and computes the corresponding commitments i.e. $com(U^{x_{\nu}})=C^{x_{\nu}}, com(U^{y_{\nu}})=C^{y_{\nu}}, com(U^{z_{\nu}})=C^{z_{\nu}}$\\
+$P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such that $p^{(xy)_{\nu}}_{ij}(\cdot)= p^{x_{\nu}}_{ij}(\cdot)p^{y_{\nu}}_{ij}(\cdot)$. To do that use FFT and choose $\{\eta_1,\eta_2,\cdots,\eta_n\}$ accordingly, in particular, $n$th roots of unity and set $n\geq 2s-1$.\\
+%Similarly, $P_{\nu}$ constructs polynomials $p^{(az)_{\nu}}_{ij}(\cdot)$ such that $p^{(az)_{\nu}}_{ij}(\cdot)= p^{a_{\nu}}_{ij}(\cdot)p^{z_{\nu}}_{ij}(\cdot)$.\\
+
+\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (A) {$P_{\nu}$};
+		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=1em]{$C^{\delta_{\nu}}, \delta\in \{x,y,z\}$}(7,-1);
+		\node[below of=P, xshift=-1em, yshift=-2em]{$C^{\delta}=\sum\limits_{\nu \in [N]}C^{\delta_{\nu}}$, $c^{\delta}$ is the Merkle root of $C^{\delta}$, $\delta\in\{x,y,z\}$};
+		\draw[->](8,-3)-- node[yshift=1em]{$c^{\delta}, \delta\in \{x,y,z\}$}(15,-3);
+		\draw[->](15,-4)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(8,-4);
+		\draw[->](7,-5)-- node[yshift=0.5em]{$r$}(1,-5);
+		\draw[->](1,-6)-- node[yshift=1em]{$p^{\nu}_{j}(\cdot)=\sum\limits_{i\in [p]}r_i[p^{(xy)_{\nu}}_{ij}(\cdot) + p^a_{ij}(\cdot)p^{z_{\nu}}_{ij}(\cdot)]$}(7,-6);
+		\node[below of=P, xshift=-1em, yshift=-16em]{$q_j(\cdot)=\sum\limits_{\nu \in [N]} p^{\nu}_{j}(\cdot)- \sum\limits_{i\in [p]} r_ip^{b}_{ij}(\cdot)$};
+		\node[below of=P, xshift=-1em, yshift=-18em]{Matrix $\overline{q}$ of size $m\times n$, $\overline{q}_{jk}= q_j(\eta_k)$};
+		\node[below of=P, xshift=-1em, yshift=-20em]{$d_{j'}=com(\overline{q}[j'])$ $\forall j'\in [h]$};
+		\draw[->](8,-9)-- node[yshift=1em]{$\{d_{j'}\}_{j'\in[h]}$}(15,-9);
+		\draw[->](15,-10)-- node[yshift=1em]{$\gamma\in_R \mathbb{F}^m$}(8,-10);
+		\node[below of=P, xshift=-1em, yshift=-28em]{Define: $q(\cdot)=\sum\limits_{j\in[m]}\gamma_jq_j(\cdot)$};
+		\draw[->](8,-11.5)-- node[yshift=1em]{$q(\cdot)$}(15,-11.5);
+		\draw[->](15,-12.5)-- node[xshift=-1em, yshift=1em]{$Q\subset _R [m]\times [n] : |Q|=t \& j_1\neq j_2$ and $k_1\neq k_2 \forall (j_1,k_1),(j_2,k_2)\in Q$}(8,-12.5);
+		\draw[->](8,-13.5)-- node[xshift=-1em, yshift=1em]{$\overline{q}[k], C^{\delta}[k]$ and corresponding Merkle paths}(15,-13.5);
+		\draw[->](8,-13.5)-- node[xshift=-1em, yshift=-1em]{$U^{\delta}[\cdot,j,k]$, where $\delta\in \{x,y,z\} \& \forall (j,k)\in Q$ }(15,-13.5);		
+	\end{tikzpicture}
+	\caption{Protocol for Quadratic Constraint}
+\end{figure}
+\FloatBarrier
+
+\textit{V} checks that:\\
+\begin{itemize}
+	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, $\delta\in \{x,y,z\}$.
+	\item[(b)] $q(\zeta_c)=0$ $\forall c\in [l]$.
+	\item[(c)] Check using $d_1,\cdots, d_h$ using Inner Product argument by Bullet Proofs: $<\gamma, \overline{q}[j']>=q(\eta_{j'}) \forall j'\in [h]$.
+	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k}d_{j'})= q(\eta_k) \forall k\in [n]$, where $T$ is a public matrix of dimension $n\times h$ such that $T([p(\eta_1),\cdots,p(\eta_h)]^T)=([p(\eta_1),\cdots,p(\eta_n)]^T)$ for all polynomial of degree $<h$.
+	\item[(e)] Check $U^{\delta}[\cdot,j,k]$ with respect to $C^{\delta}[k]$ $\forall (j,k)\in Q$ by Inner Product argument using Bullet Proofs: $<e_j,U^{\delta}[i,\cdot,k]>=U^{\delta}[i,j,k]$.
+	\item[(f)] $\sum\limits_{i\in [p]} r_i[U^x[i,j,k].U^y[i,j,k]+U^a[i,j,k].U^z[i,j,k]-U^b[i,j,k]]=\overline{q}[k]_j$ $\forall (j,k)\in Q$.
+\end{itemize}
+%--------------------------------------------------------------------------------------------
+\section{Proof of size $|C|^{\frac{1}{\alpha}}$}
+Here consider our extended witness $w\in \mathbb{F}^{pm_1m_2l}$. Encode it to $U^w$ in the same way as above, where size of $U$ is $p\times m_1m_2\times n$. Let, $m=m_1m_2$\\
+
+\paragraph{Protocol for Testing Interleaved:}
+\textit{P} and \textit{V} does the following:
+
+\begin{figure}[htb!]
+	\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(1,-2);
+		\node[below of=P, xshift=-1em, yshift=-3em]{$\widetilde{U}=\sum\limits_{i\in [p]}r_i U[i]$};
+		\node[below of=P, xshift=-1em, yshift=-5em]{$\tilde{c}=com(\widetilde{U})$};
+		%---------------------
+		\draw[->](1,-3.5)-- node[yshift=0.5em]{$\tilde{c}$}(7,-3.5);
+		%\draw[->](7,-4.5)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-4.5);
+		\draw[->](7,-4.5)-- node[yshift=0.5em]{$\gamma\in_R \mathbb{F}^{m_1m_2}$}(1,-4.5);
+		\node[below of=P, yshift=-11em]{$w=\gamma^T \widetilde{U}$};
+		\draw[->](1,-5.5)-- node[yshift=0.6em]{$w$}(7,-5.5);
+		\draw[->](7,-6.5)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-6.5);
+		%\draw[->](1,-7.5)-- node[yshift=0.6em]{$\widetilde{U}[k]$ with the randomness to commit it:$ k\in Q$}(7,-7.5);
+		\draw[->](1,-7.5)-- node[yshift=0.5em]{$C[k]: k \in Q$ and corresponding Merkle paths}(7,-7.5);
+	\end{tikzpicture}
+	\caption{Protocol for Testing Interleaved}
+\end{figure}
+\FloatBarrier
+
+\textit{P} and \textit{V} follows the protocol in Figure 1 and then
+\textit{V} checks the following:
+\begin{itemize}
+	\item[(a)] Validation of $C[k]$ with respect to $c$.
+	\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
+	\item[(c)] $w\in L$, $L$ is the set of codewords.
+	\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_k$ $\forall k\in Q'$ Checking $\widetilde{U}$ with respect to it's commitment and $\gamma$ using inner product argument i.e. $<\gamma,  \widetilde{U}[k]>=w_k$ $\forall k\in[n]$
+	%\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
+\end{itemize}
+
+\textbf{Proof Size:} 
+\begin{itemize} 
+	\item constant size Merkle root
+	\item $n$ sized vector $\tilde{c}$
+	\item $n$ sized vector $w$
+	\item $t$ many $p$ sized vector $C[k]:k\in Q$
+	\item proof for inner product argument $O(log(m)$
+\end{itemize}
+So total size of the proof is $O(|C|^{\frac{1}{4}})$.
+
+\textbf{Verifier's Complexity:}
+\begin{itemize}
+	\item Checking Merkle root
+	\item $p$ multiplications: $pM$
+	\item Multiplication by the Parity check matrix: $n^2M$
+	\item Inner Product check :$m.E$
+\end{itemize}
+So total $mE+pM+n^2M$
+
+\textbf{Prover's Complexity:}
+\begin{itemize}
+	\item Computing $C$, $|C|$ many exponentiation: $|C|.E$
+	\item Computing Merkle root
+	\item To compute $\widetilde{U}$, $|C|.M$ and to compute $\tilde{c}$, $p.n.M$
+	\item To compute $w$, $m.n.M$
+\end{itemize}
+So total $|C|.E+|C|.M+p.n.M+m.n.M+h$, where $h$ is the complexit to compute the Merkle root.
+%-----------------------------------------------------------
+\paragraph{Protocol for checking Linear Constraint:} $x$ such that $Ax=b$ \\
+\textit{P} and \textit{V} does the following:
+\vspace*{40pt}
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pm_1m_2l}$}(1,-2);
+		\node[below of=P, yshift=-4em]{Define: $r=\overline{r}^TA$};
+		\node[below of=P, yshift=-5.5em]{Construct polynomials $r_{ij}(.)$ of deg $< l$};
+		\node[below of=P, yshift=-7.5em]{Define $q_j(.)=\sum\limits_{i\in[p]} r_{ij}(.).p_{ij}(.)$ $\forall j\in [m]$};
+		\node[below of=P, yshift=-9em]{Define matrix $\overline{q}=(q_{jk})_{m_1m_2\times n}$, where $q_{jk}=q_j(\eta_k)$};
+		\node[below of=P, yshift=-10.5em]{Define $d_{j'}=com([q_{1j'},q_{2j'},\cdots,q_{mj'}]^T)$ $\forall j'\in[h]$, $h=s+l-1$}; 
+		\node[below of=P, yshift=-12em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$};
+	%--------------------
+		\draw[->](1,-7)-- node[yshift=1em]{$\{d_i:i\in[h]\}, q(.)=\sum\limits_{j\in [m]}q_j(.)$}(7,-7);
+		\draw[->](7,-8)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-8);
+		\draw[->](1,-9)-- node[yshift=0.5em]{$C[k]: k \in Q$ and Merkle paths for $c$}(7,-9);
+		\draw[->](7,-10)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-10);
+		\draw[->](1,-11)-- node[yshift=0.5em]{$U[.,j,k]:j\in Q', k\in Q $ and randomness}(7,-11);
+	\end{tikzpicture}
+	\caption{Protocol for checking Linear Constraint}
+\end{figure}
+\FloatBarrier
+
+\textit{V} checks that:
+\begin{itemize}
+	\item[(a)] Validation of $C[k]$ with respect to $c$. 
+	\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
+	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<1,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
+	%\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+	\item[(d)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U[i,.,k]>=U[i,j,k]$
+	\item[(e)] \textit{V} computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$ which is the commitment of the vector $\overline{q}[k]$ and also computes $\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$ $\forall j\in Q', k\in Q$.
+\end{itemize}
+\textbf{Proof Size:}
+\begin{itemize}
+	\item Constant size Merkle root.
+	\item $h$ many constants for $d_1,\cdots, d_h$ and $h$ coefficients for the polynomial, $O(h)$.
+	\item $t$ many $C[k]$ and corresponding Merkle paths, total size: $t.p+ t\log(pn)$
+	\item $t$ many $U[\cdot,j,k]$ and randomness: $O(t.p)$.
+	\item Proof for Inner Product argument $O(\log(m))$
+\end{itemize}
+In total $O(|C|^{\frac{1}{4}})$
+
+\textbf{Verifier's Complexity:} 
+\begin{itemize}
+	\item Checking Merkle roots.
+	\item $l$ polynomial evaluations $(s+l-1).l.M$
+	\item Inner Product check by the verifier: $O(m.E)$
+	\item $(s+l-1).M+p.M+|C|.M+\log m. E$
+\end{itemize}
+So total $(s+l-1).l.M+ m.E+(s+l-1).M+p.M+|C|.M+\log m.E$
 
 
+\textbf{Prover's Complexity:}
+ To compute $C$ matrix, Prover needs to do $|C|$ many exponentiation and that is dominating term in his computation.
+%-----------------------------------------------------------
+\paragraph{Protocol for checking Quadratic Constraint:} $x,y,z$ suc that $x\odot y+a\odot z =b$\\
+\textit{P} and \textit{V} does the following:
+\begin{figure}[htb!]
+	%\centering
+	\begin{tikzpicture}
+		\node[block] (P) {\textit{P}};
+		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
+		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
+		\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
+		\node[below of=P, yshift=-6.5em]{Define: $q_{j}(.)=\sum\limits_{i\in[p]} r_i.p_{ij}(.)$ $\forall j\in [m]$};
+		\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{jk})_{m_1m_2\times n}$, where $q_{jk}=q_j(\eta_k)$};
+		\node[below of=P, yshift=-9.5em]{Define $d_{j'}=com([q_{1j'},q_{2j'},\cdots,q_{mj'}]^T)$ $\forall j'\in[h]$ $h=2s-1$};
+		\node[below of=P, yshift=-11em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$ };
+		\draw[->](1,-6)-- node[yshift=1em]{$\{d_i:i\in[h]\}$}(7,-6);
+		\draw[->](7,-7)-- node[yshift=1em]{$\gamma \in_R \mathbb{F}^m$}(1,-7);
+		\draw[->](1,-8)-- node[yshift=1em]{$q(.)=\sum\limits_{j\in[m]} \gamma_j.q_j(.)$}(7,-8);
+		\draw[->](7,-9)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-9);
+		\draw[->](1,-10)-- node[yshift=0.5em]{$C^{\delta}[k]: k \in Q$ and Merkle paths for $c^{\delta}: \delta\in\{x,y,z\}$}(7,-10);
+		\draw[->](7,-11)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-11);
+		\draw[->](1,-12)-- node[yshift=0.5em]{$U^{\delta}[.,j,k]:j\in Q', k\in Q, \delta\in\{x,y,z\}$ and randomness}(7,-12);
+	\end{tikzpicture}
+\caption{Protocol for checking Quadratic constraint}
+\end{figure}
+\FloatBarrier
 
+\textit{V} checks that:
+\begin{itemize}
+	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, where $\delta\in\{x,y,z\}$. 
+	\item[(b)] $\forall k\in[l], q(\zeta_k)=0$
+	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<\gamma,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
+	%\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+	\item[(d)] Check $U^{\delta}[.,j,k]$ with respect to $C^{\delta}[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U^{\delta}[i,.,k]>=U^{\delta}[i,j,k]$, where $\delta\in\{x,y,z\}$. 
+	\item[(e)] \textit{V} computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$, which is the commitment of the vector$\overline{q}[k]$ and also computes$\sum\limits_{i\in[p]} r_i[U^{x}[i,j,k].U^y[i,j,k]+U^{a}[i,j,k].U^z[i,j,k]-U^{b}[i,j,k]] =R[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=R[i,j,k]$ $\forall j\in Q', k\in Q$.\\
+\end{itemize}
+
+\textbf{Proof Size:}
+\begin{itemize}
+	\item Constant size Merkle root $c$.
+	\item $d_1,\cdots, d_h$: $O(h)$.
+	\item To send the polynomial $q(\cdot)$, $2s-1$ many coefficients are needed to be send.
+	\item $t$ many $C[k]$, $t.p$
+	\item $t$ many $U[\cdot,j,k]$, $t.p$
+	\item Proof for Inner product argument: $\log m$
+\end{itemize}
+In total $O(h+2s-1+t.p+\log(m) = O(|C|^{\frac{1}{4}})$
+
+\textbf{Verifier's Complexity:}
+\begin{itemize}
+	\item Checking Merkle roots.
+	\item $l$ polynomial evaluations: $(2s-1).l.M$
+	\item Checking using Inner Product arguments $O(m.E)$
+	\item $(2s-1).M+t.p.M$
+\end{itemize}
+So total complexity $O(|C|^{\frac{1}{2}}. E + |C|^{\frac{1}{2}}. M)$
+
+\textbf{Prover's Complexity:}
+ To compute $C$ matrix, Prover needs to do $|C|$ many exponentiation and that is dominating term in his computation.
+
+	
 \end{document}
