@@ -1,0 +1,32 @@
+\section{Preliminaries}
+\subsection{Codes}
+
+\paragraph{\textbf{Reed-Solomon Code:}} For positive integers $n,k$, finite field $\mathbb{F}$, and a vector $\eta = (\eta_1,\cdots ,\eta_n) \in \mathbb{F}_n$ of distinct field elements, the code $RS_{\mathbb{F},n,k,\eta}$ is the $[n,k,n-k+1]$ linear code over $\mathbb{F}$ that consists of all $n$-tuples $(p(\eta_1),...,p(\eta_n))$ where $p(\cdot)$ is a polynomial of degree $< k$ over $\mathbb{F}$.
+\paragraph{\textbf{Interleaved Code:}} Let $L\subset \mathbb{F}_n$ be an $[n,k,d]$ linear code over $\mathbb{F}$. We let $L^m$ denote the $[n,mk,d]$ (interleaved) code over $\mathbb{F}^m$ whose code words are all $m\times n$ matrices $U$ such that every row $U_i$ of $U$ satisfies $U_i\in L$. For $U\in L^m$ and $j\in[n]$, we denote by $U[j]$ the $j^{th}$ symbol (column) of $U$.
+\subsection{Interactive Oracle Proofs} The Interactive Oracle Proofs is the notion which combine both Interactive Proofs and Probabilistically Checkable Proofs, and also generalize the notion of the Interactive PCPs.
+\paragraph{} A $k$-round public-coin IOP has $k$ rounds of interaction. In the $i^{th}$ round of interaction, the verifier sends a uniformly random message $m_i$ to the prover; then the prover replies with a message $\pi_i$ to the verifier. After $k$ rounds of interaction, the verifier makes some queries to the oracles it received and either accepts or rejects.
+\paragraph{} An IOP system for a relation $\mathcal{R}$ with round complexity $k$ and soundness error $\epsilon$ is a pair $(P, V )$, where $P, V$ are probabilistic algorithms, that satisfies the following properties:
+\paragraph{\textit{Completeness:}}  For every instance-witness pair $(x,w)$ in the relation $\mathcal{R}, (P (x, w), V (x))$ is a $k(n)$-round interactive oracle protocol with accepting probability 1.
+\paragraph{\textit{Soundness:}} For every instance $x \notin \mathcal{L(R)}$ and unbounded malicious prover $P^*, (P^*, V (x))$ is a $k(n)$-round interactive oracle protocol with accepting probability at most $\epsilon(n)$.
+\subsection{Zero-Knowledge} 
+\paragraph{\textbf{Interactive Argument Systems:}} A pair of PPT(Probabilistic Polynomial Time) interactive machines $<P, V>$ is called an interactive proof system for a language $\mathcal{L}$ if there exists a negligible function $negl(\cdot)$ such that the following two conditions hold:
+\begin{itemize}
+	\item[(1)] \textit{Completeness:} For every $x\in \mathcal{L}$ there exists a string $w$ such that for every $z \in \{0,1\}^*$,
+$Pr[<P(x,w),V(x,z)>=1] \geq 1-negl(|x|)$.
+	\item[(2)] \textit{Soundness:} For every $x \notin \mathcal{L}$, every interactive PPT machine $P^*$, and every $w,z\in \{0,1\}^*$ $Pr[<P^*(x,w),V(x,z)>=1]\leq negl(|x|)$ 
+\end{itemize}
+\paragraph{\textbf{Zero Knowledge:}} Let$<P,V>$ be an interactive proof system for some language $\mathcal{L}$. We say that $<P,V>$ is computational zero-knowledge with respect to an auxiliary input if for every PPT interactive machine $V^*$ there exists a PPT algorithm $S$, running in time polynomial in the length of its first input, such that $\{<P(x,w),V^*(x,z)>\}_{x\in \mathcal{L},w\in \mathcal{R}_x,z\in \{0,1\}^*}\approx_c \{<S(x,z)>\}_{x\in\mathcal{L},z\in\{0,1\}^*}$
+\subsection{Commitment schemes} 
+\paragraph{\textbf{Commitemnts:}} A non-interactive commitment scheme consists of a pair of probabilistic polynomial time algorithms $(Setup,Com)$. The setup algorithm $pp\leftarrow Setup(1^{\lambda})$ generates public parameters $pp$ for the scheme, for security parameter $\lambda$. The commitment algorithm $Com_{pp}$ defines a function $M_{pp} \times R_{pp} \rightarrow C_{pp}$ for message space $M_{pp}$, randomness space $R_{pp}$ and commitment space $C_{pp}$ determined by $pp$. For a message $x\in M_{pp}$, the algorithm draws $\delta \in_R  R_{pp}$ uniformly at random, and computes commitment $\com = Com_{pp}(x; \delta)$.\\
+For ease of notation we write $Com = Com_{pp}$.
+\paragraph{\textbf{Homomorphic Commitment:}} A homomorphic commitment scheme is a non-interactive commitment scheme such that $M_{pp},R_{pp}$ and $C_{pp}$ are all abelian groups, and for all $x_1,x_2 \in M_{pp}, \delta_1,\delta_2 \in R_{pp}$, we have $Com(x_1; \delta_1) + Com(x_2; \delta_2) = Com(x_1 + x_2; \delta_1 + \delta_2)$
+\paragraph{\textbf{Hiding Commitment:}} A commitment scheme is said to be hiding if for all PPT adversaries $\Adv$ there exists a negligible function $\mu(\lambda)$ such that
+$$ |Pr[b=b'|pp\leftarrow Setup(1^{\lambda}); (x_0,x_1)\in M^2_{pp}\leftarrow \Adv(pp), b\in_R\{0,1\}, \delta \in_R R_{pp}, \com=Com(x_b;\delta), b'\leftarrow \Adv(pp,com)]-\frac{1}{2}|\leq \mu(\lambda)$$
+\paragraph{\textbf{Binding Commitment:}} A commitment scheme is said to be binding if for all PPT adversaries $\Adv$ there exists a negligible function $\mu$ such that 
+$$Pr[Com(x_0;\delta_0)=Com(x_1,\delta_1) \wedge x_0\neq x_1| pp\leftarrow Setup(1^{\lambda})x_0,x_1,\delta_0, \delta_1\leftarrow \Adv(pp)]\leq \mu(\lambda)$$
+\paragraph{\textbf{Pedersen Commitment:}} $M_{pp}, R_{pp} = \mathbb{Z}_p, C_{pp} = \mathbb{G}$ of order $p$.\\
+$Setup : g, h \in_R \mathbb{G}$\\
+$Com(x,\delta)=(g^xh^{\delta})$
+\paragraph{\textbf{Pedersen Vector Commitment:}} $M_{pp}= \mathbb{Z}^n_p , R_{pp} = \mathbb{Z}_p, C_{pp}= \mathbb{G}$ with G of order p.\\ 
+$Setup: \vc{g}=(g_1,\cdots,g_n),h \in_R \mathbb{G}$\\
+$Com(\vc{x} = (x_1,\cdots,x_n);\delta) = h^r\vc{g}^{\vc{x}} = h^r \prod\limits_i g_i^{x_i} \in \mathbb{G}$

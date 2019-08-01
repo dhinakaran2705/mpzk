@@ -3,7 +3,7 @@ Motivation for proving knowledge of witness, shared across different parties.
 
 
 
-1. Formal notion of Distributed Provers Zero Knowledge Protocol (P,V)
+1. Informal notion of Distributed Provers Zero Knowledge Protocol (P,V)
 1.1 Need for homomorphic commitments (Oracle access for IOP).
 
 2. Preliminaries:
