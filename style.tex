@@ -18,10 +18,82 @@
 \usepackage[left=2cm, right=2cm, top=4cm, bottom=2cm]{geometry}
 
 
-%----------Comments-----------
-\newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
+%%%%%%%%%%%%%%%%%% Macros brought by VD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Calligraphic and blackboard type letters.
+
+\def\cA{{\cal A}}
+\def\cB{{\cal B}}
+\def\cC{{\cal C}}
+\def\cD{{\cal D}}
+\def\cE{{\cal E}}
+\def\cF{{\cal F}}
+\def\cG{{\cal G}}
+\def\cH{{\cal H}}
+\def\cI{{\cal I}}
+\def\cJ{{\cal J}}
+\def\cK{{\cal K}}
+\def\cL{{\cal L}}
+\def\cM{{\cal M}}
+\def\cN{{\cal N}}
+\def\cO{{\cal O}}
+\def\cP{{\cal P}}
+\def\cQ{{\cal Q}}
+\def\cR{{\cal R}}
+\def\cS{{\cal S}}
+\def\cT{{\cal T}}
+\def\cU{{\cal U}}
+\def\cV{{\cal V}}
+\def\cW{{\cal W}}
+\def\cX{{\cal X}}
+\def\cY{{\cal Y}}
+\def\cZ{{\cal Z}}
+\def\cl{{\cal l}}
+\def\cq{{\cal q}}
+%%%%%%%%%%%%%%%%%
+\def\bbC{{\mathbb C}}
+\def\bbE{{\mathbb E}}
+\def\bbF{{\mathbb F}}
+\def\bbG{{\mathbb G}}
+\def\bbM{{\mathbb M}}
+\def\bbN{{\mathbb N}}
+\def\bbQ{{\mathbb Q}}
+\def\bbR{{\mathbb R}}
+\def\bbV{{\mathbb V}}
+\def\bbZ{{\mathbb Z}}
+
+\def\Zq{\bbZ_q}
+
+%%%%%%%%%%%%%%%%%
+
+% Rounding commands
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\round}[1]{\left\lfloor #1 \right\rceil}
+
+
+%%%%%%%%%%%%%%%%%% Macros defined by Protik %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \newcommand{\Defn}[1]{\textbf{{\textit{#1}}}}
 \newcommand{\Adv}{\mathcal{A}}
 \newcommand{\com}{\textbf{com}}
 \newcommand{\vc}[1]{\textbf{{#1}}}
 %\newcommand{\bb}[1]{\mathbb{#1}}
+
+
+%----------Comments-----------
+\newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
+
+% Author notes
+\def\ShowAuthNotes{1}
+\ifnum\ShowAuthNotes=1
+%\newcommand{\authnote}[2]{{\textbf{$\mathbf{\big[}$~#1's note:}} \textbf{\em\small #2}~{$\mathbf{\big]}$}}
+\newcommand{\authnote}[2]{\\ \textcolor{red}{\parbox{0.9\linewidth}{[{\footnotesize {\bf #1:} { {#2}}}]}}\\}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+
+\newcommand{\dnote}[1]{\authnote{VD}{#1}}
+\newcommand{\pnote}[1]{\authnote{PKP}{#1}}
+\newcommand{\nnote}[1]{\authnote{NS}{#1}}
