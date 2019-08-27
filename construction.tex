@@ -41,10 +41,24 @@ c[p,1] & c[p,2] & \cdots & c[p,n]
 \end{bmatrix}
 =C$$
 %---------------------------------------
-where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ and let $c$ is the Merkle tree root of $C$ where leaves are entries of $C$.
+where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ and let $c$ is the Merkle tree root of $C$ where leaves are columns of $C$.
 
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P} and \textit{V} does the following:
+\textit{P} and \textit{V} does the following:\\
+\begin{enumerate}
+	\item \textit{P} sends $c$, the Merkle root of the commitment $C$, to \textit{V}.
+	\item \textit{V $\rightarrow$ P}: $r\in_R \bbF^p$
+	\item \textit{P}: $\widetilde{U}=\sum\lim\limits_{i\in[p]}r_iU[i]$, $\tilde{c}= \com(\widetilde{U})$
+	\item \textit{P $\rightarrow$ V}: $\tilde{c}$
+	\item \textit{V $\rightarrow$ P}: $\gamma \in_R \bbF^m$
+	\item \textit{P}: $w= \gamma^T\widetilde{U}$
+	\item \textit{P $\rightarrow$ V}: $w$
+	\item \textit{V $\rightarrow$ P}: $Q\subset _R [n] : |Q|=t$
+	\item \textit{P $\rightarrow$ V}: $\widetilde{U}[k]$ \textit{with the randomness $\delta_k$ to commit $\widetilde{U}[k]$} : $k\in Q$
+	\item \textit{P $\rightarrow$ V}: $C[k]$ \textit{with the corresponding Merkle paths to the root} $:k\in Q$
+\end{enumerate}
+
+
 
 \begin{figure}[htb!]
 	\centering

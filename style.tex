@@ -14,7 +14,7 @@
 %\newtheorem{theorem}{Theorem}[section]
 %\newtheorem{corollary}{Corollary}[theorem]
 %\newtheorem{lemma}[theorem]{Lemma}
-
+\usepackage{comment}
 \usepackage[left=2cm, right=2cm, top=4cm, bottom=2cm]{geometry}
 
 
@@ -77,7 +77,7 @@
 
 \newcommand{\Defn}[1]{\textbf{{\textit{#1}}}}
 \newcommand{\Adv}{\mathcal{A}}
-\newcommand{\com}{\textbf{com}}
+\newcommand{\com}{\mathsf{com}}
 \newcommand{\vc}[1]{\textbf{{#1}}}
 %\newcommand{\bb}[1]{\mathbb{#1}}
 %\newcommand{\poly}[1][2]{#1(#2)}
@@ -85,7 +85,18 @@
 \newcommand{\qb}{q_{blind}}
 \newcommand{\qbj}{q_{{blind}_j}}
 %\newcommand{\trans}[1]{\textbf{\tau_{#1}}}
-
+\def\T{T} % Matrix T
+\def\A{A} % Matrix A
+\def\B{B} % Block B
+\def\AT{A\cdot T} %Matrix A.T
+\def\tc{\tilde{c}}
+\def\tU{\widetilde{U}} 
+\def\tv{\tilde{v}}
+\def\vecx{\textbf{x}}
+\def\oQ{\overline{Q}}
+\def\oq{\overline{q}}
+\def\q1b{q_{1_{blind}}}
+\def\q1bj{q_{1_{blind_j}}}
 %----------Comments-----------
 \newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
 
