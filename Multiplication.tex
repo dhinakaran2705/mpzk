@@ -1,0 +1,20 @@
+\documentclass[runningheads]{llncs}
+
+\input{style.tex}
+
+\begin{document}
+	Let, degree of $p^x(\cdot), p^y(\cdot) < s$ where $p^x(\cdot)$ and $p^y(\cdot)$ are encodings of $x$ and $y$ respectively, where $x=(x_1,\ldots, x_l)$ and $y=(y_1,\ldots, y_l)$.\\
+	Let, $S=\{\eta_1,\ldots, \eta_{2s}\}$.
+	Consider $3l<s$ and $t<\frac{N}{3}$.
+	$S_1,\ldots, S_N$ is a partition of $S$.\\
+	For the privacy, $t.|S_i|<s-l$, to choose a partition such that $S_i$ such that $|S_i|<\frac{2s}{N}$.\\
+	Let $P_i$ is the $i^{th}$ prover contains a share of $p^x(\cdot)$ and $p^y(\cdot)$, say $p^{x_i}(\cdot)$ and $p^{y_i}(\cdot)$.
+	The provers do the following protocol to get the share of the polynomial $p^{xy}(\cdot)=p^x(\cdot).p^y(\cdot)$:\\
+	\begin{itemize}
+		\item $P_i$ evaluates $p^{x_i}(\eta)$ and $p^{y_i}(\eta)$ and sends this to $P_j$ if $\eta\in S_j$
+		\item $P_j$ computes $\sum\limits_{i\in [N]}p^{x_i}(\eta)=p^x(\eta)$ and $\sum\limits_{i\in [N]}p^{y_i}(\eta)=p^y(\eta)$ $\forall \eta \in S_j$
+		\item $P_j$ computes $p^x(\eta).p^y(\eta)=p^{xy}(\eta)$ $\forall \eta \in S_j$
+		\item $P_j$ construct shares $p^{xy}(\eta)_1,\ldots, p^{xy}(\eta)_N$ such that $p^{xy}(\eta)=\sum\limits_{i\in [N]} p^{xy}(\eta)_i$ and  sends $p^{xy}(\eta)_i$ to $P_i$.
+	\end{itemize}
+	\textbf{Privacy:} If $t$ corrupted provers come together they can get the evaluation of $p^{x_i}$ on $t\times \frac{2s}{N}<\frac{N}{3}\times \frac{2s}{N}=\frac{2s}{3}<\frac{3s-3l}{3}=s-l$
+\end{document}

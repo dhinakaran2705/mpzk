@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6960 64-bit) (preloaded format=pdflatex 2019.2.22)  10 AUG 2019 09:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6960 64-bit) (preloaded format=pdflatex 2019.2.22)  27 AUG 2019 06:55
 entering extended mode
 **./main.tex
 (main.tex
@@ -595,6 +595,10 @@ LaTeX Info: Redefining \] on input line 2845.
 ) ("C:\Program Files\MiKTeX 2.9\tex/latex/placeins\placeins.sty"
 Package: placeins 2005/04/18  v 2.2
 )
+("C:\Program Files\MiKTeX 2.9\tex/latex/comment\comment.sty"
+\CommentStream=\write4
+
+Excluding comment 'comment')
 ("C:\Program Files\MiKTeX 2.9\tex/latex/geometry\geometry.sty"
 Package: geometry 2018/04/16 v5.8 Page Geometry
 
@@ -785,7 +789,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 32--34
  []
 
 
-Overfull \hbox (35.52165pt too wide) detected at line 35
+Overfull \hbox (32.46623pt too wide) detected at line 35
 \OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 Pr\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 b \OT1/c
 mr/m/n/10 = \OML/cmm/m/it/10 b[]\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 pp \OMS/cmsy
 /m/n/10   \OML/cmm/m/it/10 Setup\OT1/cmr/m/n/10 (1[]); (\OML/cmm/m/it/10 x[]; x
@@ -806,58 +810,85 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--39
  []
 
 ) (DPZK.tex) (DPZKShortProof.tex) (DPZKQuickVerify.tex [3]) (instantiations.tex
-) (implementation.tex) (construction.tex [4]
-Underfull \hbox (badness 10000) in paragraph at lines 81--82
+) (implementation.tex) (construction.tex
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 95--96
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 151--152
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 168--169
+
+ []
+
+[7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 234--235
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 154--155
-
- []
-
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 220--221
+Underfull \hbox (badness 10000) in paragraph at lines 237--238
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--224
-
- []
-
-[8]
-Underfull \hbox (badness 10000) in paragraph at lines 265--271
+Underfull \hbox (badness 10000) in paragraph at lines 279--285
 
  []
 
 
-Overfull \hbox (14.81177pt too wide) in paragraph at lines 295--296
+Overfull \hbox (14.81177pt too wide) in paragraph at lines 309--310
  [][] 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--300
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 313--314
 
  []
 
 
-Overfull \hbox (37.5722pt too wide) in paragraph at lines 337--338
+Overfull \hbox (37.5722pt too wide) in paragraph at lines 351--352
 [][] 
  []
 
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 342--343
+
+Underfull \hbox (badness 10000) in paragraph at lines 356--357
+
+ []
+
+[10]
+Overfull \hbox (21.45448pt too wide) in paragraph at lines 361--362
+[]\OT1/cmr/m/n/10 Reveal($[] \OML/cmm/m/it/10 T[]d[]\OT1/cmr/m/n/10 ) = \OML/cm
+m/m/it/10 q\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/
+10 8\OML/cmm/m/it/10 k \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 n\O
+T1/cmr/m/n/10 ]$, where $\OML/cmm/m/it/10 T$ \OT1/cmr/m/n/10 is a pub-lic ma-tr
+ix of di-men-sion $\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 h$ \O
+T1/cmr/m/n/10 such that $\OML/cmm/m/it/10 T\OT1/cmr/m/n/10 ([\OML/cmm/m/it/10 p
+\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; []  ; 
+p\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )][]) =
+ []
+
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 366--369
 
  []
 
 
-Overfull \hbox (21.45448pt too wide) in paragraph at lines 347--348
+Underfull \hbox (badness 10000) in paragraph at lines 398--399
+
+ []
+
+[12]
+Overfull \hbox (21.45448pt too wide) in paragraph at lines 403--404
 []\OT1/cmr/m/n/10 Reveal($[] \OML/cmm/m/it/10 T[]d[]\OT1/cmr/m/n/10 ) = \OML/cm
 m/m/it/10 q\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/
 10 8\OML/cmm/m/it/10 k \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 n\O
@@ -869,29 +900,7 @@ p\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )][]) =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--355
-
- []
-
-[10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 384--385
-
- []
-
-
-Overfull \hbox (21.45448pt too wide) in paragraph at lines 389--390
-[]\OT1/cmr/m/n/10 Reveal($[] \OML/cmm/m/it/10 T[]d[]\OT1/cmr/m/n/10 ) = \OML/cm
-m/m/it/10 q\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/
-10 8\OML/cmm/m/it/10 k \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 n\O
-T1/cmr/m/n/10 ]$, where $\OML/cmm/m/it/10 T$ \OT1/cmr/m/n/10 is a pub-lic ma-tr
-ix of di-men-sion $\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 h$ \O
-T1/cmr/m/n/10 such that $\OML/cmm/m/it/10 T\OT1/cmr/m/n/10 ([\OML/cmm/m/it/10 p
-\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; []  ; 
-p\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )][]) =
- []
-
-
-Overfull \hbox (14.95418pt too wide) in paragraph at lines 390--391
+Overfull \hbox (14.95418pt too wide) in paragraph at lines 404--405
 []\OT1/cmr/m/n/10 Check $\OML/cmm/m/it/10 U[]\OT1/cmr/m/n/10 [\OMS/cmsy/m/n/10 
 \OML/cmm/m/it/10 ; j; k\OT1/cmr/m/n/10 ]$ with re-spect to $\OML/cmm/m/it/10 C
 []\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 k\OT1/cmr/m/n/10 ]$ $\OMS/cmsy/m/n/10 8\OT1
@@ -903,16 +912,12 @@ n/10 \OML/cmm/m/it/10 ; k\OT1/cmr/m/n/10 ] \OML/cmm/m/it/10 >\OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
+Underfull \hbox (badness 10000) in paragraph at lines 409--410
 
  []
 
-
-Underfull \vbox (badness 1571) has occurred while \output is active []
-
- [12]
 [13] [14]
-Overfull \hbox (16.0282pt too wide) in paragraph at lines 495--496
+Overfull \hbox (16.0282pt too wide) in paragraph at lines 509--510
 []\OT1/cmr/m/it/10 V \OT1/cmr/m/n/10 com-putes the value $[] \OML/cmm/m/it/10 T
 []d[]$ \OT1/cmr/m/n/10 which is the com-mit-ment of the vec-tor $[][\OML/cmm/m/
 it/10 k\OT1/cmr/m/n/10 ]$ and also com-putes $[] \OML/cmm/m/it/10 r[]\OT1/cmr/m
@@ -921,7 +926,7 @@ it/10 k\OT1/cmr/m/n/10 ]$ and also com-putes $[] \OML/cmm/m/it/10 r[]\OT1/cmr/m
  []
 
 [15]
-Overfull \hbox (48.84512pt too wide) in paragraph at lines 553--554
+Overfull \hbox (48.84512pt too wide) in paragraph at lines 567--568
 []\OT1/cmr/m/it/10 V \OT1/cmr/m/n/10 com-putes the value $[] \OML/cmm/m/it/10 T
 []d[]$\OT1/cmr/m/n/10 , which is the com-mit-ment of the vector$[][\OML/cmm/m/i
 t/10 k\OT1/cmr/m/n/10 ]$ and also computes$[] \OML/cmm/m/it/10 r[]\OT1/cmr/m/n/
@@ -931,61 +936,72 @@ t/10 k\OT1/cmr/m/n/10 ]$ and also computes$[] \OML/cmm/m/it/10 r[]\OT1/cmr/m/n/
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 553--554
+Underfull \hbox (badness 10000) in paragraph at lines 567--568
 
  []
 
 [16]
-Underfull \hbox (badness 10000) in paragraph at lines 585--586
+Underfull \hbox (badness 10000) in paragraph at lines 599--600
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 587--588
+Underfull \hbox (badness 10000) in paragraph at lines 601--602
 
  []
 
-) [17] (main.aux) ) 
+[17]) (Zero-Knowledge.tex
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+
+ []
+
+) [18] (AmortizedVerifier'sComplexity.tex [19]) [20] (main.aux) ) 
 Here is how much of TeX's memory you used:
- 15998 strings out of 492946
- 332824 string characters out of 3135512
- 426046 words of memory out of 3000000
- 19531 multiletter control sequences out of 15000+200000
- 16014 words of font info for 60 fonts, out of 3000000 for 9000
+ 16057 strings out of 492946
+ 333782 string characters out of 3135512
+ 422003 words of memory out of 3000000
+ 19577 multiletter control sequences out of 15000+200000
+ 17525 words of font info for 65 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,9n,79p,1643b,697s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmbsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.
-pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/
-Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/Program F
-iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKT
-eX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cmextra/cmex9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
-msfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
-cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.
-pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/P
-rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program Fi
-les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cmextra/cmmib6.pfb><C:/Program Files/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfo
-nts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr
-9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C
-:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Progra
-m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/M
-iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmsy9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
-c/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfon
-ts/cm/cmti9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbol
-s/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/m
-sbm7.pfb>
-Output written on main.pdf (17 pages, 433793 bytes).
+<C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbsy10.pfb><C:/Program Files/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmbx6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
+c/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx
+ti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:
+/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program
+ Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmmi9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfon
+ts/cmextra/cmmib6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.p
+fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Pro
+gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files/MiKTeX 2.
+9/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Program Files/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
+blic/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
+fonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmsy6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Prog
+ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program File
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9
+/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on main.pdf (20 pages, 459783 bytes).
 PDF statistics:
- 208 PDF objects out of 1000 (max. 8388607)
+ 222 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  109 words of extra memory for PDF output out of 10000 (max. 10000000)
 
