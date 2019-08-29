@@ -159,9 +159,9 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$. 
 	\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
-	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<1,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
+	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $\langle 1^m , \overline{q}[j']\rangle =q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
-	\item[(e)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U[i,.,k]>=U[i,j,k]$
+	\item[(e)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $\langle e_j,U[i,.,k] \rangle=U[i,j,k]$
 	\item[(f)] $\sum\limits_{i\in[p]} r_{ij}(\eta_k) U[i,j,k]=\overline{q}[k]_j$ $\forall k\in Q$ and $j\in Q'$\\
 \end{itemize}
 

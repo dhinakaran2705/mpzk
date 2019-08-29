@@ -1,6 +1,17 @@
 \section{Amortized Verifier's complexity:}
 
-For our construction, verifier's complexity for Interleaved Testing and Quadratic Testing is already sublinear, main bottle-neck for verifier's complexity is due to linear check, where the Verifier requires to read the whole matrix $\A$, which of size $|C|$. So for a circuit the Verifier will a few computation and later use it to get better complexity.
+For our construction, verifier's complexity for Interleaved Testing and Quadratic Testing is already sublinear, main bottle-neck for verifier's complexity is due to linear check.
+Now we will discuss one by one, all the checks that verifier needs to do for the linearity constraint.
+\begin{itemize}
+	\item Validation check for $C[k]$ with respect to $c$: 
+	\item $\sum\limits_{k\in[l]} q(\zeta_k) = \overline{r}^T b$: since for the linear check in our protocol, we wilkl always have the public vecto $b=0$, so only operations that the verifier will do is to evaluate the polynomial $q(\cdot)$ in $l$ many public points, that needs $l\cdot (s_l-1)$ many field operations, since degree of the polynomial $q(\cdot)$ is $<s+l-1$.
+	\item $\langle 1^m , \oq[j'] \rangle = q(\eta_{j'})$ $\forall j'\in [h]$: For this proof of inner product will be given, we are using bulletproofs for that, as prover is giving multiple proofs, verifier will use the batch verification and verification complexity is: $\{2m+ 2+ h(2\log(m)+5)\}$ many exponentiation and $m\cdot h$ many multiplication, where $h=s+l-1$.
+	\item $\sum\limits_{j'\in [h]} T_{j'k}d_{j'}=\oq[k]$ $\forall k\in Q$: $t\cdot h$ many exponentiations
+	\item $\langle e_j,U[i,.,k] \rangle=U[i,j,k]$ $\forall i\in [p], j\in Q', k\in Q$: $2m+ 2+ t(\log m +5$) many exponentiations and $t\cdot m$ multiplications.
+	\item $\sum\limits_{i\in[p]} r_{ij}(\eta_k)\cdot U[i,j,k] = \oq[k]_j $ $\forall k\in Q, j\in Q'$: Time to compute $r_{ij}(\eta_k) + p\cdot t$ many multiplications. Now we will show that computating $r_{ij}(\cdot)$ will take $\max\{O(|C|^{2/c}), O(|C|^{1-1/c})\}$ on expectation.
+\end{itemize}
+\subsection{Computing $r_{ij}(\eta_k)$}
+For this, the Verifier requires to read the whole matrix $\A$, which of size $|C|$. So for a circuit the Verifier will a few computation and later use it to get better complexity.
 
 We know that size of $\A$ is $pml \times pml$.\\
 Let $r\in \bbF^{pml}$, then $r$ can be written as $[r[1],\ldots, r[p]]$,
