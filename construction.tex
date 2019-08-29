@@ -1,8 +1,4 @@
 \section{Construction}
-
-
-
-
 %\textbf{Encoding:} 
 \paragraph{Encoding:}
 Let, $x\in \mathbb{F}^{pml}$ %\mycomment{what is $pml$?add the details}
@@ -44,16 +40,16 @@ c[p,1] & c[p,2] & \cdots & c[p,n]
 where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ and let $c$ is the Merkle tree root of $C$ where leaves are columns of $C$.
 
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P} and \textit{V} does the following:\\
+$\P$  and \textit{V} does the following:\\
 \begin{enumerate}
-	\item \textit{P} sends $c$, the Merkle root of the commitment $C$, to \textit{V}.
-	\item \textit{V $\rightarrow$ P}: $r\in_R \bbF^p$
-	\item \textit{P}: $\widetilde{U}=\sum\lim\limits_{i\in[p]}r_iU[i]$, $\tilde{c}= \com(\widetilde{U})$
-	\item \textit{P $\rightarrow$ V}: $\tilde{c}$
-	\item \textit{V $\rightarrow$ P}: $\gamma \in_R \bbF^m$
-	\item \textit{P}: $w= \gamma^T\widetilde{U}$
-	\item \textit{P $\rightarrow$ V}: $w$
-	\item \textit{V $\rightarrow$ P}: $Q\subset _R [n] : |Q|=t$
+	\item $\P$ sends $c$, the Merkle root of the commitment $C$, to \textit{V}.
+	\item \textit{V} sends a $r\in_R \bbF^p$ to $\P$ .
+	\item $\P$ computes $\tU=\sum\limits_{i\in[p]} r_i\cdot U[i]$, and  $ \tc = \com(\tU)$.
+	\item $\P$  sends $\tc$ to \textit{V}.
+	\item \textit{V} picks $\gamma \in_R \bbF^m$ and sends to $\P$.
+	\item $\P$ computes $w=\gamma^T\tU$.
+	\item $\P$ sends $w$ to \textit{V}.
+	\item \textit{V} picks a random subset $Q$ of $[n]$ such that $|Q|=t$, and send $Q$ to \
 	\item \textit{P $\rightarrow$ V}: $\widetilde{U}[k]$ \textit{with the randomness $\delta_k$ to commit $\widetilde{U}[k]$} : $k\in Q$
 	\item \textit{P $\rightarrow$ V}: $C[k]$ \textit{with the corresponding Merkle paths to the root} $:k\in Q$
 \end{enumerate}
@@ -63,7 +59,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \begin{figure}[htb!]
 	\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
+		\node[block] (P) {$\P$};
 		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(1,-2);
@@ -82,7 +78,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	\caption{Protocol for Testing Interleaved}
 \end{figure}
 
-\textit{P} and \textit{V} follows the protocol in Figure 1 and then
+$\P$ and \textit{V} follows the protocol in Figure 1 and then
 \textit{V} checks the following:
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$.
@@ -92,7 +88,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
 \end{itemize}
 
-\textbf{Completeness:} It is easy to see that if \textit{P} has correct witness, for any choice of $r, Q, \gamma, Q'$ of \textit{V}, \textit{P} can response for which \textit{V} accepts.\\
+\textbf{Completeness:} It is easy to see that if $\P$ has correct witness, for any choice of $r, Q, \gamma, Q'$ of \textit{V}, $\P$ can response for which \textit{V} accepts.\\
 
 \textbf{Soundness:} The following lemma ensures the soundness:
 %\textbf{Lemma}
@@ -130,12 +126,12 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
  
 \vspace*{50pt}
 \paragraph{Protocol for checking Linear Constraint:} $x$ such that $Ax=b$ \\
-\textit{P} and \textit{V} does the following:
+$\P$ and \textit{V} does the following:
 \vspace*{40pt}
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
+		\node[block] (P) {$\P$};
 		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pml}$}(1,-2);
@@ -170,16 +166,16 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \textbf{Soundness:} The following lemma ensures the soundness:
 
 \begin{lemma}
-	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$ encoding $x\in \mathbb{F}^{pml}$ such that $Ax=b$. Then, for any malicious \textit{P} strategy, $U^*$ is rejected by \textit{V} except with at most $((e +k +l)/n)^{\kappa} +1/|\mathbb{F}|+neg(\kappa)$ probability.
+	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$ encoding $x\in \mathbb{F}^{pml}$ such that $Ax=b$. Then, for any malicious $\P$ strategy, $U^*$ is rejected by \textit{V} except with at most $((e +k +l)/n)^{\kappa} +1/|\mathbb{F}|+neg(\kappa)$ probability.
 \end{lemma}
 
 \begin{proof}
 	Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
-	 Otherwise, \textit{P} must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore \textit{P} can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
+	 Otherwise, $\P$ must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore $\P$ can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
 	 Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
 \end{proof}
 
-\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so \textit{P} will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
+\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so $\P$ will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
 
 %To achieve zero knowledge, we need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s. For to do that we are going to modify $U$.\\
 %Define: $q'_j(\cdot)=q_j(\cdot)+r_{{blind}_j}(\cdot)$ $\forall j\in [m]$, where $r_{{blind}_j}(\cdot)$ are polynomials of degree $<k+l-1$ and $r_{{blind}_j}(\zeta_c)=0$ $\forall c\in[l], j\in [m]$.\\
@@ -187,7 +183,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 %So modify $U$ in the following way, say $U'$, Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1](j,k)=r_{{blind}_j}(\eta_k)$ $\forall j\in[m], k\in [n]$ and $U'[p+1](m+1,k)=r_blind(\eta_k)$ $\forall k\in[n]$.\\
 \textbf{Communication Complexity:}
 \begin{itemize}
-	\item \underline{Proof Size}: First \textit{P} sends Merkle root, which is of constant size, say $\lambda$,  then sends $(k+l-1)$ many commitments of constant size and $(k+l-1)$ many coefficients of $q$, therefore, $(\lambda+1)\times (k+l-1)$. $t\times m$ to send $t$ columns of $\overline{q}$ and $t \times p\lambda$ for $t$ columns of $C$, and for Merkle paths $t \times \log (pn)$. Finally $t^2$ many vectors from $U$ including the randomness to commit \textit{P} needs to send $t^2(p+\alpha)$. So, total size of the proof is $\sqrt[3]{|C|}$.
+	\item \underline{Proof Size}: First $\P$ sends Merkle root, which is of constant size, say $\lambda$,  then sends $(k+l-1)$ many commitments of constant size and $(k+l-1)$ many coefficients of $q$, therefore, $(\lambda+1)\times (k+l-1)$. $t\times m$ to send $t$ columns of $\overline{q}$ and $t \times p\lambda$ for $t$ columns of $C$, and for Merkle paths $t \times \log (pn)$. Finally $t^2$ many vectors from $U$ including the randomness to commit $\P$ needs to send $t^2(p+\alpha)$. So, total size of the proof is $\sqrt[3]{|C|}$.
 	\item \underline{Verifier's Complexity:} $l$ many polynomial evaluation of degree at most $(s+l-1)$, for that number of multiplication is $O(l(s+l-1))$,\\
 	Checking commitments by IP using Bulletproofs, $(s+l-1)\sqrt{m}$ many exponentiations.\\
 	$t(s+l-1)$ many multiplications.\\
@@ -200,11 +196,11 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 \end{itemize}
 %\vspace*{3.25cm}
 \paragraph{Protocol for checking Quadratic Constraint:} $x,y,z$ suc that $x\odot y+a\odot z =b$\\
-\textit{P} and \textit{V} does the following:
+$\P$ and \textit{V} does the following:
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
+		\node[block] (P) {$\P$};
 		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
@@ -283,12 +279,12 @@ Note that $U$ decodes to $w$. So let's call this $U^w$\\
 Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as mentioned in sectioin 1. Therefore by the homomorphic property of the commitment scheme $C^w=\sum\limits_{\nu \in [N]} C^{w_{\nu}}$.\\
 %---------------------------------------------------------------
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
 		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{w_{\nu}}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C^w=\sum\limits_{\nu \in [N]}C^{w_{\nu}}$, $c$ is the Merkle root of $C^w$};
@@ -321,12 +317,12 @@ Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as m
 
 \paragraph{Protocol for Linear constraint:} Let $Ax=b$, where $A\in \mathbb{F}^{pml\times pml}$ and $b\in \mathbb{F}^{pml}$ are publicly known and $x$ is the secret which is additively distributed among the provers, say $x_{\nu}$ is the share of the $\nu$th prover.\\
 $P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{\nu}$.\\
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
 		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{\nu}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C=\sum\limits_{\nu \in [N]}C^{\nu}$, $c$ is the Merkle root of $C$};
@@ -367,12 +363,12 @@ $P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{
 $P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such that $p^{(xy)_{\nu}}_{ij}(\cdot)= p^{x_{\nu}}_{ij}(\cdot)p^{y_{\nu}}_{ij}(\cdot)$. To do that use FFT and choose $\{\eta_1,\eta_2,\cdots,\eta_n\}$ accordingly, in particular, $n$th roots of unity and set $n\geq 2s-1$.\\
 %Similarly, $P_{\nu}$ constructs polynomials $p^{(az)_{\nu}}_{ij}(\cdot)$ such that $p^{(az)_{\nu}}_{ij}(\cdot)= p^{a_{\nu}}_{ij}(\cdot)p^{z_{\nu}}_{ij}(\cdot)$.\\
 
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
 		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{\delta_{\nu}}, \delta\in \{x,y,z\}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C^{\delta}=\sum\limits_{\nu \in [N]}C^{\delta_{\nu}}$, $c^{\delta}$ is the Merkle root of $C^{\delta}$, $\delta\in\{x,y,z\}$};
@@ -409,7 +405,7 @@ $P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such t
 Here consider our extended witness $w\in \mathbb{F}^{pm_1m_2l}$. Encode it to $U^w$ in the same way as above, where size of $U$ is $p\times m_1m_2\times n$. Let, $m=m_1m_2$\\
 
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P} and \textit{V} does the following:
+$\P$ and \textit{V} does the following:
 
 \begin{figure}[htb!]
 	\centering
