@@ -265,13 +265,20 @@ $\V$ checks the following:
 \textbf{Soundness:} The following lemma ensures the soundness:
 
 \begin{lemma}
-	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$ encoding $x\in \mathbb{F}^{pml}$ such that $Ax=b$. Then, for any malicious $\P$ strategy, $U^*$ is rejected by $\V$ except with at most $((e +k +l)/n)^{\kappa} +1/|\mathbb{F}|+neg(\kappa)$ probability.
+	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$, which is encoding $x\in \bbF^{pml}$ such that $Ax\neq b$. Then, for any malicious $\P^*$ strategy, $U^*$ is rejected by $\V$ except with at most $((e + s + l)/n) ^{\kappa} +1/|\bbF|+neg(\kappa)$ probability.
 \end{lemma}
 
 \begin{proof}
-	Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
-	 Otherwise, $\P$ must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore $\P$ can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
-	 Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
+	Let $q(\cdot)$ be the polynomial that is generated from the honest prover's input $x$, as we assumed that $Ax\neq b$, $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$. Hence the polynomial $q(\cdot)$ fails the check (b) expect with probability $\frac{1}{|\bbF|}$.\\
+	Next strategy of $\P^*$ could be to send a wrong polynomial $q'(\cdot)$ which is not the correctly generated polynomial $q(\cdot)$ i.e. $q(\cdot)\neq q'(\cdot)$. But $\P^*$ cannot send a polynomial of higher degree. So, $q(\cdot)$ and $q'(\cdot)$ both will have degree at most $ s+l-1$. Therefore, $q(\cdot)$ and $q'(\cdot)$ can agree on at most $s+l-2$ points. So we have that the number of indices $k\in[n]$ for which $q(\eta_k)=q'(\eta_k)$ is at most $s+l-2$. Let $Q'$ be the set of indices in which they agree. Then $\V$ rejects in check (f) whenever queried $Q$ by $\V$ contains an index $k\notin \oQ'\cup E$, where $E\subseteq [n]$ is the set of indices in which $U^*$ differs from $U$. Above fails to happen with probability at most $\frac{\binom{e+s+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+s+l}{n})^t\approx (\frac{e+s+l}{n})^{\kappa}$.\\
+	Therefore soundness error is $(\frac{e+s+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme and soundness of the proof of inner product argument).
+	
+	\begin{comment}
+		Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
+		Otherwise, $\P$ must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore $\P$ can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
+		Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
+	\end{comment}
+	
 \end{proof}
 
 %\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so $\P$ will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
@@ -360,9 +367,14 @@ $\V$ checks the following:
 \textbf{Soundness:} The following lemma ensures the soundness:
 
 \begin{lemma}
-		
+		Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that malformed $U^{x*}, U^{y*}, U^{z*}$ are $e$-close to codeword $U^x, U^y, U^z \in L^{mp}$, which is encoding $x,y,z\in \mathbb{F}^{pml}$ such that $x\odot y + a\odot z = b$ does not hold. Then, for any malicious $\P^*$ strategy, $(U^{x*}, U^{y*}, U^{z*}$ is rejected by $\V$ except with at most $((e + 2k)/n) ^{\kappa} +1/|\bbF|+neg(\kappa)$ probability.
 \end{lemma}
 
+\begin{proof}
+	Let $q(\cdot)$ be the polynomial that is generated by a honest prover's input $x,y,z$ for which $x\odot y + a\odot z=b$ does not hold. If $\P^*$ sends $q(\cdot)$ to $\V$ then $\P^*$ fails check (b) expect with probability at most $\frac{1}{\bbF}$ over the choice of $\gamma$.\\
+	Let $q'(\cdot)$ be the polynomial sent by $\P$ to $\V$ which is not same as $q(\cdot)$ i.e. $q(\cdot)\neq q'(\cdot)$. Then $q'(\cdot)$ and $q(\cdot)$ can agree in at most $2s-2$ points since both of them has degree at most $2s-2$. Therefore the number of indices $k\in [n]$ for which $q(\eta_k)=q'(\eta_k)$ is at most $2s-2$. Let $Q'$ be the set of indices on which $q$ and $q'$ agree. Then $\V$ rejects the proof in check (f) whenever $Q$ contains an index $i\notin Q' \cup E$, where $E=\Delta((U^{x*}, U^{y*}, U^{z*}), L^{3pm})$. This fails to happen with probability at most $\frac{\binom{e+2s-2}{t}}{\binom{n}{t}}\approx (\frac{e+2s}{n})^t\approx (\frac{e+2s}{n})^{\kappa}$.\\
+	Therefore soundness error is $(\frac{e+2s}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme and soundness of the proof of inner product argument).
+\end{proof}
 \textbf{Zero Knowledge:}
 
 \textbf{Communication Complexity:}
