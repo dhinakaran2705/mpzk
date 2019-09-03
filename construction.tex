@@ -1,8 +1,4 @@
 \section{Construction}
-
-
-
-
 %\textbf{Encoding:} 
 \paragraph{Encoding:}
 Let, $x\in \mathbb{F}^{pml}$ %\mycomment{what is $pml$?add the details}
@@ -43,28 +39,57 @@ c[p,1] & c[p,2] & \cdots & c[p,n]
 %---------------------------------------
 where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ and let $c$ is the Merkle tree root of $C$ where leaves are columns of $C$.
 
+
+\subsection{Interleaved Testing}Prover $\P$ has the extended witness which he encodes into $U$, using Reed-Solomon Encoding, and commits the encoded matrix using homomorphic commitment. Using the encoded matrix $U$ and the commitment $C$, $\P$ replies to $\V$'s messages. Now this \textit{Interleaved Testing} checks that whether $U$ is an encoding or not. Our protocol requires this check due to the fact that one malicious prover $\P^*$ can cheat the verifier by constructing a wrong $U$ which is not an encoding, but can satisfy the checks for linear and quadratic, and in soundness will show that if $U$ is an encoding then with very high probability prover will fail to cheat. 
+
+
+\begin{comment}
+	
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P} and \textit{V} does the following:\\
-\begin{enumerate}
-	\item \textit{P} sends $c$, the Merkle root of the commitment $C$, to \textit{V}.
-	\item \textit{V $\rightarrow$ P}: $r\in_R \bbF^p$
-	\item \textit{P}: $\widetilde{U}=\sum\lim\limits_{i\in[p]}r_iU[i]$, $\tilde{c}= \com(\widetilde{U})$
-	\item \textit{P $\rightarrow$ V}: $\tilde{c}$
-	\item \textit{V $\rightarrow$ P}: $\gamma \in_R \bbF^m$
-	\item \textit{P}: $w= \gamma^T\widetilde{U}$
-	\item \textit{P $\rightarrow$ V}: $w$
-	\item \textit{V $\rightarrow$ P}: $Q\subset _R [n] : |Q|=t$
-	\item \textit{P $\rightarrow$ V}: $\widetilde{U}[k]$ \textit{with the randomness $\delta_k$ to commit $\widetilde{U}[k]$} : $k\in Q$
-	\item \textit{P $\rightarrow$ V}: $C[k]$ \textit{with the corresponding Merkle paths to the root} $:k\in Q$
-\end{enumerate}
+$\P$  and $\V$ does the following:\\
+\begin{itemize}
+	\item $\P$ sends $c$, the Merkle root of the commitment $C$, to $\V$.
+	\item $\V$ sends a $r\in_R \bbF^p$ to $\P$ .
+	\item $\P$ computes $\tU=\sum\limits_{i\in[p]} r_i\cdot U[i]$, and  $ \tc = \com(\tU)$.
+	\item $\P$  sends $\tc$ to $\V$.
+	\item $\V$ picks $\gamma \in_R \bbF^m$ and sends to $\P$.
+	\item $\P$ computes $w=\gamma^T\tU$.
+	\item $\P$ sends $w$ to $\V$.
+	\item $\V$ picks a random subset $Q$ of $[n]$ such that $|Q|=t$, and send $Q$ to $\P$.
+	\item $\P$ sends $\tU[k]$ with the randomness $\delta_k$ used to commit $\tU[k]$ and $C[k]$ with the corresponding Merkle Paths to the root $c$, $\forall k\in Q$.
+\end{itemize}
+content...
+\end{comment}
 
+\begin{protocolbox}{Interleaved Testing}{$\P$ and $\V$ interaction}{interleaved1}
+	\begin{myitemize}
+		\item $\P$ sends $c$, the Merkle root of the commitment $C$, to $\V$.
+		\item $\V$ sends a $r\in_R \bbF^p$ to $\P$ .
+		\item $\P$ computes $\tU=\sum\limits_{i\in[p]} r_i\cdot U[i]$, and  $ \tc = \com(\tU)$, and sends $\tc$ to $V$.
+		\item $\V$ picks $\gamma \in_R \bbF^m$ and sends to $\P$.
+		\item $\P$ computes $w=\gamma^T\tU$, and sends $w$ to $V$.
+		\item $\V$ picks a random subset $Q$ of $[n]$ such that $|Q|=t$, and send $Q$ to $\P$.
+		\item $\P$ sends $\tU[k]$ with the randomness $\delta_k$ used to commit $\tU[k]$ and $C[k]$ with the corresponding Merkle Paths to the root $c$, $\forall k\in Q$.
+	\end{myitemize}
+\end{protocolbox}
 
+\begin{algobox}{Checks}{$\V$ checks}{mytable}
+	\begin{itemize}
+		\item[(a)] Validation of $C[k]$ with respect to $c$.
+		\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
+		\item[(c)] $w\in L$, $L$ is the set of codewords.
+		\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_k$ $\forall k\in Q'$
+		\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
+	\end{itemize}
+\end{algobox}
+
+\begin{comment}
 
 \begin{figure}[htb!]
 	\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\node[block] (P) {$\P$};
+		\node[block, right of = P, xshift=7cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(1,-2);
 		\node[below of=P, xshift=-1em, yshift=-3em]{$\widetilde{U}=\sum\limits_{i\in [p]}r_i U[i]$};
@@ -82,8 +107,8 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	\caption{Protocol for Testing Interleaved}
 \end{figure}
 
-\textit{P} and \textit{V} follows the protocol in Figure 1 and then
-\textit{V} checks the following:
+$\P$ and $\V$ follows the protocol in Figure 1 and then
+$\V$ checks the following:
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$.
 	\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
@@ -91,12 +116,57 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	\item[(d)] $\sum\limits_{j\in [m]} \gamma_j \widetilde{U}[j,k] = w_k$ $\forall k\in Q'$
 	\item[(e)] $open(\tilde{c}_k) = \widetilde{U}[k]$ $\forall k\in Q'$
 \end{itemize}
+	content...
+\end{comment}
 
-\textbf{Completeness:} It is easy to see that if \textit{P} has correct witness, for any choice of $r, Q, \gamma, Q'$ of \textit{V}, \textit{P} can response for which \textit{V} accepts.\\
+\textbf{Completeness:} It is easy to see that if $\P$ has correct witness, for any choice of $r, Q, \gamma, Q'$ of $\V$, $\P$ can response for which $\V$ accepts.\\
 
-\textbf{Soundness:} The following lemma ensures the soundness:
+%\textbf{Soundness:} The following lemma ensures the soundness:
 %\textbf{Lemma}
- \begin{lemma} Suppose $d(U^*,L^{mp})>e$, where $e$ is some positive integer such that $e<\frac{d}{3}$\mycomment{(what is the bound of $e$)}, $U^*$ is not a correct encoding then any adversarial prover strategy succeeds with probability at most $(1-\frac{e}{2n})^{\kappa}+\frac{d}{|\mathbb{F}|}+neg(\kappa)$.
+ \begin{lemma}
+ 	Let, $L=RS_{\bbF, n, k, \eta}$ be a Reed-Solomon code with minimum distance $d=n+k-1$. Let $e$ be a positive number such that $e<\frac{d}{3}$. Then for every $u,v\in \bbF^n$, the affine line $l_{u,v}=\{u+\alpha v : \alpha \in \bbF\}$ satisfies
+ 	\begin{enumerate}
+ 		 \item[(i)] For every $x\in l_{u,v}$, $d(x,L)\leq e$. or
+ 		 \item[(ii)] For at most $d$ points $x\in l_{u,v}$, we have $d(x,L)\leq e$.
+ 	\end{enumerate} 
+ \end{lemma}
+
+ \begin{proof}
+ 	We will prove it for any $[n,k,d]$ linear code $L$. To prove the above lemma it is sufficient to prove that if $\exists$ $d+1$ distinct points $X=\{x_0,\ldots, x_{d}\}\subseteq l_{u,v} : d(x_i,L)\leq e$ $\forall i\in \{0.\ldots, d\}$, then $d(x,L)\leq e$ $\forall x\in l_{u,v}$.\\
+ 	Let $\exists$ a set $X$ of $d+1$ points. Let $l_i$ denotes the point in $L$ closest to $x_i$ for all $i\in [d]$. Set $\eta_i=x_i-l_i$ $\forall i \in [d]$ and let \boldm{$\eta$}=$\{\eta_0,\ldots, \eta_d\}$. By assumption $d(\eta_i,0)\leq e$ $\forall i \in [d]$. Since $l_{u,v}$ is contained in affine span of any two distinct points in it, we have tuples $\{\alpha_i, \beta_i\}_{i=0}^{d}$ such that $x_i= \alpha_i\cdot x_0+\beta_i\cdot x_1$ $\forall i\in [d]$ Note that $(\alpha_0,\beta_0)=(1,0)$ and $(\alpha_1, \beta_1)= (0,1)$.\\
+ 	We call $X$ degenerate if $\exists$ $i\neq j$ satisfying one of the following two conditions:
+ 	\begin{itemize}
+ 		\item(a) ($\alpha_i,\beta_i$)= ($\gamma\alpha_j,\gamma\beta_j$) for some $\gamma\in \bbF$.
+ 		\item(b) $\alpha_i=\alpha_j$ or $\beta_i=\beta_j$.
+ 	\end{itemize}
+ 	\begin{itemize}
+ 		\item[case-1] \textit{$X$ is degenerate}. Suppose $X$ is degenerate due to satisfying the above condition (a) i.e. $\exists$ $i\neq j$ such that $x_i=\gamma x_j$ for some $\gamma\in \bbF$. In this case we have $0=\frac{1}{1-\gamma}x_i-\frac{\gamma}{1-\gamma}x_j\in l_{u,v}$. This implies $l_{u,v}=\{\alpha x_i:\alpha\in \bbF\}$ and hence $d(x,L)=d(x_i,L)\leq e$ $\forall x\in l_{u,v}$. Suppose $X$ doesnot have degeneracy of type (a), i.e. $X$ has $\alpha_i=\alpha_j$ for some $i\neq j$. Then we have $x_i-x_j-\beta x_1=0$ where $\beta=\beta_i-\beta_j$. Note that $\beta_i\neq \beta_j$ and hence $\beta\neq 0$. Therefore $0=(-\frac{1}{\beta})x_i+(\frac{1}{\beta})x_j+x_1\in l_{u,v}$ and hence $l_{u,v}=\{\alpha x_i:\alpha\in \bbF\}$. Thus $d(x,L)\leq e$ $x\in l_{u,v}$. The similar arguement will work for the case when $\beta_i=\beta_j$.
+ 		\item[case-2] \textit{$X$ is non-degenerate}. We first prove that $l_i=\alpha_i l_0+\beta_i l_1$ and $\eta_i = \alpha_i \eta_0 + \beta_i \eta_1$ $\forall i\in [d]$. We have 
+ 		\begin{align*}
+ 			l_i+\eta_i= x_i &= \alpha_i x_0+\beta_i x_1\\
+ 			&= \alpha_i(l_0+\eta_0)+\beta_i(l_1+\eta_1)\\
+ 			&= (\alpha_i l_0+\beta_i l_1)+ (\alpha_i \eta_0+\beta_i \eta_1)
+ 		\end{align*}
+ 		By rearranging we have, 
+ 		$$l_i-(\alpha_i l_0 +\beta_i l_1)= \alpha_i \eta_0 + \beta_i \eta_1 - \eta_i$$
+ 		In the above equation we see that the LHS is a vector in L. Further $d(\alpha_i \eta_0 + \beta_i \eta_1 - \eta_i, 0)\leq d(\eta_0,0)+ d(\eta_1,0) + d(\eta_i,0)\leq 3e < d$. LHS must be 0 and hence $l_i = (\alpha_i l_0 +\beta_i l_1)$ and $\eta_i= \alpha_i \eta_0+\beta_i \eta_1$. Observe that any $x^*\in l_{u,v}$ can be written as $x^*=\alpha^* x_0+ \beta^* x_1$. Thus $d(x^*,L) = d(\alpha^* x_0+ \beta^* x_1, L)\leq d(\alpha^* \eta_0+ \beta^* \eta_1,0) \leq |E|$, where $E$ denotes the set $\Delta(\eta_0,0)\cup \Delta(\eta_1,0)$.\\
+ 		Claim: $|E|\leq e$.\\ 
+ 		Consider the partition of $E$ into the sets $E_0= \Delta(\eta_0,0) \setminus \Delta(\eta_1,0)$, $E_1= \Delta(\eta_1,0) \setminus \Delta(\eta_0,0)$ and $E_{01}= \Delta(\eta_0,0) \cap \Delta(\eta_1,0)$.
+		Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$ where $m_{ij}=0$ if the $j^{th}$ position of $\eta_i$, $\eta_i^j$ is 0, else 1. We will show that each row of $M$ has at most one 0. If not assume that $\exists$ $i$ such that $m_{ip}=m_{iq}=0$. There are three possible cases:
+		\begin{myitemize}
+			\item if $i\in E_0$, the above condition implies that $\alpha_p \eta_i^p= \alpha_q \eta_i^q= 0 \Rightarrow \alpha_p=\alpha_q=0$ since $\eta_0^i\neq 0$ for $i\in E_0$. This is a contradiction that $X$ is non-degenerate.
+			\item if $i\in E_1$, similar arguement will work.
+			\item $i\in E_{01}$ we have $\alpha_p \eta_0^i +\beta_p \eta_i^p= \alpha_q \eta_0^i +\beta_q \eta_1^q=0$ which implies $\frac{\alpha_p}{\beta_p}= \frac{\alpha_q}{\beta_q} = -\frac{\eta_1^i}{\eta_0^i}\Rightarrow \frac{\alpha_p}{\alpha_q}= \frac{\beta_p}{\beta_q}$, which contradicts the fact that $X$ is not degenerate. Note that all denominators can be argued to be non-zero for $i\in E_{01}$.
+		\end{myitemize}
+	From the above we conclude that each row of $M$ has at least $d$ entries as 1. counyting by columns, we have that each column has at most $e$ entries as 1. Therefore $td\leq e(d+1) \Rightarrow t\leq e+e/d< e+1$ i.e. $t\leq e$. This completes the proof.
+ 	\end{itemize}
+ \end{proof}
+
+ \begin{lemma}
+ 	Let $L=RS_{\bbF,n,k,\eta}$ be a Reed-Solomon code with minimal distance $d=n+k-1$ and $e$ be a positive integer such that $e<\frac{d}{3}$. Suppose $d(U^*, L^{pm})> e$, then for a random linear combination of the slices of $U^*$, say $\oU$, we have $Pr[d(\oU,L^m)\leq e]\leq \frac{d}{|\bbF|}$
+ \end{lemma}
+
+ \begin{lemma} Let $e$ be a poisitive integer such that $e<\frac{d}{3}$. Suppose $d(U^*,L^{pm})>e$. Then for any malicious $\P^*$'s strategy, $U^*$ is rejected by $\V$ expect with probability at most $(1-\frac{e}{2n})^{\kappa}+\frac{d}{|\mathbb{F}|}+neg(\kappa)$.
  \end{lemma}
  
  \begin{proof}
@@ -128,58 +198,90 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	So total complexity of the Prover is $mnM+|C|(M+E)=O(|C|(M+E))$
   \end{itemize}
  
-\vspace*{50pt}
-\paragraph{Protocol for checking Linear Constraint:} $x$ such that $Ax=b$ \\
-\textit{P} and \textit{V} does the following:
-\vspace*{40pt}
-\begin{figure}[htb!]
+%\vspace*{50pt}
+\subsection{Linear Constraint} Our protocol requires a check which ensures that the prover $\P$ knows a $x$ such that $Ax=b$ holds. The following protocol is check this condition which requires messages of size $|C|^{1/3}$.
+
+\begin{protocolbox}{Checking Linear Constraint}{$\P$ and $\V$ interaction}{Linear1}
+	\begin{myitemize}
+		\item $\P$ sends $c$, the Merkle root of the commitment $C$, to $\V$.
+		\item $\V$ sends a $\overline{r}\in_R \bbF^{pml}$ to $\P$ .
+		\item $\P$ computes $r=\overline{r}^TA$, and constructs $pm$ many polynomials $r_{ij}(\cdot)$ of degree $<l$. Define $q_j(\cdot) = \sum\limits_{i\in [p]} r_{ij}(\cdot)\cdot p_{ij}(\cdot)$ $\forall j\in [m]$. Define a matrix $\oq=(q_{ij})_{m\times n}$, where $q_{jk}=q_j(\eta_k)$. Then computes the commitment $d_{j'} = \com([q_{1j'}, \ldots, q{mj'}]^T)$, where $h=s+l-1$. Let $T\in \bbF^{h\times n}$ such that $[p(\eta_1), \ldots, p(\eta_k)]T= [p(\eta_1), \ldots, p(\eta_n)]$ $\forall$ polynomials of degree $<h$. Finally $\P$ sends $\{d_1,\ldots, d_h\}$ and $q(\cdot)=\sum\limits_{j\in [m]}q_j(\cdot)$ to $\V$ and proof of inner product that is $\langle 1^m, \oq[j']\rangle=q(\eta_{j'})$ $\forall j'\in [h]$.
+		\item $\V$ picks a random subset $Q$ of $[m]\times[n]$ of size $t$ such that if $(j_1,k_1),(j_2,k_2)\in Q$, then $j_1\neq j_2$ and $k_1\neq k_2$ and sends $Q$ to $\P$.
+		
+		\item $\P$ sends $\oq[k]$ and the randomness that used to compute the commitment of $\oq[j']$ \& $C[k]$ and corresponding Merkle paths to the root $c : \exists$ some $j\in[m]$ such that $(j,k)\in Q$ and $U[\cdot,j,k]$ with the randomness $\delta_{jk}$ which used to commit $U[\cdot,j,k]:(j,k)\in Q$ and the proof of inner product that is $\langle e_j,U[i,\cdot,k]\rangle=U[i,j,k]$ $\forall (j,k)\in Q, i\in [p]$.
+	\end{myitemize}
+\end{protocolbox}
+
+\begin{algobox}{Checks}{$\V$ checks}{mytable}
+	\begin{itemize}
+		\item[(a)] Validation of $C[k]$ with respect to $c$. 
+		\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
+		\item[(c)] $\V$ verifies the proof for innner product for $\langle 1^m, \oq[j']\rangle=q(\eta_{j'})$ $\forall j'\in [h]$, given by $\P$.
+		\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+		\item[(e)] $\V$ verifies the proof for inner product for $\langle e_j, U[i,\cdot,k]\rangle = U[i,j,k]$ $\forall i\in [p], (j,k)\in Q$, given by $\P$.
+		\item[(f)] $\sum\limits_{i\in[p]} r_{ij}(\eta_k) U[i,j,k]=\oq[k]_j$ $\forall (j,k)\in Q$.
+	\end{itemize}
+\end{algobox}
+
+\begin{comment}
+	$\P$ and $\V$ does the following:
+	\vspace*{40pt}
+	\begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
-		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
-		\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pml}$}(1,-2);
-		\node[below of=P, yshift=-4em]{Define: $r=\overline{r}^TA$};
-		\node[below of=P, yshift=-5.5em]{Construct polynomials $r_{ij}(.)$ of deg $< l$};
-		\node[below of=P, yshift=-7.5em]{Define $q_j(.)=\sum\limits_{i\in[p]} r_{ij}(.).p_{ij}(.)$ $\forall j\in [m]$};
-		\node[below of=P, yshift=-9em]{Define matrix $\overline{q}=(q_{ij})_{m\times n}$, where $q_{ij}=q_i(\eta_j)$};
-		\node[below of=P, yshift=-10.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$, $h=s+l-1$}; 
-		\node[below of=P, yshift=-12em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$};
+	\node[block] (P) {$\P$};
+	\node[block, right of = P, xshift= 7cm] (V) {$\V$};
+	\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
+	\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pml}$}(1,-2);
+	\node[below of=P, yshift=-4em]{Define: $r=\overline{r}^TA$};
+	\node[below of=P, yshift=-5.5em]{Construct polynomials $r_{ij}(.)$ of deg $< l$};
+	\node[below of=P, yshift=-7.5em]{Define $q_j(.)=\sum\limits_{i\in[p]} r_{ij}(.).p_{ij}(.)$ $\forall j\in [m]$};
+	\node[below of=P, yshift=-9em]{Define matrix $\overline{q}=(q_{ij})_{m\times n}$, where $q_{ij}=q_i(\eta_j)$};
+	\node[below of=P, yshift=-10.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$, $h=s+l-1$}; 
+	\node[below of=P, yshift=-12em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$};
 	%--------------------
-		\draw[->](1,-7)-- node[yshift=1em]{$\{d_i:i\in[h]\}, q(.)=\sum\limits_{j\in [m]}q_j(.)$}(7,-7);
-		\draw[->](7,-8)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-8);
-		\draw[->](1,-9)-- node[yshift=0.5em]{$\overline{q}[k] \& C[k]: k \in Q$ and Merkle paths for $c$}(7,-9);
-		\draw[->](7,-10)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-10);
-		\draw[->](1,-11)-- node[yshift=0.5em]{$U[.,j,k]:j\in Q', k\in Q $ and randomness}(7,-11);
+	\draw[->](1,-7)-- node[yshift=1em]{$\{d_i:i\in[h]\}, q(.)=\sum\limits_{j\in [m]}q_j(.)$}(7,-7);
+	\draw[->](7,-8)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-8);
+	\draw[->](1,-9)-- node[yshift=0.5em]{$\overline{q}[k] \& C[k]: k \in Q$ and Merkle paths for $c$}(7,-9);
+	\draw[->](7,-10)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-10);
+	\draw[->](1,-11)-- node[yshift=0.5em]{$U[.,j,k]:j\in Q', k\in Q $ and randomness}(7,-11);
 	\end{tikzpicture}
 	\caption{Protocol for checking Linear Constraint}
-\end{figure}
-
-\textit{V} checks that:
-\begin{itemize}
+	\end{figure}
+	
+	$\V$ checks that:
+	\begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$. 
 	\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
 	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $\langle 1^m , \overline{q}[j']\rangle =q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
 	\item[(e)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $\langle e_j,U[i,.,k] \rangle=U[i,j,k]$
 	\item[(f)] $\sum\limits_{i\in[p]} r_{ij}(\eta_k) U[i,j,k]=\overline{q}[k]_j$ $\forall k\in Q$ and $j\in Q'$\\
-\end{itemize}
+	\end{itemize}
+\end{comment}
 
 \textbf{Completeness:} If the prover encodes the correct $x$ which satisfies $Ax=b$, then all the above checks will be passed, which ensures the completeness property.\\
 
 \textbf{Soundness:} The following lemma ensures the soundness:
 
 \begin{lemma}
-	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$ encoding $x\in \mathbb{F}^{pml}$ such that $Ax=b$. Then, for any malicious \textit{P} strategy, $U^*$ is rejected by \textit{V} except with at most $((e +k +l)/n)^{\kappa} +1/|\mathbb{F}|+neg(\kappa)$ probability.
+	Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that a malformed $U^*$ is $e$-close to a codeword $U\in L^{mp}$, which is encoding $x\in \bbF^{pml}$ such that $Ax\neq b$. Then, for any malicious $\P^*$ strategy, $U^*$ is rejected by $\V$ except with at most $((e + s + l)/n) ^{\kappa} +1/|\bbF|+neg(\kappa)$ probability.
 \end{lemma}
 
 \begin{proof}
-	Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
-	 Otherwise, \textit{P} must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore \textit{P} can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
-	 Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
+	Let $q(\cdot)$ be the polynomial that is generated from the honest prover's input $x$, as we assumed that $Ax\neq b$, $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$. Hence the polynomial $q(\cdot)$ fails the check (b) expect with probability $\frac{1}{|\bbF|}$.\\
+	Next strategy of $\P^*$ could be to send a wrong polynomial $q'(\cdot)$ which is not the correctly generated polynomial $q(\cdot)$ i.e. $q(\cdot)\neq q'(\cdot)$. But $\P^*$ cannot send a polynomial of higher degree. So, $q(\cdot)$ and $q'(\cdot)$ both will have degree at most $ s+l-1$. Therefore, $q(\cdot)$ and $q'(\cdot)$ can agree on at most $s+l-2$ points. So we have that the number of indices $k\in[n]$ for which $q(\eta_k)=q'(\eta_k)$ is at most $s+l-2$. Let $Q'$ be the set of indices in which they agree. Then $\V$ rejects in check (f) whenever queried $Q$ by $\V$ contains an index $k\notin \oQ'\cup E$, where $E\subseteq [n]$ is the set of indices in which $U^*$ differs from $U$. Above fails to happen with probability at most $\frac{\binom{e+s+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+s+l}{n})^t\approx (\frac{e+s+l}{n})^{\kappa}$.\\
+	Therefore soundness error is $(\frac{e+s+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme and soundness of the proof of inner product argument).
+	
+	\begin{comment}
+		Since we assume that $Ax\neq b$, therefore $Pr_r[r^TAx=r^Tb]$ is at most $\frac{1}{|\mathbb{F}|}$.\\
+		Otherwise, $\P$ must have sent a wrong $q'$, instead of $q$. Since, degree of $q'$ and $q$ can be at most $k+l-2$, as $q'$ is fixed after fixing the matrix $\overline{q}$, which is fixed and ensured to the verifier by providing $d_1,\cdots, d_h$. $q$ and $q'$ could be same in at most $k+l-2$ many indices of $\eta$. Let, $\overline{Q}$ is the set of indices where $q'$ and $q$ agree. and $E$ be the set of indices where $U$ and $U^*$ are different. Therefore, in check (f), prover fails if $k\in Q$ such that $k\notin \overline{Q}\cup E$. Therefore $\P$ can cheat with probability at most $\frac{\binom{e+k+l-2}{t}}{\binom{n}{t}}\approx (\frac{e+k+l}{n})^t\approx (\frac{e+k+l}{n})^{\kappa}$.\\
+		Therefore soundness error is $(\frac{e+k+l}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme).
+	\end{comment}
+	
 \end{proof}
 
-\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so \textit{P} will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
+%\textbf{Zero Knowledge:} %To achieve zero knowledge, modify $U$ in the following way, say $U'$: Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1]$ zeros in all the positions in the first $m$ rows and put $u'$ in the $(m+1)th$ row, where $u'$ encodes to $v_1,\cdots, v_l$ such that $\sum\limits_{c\in[l]}v_c=0$. In this encoding, $q_{m+1}$ be the corresponding polynomial, let's call this $r_{blind}$, which has degree $<k+l-1$. so $\P$ will send $q'(\cdot)=q(\cdot)+r_{blind}(\cdot)$, which will ensure the zero knowledge.\mycomment{(We need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s)}\\
 
 %To achieve zero knowledge, we need to blind two things (i) $q(\cdot)$ and (ii) $\overline{q}$, which consists of evaluation of $q_j$ on $\eta$'s. For to do that we are going to modify $U$.\\
 %Define: $q'_j(\cdot)=q_j(\cdot)+r_{{blind}_j}(\cdot)$ $\forall j\in [m]$, where $r_{{blind}_j}(\cdot)$ are polynomials of degree $<k+l-1$ and $r_{{blind}_j}(\zeta_c)=0$ $\forall c\in[l], j\in [m]$.\\
@@ -187,7 +289,7 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 %So modify $U$ in the following way, say $U'$, Set $U'$ of size $(p+1)\times (m+1)\times n$, $U'[i]=U[i]$ for the first $m$ rows and all zeros in the $(m+1)th$ row. Set $U'[p+1](j,k)=r_{{blind}_j}(\eta_k)$ $\forall j\in[m], k\in [n]$ and $U'[p+1](m+1,k)=r_blind(\eta_k)$ $\forall k\in[n]$.\\
 \textbf{Communication Complexity:}
 \begin{itemize}
-	\item \underline{Proof Size}: First \textit{P} sends Merkle root, which is of constant size, say $\lambda$,  then sends $(k+l-1)$ many commitments of constant size and $(k+l-1)$ many coefficients of $q$, therefore, $(\lambda+1)\times (k+l-1)$. $t\times m$ to send $t$ columns of $\overline{q}$ and $t \times p\lambda$ for $t$ columns of $C$, and for Merkle paths $t \times \log (pn)$. Finally $t^2$ many vectors from $U$ including the randomness to commit \textit{P} needs to send $t^2(p+\alpha)$. So, total size of the proof is $\sqrt[3]{|C|}$.
+	\item \underline{Proof Size}: First $\P$ sends Merkle root, which is of constant size, say $\lambda$,  then sends $(k+l-1)$ many commitments of constant size and $(k+l-1)$ many coefficients of $q$, therefore, $(\lambda+1)\times (k+l-1)$. $t\times m$ to send $t$ columns of $\overline{q}$ and $t \times p\lambda$ for $t$ columns of $C$, and for Merkle paths $t \times \log (pn)$. Finally $t^2$ many vectors from $U$ including the randomness to commit $\P$ needs to send $t^2(p+\alpha)$. So, total size of the proof is $\sqrt[3]{|C|}$.
 	\item \underline{Verifier's Complexity:} $l$ many polynomial evaluation of degree at most $(s+l-1)$, for that number of multiplication is $O(l(s+l-1))$,\\
 	Checking commitments by IP using Bulletproofs, $(s+l-1)\sqrt{m}$ many exponentiations.\\
 	$t(s+l-1)$ many multiplications.\\
@@ -199,49 +301,80 @@ where $c[i,k]=com([p_{i1}(\eta_k),p_{i2}(\eta_k),\cdots , p_{im}(\eta_k)]^T)$ an
 	
 \end{itemize}
 %\vspace*{3.25cm}
-\paragraph{Protocol for checking Quadratic Constraint:} $x,y,z$ suc that $x\odot y+a\odot z =b$\\
-\textit{P} and \textit{V} does the following:
-\begin{figure}[htb!]
+\subsection{Quadratic Constraint} In our protocol we will describe a protocol that ensures that the prover $\P$ knows $x,y,z$ such that $x\odot y+a\odot z =b$ holds. To prove the circuit satisfiability, $x,y,z$ will the vectors corresponding to the multiplication gates. $\P$ constructs vectors $x, y z \in \bbF^{pml}$, where $j^{th}$ entry of $x, y$ and $z$ contains the values $\beta_a, \beta_b$ and $\beta_c$ corresponding to the $j^{th}$ multiplication gate in the extended witness $w$.
+
+\begin{protocolbox}{Checking Quadratic Constraint}{$\P$ and $\V$ interaction}{Quadratic1}
+	\begin{myitemize}
+		\item $\P$ sends $c^x, c^y, c^z$, the Merkle root of the commitment $C^x, C^y, C^z$, to $\V$, where $C^x$ is the commitment of $U^x$, encoding of $x$, same for $y$, $z$.
+		\item $\V$ sends a $r\in_R \bbF^{p}$ to $\P$.
+		\item $\P$ constructs $pm$ many polynomials $p_{ij}(\cdot)$ of degree $<2s-1$, where $p_{ij}= p^x_{ij}(\cdot)\cdot p^y_{ij}(\cdot)+ p^a_{ij}(\cdot)\cdot p^z_{ij}(\cdot)-p^b_{ij}(\cdot)$. Define $q_j(\cdot) = \sum\limits_{i\in [p]} r_i\cdot p_{ij}(\cdot)$ $\forall j\in [m]$. Define a matrix $\oq=(q_{ij})_{m\times n}$, where $q_{jk}=q_j(\eta_k)$. Then computes the commitment $d_{j'} = \com([q_{1j'}, \ldots, q{mj'}]^T)$, where $h=2s-1$. Let $T\in \bbF^{h\times n}$ such that $[p(\eta_1), \ldots, p(\eta_k)]T= [p(\eta_1), \ldots, p(\eta_n)]$ $\forall$ polynomials of degree $<h$. Finally $\P$ sends $\{d_1,\ldots, d_h\}$ to $\V$ 
+		\item $\V$ picks a $gamma$ uniformly at random from $\bbF^m$ and sends it to $\P$.
+		\item $\P$ constructs polynomial $q(\cdot)=\sum\limits_{j\in [m]} \gamma_j\cdot q_j(\cdot)$ and sends all the coefficients to $\P$ and and proof of inner product that is $\langle  1^m , \oq[j'] \rangle = q(\eta_{j'})$ $\forall j'\in [h]$.
+		\item $\V$ picks a random subset $Q$ of $[m]\times[n]$ of size $t$ such that if $(j_1,k_1),(j_2,k_2)\in Q$, then $j_1\neq j_2$ and $k_1\neq k_2$ and sends $Q$ to $\P$.	
+		\item $\P$ sends $\oq[k]$ and the randomness that used to compute the commitment of $\oq[j']$ \& $C^x[k], C^y[k], C^z[k]$ and corresponding Merkle paths to the root $c^x, c^y, c^z : \exists$ some $j\in[m]$ such that $(j,k)\in Q$ and $U^x[\cdot,j,k], U^y[\cdot,j,k], U^z[\cdot,j,k]$ with the randomness $\delta^x_{jk}, \delta^y{jk}, \delta_z{jk}$ which used to commit $U^x[\cdot,j,k], U^y[\cdot,j,k], U^z[\cdot,j,k] : (j,k)\in Q$ and the proof of inner product that is $\langle e_j,[i,\cdot,k]\rangle=U[i,j,k]$ $\forall (j,k)\in Q, i\in [p]$.
+	\end{myitemize}
+\end{protocolbox}
+
+\begin{algobox}{Checks}{$\V$ checks}{mytable}
+	\begin{itemize}
+		\item[(a)] Validation of $C^x[k], C^y[k], C^z[k]$ with respect to $c^x, c^y, c^z$ respectively. 
+		\item[(b)] $q(\zeta_k)=0$ $\forall k\in [l]$.
+		\item[(c)] $\V$ verifies the proof for innner product for $\langle \gamma,\oq[j'] \rangle = q(\eta_{j'})$ $\forall j'\in [h]$, given by $\P$.
+		\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
+		\item[(e)] $\V$ verifies the proof for inner product for $\langle e_j, U^x[i,\cdot,k]\rangle = U^x[i,j,k]$, $\langle e_j, U^y[i,\cdot,k]\rangle = U^y[i,j,k]$, $\langle e_j, U^z[i,\cdot,k]\rangle = U^z[i,j,k]$ $\forall i\in [p], (j,k)\in Q$, given by $\P$.
+		\item[(f)] $\sum\limits_{i\in[p]} r_{i}\cdot [U^x[i,j,k]\cdot U^y[i,j,k]+ U^a[i,j,k]\cdot U^z[i,j,k] - U^b[i,j,k]]=\oq[k]_j$ $\forall (j,k)\in Q$.
+	\end{itemize}
+\end{algobox}
+
+\begin{comment}
+	\begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
-		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
-		\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
-		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
-		\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
-		\node[below of=P, yshift=-6.5em]{Define: $q_{j}(.)=\sum\limits_{i\in[p]} r_i.p_{ij}(.)$ $\forall j\in [m]$};
-		\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{jk})_{m\times n}$, where $q_{jk}=q_j(\eta_k)$};
-		\node[below of=P, yshift=-9.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$ $h=2s-1$};
-		\node[below of=P, yshift=-11em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$ };
-		\draw[->](1,-6)-- node[yshift=1em]{$\{d_i:i\in[h]\}$}(7,-6);
-		\draw[->](7,-7)-- node[yshift=1em]{$\gamma \in_R \mathbb{F}^m$}(1,-7);
-		\draw[->](1,-8)-- node[yshift=1em]{$q(.)=\sum\limits_{j\in[m]} \gamma_j.q_j(.)$}(7,-8);
-		\draw[->](7,-9)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-9);
-		\draw[->](1,-10)-- node[yshift=0.5em]{$\overline{q}[k] \& C^{\delta}[k]: k \in Q$ and Merkle paths for $c^{\delta}: 		\delta\in\{x,y,z\}$}(7,-10);
-		\draw[->](7,-11)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-11);
-		\draw[->](1,-12)-- node[yshift=0.5em]{$U^{\delta}[.,j,k]:j\in Q', k\in Q, \delta\in\{x,y,z\}$ and randomness}(7,-12);
+	\node[block] (P) {$\P$};
+	\node[block, right of = P, xshift= 7cm] (V) {$\V$};
+	\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
+	\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
+	\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
+	\node[below of=P, yshift=-6.5em]{Define: $q_{j}(.)=\sum\limits_{i\in[p]} r_i.p_{ij}(.)$ $\forall j\in [m]$};
+	\node[below of=P, yshift=-8em]{Define matrix $\overline{q}=(q_{jk})_{m\times n}$, where $q_{jk}=q_j(\eta_k)$};
+	\node[below of=P, yshift=-9.5em]{Define $d_i=com([q_{1i},q_{2i},\cdots,q_{mi}]^T)$ $\forall i\in[h]$ $h=2s-1$};
+	\node[below of=P, yshift=-11em]{$T\in \mathbb{F}^{h\times n}$ such that$[p(\eta_1),\cdots,p(\eta_h)]T=[p(\eta_1),	\cdots,p(\eta_n)]$ };
+	\draw[->](1,-6)-- node[yshift=1em]{$\{d_i:i\in[h]\}$}(7,-6);
+	\draw[->](7,-7)-- node[yshift=1em]{$\gamma \in_R \mathbb{F}^m$}(1,-7);
+	\draw[->](1,-8)-- node[yshift=1em]{$q(.)=\sum\limits_{j\in[m]} \gamma_j.q_j(.)$}(7,-8);
+	\draw[->](7,-9)-- node[yshift=0.5em]{$Q\subset _R [n] : |Q|=t$}(1,-9);
+	\draw[->](1,-10)-- node[yshift=0.5em]{$\overline{q}[k] \& C^{\delta}[k]: k \in Q$ and Merkle paths for $c^{\delta}: 		\delta\in\{x,y,z\}$}(7,-10);
+	\draw[->](7,-11)-- node[yshift=0.5em]{$Q'\subset _R [m] : |Q'|=t$}(1,-11);
+	\draw[->](1,-12)-- node[yshift=0.5em]{$U^{\delta}[.,j,k]:j\in Q', k\in Q, \delta\in\{x,y,z\}$ and randomness}(7,-12);
 	\end{tikzpicture}
-\caption{Protocol for checking Quadratic constraint}
-\end{figure}
-
-\textit{V} checks that:
-\begin{itemize}
+	\caption{Protocol for checking Quadratic constraint}
+	\end{figure}
+	
+	$\V$ checks that:
+	\begin{itemize}
 	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, where $\delta\in\{x,y,z\}$. 
 	\item[(b)] $\forall c\in[l], q(\zeta_c)=0$
 	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<\gamma,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
 	\item[(e)] Check $U^{\delta}[.,j,k]$ with respect to $C^{\delta}[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U^{\delta}[i,.,k]>=U^{\delta}[i,j,k]$, where $\delta\in\{x,y,z\}$. 
 	\item[(f)] $\sum\limits_{i\in[p]} r_{i}[U^x[i,j,k].U^y[i,j,k]+U^a[i,j,k].U^z[i,j,k]-U^b[i,j,k]]=\overline{q}[k]_j$ $\forall k\in Q$ and $j\in Q'$\\
-\end{itemize}
+	\end{itemize}
+\end{comment}
+
 
 \textbf{Completeness:} If the prover encodes the correct $x,y,z$ which satisfy $x\odot y + a\odot z=b$, then all the above checks will be passed, which ensures the completeness property.\\
 
 \textbf{Soundness:} The following lemma ensures the soundness:
 
 \begin{lemma}
-		
+		Let $e$ be a positive integer such that $e < \frac{d}{3}$. Suppose that malformed $U^{x*}, U^{y*}, U^{z*}$ are $e$-close to codeword $U^x, U^y, U^z \in L^{mp}$, which is encoding $x,y,z\in \mathbb{F}^{pml}$ such that $x\odot y + a\odot z = b$ does not hold. Then, for any malicious $\P^*$ strategy, $(U^{x*}, U^{y*}, U^{z*}$ is rejected by $\V$ except with at most $((e + 2k)/n) ^{\kappa} +1/|\bbF|+neg(\kappa)$ probability.
 \end{lemma}
 
+\begin{proof}
+	Let $q(\cdot)$ be the polynomial that is generated by a honest prover's input $x,y,z$ for which $x\odot y + a\odot z=b$ does not hold. If $\P^*$ sends $q(\cdot)$ to $\V$ then $\P^*$ fails check (b) expect with probability at most $\frac{1}{\bbF}$ over the choice of $\gamma$.\\
+	Let $q'(\cdot)$ be the polynomial sent by $\P$ to $\V$ which is not same as $q(\cdot)$ i.e. $q(\cdot)\neq q'(\cdot)$. Then $q'(\cdot)$ and $q(\cdot)$ can agree in at most $2s-2$ points since both of them has degree at most $2s-2$. Therefore the number of indices $k\in [n]$ for which $q(\eta_k)=q'(\eta_k)$ is at most $2s-2$. Let $Q'$ be the set of indices on which $q$ and $q'$ agree. Then $\V$ rejects the proof in check (f) whenever $Q$ contains an index $i\notin Q' \cup E$, where $E=\Delta((U^{x*}, U^{y*}, U^{z*}), L^{3pm})$. This fails to happen with probability at most $\frac{\binom{e+2s-2}{t}}{\binom{n}{t}}\approx (\frac{e+2s}{n})^t\approx (\frac{e+2s}{n})^{\kappa}$.\\
+	Therefore soundness error is $(\frac{e+2s}{n})^{\kappa}+\frac{1}{|\mathbb{F}|}+neg(\kappa)$, ($neg(\kappa)$ is due to the soundness probability of the commitment scheme and soundness of the proof of inner product argument).
+\end{proof}
 \textbf{Zero Knowledge:}
 
 \textbf{Communication Complexity:}
@@ -283,13 +416,13 @@ Note that $U$ decodes to $w$. So let's call this $U^w$\\
 Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as mentioned in sectioin 1. Therefore by the homomorphic property of the commitment scheme $C^w=\sum\limits_{\nu \in [N]} C^{w_{\nu}}$.\\
 %---------------------------------------------------------------
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
-		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
+		\node[block, right of = P, xshift=7cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{w_{\nu}}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C^w=\sum\limits_{\nu \in [N]}C^{w_{\nu}}$, $c$ is the Merkle root of $C^w$};
 		\draw[->](8,-3)-- node[yshift=1em]{$c$}(15,-3);
@@ -310,7 +443,7 @@ Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as m
 	\caption{Protocol for Testing Interleaved}
 \end{figure}
 
-\textit{V} checks that:\\
+$\V$ checks that:\\
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to the Merkle root $c$.
 	\item[(b)] $\tilde{c}_k=\sum\limits_{i\in[p]}r_iC_{ik}$ $\forall k\in Q$
@@ -321,13 +454,13 @@ Let $C^{w_{\nu}}, C^w$ be the commitment of $U^{w_{\nu}}, U^w$ respectively as m
 
 \paragraph{Protocol for Linear constraint:} Let $Ax=b$, where $A\in \mathbb{F}^{pml\times pml}$ and $b\in \mathbb{F}^{pml}$ are publicly known and $x$ is the secret which is additively distributed among the provers, say $x_{\nu}$ is the share of the $\nu$th prover.\\
 $P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{\nu}$.\\
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
-		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
+		\node[block, right of = P, xshift=6.5cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{\nu}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C=\sum\limits_{\nu \in [N]}C^{\nu}$, $c$ is the Merkle root of $C$};
 		\draw[->](8,-3)-- node[yshift=1em]{$c$}(15,-3);
@@ -353,7 +486,7 @@ $P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{
 \end{figure}
 
 %\mycomment{P sends Q to $P_{\nu}$ and from the reply P computes $\overline{q}[k]$}
-\textit{V} checks that:\\
+$\V$ checks that:\\
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to the Merkle root $c$.
 	\item[(b)] $\sum\limits_{c\in[l]} q(\zeta_c)=\overline{r}^Tb$.
@@ -367,13 +500,13 @@ $P_{\nu}$ encodes $x_{\nu}$ to $U^{\nu}$ and $C^{\nu}$ is the commitment of $U^{
 $P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such that $p^{(xy)_{\nu}}_{ij}(\cdot)= p^{x_{\nu}}_{ij}(\cdot)p^{y_{\nu}}_{ij}(\cdot)$. To do that use FFT and choose $\{\eta_1,\eta_2,\cdots,\eta_n\}$ accordingly, in particular, $n$th roots of unity and set $n\geq 2s-1$.\\
 %Similarly, $P_{\nu}$ constructs polynomials $p^{(az)_{\nu}}_{ij}(\cdot)$ such that $p^{(az)_{\nu}}_{ij}(\cdot)= p^{a_{\nu}}_{ij}(\cdot)p^{z_{\nu}}_{ij}(\cdot)$.\\
 
-\textit{P}$\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
+$\P$ $\in \{P_1,\cdots, P_N\}$ is arbitrarily chosen.\\
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (A) {$P_{\nu}$};
-		\node[block, right of = A, xshift=7cm] (P) {\textit{P}};
-		\node[block, right of = P, xshift=6.5cm] (V) {\textit{V}};
+		\node[block, right of = A, xshift=7cm] (P) {$\P$};
+		\node[block, right of = P, xshift=6.5cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=1em]{$C^{\delta_{\nu}}, \delta\in \{x,y,z\}$}(7,-1);
 		\node[below of=P, xshift=-1em, yshift=-2em]{$C^{\delta}=\sum\limits_{\nu \in [N]}C^{\delta_{\nu}}$, $c^{\delta}$ is the Merkle root of $C^{\delta}$, $\delta\in\{x,y,z\}$};
 		\draw[->](8,-3)-- node[yshift=1em]{$c^{\delta}, \delta\in \{x,y,z\}$}(15,-3);
@@ -395,7 +528,7 @@ $P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such t
 \end{figure}
 \FloatBarrier
 
-\textit{V} checks that:\\
+$\V$ checks that:\\
 \begin{itemize}
 	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, $\delta\in \{x,y,z\}$.
 	\item[(b)] $q(\zeta_c)=0$ $\forall c\in [l]$.
@@ -409,13 +542,13 @@ $P_{\nu}$ constructs `$pm$' many polynomials $p^{(xy)_{\nu}}_{ij}(\cdot)$ such t
 Here consider our extended witness $w\in \mathbb{F}^{pm_1m_2l}$. Encode it to $U^w$ in the same way as above, where size of $U$ is $p\times m_1m_2\times n$. Let, $m=m_1m_2$\\
 
 \paragraph{Protocol for Testing Interleaved:}
-\textit{P} and \textit{V} does the following:
+$\P$ and $\V$ does the following:
 
 \begin{figure}[htb!]
 	\centering
 	\begin{tikzpicture}
 		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift=7cm] (V) {\textit{V}};
+		\node[block, right of = P, xshift=7cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^p$}(1,-2);
 		\node[below of=P, xshift=-1em, yshift=-3em]{$\widetilde{U}=\sum\limits_{i\in [p]}r_i U[i]$};
@@ -434,8 +567,8 @@ Here consider our extended witness $w\in \mathbb{F}^{pm_1m_2l}$. Encode it to $U
 \end{figure}
 \FloatBarrier
 
-\textit{P} and \textit{V} follows the protocol in Figure 1 and then
-\textit{V} checks the following:
+\textit{P} and $\V$ follows the protocol in Figure 1 and then
+$\V$ checks the following:
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$.
 	\item[(b)] $\tilde{c}_k = \sum\limits_{i\in[p]} r_ic_{ik}$ $\forall k\in Q$
@@ -473,13 +606,13 @@ So total $mE+pM+n^2M$
 So total $|C|.E+|C|.M+p.n.M+m.n.M+h$, where $h$ is the complexit to compute the Merkle root.
 %-----------------------------------------------------------
 \paragraph{Protocol for checking Linear Constraint:} $x$ such that $Ax=b$ \\
-\textit{P} and \textit{V} does the following:
+\textit{P} and $\V$ does the following:
 \vspace*{40pt}
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\node[block, right of = P, xshift= 7cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$\overline{r}\in_R \mathbb{F}^{pm_1m_2l}$}(1,-2);
 		\node[below of=P, yshift=-4em]{Define: $r=\overline{r}^TA$};
@@ -499,14 +632,14 @@ So total $|C|.E+|C|.M+p.n.M+m.n.M+h$, where $h$ is the complexit to compute the 
 \end{figure}
 \FloatBarrier
 
-\textit{V} checks that:
+$\V$ checks that:
 \begin{itemize}
 	\item[(a)] Validation of $C[k]$ with respect to $c$. 
 	\item[(b)] $\sum\limits_{k\in [l]} q(\zeta_k)=\overline{r}^Tb$
 	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<1,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	%\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
 	\item[(d)] Check $U[.,j,k]$ with respect to $C[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U[i,.,k]>=U[i,j,k]$
-	\item[(e)] \textit{V} computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$ which is the commitment of the vector $\overline{q}[k]$ and also computes $\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$ $\forall j\in Q', k\in Q$.
+	\item[(e)] $\V$ computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$ which is the commitment of the vector $\overline{q}[k]$ and also computes $\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=\sum\limits_{i\in[p]} r_{ij}(\eta_k)U[i,j,k]$ $\forall j\in Q', k\in Q$.
 \end{itemize}
 \textbf{Proof Size:}
 \begin{itemize}
@@ -532,12 +665,12 @@ So total $(s+l-1).l.M+ m.E+(s+l-1).M+p.M+|C|.M+\log m.E$
  To compute $C$ matrix, Prover needs to do $|C|$ many exponentiation and that is dominating term in his computation.
 %-----------------------------------------------------------
 \paragraph{Protocol for checking Quadratic Constraint:} $x,y,z$ suc that $x\odot y+a\odot z =b$\\
-\textit{P} and \textit{V} does the following:
+\textit{P} and $\V$ does the following:
 \begin{figure}[htb!]
 	%\centering
 	\begin{tikzpicture}
 		\node[block] (P) {\textit{P}};
-		\node[block, right of = P, xshift= 7cm] (V) {\textit{V}};
+		\node[block, right of = P, xshift= 7cm] (V) {$\V$};
 		\draw[->](1,-1)-- node[yshift=0.5em]{$c^x, c^y, c^z$}(7,-1);
 		\draw[->](7,-2)-- node[yshift=0.5em]{$r\in_R \mathbb{F}^{p}$}(1,-2);
 		\node[below of=P, yshift=-4.5em]{Define: $p_{ij}(.)=p^x_{ij}(.).p^y_{ij}(.)+p^a_{ij}(.).p^z_{ij}(.)-p^b_{ij}(.)$};
@@ -557,14 +690,14 @@ So total $(s+l-1).l.M+ m.E+(s+l-1).M+p.M+|C|.M+\log m.E$
 \end{figure}
 \FloatBarrier
 
-\textit{V} checks that:
+$\V$ checks that:
 \begin{itemize}
 	\item[(a)] Validation of $C^{\delta}[k]$ with respect to $c^{\delta}$, where $\delta\in\{x,y,z\}$. 
 	\item[(b)] $\forall k\in[l], q(\zeta_k)=0$
 	\item[(c)] Check $q(.)$ using $d_1,\cdots,d_h$: $<\gamma,\overline{q}[j']>=q(\eta_{j'})\forall j'\in[h]$ as the inner product of the commitments should match with the commitment on the value $q(\eta_{j'})$. Using the idea of bullet proofs. Note that Verifier does not have $\overline{q}[j'] $ for all $j'\in[h]$ but still this check is possible using the commitments $d_1,\cdots, d_h$.
 	%\item[(d)] Reveal($\sum\limits_{j'\in [h]} T_{j'k} d_{j'})=\overline{q}[k] \forall k\in Q$
 	\item[(d)] Check $U^{\delta}[.,j,k]$ with respect to $C^{\delta}[k]$ $\forall k\in Q,  j\in Q'$: $<e_j,U^{\delta}[i,.,k]>=U^{\delta}[i,j,k]$, where $\delta\in\{x,y,z\}$. 
-	\item[(e)] \textit{V} computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$, which is the commitment of the vector$\overline{q}[k]$ and also computes$\sum\limits_{i\in[p]} r_i[U^{x}[i,j,k].U^y[i,j,k]+U^{a}[i,j,k].U^z[i,j,k]-U^{b}[i,j,k]] =R[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=R[i,j,k]$ $\forall j\in Q', k\in Q$.\\
+	\item[(e)] $\V$ computes the value $\sum\limits_{j'\in[h]}T_{j'k}d_{j'}$, which is the commitment of the vector$\overline{q}[k]$ and also computes$\sum\limits_{i\in[p]} r_i[U^{x}[i,j,k].U^y[i,j,k]+U^{a}[i,j,k].U^z[i,j,k]-U^{b}[i,j,k]] =R[i,j,k]$. Now use Inner Product argument i.e. $<e_j,\overline{q}[k]>=R[i,j,k]$ $\forall j\in Q', k\in Q$.\\
 \end{itemize}
 
 \textbf{Proof Size:}
@@ -590,6 +723,8 @@ So total complexity $O(|C|^{\frac{1}{2}}. E + |C|^{\frac{1}{2}}. M)$
 \textbf{Prover's Complexity:}
  To compute $C$ matrix, Prover needs to do $|C|$ many exponentiation and that is dominating term in his computation.
  
+ 
+ \begin{comment}
  \subsection{Zero-Knowledge:} We have three checks:
  \begin{itemize}
  	\item Interleaved Testing
@@ -607,5 +742,4 @@ $$\tau_1=\{r_1,\tilde{c}, \gamma_1, w, Q_1, C_{Q_1}, \widetilde{U}_{Q_1}, \tilde
 $$\tau_2= \{r_2, d_{1[h]}, q_1(\cdot), Q_2, \overline{q}_{1Q_2}, C_{Q_2}, U_{Q_2}, \delta_{Q_2}, v_{Q_2} \}$$
 $$\tau_3= \{r_3, d_{2[h]}, \gamma_2, q_2(\cdot), Q_2, \overline{q}_{2Q_2}, C_{Q_2}, U_{Q_2}, \delta_{Q_2}, v_{Q_2} \}$$
 Let $\cS$ be the simulator. Then $\cS$ randomly picks $r_1, r_2, r_3, \gamma_1, \gamma_2, Q=Q_1\cup Q_2$, where size of $Q$ is $t$ such that $Q_1$ and $Q_2$ are disjoint. $\cS$ chooses a block $\cB$ corresponding to $Q$, i.e. $\cS$ chooses and fixes the complete matrix along the direction $m$ and $p$, for the indices in $Q$. Once the block $\cB$ is fixed, for these block, $U$ is fixed by the condition that, $t$ slices along the direction $m$ and $p$ is fixed and $l$ positions are fixed because of the enconding of the witness. So, using $\cB$, $\cS$ generates $\tilde{c}, w, C_{Q_1}, \widetilde{U}_{Q_1}, d_{1[h]}, d_{2[h]}, \overline{q}_{1Q_2}, q_{2Q_2}, C_{Q_2}, U_{Q_2}$ and randomly picks $\tilde{\delta}_{Q_1},\delta_{Q_2}, \tilde{v}_{Q_1}, v_{Q_2}$. Therefore the transcript generated by $\cS$ is indistinguishable from $\tau_1, \tau_2, \tau_3$. 
-
-
+\end{comment}
