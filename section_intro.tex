@@ -454,16 +454,69 @@ where $X[i,.,k]$ denotes the $n_2$-length vector $(X[i,1,k],\ldots,X[i,n_2,k])$
 and $\delta_{ik}$ denotes the commitment randomness. We define oracle
 $\comoracle$ as $\comoracle[i,k]=c_{ik}$ for $i\in [p],k\in [n_1]$.
 
-\subsubsection{Bivariate Interleaved Code}
+\subsubsection{Bivariate Interleaved Code(BIC)}
 Let $Q(x,y)\in \FF[x,y]$ be a bivariate polynomial with $deg_x(Q) < m$ and
 $\deg_y(Q) < \ell$. Then the evaluations of $Q$ on $H$ form an $n_2\times n_1$
 matrix whose rows are codewords in a Reed-Solomon code, which we call $L_1$ and columns
-are codewords in a Reed-Solomon code which we call $L_2$. Let $d_1$ and $d_2$
-denote the minimum distance of the codes $L_1$ and $L_2$
-respectively.\smallskip
+are codewords in a Reed-Solomon code which we call $L_2$. In other words, the
+evaluations of $Q$ on $H$ forms a codeword in the interleaved codes $L_1^{n_2}$
+and $L_2^{n_1}$. Let $\Delta_1$ and $\Delta_2$ denote the distance function on
+the codes $L_1^{n_2}$ and $L_2^{n_1}$ respectively, and let $d_1$ and $d_2$
+denote the minimum distances for the codes $L_1^{n_2}$ and $L_2^{n_1}$
+respectively. We have the following:
+\begin{lemma}\label{lem:bicdecoding}
+Let $U^\ast\in \FF^{n_2\times n_1}$ be such that $\Delta_1(U^\ast,L_1^{n_2})<e$
+and $\Delta_2(U^\ast,L_2^{n_1})<e$ for $e < \min(d_1,d_2)/2$. Then there exists
+(unique) 
+$U\in L_1^{n_2}\cap L_2^{n_1}$ such that $\Delta_1(U^\ast,U)<e$ and
+$\Delta_2(U^\ast,U)<e$.
+\end{lemma}
+\begin{proof}
+Let $U_1\in L_1^{n_2}$, $U_2\in L_2^{n_1}$ be such that
+$\Delta_1(U^\ast,U_1)<e$ and $\Delta_2(U^\ast,U_2)<e$. We show that $U_1=U_2$
+to prove the lemma. Let $J_1,J_2$ and $J_3$ form a partition of the set $[n_2]$
+where $J_1$ contains row indices where $U^\ast$ and $U_2$ differ, and $J_2,J_3$
+form a partition of $[n_2]\backslash J_1$ with $|J_2|=m$. Similarly let
+$K_1,K_2,K_3$ be subsets of $[n_1]$, where $K_1$ contains column indices where
+$U^\ast$ and $U_1$ differ, and $K_2,K_3$ for a partition of $[n_1]\backslash
+K_1$ with $|K_2|=\ell$. Let $Q\in \FF[x,y]$ be the unique polynomial with
+$deg_x(Q)<m$ and $deg_y(Q)<\ell$ such that for all $(j,k)\in J_2\times K_2$,
+$Q(\beta_j,\eta_k)=U[j,k]=U_1[j,k]=U_2[j,k]$. Define $U^Q$ by
+$U^Q[j,k]=Q(\beta_j,\eta_k)$ for $j\in [n_2]$ and $i\in [n_1]$. We note the
+following:
+\begin{enumerate}[{\rm 1.}]
+\item $U_1,U_2,U^\ast$ are identical on $(j,k)\in (J_2\cup J_3)\times (K_2\cup
+K_3)$. Further $U^Q$ is identical with the other three on $(J_2\times K_2)$.
+\item Now consider $U_2$ and $U^Q$. Since both the matrices have columns as
+codewords in $L_2$, and the columns corresponding to indices in $K_2$ are
+identical on positions in $J_2$, by the distance property of the Reed-Solomon
+code $L_1$, entire columns with indices in $K_2$ are identical in $U_2$ and
+$U^Q$, i.e, $U_2[.,k]=U^Q[.,k]$ for $k\in K_2$.
+\item Since $U_2$ and $U^\ast$ are identical on all rows with indices in
+$J_2\cup J_3$, from the above we conclude $U^\ast[j,k]=U^Q[j,k]$ for $(j,k)\in
+(J_2\cup J_3)\times K_2$.
+\item Now we observe that $U^\ast$ and $U_1$ are identical on $(J_2\cup
+J_3)\times K_2$, and thus from the above, $U^Q[j,k]=U_1[j,k]$ for $(j,k)\in
+(J_2\cup J_3)\times K_2$.
+\item Finally, we notice that rows in $U_1$ and $U^Q$ are codewords in $L_1$,
+and the rows corresponding to indices in $J_2\cup J_3$ are identical on
+positions in $K_2$. Again, using the distance property of Reed-Solomon codes we
+conclude $U_1$ and $U^Q$ have identical rows for indices in $J_2\cup J_3$. 
+\item The above implies $\Delta_2(U^Q,U_1)\leq e < d_2$ and hence $U^Q=U_1$.
+Similarly we can show $U^Q=U_2$. Thus $U^Q$ satisfies $\Delta_1(U^\ast,U^Q)<e$
+and $\Delta_2(U^\ast,U^Q)<e$. Further since $e < \min(d_1,d_2)/2$, we see that
+$U^Q$ is unique such codeword. This completes the proof.
+\end{enumerate}
+\end{proof}
 
-\noindent{\em Proximity Protocol for BIC}: We
-describe a protocol for ``proximity'' of a purported codeword to bivariate
+For a $U^\ast\in \FF^{n_2\times n_1}$ such that
+$\max(\Delta_1(U^\ast,L_1^{n_2}),\Delta_2(U^\ast,L_2^{n_1}))<e$ where $e <
+\min(d_1,d_2)/2$, we define $\decode(U^\ast)$ to be the unique codeword in
+$L_1^{n_2}\cap L_2^{n_1}$ satisfying the property in the Lemma
+\ref{lem:bicdecoding}. 
+
+\subsubsection{Proximity Protocol for BIC}\label{sec:proximitybic}
+We describe a protocol for ``proximity'' of a purported codeword to bivariate
 interleaved code. Let $U\in \FF^{n_2\times n_1}$ denote the purported codeword and let
 $e<\min(d_1,d_2)/3$ denote the proximity parameter. In its first message the
 prover computes commitments $c_1,\ldots,c_{n_1}$ to the columns of $U$ and
@@ -554,3 +607,185 @@ $k\in Q_1$. Similarly $w_2=\sum_{k\in [n_1]}\tau_ku_k$ and $w_2\in L_2$. From
 Lemma \ref{lem:proximitytest}, with overwhelming probability the oracle
 $U=[u_1,\ldots,u_{n_1}]$ is $e$-close to both the interleaved codes.  
 \end{proof}
+
+\subsubsection{Linear Check}
+We now describe a protocol to check that a purported commitment oracle
+$\comoracle$ encodes witness $x$ satisfying the constraint $Ax=0$ for a public
+matrix $A$. As before we assume $x\in \FF^N$ and $A\in \FF^{N\times N}$ and
+$N=pm\ell$ for some positive integers $p,m$ and $\ell$. We further assume that
+the prover has RS-encoded oracle $\rsoracle$ which opens to the commitment
+$\comoracle$ and is $e$-close to the interleaved codes $L_1^{pm}$ and
+$L_2^{pn_1}$. The prover and the verifier interact as follows:
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: The verifier sends a random $r\sample
+\FF^N$ and random $\tau\sample \FF^{n_1}$ to the prover.
+\item $\prover\rightarrow\verifier$: The prover computes as follows:
+\begin{itemize}
+\item interpolates bivariate polynomials $R^i:i\in [p]$ such that the polynomial $R^i$ interpolates the
+vector $(r_{(i-1)mn+1},\ldots,r_{imn})$ for $i\in [p]$. 
+\item computes polynomials $p_j(.)=\sum_{i\in [p]}R^i(\alpha_j,.)Q^i(\alpha_j,.)$ for
+$j\in [n_2]$. 
+\item evaluates the polynomials $p_j$ on the set
+$\bm{\eta}=\{\eta_1,\ldots,\eta_{n_1}\}$. Let $P$ denote the $n_2\times n_1$
+matrix whose $j^{th}$ row is the evaluation of the polynomial $p_j$ on the set
+$\eta$. 
+\item computes commitments $d_1,\ldots,d_{2\ell}$ to the first
+$2\ell$ columns of $P$.
+\end{itemize}
+\begin{equation}
+P := \begin{bmatrix}
+p_1(\eta_1) & \cdots & p_1(\eta_{2\ell}) & \vline & \cdots &
+p_1(\eta_{n_1}) \\
+\vdots & \ddots & \vdots & \vline & \ddots & \vdots \\
+p_{n_2}(\eta_1) & \cdots & p_{n_2}(\eta_{2\ell}) & \vline & \cdots &
+p_{n_2}(\eta_{n_1})
+\end{bmatrix}
+\end{equation}
+Note that there exists a $2\ell\times n_1$ matrix $T$ such that $P'T = P$ where $P'$ denotes
+the submatrix of $P$ consisting of first $2\ell$ columns. Thus the commitments
+to other columns of $P$ can be computed from $d_1,\ldots,d_{2\ell}$ using
+homomorphism.
+The prover sends the commitments $d_1,\ldots,d_{2\ell}$ and the polynomial
+$p(x)=\sum_{j\in[m]} p_j(x)$ to the verifier.
+\item $\verifier\rightarrow\prover$: The verifier samples $t$ distinct indices
+$k_1,\ldots,k_t$ from the set $[n_1]$. It also picks $t$ indices
+$j_1,\ldots,j_t$ from the set $[n_2]$ independently at random. Finally the
+verifier sends the pairs $\{(j_u,k_u):u\in [t]\}$ to the prover.
+\item $\prover\rightarrow\verifier$: The prover sends $t$ ``tubes''
+$\rsoracle[.,j_u,k_u]$ for $u\in [t]$ to the verifier. Recall that
+$\rsoracle[.,j_u,k_u]$ denotes the $p$-length vector
+$(\rsoracle[1,j_u,k_u],\ldots,\rsoracle[p,j_u,k_u])$. The prover also sends the
+columns $\comoracle[.,k_u]$ for $u\in [t]$ of the oracle $\comoracle$. 
+\item The verifier proceeds as:
+\begin{itemize}
+\item It checks $\sum_{k\in [\ell]}p(\zeta_k)=0$.
+\item It runs a proximity protocol to check that $P$ is $e$-close to
+a bivariate interleaved code corresponding to Reed-Solomon codes of degrees
+$2\ell$ and $2m$ respectively.
+\item Checks that $p=\sum_{j\in n_2}p_j$.
+\item It checks $P[j,k]=\sum_{i\in [p]}R^i(\beta_j,\eta_k)\rsoracle[i,j,k]$ for
+$(j,k)\in \{(j_u,k_u):u\in [t]\}$.
+\item It checks consistency of the openings $\rsoracle[.,j_u,k_u]$ with
+commitment oracle $\comoracle$ for $u\in [t]$. 
+\end{itemize}
+\item The verifier accepts if all the above checks succeed.
+\end{enumerate}
+We now describe in detail each of verifier's checks in the final step of the
+above interaction.\smallskip
+
+\noindent{\em Checking proximity of matrix $P$}: Note that an honestly computed
+matrix $P$ in the above protocol forms a bivariate interleaved codewords where
+the rows correspond to evaluation of polynomials of degree $<2\ell$ and columns
+correspond to evaulations of polynomials of degree $<2m$. Using matrix $T$ the
+verifier can homomorphically compute the commitments to the columns of
+purported matrix $P$ and then check proximity using the proximity protocol
+described in Section \ref{sec:proximitybic}. Here we describe an optimized
+version where the verifier need not compute all the column commitments of $P$. 
+We consider the protocol of Section \ref{sec:proximitybic}, where the prover
+sends commitments $d_1,\ldots,d_{2\ell}$ in its first message (instead of $n_1$
+commitments). The prover and verifer proceed exactly as the proximity protocol.
+In testing the proximity to the interleaved code along rows, the verifier needs
+to compute the commitment to the vector $\sum_{k\in Q_1}\delta_kU[.,k]$. The
+verifier computes the commitment as $\sum_k\lambda_kd_l$ where
+$(\lambda_1,\ldots,\lambda_t)^T = T|_{Q_1}\delta$. Similarly for computing
+commitment for the vector $w_2=P\tau$, for random $\tau\sample \FF^{n_1}$, the
+verifier computes the commitment to $w_2$ as $\sum_{k\in
+[n_1]}\gamma_k\delta_k$ where $(\gamma_1,\ldots,\gamma_{n_1})^T=T\tau$. Note
+that naively computing commitments to all the columns would have required
+$O(\ell m)$ cryptographic operations, while in the current scheme we only need
+$O(m)$ cryptographic operations.\smallskip
+
+\noindent{\em Checking consistency of $p$ with $P$}: To check that $p=\sum_{j\in
+n_2}p_j$, the verifier evaluates $p$ on $\eta_1,\ldots,\eta_{2\ell}$ to obtain the
+evaluation vector $\bar{p}$. The verifier now needs to verify
+$\bar{p}=\bm{1}^TP'$ where $P'$ denotes the submatrix consisting of the first
+$2\ell$ columns of $P$, which probabilistically reduces to inner product check
+$\innp{\bm{1}}{P's}=\innp{\bar{p}}{s}$ for a randomly sampled $s\sample
+\FF^{2\ell}$. For the inner product protocol, the verifier can homomorphically compute the commitment to the
+vector $P's$ given $d_1,\ldots,d_{2\ell}$.\smallskip
+
+\noindent{\em Checking consistency of $P$ with $\rsoracle$}: The checks
+$P[j,k]=\sum_{i\in [p]} R^i(\beta_j,\eta_k)\rsoracle[i,j,k]$ probabilistically
+verify the computation of $P$ from the $\rsoracle$ by probing a few locations
+$(j_u,k_u)$ for $u\in [t]$. Since $P[j,k]=\innp{P[.,k]}{e_j}$, and the verifier
+can compute commitment for $P[.,k]$ the required checks can be accomplished by
+running $t$ instances of the inner product arguments.\smallskip
+
+
+\noindent{\em Checking consistency of openings of $\rsoracle$ with
+$\comoracle$}: Consider $(j,k)\in \{(j_u,k_u):u\in [t]\}$. To check the
+consistency of the opened tube $\rsoracle[.,j,k]$, verifier checks
+$\innp{\rsoracle[i,.,k]}{e_j}=\rsoracle[i,j,k]$ for all $i\in [p]$. This can be
+checked probabilistically by randomly sampling $v\in \FF^p$ and checking
+$\innp{\sum_{i\in [p]}v_i\rsoracle[i,.,k]}{e_j}=\innp{v}{\rsoracle[.,j,k]}$.
+The commitment to the vector $\sum_{i\in [p]}v_i\rsoracle[i,.,k]$ can be
+computed homomorphically as $\sum_{i\in [p]}v_i\comoracle[i,j]$. Similar
+consistency check can be done for all $t$ tubes.
+
+\begin{lemma}\label{lem:linchecksound}
+Let $\rsoracle$ be an RS-encoded oracle where $U^\ast=\decode(\rsoracle)$ is
+an encoding of $x$ s.t $Ax\neq 0$. Then any bounded prover $\pdv^\ast$ which
+commits $\rsoracle$ as $\comoracle$ succeeds in the linear check protocol with
+negligible proabability.
+\end{lemma}
+\begin{proof}
+To simplify the proof, we assume that the prover $\pdv^\ast$ does not violate the
+binding property of the commitment scheme $\comm$, i.e, it opens appropriate
+homomorphic combinations of the committed vectors and does not break the
+soundness of the inner product protocols. The verifier checks the
+following in the linear check protocol:
+\begin{enumerate}
+\item Openings $\rsoracle[.,j,k]$ are consistent with $\comoracle$ for
+$(j,k)\in \{(j_u,k_u):u\in [t]\}$.
+\item The matrix $P$ satisfies $\Delta_1(P,L_1^{n_2})<e$ and
+$\Delta_2(P,L_2^{n_1})<e$.
+\item The matrix $P$ is correctly computed from the oracle $\rsoracle$ and
+vector $r\in \FF^N$.
+\item The polynomial $p$ is correctly computed from the matrix $P$.
+\item The polynomial $p$ satisfies $\sum_{k\in \ell}p(\zeta_k)=0$.
+\end{enumerate}
+By assumption that prover does not know two openings to a commitment, the
+openings $\rsoracle[.,j,k]$ in the first check are honest. Let $P^\ast$ denote
+honestly computed matrix from $U^\ast$ and $p^\ast$ denote honestly computed
+polynomial from $P^\ast$. Since $P$ satisfies the proximity checks, with
+overwhelming probability Lemma \ref{lem:bicdecoding} implies that there exists bivariate codeword $\bar{P}$ such that
+$\Delta_1(P,\bar{P})<e$ and $\Delta_2(P,\bar{P})<e$. We consider two cases,
+viz, $\bar{P}=P^\ast$ and $\bar{P}\neq P^\ast$ and show that $\pdv^\ast$
+succeeds with negligible probability in both the cases. 
+
+First, assume that $\bar{P}=P^\ast$. Thus we have $\Delta_1(P,P^\ast)<e$. If
+the polynomial $p$ sent by $\pdv^\ast$is the same as the polynomial $p^\ast$, we have $\sum_{k\in
+[\ell]} p(\zeta_k) = \sum_{k\in [\ell]} p^\ast(\zeta_k)\neq 0$ as $U^\ast$
+encodes $x$ such that $Ax\neq 0$. Thus $\pdv^\ast$ fails if $p=p^\ast$. Assume,
+then that $p\neq p^\ast$. Let $K$ denote the column indices where $P$ and
+$P^\ast$ agree. By assumption, $|K|>n_1-e$. For all $k\in K$ we have
+$p(\eta_k)=p^\ast(\eta_k)$. Since the polynomials $p$ and $p^\ast$ are of
+degree $<2\ell$, this is a contradiction when $n_1-e\geq 2\ell$. Thus an
+adverserial prover $\pdv^\ast$ fails when $\bar{P}=P^\ast$.
+
+Now consider the case when $\bar{P}\neq P^\ast$. Then, by the distance
+properties of the codes $L_1^{n_2}$ and $L_2^{n_1}$ and Lemma
+\ref{lem:bicdecoding}, we must have $\Delta_1(P,P^\ast)>n_1-e$ or
+$\Delta_2(P,P^\ast)>n_2-e$. Without loss of generality, assume the
+former. Let $E_u$ denote the event $\pdv^\ast$ succeding on query $(j_u,k_u)$
+for $u\in [t]$. Since $P$ and $P^\ast$ differ in at least $n_1-e$ columns
+and $P$ and $\bar{P}$ differ in at most $e$ columns, we conclude that $\bar{P}$
+and $P^\ast$ differ in at least $n_1-2e$ columns. Let $X$ denote the indices of
+the $n_1-2e$ columns where $P$ and $\bar{P}$ agree, while $P^\ast$ differs from
+them. For $k_u\in X$,  $\pdv^\ast$ succeeds if
+$$P[j_u,k_u]=\bar{P}[j_u,k_u]=P^\ast[j_u,k_u]=\sum_{i\in
+[p]}R^i(\beta_{j_u},\eta_{k_u})\rsoracle[i,j_u,k_u].$$
+Since the columns of $\bar{P}$ and $P^\ast$ are evaluations of polynomials of
+degree $<2m$, the above succeeds with probability $2m/n_2$. Thus we have:
+\begin{align*}
+\prob{E_u}\leq \frac{2e}{n_1}+\frac{n_1-2e}{n_1}.\frac{2m}{n_2}
+\end{align*}
+The probability that the verifier succeeds on all queries is then:
+\begin{align}
+\prob{\wedge_{u\in [t]}E_u}\leq
+\left(\frac{2e}{n_1}+\frac{n_1-2e}{n_1}.\frac{2m}{n_2}\right)^t.
+\end{align}
+The above probability is negligible in $\secpar$ for $t=O(\secpar)$. This completes the
+proof of soundness of the linear check.
+\end{proof}
+
