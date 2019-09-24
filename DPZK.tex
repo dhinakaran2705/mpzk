@@ -1,7 +1,72 @@
 \section{Distributed Prover Zero Knowledge}
+Framework
+\begin{itemize}
+\item Proof size independent of no. of parties.
+\item Notion of homomorphic oracles
+\item custom aggregation protocols for non-homomorphic messages
+\item concrete improvements and adjustments to obtain sublinear communication for custom MPC. - only for interactive part of circuit
+\end{itemize}
 
-\subsection{Definition}
+\subsection{Definition of DPZK}
+Let $P_1, \ldots, P_p$ be $p$ parties. Let $w_1, \ldots, w_N$ be an $N$-element witness set, with the parties possessing a partitioning of this set. A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
+\begin{itemize}
+\item $\Setup$ takes an input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
+\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st_1, \ldots, \st_p) \rightarrow m_i$. $\st_j$ is the state of the party $P_j$. $\st_j$ is initially set to $P_j$'s partition of the witness set and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$be the transcript of the protocol.
+\end{itemize}
+A DPZK protocol for the language 
+\[
+L := \{ x | C(x, w) =1 \text{ for some } w = (w_1, \ldots w_N) \}
+\]
+satisfies the following properties: 
+correctness, soundness, zero-knowledge and privacy among provers.
+\dnote{self: give a name for Privacy among provers}
+\paragraph{Completeness}: %We will define correctness assuming that the witness set is minimal.
+Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $w = (w_1, \ldots w_N)$ corresponding to $x \in L$, when the initial $\st_j$s are set with $\sigma$ and a partition of $w$, $\langle \Pi, V \rangle$ outputs an accept with probability 1.
 
+\paragraph{Soundness}:  For every instance $x \notin L$ and any protocol $\Pi^*$, $V$ accepts with probability at most $\negl(\secp)$.
+\dnote{``any protocol'' Pi* captures any witness w? or should that be explicit?}
+Soundness ensures the existence of a witness for $x \in L$. The proof of knowledge of the witness by the prover is captured by the notion of knowledge extraction where an extractor extracts the witness whenever the verifier accepts when having an oracle access to the prover. The notion of witness extended emulation proposes the existence of an emulator which additionally produces a simulated transcript between the prover and the verifier irrespective of whether the verifier accepts or not. We will now define the notion of witness-extended emulation for the DPZK setting, adapted from \cite{Groth11}. 
+\begin{definition}
+A DPZK protocol $(\Setup, \Pi, V)$ has computational witness-extended emulation if for all deterministic polynomial time $\Pi^*$ there exists  an expected polynomial time emulator $\chi$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau$
+\begin{align*}
+&Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{\st_i\}_{i \in [p]}) \leftarrow A(\sigma); tr \leftarrow \langle \Pi^*, V \rangle: A(tr) = 1 \right] \\
+\approx &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{\st_i\}_{i \in [p]}) \leftarrow A(\sigma); (tr, w) \leftarrow \chi^{\langle \Pi^*, V \rangle}(\sigma, x): \right. \\
+&\,\,\,\,\,\, A(tr) = 1 \left. \text{ and if } tr \text{ accepts if } x \in L \text{ with } w \text{ as witness} \right] 
+\end{align*}
+\end{definition}
+\dnote{1. should the notation $\langle \Pi, V \rangle$ be modified to also take their respective inputs?\\
+2. Proof of knowledge \textit{vs} argument of knowledge}
+Note that this follows from the single prover definition since an adversarial prover in the single prover definition can be any PPT algorithm, and this is independent of whether the PPT algorithm is run by a single prover or a protocol between multiple provers.
+Also, allowing for any adversarial $\Pi^*$ captures adversarial behaviour by all the parties.
+
+\paragraph{Zero-knowledge}: 
+This is a property with respect to the view of the verifier $V$. The protocol $\Pi$ and the number of provers involved to produce these messages do not impact the zero-knowledge property. Hence, the DPZK definition for zero-knowledge does not change from its single prover version.
+\begin{definition}
+The argument $(\Setup, \Pi, V)$ is a perfect special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
+\begin{align*}
+&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (x,w) \leftarrow A(\sigma); tr \leftarrow \langle \Pi, V \rangle: x \in L \text{ with witness } w \text{ and } A(tr)=1 \right] \\
+= &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x,w) \leftarrow A(\sigma); tr \leftarrow S(\sigma,x): x \in L \text{ with witness } w \text{ and } A(tr) = 1 \right]
+\end{align*}
+\end{definition}
+\dnote{What's the need for the additional $\rho$ as output by A and input to V in this definition of Groth11}
+
+\paragraph{Privacy among parties}:
+This notion follows from the simulation security of multi-party computation. The transcript of the interaction between parties can be simulated by a simulator with access only to the secret inputs of the corrupted provers. Hence, for a protocol supporting $p-1$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $p-1$ provers.
+
+\subsubsection{Circuit share complexity}
+We introduce this notion of \textit{circuit share complexity} to quantify the part of the circuit whose wire values are functions of inputs from more than one prover. 
+Consider the class of applications where hashes (or any other commitment) of data from different parties are stored on a blockchain and a zero-knowledge proof has to be generated on an aggregation of all the data. This could be: 
+\begin{enumerate}
+\item Finance network: different bank account holders proving to a loan provider that the sum of their account balances is greater than the required threshold.
+\item Trade logistic network: different logistic providers proving to a customer or regulator that the average delay of shipment along a particular route is less than a specified time.
+\item 
+\end{enumerate}
+In all the applications in this class, each party participating in the aggregation first proves the \textit{relevance} of his/her data before they all run a protocol to prove the aggregated value on their data together. The proof of relevance involves proving that the data corresponds to a commitment in the blockchain network by proving the knowledge of the opening of a commitment in the blockchain. 
+For instance, when using verifying a hash commitment within a proof system which works with circuit representation of the relation, the proofs of relevance i.e. the hash verifications of the individual data take up most of the gates in the circuit. But each such verification rely only on data from a single party. The aggregation does involve data from multiple parties but this step requires a relatively smaller number of gates. Hence, the circuit share complexity is very small for such applications, compared to the total size of the circuit. A DPZK protocol with its complexities proportional to the circuit share complexity instead of the total circuit complexity can attain major savings for such applications.
+In general, the compatibility of the commitment with function representation of the proof system plays a part in the above discussion. We will discuss the relevant work on this compatibility in more detail in Section \ref{sec:relatedwork}.
+
+Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the \textit{total} size of the circuit.
+ 
 \subsubsection{Discussion}
 Discussion on the definition.
 
@@ -10,4 +75,4 @@ Discussion on the definition.
  -- some technical description of the techniques, and how "commitment oracle"
 helps in realizing DPZK
 
-\paragraph{Note} If we did not use homomorphic commitment we get +poly(\ secp).N protocol.
+\paragraph{Note} If we did not use homomorphic commitment we get +poly(secp).N protocol.
