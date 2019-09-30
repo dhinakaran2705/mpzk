@@ -686,11 +686,11 @@ sends commitments $d_1,\ldots,d_{2\ell}$ in its first message (instead of $n_1$
 commitments). The prover and verifer proceed exactly as the proximity protocol.
 In testing the proximity to the interleaved code along rows, the verifier needs
 to compute the commitment to the vector $\sum_{k\in Q_1}\delta_kU[.,k]$. The
-verifier computes the commitment as $\sum_k\lambda_kd_l$ where
+verifier computes the commitment as $\sum\lambda_kd_k$ where
 $(\lambda_1,\ldots,\lambda_t)^T = T|_{Q_1}\delta$. Similarly for computing
 commitment for the vector $w_2=P\tau$, for random $\tau\sample \FF^{n_1}$, the
 verifier computes the commitment to $w_2$ as $\sum_{k\in
-[n_1]}\gamma_k\delta_k$ where $(\gamma_1,\ldots,\gamma_{n_1})^T=T\tau$. Note
+[2\ell]}\gamma_kd_k$ where $(\gamma_1,\ldots,\gamma_{2\ell})^T=T\tau$. Note
 that naively computing commitments to all the columns would have required
 $O(\ell m)$ cryptographic operations, while in the current scheme we only need
 $O(m)$ cryptographic operations.\smallskip
@@ -782,10 +782,65 @@ degree $<2m$, the above succeeds with probability $2m/n_2$. Thus we have:
 \end{align*}
 The probability that the verifier succeeds on all queries is then:
 \begin{align}
-\prob{\wedge_{u\in [t]}E_u}\leq
+\prob{\bigwedge_{u\in [t]}E_u}\leq
 \left(\frac{2e}{n_1}+\frac{n_1-2e}{n_1}.\frac{2m}{n_2}\right)^t.
 \end{align}
 The above probability is negligible in $\secpar$ for $t=O(\secpar)$. This completes the
 proof of soundness of the linear check.
 \end{proof}
+
+
+\subsubsection{Quadratic Check}\label{sec:quadcheck}
+We now describe the interactive oracle protocol for checking the relation
+$x\circ y = z$ for vectors $x,y,z\in \FF^N$. Let $\rsoracle_x,\rsoracle_y$ and
+$\rsoracle_z$ denote the encodings of vectors $x$, $y$ and $z$ respectively via
+the bivariate code. Let $\comoracle_x,\comoracle_y$ and $\comoracle_z$ denote
+the respecitve commitment oracles. The prover and the verifier interact as
+follows:
+
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: The verifier sends a challenge $r\sample
+\FF^p$ to the prover.
+\item $\prover\rightarrow\verifier$: The prover computes as follows:
+  \begin{itemize}
+  \item For $j\in [n_2]$, $p_j(.)=\sum_{i\in [p]}
+r_i(Q^i_x(\alpha_j,.).Q^i_y(\alpha_j,.)-Q^i_z(\alpha_j,.))$.
+  \item Constructs $n_2\times n_1$ matrix $P$, where the $j^{th}$ row of $P$
+consists of evaluations of the polynomial $p_j$ on the points
+$\eta_1,\ldots,\eta_{n_1}$.
+  \item Computes commitments $d_1,\ldots,d_{2\ell}$ to the first $2\ell$
+columns of $P$.
+  \end{itemize}
+The prover sends the commitments $d_1,\ldots,d_{2\ell}$ to the verifier.
+
+\item $\verifier\rightarrow\prover$: The verifier sends $\gamma\in \FF^m$ and
+$t$ randomly sampled pairs $\{(j_u,k_u),u\in [t]\}$ from $[n_2]\times [n_1]$. 
+
+\item $\prover\rightarrow\verifier$: The prover sends the polynomial
+$p(.)=\sum_{j\in [m]}\gamma_j.p_j(.)$, the tubes $\rsoracle_a[.,j_u,k_u]$,
+ the columns $\comoracle_a[.,k_u]$ for $a\in\{x,y,z\}$ and $u\in [t]$.
+
+\item The verifier proceeds as:
+  \begin{itemize}
+  \item Checks that $p(\zeta_k)=0$ for all $k\in [l]$.
+  \item Checks that $P$ is $e$-close to bivariate interleaved code with
+corresponding Reed-Solomon codes of dimensions $2\ell$ and $2m$ respectively.
+  \item Checks that $p=\sum_{j\in [m]}\gamma_jp_j$.
+  \item Checks that $P[j,k]=\sum_{i\in
+[p]}r_i(\rsoracle_x[i,j,k].\rsoracle_y[i,j,k]-\rsoracle_z[i,j,k]$ for $(j,k)\in
+\{(j_u,k_u):u\in [t]\}$.
+  \item Checks the consistency of openings $\rsoracle_a[i,j_u,k_u]$ for $a\in
+\{x,y,z\}$ and $u\in [t]$ with the commitment oracles $\comoracle_a$.
+  \end{itemize}
+The verifier accepts if all the checks succeed.
+
+\end{enumerate}
+
+
+\begin{lemma}\label{lem:quadhecksound}
+Let $\rsoracle = [\rsoracle_x,\rsoracle_y,\rsoracle_z]$ be an RS-encoded oracle where $U^\ast=\decode(\rsoracle)$ is
+an encoding of $[x,y,z]$ s.t $x\circ y\neq z$. Then any bounded prover $\pdv^\ast$ which
+commits $\rsoracle$ as $\comoracle$ succeeds in the quadratic check protocol with
+negligible proabability.
+\end{lemma}
 
