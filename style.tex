@@ -4,7 +4,22 @@
 \usepackage{amssymb}
 %\usepackage{epstopdf}
 \usepackage{amssymb}
-%\renewcommand{\baselinestretch}{1.8}
+\usepackage[lambda,
+advantage,
+operators,
+sets, 
+adversary, 
+landau,
+probability, 
+notions, 
+logic,
+ff,
+mm,
+primitives, 
+events, 
+complexity, 
+asymptotics, 
+keys]{cryptocode}
 \usepackage{tikz}
 \usetikzlibrary{shapes, shadows, arrows}
 \usepackage{amsmath}
@@ -65,8 +80,8 @@
 
 % 		Rounding commands
 
-\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
-\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+%\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+%\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 \newcommand{\round}[1]{\left\lfloor #1 \right\rceil}
 
 %%%%%%%%%%%%%%%%%
@@ -82,7 +97,7 @@
 
 \def\inp{\mathsf{in}}
 \def\st{\mathsf{st}}
-\def\secp{{\kappa}}
+\def\secp{{\lambda}}
 
 
 

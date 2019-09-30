@@ -8,32 +8,34 @@ Framework
 \end{itemize}
 
 \subsection{Definition of DPZK}
-Let $P_1, \ldots, P_p$ be $p$ parties. Let $w_1, \ldots, w_N$ be an $N$-element witness set, with the parties possessing a partitioning of this set. A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
+Consider a language in $\npol$
+\[
+L := \{ x | C(x, w) =1 \text{ for some witness } w \}
+\]
+\dnote{rewrite in terms of relation and with x in L as language}
+Let $P_1, \ldots, P_N$ be $N$ parties. For the purpose of distributed proof generation, let $w = (w_1, \ldots, w_N)$ be an $N$-element witness set, with the parties possessing a partitioning of this set.\dnote{Change partition into additive sharing, with each share taking the input length of the circuit. A partition is a sub-class of sharing since the share for a prover can be its partition padded with zeros for the rest of input.} A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
 \begin{itemize}
 \item $\Setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
-\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st_1, \ldots, \st_p) \rightarrow m_i$. Here, $\st_j$ is the state of the party $P_j$. $\st_j$ is initially set to $P_j$'s partition of the witness set and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
+\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have the output $m_i$ of $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st^i_1, \ldots, \st^i_p)$ provided to $V$. Here, $\st^i_j$ is the state of the party $P_j$ at round $i$. $\st^1_j$ is set to $P_j$'s partition of the witness set and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
 \end{itemize}
-A DPZK protocol for the language 
-\[
-L := \{ x | C(x, w) =1 \text{ for some } w = (w_1, \ldots w_N) \}
-\]
+A DPZK protocol for a language $L$
 satisfies the following properties: 
 correctness, soundness, zero-knowledge and privacy among provers.
 \dnote{self: give a name for Privacy among provers}
 \paragraph{Completeness}: %We will define correctness assuming that the witness set is minimal.
 Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $w = (w_1, \ldots w_N)$ corresponding to $x \in L$, when the initial states are set with $\sigma$ and a partition of $w$, $\langle \Pi, V \rangle$ outputs an accept with probability 1.
 
-\paragraph{Soundness}:  For every instance $x \notin L$ and any protocol $\Pi^*$, $V$ accepts with probability at most $\negl(\secp)$.
-\dnote{``any protocol'' Pi* captures any witness w? or should that be explicit?}
+\paragraph{Soundness}:  For every instance $x \notin L$ and any PPT algorithm $\Pi^*$, $V$ accepts with probability at most $\negl(\secp)$.
+
 Soundness ensures the existence of a valid witness for $x \in L$.\dnote{rephrase the previous sentence.} The proof of knowledge of the witness by the prover is captured by the notion of knowledge extraction where an extractor extracts the witness whenever the verifier accepts using an oracle access to the prover. The stronger notion of witness extended emulation \cite{Lindell03} proposes the existence of an emulator which additionally produces a simulated transcript between the prover and the verifier irrespective of whether the verifier accepts or not. We will now define the notion of witness-extended emulation for the DPZK setting, adapted from \cite{Groth11}. 
 \begin{definition}
 A DPZK protocol $(\Setup, \Pi, V)$ has computational witness-extended emulation if for all deterministic polynomial time $\Pi^*$ there exists  an expected polynomial time emulator $\chi$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau$
 \begin{align*}
-&Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{\st_i\}_{i \in [p]}) \leftarrow A(\sigma); tr \leftarrow \langle \Pi^*, V \rangle: A(tr) = 1 \right] \\
-\approx &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{\st_i\}_{i \in [p]}) \leftarrow A(\sigma); (tr, w) \leftarrow \chi^{\langle \Pi^*, V \rangle}(\sigma, x): \right. \\
-&\,\,\,\,\,\, A(tr) = 1 \left. \text{ and if } tr \text{ accepts then } x \in L \text{ with } w \text{ as witness} \right] 
+&Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{w_i\}_{i \in [N]}) \leftarrow A(\sigma); tr \leftarrow \langle \Pi^*, V \rangle: A(tr) = 1 \right] \\
+\approx &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x, \{w_i\}_{i \in [N]}) \leftarrow A(\sigma); (tr, w) \leftarrow \chi^{\langle \Pi^*, V \rangle}(\sigma, x): \right. \\
+&\;\;\; A(tr) = 1 \left. \text{ and if } tr \text{ accepts then } x \in L \text{ with } w \text{ as witness} \right] 
 \end{align*}
-where $\chi$ has access to the oracle $\langle \Pi^*, V \rangle$ which produces the transcript 
+where $\chi$ has access to the oracle $\langle \Pi^*, V \rangle$ which produces the transcript. $\chi$ can rewind $\langle \Pi^*, V \rangle$ to any round and resume the protocol with fresh randomness for the verifier.
 \end{definition}
 .\dnote{1. should the notation $\langle \Pi, V \rangle$ be modified to also take their respective inputs?\\
 2. Proof of knowledge \textit{vs} argument of knowledge}
@@ -41,22 +43,38 @@ Note that this follows from the single prover definition since an adversarial pr
 Also, allowing for any adversarial $\Pi^*$ captures adversarial behaviour by all the parties.
 
 \paragraph{Zero-knowledge}: 
-This notion ensures that the proof does not reveal any information beyond the fact that the instance is in the language.
+The notion of zero-knowledge ensures that the proof does not reveal any information beyond the fact that the instance is in the language.
 This is a property with respect to the view of the verifier $V$. The protocol $\Pi$ and the number of provers involved to produce these messages do not impact the zero-knowledge property. Hence, the DPZK definition for zero-knowledge does not change from its single prover version.
 \begin{definition}
 The argument $(\Setup, \Pi, V)$ is a perfect special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
 \begin{align*}
-&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (x,w) \leftarrow A(\sigma); tr \leftarrow \langle \Pi, V \rangle: x \in L \text{ with witness } w \text{ and } A(tr)=1 \right] \\
-= &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x,w) \leftarrow A(\sigma); tr \leftarrow S(\sigma,x): x \in L \text{ with witness } w \text{ and } A(tr) = 1 \right]
+&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (x,w,\rho) \leftarrow A(\sigma); tr \leftarrow \langle \Pi, V_\rho \rangle: x \in L \text{ with witness } w \text{ and } A(tr)=1 \right] \\
+= &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (x,w,\rho) \leftarrow A(\sigma); tr \leftarrow S(\sigma,x,\rho): x \in L \text{ with witness } w \text{ and } A(tr) = 1 \right]
 \end{align*}
 \end{definition}
 .\dnote{Auxiliary input zk or just without it?}
 
 \paragraph{Privacy among parties}:
 This notion follows from the simulation security of multi-party computation. The transcript of the interaction between parties can be simulated by a simulator with access only to the secret inputs of the corrupted provers. Hence, for a protocol supporting $p-1$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $p-1$ provers.
+\dnote{self: include formal definition}
+
+\paragraph{Efficiency measures}
+A DPZK protocol is measured for its efficiency using the following measures:
+\begin{enumerate}
+\item Complexity of $\Pi$: The protocol $\Pi$ is measured in terms of the following complexities:
+\begin{itemize}
+\item computation
+\item communication
+\item number of rounds
+\end{itemize}
+\item Verifier complexity
+\item Proof size
+\end{enumerate}
 
 \subsubsection{Circuit share complexity}
-We introduce this notion of \textit{circuit share complexity} to quantify the part of the circuit whose wire values are functions of inputs from more than one prover. 
+Consider a relation where the witness is \textit{partitioned} among the provers in the DPZK setting. We define a new notion of efficiency for a DPZK protocol which would become a prominent efficiency measure for a class of real-world applications.
+Let \textit{shared circuit} denote the part of the circuit representing the relation whose wire values are functions of inputs from more than one prover. 
+We introduce the notion of \textit{circuit share complexity} to denote the size of this shared circuit.
 Consider the class of applications where hashes (or any other commitment) of data from different parties are stored on a blockchain and a zero-knowledge proof has to be generated on an aggregation of all the data. This could be: 
 \begin{enumerate}
 \item Finance network: different bank account holders proving to a loan provider that the sum of their account balances is greater than the required threshold.
@@ -67,7 +85,7 @@ In all the applications in this class, each party participating in the aggregati
 For instance, when using verifying a hash commitment within a proof system which works with circuit representation of the relation, the proofs of relevance i.e. the hash verifications of the individual data take up most of the gates in the circuit. But each such verification rely only on data from a single party. The aggregation does involve data from multiple parties but this step requires a relatively smaller number of gates. Hence, the circuit share complexity is very small for such applications, compared to the total size of the circuit. A DPZK protocol with its complexities proportional to the circuit share complexity instead of the total circuit complexity can attain major savings for such applications.
 In general, the compatibility of the commitment with function representation of the proof system plays a part in the above discussion. We will discuss the relevant work on this compatibility in more detail in Section \ref{sec:relatedwork}.
 
-Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the \textit{total} size of the circuit.
+Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the \textit{total} size of the circuit. 
  
 \subsubsection{Discussion}
 Discussion on the definition.
