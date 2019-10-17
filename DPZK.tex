@@ -8,22 +8,24 @@ Framework
 \end{itemize}
 
 \subsection{Definition of DPZK}
-Consider a language in $\npol$
+Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$ such that
 \[
-L := \{ x | C(x, w) =1 \text{ for some witness } w \}
+x \in L \Leftrightarrow R(x, w)=1 \text{ for some witness } w
 \]
-\dnote{rewrite in terms of relation and with x in L as language}
-Let $P_1, \ldots, P_N$ be $N$ parties. For the purpose of distributed proof generation, let $w = (w_1, \ldots, w_N)$ be an $N$-element witness set, with the parties possessing a partitioning of this set.\dnote{Change partition into additive sharing, with each share taking the input length of the circuit. A partition is a sub-class of sharing since the share for a prover can be its partition padded with zeros for the rest of input.} A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
+Let $P_1, \ldots, P_N$ be $N$ parties. In our setting, we let each party have an additive share of the witness $w$. For party $i \in [N]$, let $w_i$ be its share.  Note that $w$ and its shares have length equal to the number of input wires of the circuit $C$ representing the relation $R$. We will discuss later in this section why we decided to do an additive share of the witness. Note that a partition of the witness among the provers (such that each prover owns a non-intersecting piece of the witness) is a sub-class of additive sharing since the share of a prover can be its partition of the witness padded with zeros in the rest of positions.
+
+
+A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
 \begin{itemize}
 \item $\Setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
-\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have the output $m_i$ of $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st^i_1, \ldots, \st^i_p)$ provided to $V$. Here, $\st^i_j$ is the state of the party $P_j$ at round $i$. $\st^1_j$ is set to $P_j$'s partition of the witness set and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
+\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have the output $m_i$ of $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st^i_1, \ldots, \st^i_p)$ provided to $V$. Here, $\st^i_j$ is the state of the party $P_j$ at round $i$. $\st^1_j$ is set to $P_j$'s share of the witness $w_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
 \end{itemize}
 A DPZK protocol for a language $L$
 satisfies the following properties: 
 correctness, soundness, zero-knowledge and privacy among provers.
 \dnote{self: give a name for Privacy among provers}
 \paragraph{Completeness}: %We will define correctness assuming that the witness set is minimal.
-Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $w = (w_1, \ldots w_N)$ corresponding to $x \in L$, when the initial states are set with $\sigma$ and a partition of $w$, $\langle \Pi, V \rangle$ outputs an accept with probability 1.
+Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $w$ corresponding to $x \in L$, when the initial states are set with $\sigma$ and the shares of $w$, $\langle \Pi, V \rangle$ outputs an accept with probability 1.
 
 \paragraph{Soundness}:  For every instance $x \notin L$ and any PPT algorithm $\Pi^*$, $V$ accepts with probability at most $\negl(\secp)$.
 
@@ -59,13 +61,13 @@ This notion follows from the simulation security of multi-party computation. The
 \dnote{self: include formal definition}
 
 \paragraph{Efficiency measures}
-A DPZK protocol is measured for its efficiency using the following measures:
+In addition to the efficiency measures used for single-prover protocols, DPZK protocols are also measured in terms of the complexity and number of rounds involved in the communication between the provers. We now state all the efficient measures used to quantify a DPZK protocol.
 \begin{enumerate}
 \item Complexity of $\Pi$: The protocol $\Pi$ is measured in terms of the following complexities:
 \begin{itemize}
-\item computation
-\item communication
-\item number of rounds
+\item \textit{computation} complexity for the provers
+\item total \textit{communication} complexity between the provers
+\item number of \textit{rounds} of communication between the provers
 \end{itemize}
 \item Verifier complexity
 \item Proof size
@@ -79,7 +81,6 @@ Consider the class of applications where hashes (or any other commitment) of dat
 \begin{enumerate}
 \item Finance network: different bank account holders proving to a loan provider that the sum of their account balances is greater than the required threshold.
 \item Trade logistic network: different logistic providers proving to a customer or regulator that the average delay of shipment along a particular route is less than a specified time.
-\item 
 \end{enumerate}
 In all the applications in this class, each party participating in the aggregation first proves the \textit{relevance} of his/her data before they all run a protocol to prove the aggregated value on their data together. The proof of relevance involves proving that the data corresponds to a commitment in the blockchain network by proving the knowledge of the opening of a commitment in the blockchain. 
 For instance, when using verifying a hash commitment within a proof system which works with circuit representation of the relation, the proofs of relevance i.e. the hash verifications of the individual data take up most of the gates in the circuit. But each such verification rely only on data from a single party. The aggregation does involve data from multiple parties but this step requires a relatively smaller number of gates. Hence, the circuit share complexity is very small for such applications, compared to the total size of the circuit. A DPZK protocol with its complexities proportional to the circuit share complexity instead of the total circuit complexity can attain major savings for such applications.
@@ -90,9 +91,11 @@ Looking ahead, the complexity of the interaction between the provers in our DPZK
 \subsubsection{Discussion}
 Discussion on the definition.
 
-\subsection{Construction step 1: The introduction of homomorphic commitments}
+Discussion on the sharing the witness among the parties instead of partitioning the witness.
 
- -- some technical description of the techniques, and how "commitment oracle"
-helps in realizing DPZK
-
-\paragraph{Note} If we did not use homomorphic commitment we get +poly(secp).N protocol.
+%\subsection{Construction step 1: The introduction of homomorphic commitments}
+%
+% -- some technical description of the techniques, and how "commitment oracle"
+%helps in realizing DPZK
+%
+%\paragraph{Note} If we did not use homomorphic commitment we get +poly(secp).N protocol.

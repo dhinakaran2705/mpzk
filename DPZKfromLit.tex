@@ -1,0 +1,45 @@
+\section{Construction of DPZK}
+We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
+\dnote{Should I use zkSNARK protocols instead of zero-knowledge proof protocols}
+The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinocchio} and the untrusted setup \cite{aurora, bulletproofs}. \cite{Check} 
+Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
+
+Among these works, only Bulletproofs \cite{bulletproofs} discuss distributed proof generation. Even in \cite{bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
+%Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
+
+\subsection{DPZK-Aurora}
+
+
+\subsection{DPZK-Spartan}
+Spartan \cite{spartan} is a zkSNARK protocol supporting arbitrary circuits with a transparent setup, $O(|C|^{1/c})$ proof size for $c \geq 2$, an amortized sublinear verifier complexity. Spartan has three high level steps:
+\begin{enumerate}
+\item Construct a low-degree multivariate polynomial $\tilde{G}$ such that circuit satisfiability can be checked by performing a sum-check protocol \cite{sumcheck} over this polynomial.
+\item Use the polynomial commitment scheme from \cite{hyrax} to obtain a commitment of this polynomial from the prover. The traditional sum-check protocol involves the prover sending partial evaluations on this polynomial to the verifier, but this would incur a $O(|C|)$ proof size due to the degree and the number of variables in the polynomial. Instead, the Spartan prover proves these evaluations to the verifier using the polynomial commitment scheme to obtain a succinct proof.
+\item Further use polynomial commitments to achieve sub-linear verification time amortized over multiple verifications on the same circuit.
+\end{enumerate}
+Spartan encodes the extended witness vector $w$ as a polynomial $Z(\cdot)$ such that $Z(i)$ provides the value at wire $i$. Let $\tilde{Z}$ be the polynomial extension of $Z$.
+The first step, the construction of the polynomial $\tilde{G}$, involves a multiplication of the polynomial $\tilde{Z}$ on some set of $|C|$ variables $u_1$ with itself on a different distinct set of $|C|$ variables $u_2$ ($\tilde{G}$ will be evaluated on random points in the latter steps). This multiplication is the (only) step which will require an MPC protocol to obtain DPZK-Spartan. 
+
+The multilinear extension $\tilde{Z}(\cdot)$ can be obtained by an inner product of the extended witness vector $w$ with a vector of polynomials on the input variables. Hence, to enable the computation of $\tilde{Z}(u_1) \cdot \tilde{Z}(u_2)$, the prover needs to compute the pairwise product of the elements of $w$. In the DPZK setting, with $w$ being additively shared among the provers, $O(|C|^2)$ MPC multiplications have to be run by the provers. 
+\dnote{is the above explanation too succinct?}
+
+\subsection{DPZK-Ligero}
+We discuss this because this serves as the background to our protocol.
+
+Discuss the version with proof size depending on and growing with the number of provers. 
+
+--- Move the Ligero summary written by Nitin here ---
+
+
+\subsection{Summary of existing protocols}
+Argue why we need a better a single prover protocol amenable to multiple provers. 
+--- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
+
+
+
+\section{Our DPZK protocol} [To be moved to different files]
+[DPZKShortProof]
+1. The use for commitments --- 2. Explain the 2D version  
+
+[DPZKQuickVerify]
+3. The need for 3D --- 4. Our 3D version.
