@@ -1,39 +1,3 @@
-\section{Introduction}
-
-\section{Preliminaries}
-\subsection{Reed Solomon Codes}
-\begin{definition}[Reed-Solomon Code]\label{defn:rscodes}{\rm
-For positive integers $n,k$ and a finite field $\FF$, and a vector
-$\bm{\eta}=(\eta_1,\ldots,\eta_n)\in \FF^n$ of distinct field elements, the
-code $\RSC{k}{n}{\eta}$ is a linear code over $\FF$ consisting of tuples 
-$(p(\eta_1),\ldots,p(\eta_n))$ where $p$ is a polynomial of degree $< k$ over
-$\FF$.
-}
-\end{definition}
-
-\begin{definition}[Interleaved Code]\label{defn:interleaved}{\rm
-For an $[n,k,d]$ linear code $L$ over field $\FF$ and a positive integer $m$, we define
-the {\em interleaved } code $L^m$ consisting of $m\times n$ matrices over $\FF$
-whose rows are codewords in $L$. We view $L^m$ as a code over the alphabet
-$\FF^m$, where each column of $L^m$ is a symbol in $\FF^m$.
-}
-\end{definition}
-The distance of two codewords $A,B\in L^m$ is defined as the number of columns
-where they differ, i.e $\Delta(A,B)=|\{i\in [n]: A[i]\neq B[i]\}|$ where $X[i]$
-denotes the $i^{th}$ column of $m\times n$ matrix $X$. 
-
-The soundness of our protocols of proximity rely on the following lemma:
-\begin{lemma}\label{lem:proximitytest}{\rm
-Let $L$ be an $[n,k,d]$ linear code and $L^m$ be the interleaved code obtained
-from $L$ for some positive integer $m$. Let $U^\ast\in \FF^{mn}$ be such that
-$d(U^\ast,L^m) > e$ where $e < d/3$. Then,
-\begin{align}
-\probsub{r\sample \FF^m}{\Delta(r^TU^\ast,L)\leq e} < \frac{d}{|\FF|}.
-\end{align}
-}
-\end{lemma}
-The above lemma is proved in \cite{Ligero2017} for $e=d/4$. We provide a
-self-contained proof of the above for $e=d/3$ in the Appendix.
 
 \subsection{Inner Product Arguments}
 We define an interactive protocol that allows proving inner product relation
