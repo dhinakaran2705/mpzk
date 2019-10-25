@@ -56,7 +56,7 @@ keys]{cryptocode}
 
 
 \section{Making Inner Product Zero Knowledge}
-The inner prodcut protocol presented in the paper \cite[Section 3]{Bulletproofs}
+The inner product protocol presented in the paper \cite[Section 3]{Bulletproofs}
 presents a sound argument for the following relation:
 \begin{align}\label{eq:ipa}
 \{\big((P,v,\bm{g},\bm{h},g), (a,b)\big): P\in \GG, v\in \ZZ_p,
@@ -69,9 +69,9 @@ to satisfy the relation $\langle a,b \rangle = v$.
 We will present a zero knowledge argument for inner product, where the prover
 makes hiding and binding commitments to the vectors $a_L,a_R\in \ZZ_p^n$ and  
 the inner product $\langle a_L,a_R\rangle$. Specifically, given $A\in \GG$,
-$V\in \GG$ and $\bm{g},\bm{h}\in \GG^n$, $g,h\in \GG$, we give a zero knowledge
-argument of knowledge of $a_L,a_R\in \ZZ_p^n$ and $v,\sigma,\delta\in \ZZ_p$
-such that $A=h^\sigma\bm{g}^{a_L}\bm{h}^{a_R}$, $V=h^\delta g^v$ and
+$V\in \GG$, $\bm{g},\bm{h}\in \GG^n$ and $g,h\in \GG$, we give a zero knowledge
+argument of knowledge of $a_L,a_R\in \ZZ_p^n$ $v,\sigma,\delta\in \ZZ_p$
+such that $A=h^\sigma\bm{g}^{a_L}\bm{h}^{a_R}$, $V=h^\delta g^v$ with
 $\langle a_L,a_R\rangle = v$. We present the protocol below:
 
 \begin{enumerate}[{\rm 1.}]
@@ -133,7 +133,7 @@ $P=\bm{g}^{\hat{l}}\bm{h}^{\hat{r}}$, by the completeness property of the inner
 product argument, the verifier accepts in the inner product subprotocol. This
 proves the completeness of the overall protocol. 
 
-\section{Zero Knowledge}
+\subsection{Zero Knowledge}
 Concretely, the transcript $\mc{T}$ consists of messages
 $(x,T_1,T_2,P,S,\hat{t},\mu,\tau_x,\mc{T}_{in})$ where $\mc{T}_{in}$ denotes the
 transcript of the inner product argument used as the subprotocol. We remove the
