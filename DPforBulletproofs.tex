@@ -12,14 +12,17 @@
 
 \newtheorem{lemma}[theorem]{Lemma}
 
-\newcommand{\mc}{\mathcal}
+%\newcommand{\mc}{\mathcal}
 \title{Distributed prover proof generation for bulletproofs}
 
 \begin{document}
 \maketitle
 
 
-\section{Distributed prover proof generation for bulletproofs}
+\section{Distributed prover proof generation for R1CS}
+\begin{comment}
+We will give two constructions of distributed proof generation for R1CS with zero knowledge property. In the first construction we will start with reducing the proof for single prover R1CS to single prover zero knowledge inner product argument, then we will give a transformation for zero knwoledge inner product argument from single prover to multiple provers, which will directly imply the proof generation system for multiprover R1CS. In the second construction we will  
+\end{comment}
 Consider the setting of distributed prover, i.e. that witness is distributed among the provers, say N provers together hold the witness. Here we will discuss the distributed prover version of the bulletproofs for R1CS circuits. We will start with describing the distributed prover version of zero knowledge innerproduct, then we will use the protocol to design a protocol for R1CS.
 
 We will start with reducing a R1CS circuit into multiple inner product. Then we will use the zero knowledge inner product to construct the proof of R1CS circuit. Consider that the circuit has $n$ multiplcation gates. corresponding to the $j^{th}$ wire let $x_j, y_j$ and $z_j$ are the left input, right input and output wires respectively. Then the vectors $\bm{x}, \bm{y}, \bm{z}\in \bbF^n$ can be obtained from the extended witness $\bm{w}$, by multiplying public matrices $A, B, C$ which is depended only on the circuit. Therefore we have 
@@ -97,8 +100,16 @@ $\cA$ receives the commitments of the coefficients of the shares of the polynomi
 In the next step, $\cA$ gets $\hat{l}, \hat{r}, \mu, \tau_x$, which verifier gets in single prover zero knowledge inner product argument, the zero knowledge property of the above ensures that $\hat{l}, \hat{r}, \mu, \tau_x$ is not leaking any information about the secrets.
 
 Therefore A is not learning anything new. Which implies privacy of the provers are preserved.
+
 \subsection{optimization}
 We can combine the inner product $\langle \bm{r}^T \cdot A, \bm{w}\rangle = \langle \bm{r}, \bm{x} \rangle =v_1$ and $\langle \bm{r}^T \cdot C, \bm{w}\rangle = \langle \bm{r}, \bm{z} \rangle =v_3$ which can be represented as $\langle \bm{r}^T \cdot(\alpha.A+\gamma.C), \bm{w}\rangle = \langle \bm{r}, (\alpha.\bm{x}+\gamma.\bm{z}) \rangle =v_3$ where $\alpha, \gamma$ are randomly chosen by the verifier $\cV$. In the commitment we are considering that if $\langle \bm{a},\bm{b}\rangle= c$ is in the statement of the inner product, then the commitment of $\bm{a}$ and $\bm{b}$ will be of the form $h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$. Note that in the commitment there should not be any known relation between the generators and for the equation $\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle =v_4$ there should not be the known relation between the generator $\bm{g}$ which is used to commit to $\bm{x}$ with the generator which is used to commit to $\bm{y}$, for that reason the commitment for $\bm{y}$ is considered in left in $\langle \bm{y}, \bm{r} \rangle = v_2$. For that reason this inner product we could not batch with the prior inner products. In this case we need to give 6 inner product proofs instead of 8. 
+
+\subsection{Alternate proof for R1CS}
+In the beginning we just presented the reduction of R1CS satisfiability to 8 innerproduct argument, where each of them are inner products of vectors of size $n$. Another simple way of combining the inner products of vectors of size $n$ into a single inner product of size of $8n$, (for further optimization, this $8n$ can be reduced to $6n$) were given in \cite{Bulletproofs} in their range proofs. 
+For each inner product choose a different set of generators $(\bm{g}^{(k)},\bm{h}^{(k)})_{k=1}^{8}$ and define $\bm{g}$ as the interleaved concatenation of all $\bm{g}^{(k)}$ such that $g_i=g_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$. Define $\bm{h}$ in the similar way. The private vectors are also combined in the similar way. Therefore the final inner product will look like:
+$$\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\}$$
+where $a_i= a_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$ similarly define $\bm{b}$. $\langle\bm{a},\bm{b}\rangle=\sum_{k=1}^{4}2\times v_i$
+In this way proof size will be $2\log (8n) + 2$.
 \bibliographystyle{plain}
 \bibliography{references}
 \end{document}
