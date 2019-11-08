@@ -1,8 +1,8 @@
-\section{Our DPZK protocol} 
-We present our DPZK protocol \dpname{} by first explaining the single prover version of our protocol. 
+\section{Relevant prior art: an overview} 
+We will present our DPZK protocol \dpname{} by first explaining the single prover version of our protocol. 
 \dnote{adapt this part based on the summary of the DPZK derived from the existing single prover versions}
-\section{Solution Overview}
-We present an overview of the techniques underlying our interactive protocol
+
+Before that, we present an overview of the techniques underlying our interactive protocol
 with succinct argument size and efficient verification with sublinear public
 key operations and sublinear field operations in expectation. In our
 presentation of the core ideas, we first give an informal overview of the
@@ -10,7 +10,7 @@ existing techniques, and then discuss our specific modifications to them.
 
 Our starting point is the Interactive PCP argument presented in Ligero\cite{Ligero2017}. The
 aforementioned protocol uses elementary techniques, is concretely
-efficient being based on symmetric key operations, and achieves an argument
+efficient being devoid of public key operations, and achieves an argument
 size which is square-root in size of the arithmetic circuit. Our core technical
 contribution is to use homomorphic commitments and inner product arguments to 
 further reduce the size of the ``queries'' to the witness oracle. The
@@ -173,11 +173,13 @@ complexity.
 An brief recall on how our paradigm enables any improvement in single prover ZK protocol directly translate to the DP version.\\
 
 The first part of \name{} is obtaining the proof size of $N^{1/c}$ for any $c \geq 2$.
-The core idea is that we will make use of homomorphic commitments and inner product arguments to remove the linear dependence of the proof size on $m$ in \cite{ligero}. In short, we will commit to the vector $\{\hat{f}^x_i(\alpha)\}_{i \in [m]}$ using the homomorphic vector commitments. The vectors corresponding to each $\alpha$ will be committed separately. And instead of ``opening'' these vectors to the verifier, the prover in \name{} will provide an inner product argument on the vectors.
+We will make use of homomorphic commitments and inner product arguments to remove the linear dependence of the proof size on $m$ in \cite{ligero}. A brief summary of our idea follows. We will commit to the vector $\{\hat{f}^x_i(\alpha)\}_{i \in [m]}$ using the homomorphic vector commitments. The vectors corresponding to each $\alpha$ will be committed separately. Here, instead of ``opening'' these vectors to the verifier, the prover in \name{} will provide an inner product argument on the vectors.
 
-\subsection{A SNARK protocol with $O(N^{1/c})$ proof size}
+\dnote{provide a short comparison of this protocol with the existing works here.}
 
-We will now describe our protocol in detail. The protocol explained in this section will have $O(N^{1/c})$ proof size and $O(N^{1-1/c})$ public key operations (and $O(N)$ overall complexity) for the verifier.
+\subsection{\name2D{}: A SNARK protocol with $O(N^{1/c})$ proof size}
+
+We will now describe \name2D{} in detail. The protocol explained in this section will have $O(N^{1/c})$ proof size and $O(N^{1-1/c})$ public key operations (and $O(N)$ overall complexity) for the verifier. We will first explain the interactive version of our protocol \name2D{}. \\
 
 We reduce the query complexity and verifier efficiency in the interactive protocol by
 using homomorphic vector commitments over the RS encoded witness oracles. Let
@@ -192,7 +194,7 @@ $\hat{f}^x_{i}$ on $H$. We define the RS-encoded witness $\rsoracle\in
 [m]$ and $j\in [n]$. We now construct a commitment oracle $\comoracle$ from $\rsoracle$.
 
 \subsubsection{Commitment Oracle}
-Throughout we assume $\FF$ is a prime field. Let $\comm$ denote the Pedersen
+Throughout, we assume $\FF$ is a prime field. Let $\comm$ denote the Pedersen
 vector commitment scheme over $\FF^m$ with randomness space as $\FF$ and
 commitment space as group $\GG$ with independent generators $g_1,\ldots,g_m, h$. 
 Define $c_{j} = \comm(\rsoracle[\cdot,j],\delta_{j})$, $j\in [n]$ where the notation $X[\cdot,j]$
@@ -203,15 +205,15 @@ $\comoracle$ answers queries of the type $Q\subseteq [n]$, responding with
 elements $\comoracle[j]$ for $j\in Q$.\footnote{Defining the commitment vector as 
 $\comoracle$ might seem superfluous here. But, the usage of $\comoracle$ will play 
 a prominent role in our 3D protocol. We just define the notation here for the uniformity 
-in our descriptions.} 
+in our descriptions of the 2D and the 3D versions.} 
 %We will use $\comoracle$ as the witness
 %oracle, and adapt the subprotocols for checking linear constraints, quadratic
 %constraints and proximity to this oracle.
 
-\subsubsection{Linear Check with Commitment Oracle}
+\subsubsection{Linear Check with Commitment Oracle}\label{sec:lincheck2D}
 The linear check $Ax=0$ can be reduced to checking
 $\innp{r^TA}{x}=0$, where the verifier samples a random $r\sample \FF^{mn}$
-and sends it to the prover. As before, the prover and verifer write $r$ as
+and sends it to the prover. As in \cite{ligero}, the prover and verifer write $r$ as
 $(r_{1}|\cdots|r_{m})$ where each $r_i\in \FF^\ell$. Both the prover and the
 verifier also compute degree $<\ell$ polynomials $\hat{r}_{i}$ interpolating
 the vector $r_{i}$ on $G$. The required check in terms of polynomials can be
@@ -233,7 +235,7 @@ uses these queried values to prove some inner-product relations with other
 (publicly-known) vectors. Hence, our idea is to make the prover 
 use inner-product arguments to prove the consistency of $\hat{p}$ to the verifier.
 
-We will now describe our protocol \name2d{}. It will check that a purported commitment oracle
+We will now formally describe the Linear check for our protocol \name2d{}. It will check that a purported commitment oracle
 $\comoracle$ encodes witness $x$ satisfying the constraint $Ax=0$ for a public
 matrix $A$. As before, we assume $x\in \FF^N$ and $A\in \FF^{N\times N}$ and
 $N=m\ell$ for some positive integers $m$ and $\ell$. We further assume that
@@ -254,10 +256,10 @@ $p(\cdot)=\sum_{i\in [m]}R^i(\cdot)\hat{f}^x_{i}(\cdot)$ and sends $p$ to the ve
 $j_1,\ldots,j_t$ from the set $[n]$ independently at random and sends the indices to the prover.
 
 \item $\prover\leftrightarrow\verifier$: The prover wants to prove that 
-$\sum_{i\in [m]} R^i(\eta_{j_u}) \cdot \hat{f}^x_{i}(\eta_{j_u}) = p(\eta_{j_u})$ for each $u \in [t]$.
+$\sum_{i\in [m]} R^i(\eta_{j_u}) \cdot \rsoracle[i, j_u] = p(\eta_{j_u})$ for each $u \in [t]$.
 That is, $\prover$ wants to prove the inner product $\innp{R_{j_u}}{\rsoracle[\cdot,j_u]} = p(\eta_{j_u})$,
 where $R_{j_u} = (R^1(\eta_{j_u}), \ldots, R^m(\eta_{j_u}))$ and 
-$\rsoracle[\cdot, j_u]$ denotes the $n$-length vector $(\rsoracle[1, j_u], \ldots, \rsoracle[m, j_u])$.
+$\rsoracle[\cdot, j_u]$ denotes the $m$-length vector $(\rsoracle[1, j_u], \ldots, \rsoracle[m, j_u])$.
 To do so, $\prover$ runs an inner-product argument for each $u \in [t]$ with the verifier. The verifier proceeds if the arguments succeed for all $u \in [t]$.
 
 \item The verifier also checks that $\sum_{k\in [\ell]}p(\zeta_k)=0$.
@@ -272,6 +274,48 @@ To do so, $\prover$ runs an inner-product argument for each $u \in [t]$ with the
 .\dnote{The proof should be straightforward when using zk inner-product arguments, right?}
 
 
+\subsubsection{Quadratic Check}\label{sec:quadcheck2D}
+The quadratic check involves the prover convincing the verifier that $x\circ y=z$ 
+by providing oracle access to the vectors $x,y$ and $z$. Our protocol follows from
+\cite{ligero}, except for the final check by the verifier.
+To check that $\hat{p}$ is correctly computed from the oracles, the verifier queries 
+the oracles at small number of points $\alpha_1,\ldots,\alpha_q$. The prover responds
+with an inner-product proof that proves to the verifier that $\hat{p}(\alpha_j)=\sum_{i\in
+[m]}r_i(\hat{f}^x_i(\alpha_j) \cdot \hat{f}^y_i(\alpha_j)-\hat{f}^z_i(\alpha_j))$ for $j\in [q]$.\\
+
+We now formally describe the interactive oracle protocol for checking the relation
+$x\circ y = z$ for vectors $x,y,z\in \FF^N$. Let $\rsoracle_x,\rsoracle_y$ and
+$\rsoracle_z$ denote the encodings of vectors $x$, $y$ and $z$ respectively via
+the RS code. Let $\comoracle_x,\comoracle_y$ and $\comoracle_z$ denote
+the respective commitment oracles. The prover and the verifier interact as
+follows:
+
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: The verifier sends a challenge $r\sample
+\FF^p$ to the prover.
+\item $\prover\rightarrow\verifier$: The prover computes the polynomial $p_j(.)=\sum_{i\in [m]}
+r_i(\hat{f}^i_x(\cdot) \cdot \hat{f}^i_y(\cdot) - \hat{f}^i_z(\cdot))$.
+and sends it to the verifier.
+
+\item $\verifier\rightarrow\prover$: The verifier sends $t$ randomly sampled indexes $\{j_u\}_{u\in [t]}$ from $[n]$. 
+
+\item $\prover\leftrightarrow\verifier$: The prover wants to prove that 
+$\sum_{i\in [m]} r_i(\rsoracle_x[i,j_u] \cdot \rsoracle_y[i,j_u]-\rsoracle_z[i,j_u] = p(\eta_{j_u})$ for each $u \in [t]$.
+That is, $\prover$ wants to prove the inner product $\innp{r \circ \rsoracle_x[\cdot,j_u]}{\rsoracle_y[\cdot,j_u]} - \innp{r}{\rsoracle_z[\cdot,j_u]} = p(\eta_{j_u})$.
+To do so, for each $u \in [t]$, $\prover$ runs the following inner-product argument with the verifier: 
+\[
+\innp{(r \circ \rsoracle_x[\cdot,j_u] || r}{\rsoracle_y[\cdot,j_u] || -\rsoracle_z[\cdot,j_u] } = p(\eta_{j_u})
+\]
+To facilitate this, $\comoracle_x,\comoracle_y$ and $\comoracle_z$ should have been committed with different independently chosen sets of generators.\footnote{By independent, we mean that the prover does not know the Diffie-Hellman relation between any pair of generators.} And, the set of generators used for committing $r$ (to be concatenated with $r \circ \rsoracle_x[\cdot,j_u])$) should also be independent of the above three sets of generators.
+The verifier proceeds if the arguments succeed for all $u \in [t]$.
+
+\item The verifier also checks that $\sum_{k\in [\ell]}p(\zeta_k)=0$ and accepts if it succeeds.
+%\begin{itemize}
+%\item It checks $\sum_{k\in [\ell]}p(\zeta_k)=0$.
+%\item It checks consistency of $\rsoracle[\cdot, j_u]$ with commitment oracle $\comoracle$ for $u\in [t]$
+%using the inner-product arguments. 
+%\end{itemize}
+\end{enumerate}
 
 
 
@@ -279,259 +323,22 @@ To do so, $\prover$ runs an inner-product argument for each $u \in [t]$ with the
 
 
 \subsubsection{Proximity Protocol}\label{sec:proximity2D}
-We describe a protocol for ``proximity'' of a purported codeword to bivariate
+We describe a protocol for ``proximity'' of a purported codeword to the
 interleaved code. Let $U\in \FF^{n_2\times n_1}$ denote the purported codeword and let
-$e<\min(d_1,d_2)/3$ denote the proximity parameter. In its first message the
-prover computes commitments $c_1,\ldots,c_{n_1}$ to the columns of $U$ and
-sends it to verifier. Thereafter the prover and the verifier interact as
+$e< d/3$ denote the proximity parameter. 
+\dnote{To Nitin: why did you not use the notation $\rsoracle$ for $U$? Is it that only those $U$s which satisfy the proximity test become $\rsoracle$?}
+In its first message the
+prover computes commitments $c_1,\ldots,c_n$ to the columns of $U$ and
+sends it to verifier. Thereafter, the prover and the verifier interact as
 follows:
 \begin{enumerate}[{\rm 1.}]
-\item $\prover\rightarrow \verifier$: Commitments $c_1,\ldots,c_{n_1}$ to the
-columns of $U$.
-\item $\verifier\rightarrow \prover$: Verifier samples $\gamma\sample
-\FF^{n_2}$ and $\tau\sample \FF^{n_1}$ and sends to the prover.
-\item $\prover\rightarrow \verifier$: The prover computes $w_1=\gamma^TU$ and
-$w_2=U\tau$. It computes commitment $\mathsf{cm}_1$ to the
-vector $w_1$ and sends it to the verifier (the commitment to $w_2$ can be computed by the
-verifier). 
-\item $\verifier\rightarrow \prover$: Verifier samples subset $Q_1\subseteq
-[n_1]$ of size $t$ and sends it to the prover.
-\item $\prover\rightarrow\verifier$: The prover sends $w_1[k]$ for $k\in Q_1$.
-\item The prover and the verifier run the subprotocols to check:
-  \begin{itemize}
-  \item $w_1\in L_1$ and $w_1=\gamma^TU$.
-  \item $w_2\in L_2$ and $w_2=U\tau$.
-  \end{itemize}
-\end{enumerate}
-We now describe the subprotocols used in the above protocol.
-Let $H_1\in \FF^{n_1\times (n_1-\ell)}$ and $H_2\in \FF^{n_2\times (n_2-m)}$
-denote the parity check matrices for the codes $L_1$ and $L_2$
-respectively. For the first subprotocol, given the vector commitments
-$c_1,\ldots,c_{n_1}$ to the columns of $U$ and commitment $\mathsf{cm}_1$ for
-the vector $w_1$ (note that the vector is only revealed on positions in $Q_1$), the verifier checks the following inner products:
-\begin{itemize}
-\item $\innp{\gamma}{U[.,k]}=w_1[k]=\innp{w_1}{e_k}$ for all $k\in Q_1$.
-\item $\innp{w_1}{H_1[k]}=0$ for all $k\in [n_1-\ell]$.
-\end{itemize}
-The first set of inner products, probabilistically check the relation
-$\gamma^TU=w_1$ by checking it only on the index set $Q_1$. As we shall see,
-this is sufficient to verify the desired relation with high probability. The
-second check verifies membership of the $w_1$ in $L_1$ by checking
-$w_1^TH_1=\bm{0}$. The former check reduces with high probability to inner
-product checks (i) $\innp{\gamma}{\sum_k
-\delta_kU[.,k]}=\innp{\delta}{w_1|_{Q_1}}$ and
-$\innp{w_1}{\sum_k\delta_ke_k}=\innp{\delta}{w_1|_{Q_1}}$ for a randomly
-$\delta\sample \FF^t$. Note that
-commitments to all the vectors required in above inner products are available
-to the verifier. The check $\innp{w_1}{H_1[k]}=0$ for $k\in [n_1-\ell]$
-similarly reduces to a single inner product check $\innp{w_1}{H_1s}=0$ for a
-random $s\sample \FF^{n_1-\ell}$. 
-
-Next we check $w_2\in L_2$ and $w_2=U\tau$. The verifier homomorphically
-computes commitment $\mathsf{cm}_2$ to $U\tau$ and uses this as the commitment
-for $w_2$ in the inner product protocols to enforce $w_2=U\tau$ (with high
-probability). The check $w_2\in L_2$ is done as in the previous case, since we
-know the commitment to $w_2$.
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Linear Check}
-We now describe a protocol to check that a purported commitment oracle
-$\comoracle$ encodes witness $x$ satisfying the constraint $Ax=0$ for a public
-matrix $A$. As before we assume $x\in \FF^N$ and $A\in \FF^{N\times N}$ and
-$N=pm\ell$ for some positive integers $p,m$ and $\ell$. We further assume that
-the prover has RS-encoded oracle $\rsoracle$ which opens to the commitment
-$\comoracle$ and is $e$-close to the interleaved codes $L_1^{pm}$ and
-$L_2^{pn_1}$. The prover and the verifier interact as follows:
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: The verifier sends a random $r\sample
-\FF^N$ and random $\tau\sample \FF^{n_1}$ to the prover.
-\item $\prover\rightarrow\verifier$: The prover computes as follows:
-\begin{itemize}
-\item interpolates bivariate polynomials $R^i:i\in [p]$ such that the polynomial $R^i$ interpolates the
-vector $(r_{(i-1)mn+1},\ldots,r_{imn})$ for $i\in [p]$. 
-\item computes polynomials $p_j(.)=\sum_{i\in [p]}R^i(\alpha_j,.)Q^i(\alpha_j,.)$ for
-$j\in [n_2]$. 
-\item evaluates the polynomials $p_j$ on the set
-$\bm{\eta}=\{\eta_1,\ldots,\eta_{n_1}\}$. Let $P$ denote the $n_2\times n_1$
-matrix whose $j^{th}$ row is the evaluation of the polynomial $p_j$ on the set
-$\eta$. 
-\item computes commitments $d_1,\ldots,d_{2\ell}$ to the first
-$2\ell$ columns of $P$.
-\end{itemize}
-\begin{equation}
-P := \begin{bmatrix}
-p_1(\eta_1) & \cdots & p_1(\eta_{2\ell}) & \vline & \cdots &
-p_1(\eta_{n_1}) \\
-\vdots & \ddots & \vdots & \vline & \ddots & \vdots \\
-p_{n_2}(\eta_1) & \cdots & p_{n_2}(\eta_{2\ell}) & \vline & \cdots &
-p_{n_2}(\eta_{n_1})
-\end{bmatrix}
-\end{equation}
-Note that there exists a $2\ell\times n_1$ matrix $T$ such that $P'T = P$ where $P'$ denotes
-the submatrix of $P$ consisting of first $2\ell$ columns. Thus the commitments
-to other columns of $P$ can be computed from $d_1,\ldots,d_{2\ell}$ using
-homomorphism.
-The prover sends the commitments $d_1,\ldots,d_{2\ell}$ and the polynomial
-$p(x)=\sum_{j\in[m]} p_j(x)$ to the verifier.
-\item $\verifier\rightarrow\prover$: The verifier samples $t$ distinct indices
-$k_1,\ldots,k_t$ from the set $[n_1]$. It also picks $t$ indices
-$j_1,\ldots,j_t$ from the set $[n_2]$ independently at random. Finally the
-verifier sends the pairs $\{(j_u,k_u):u\in [t]\}$ to the prover.
-\item $\prover\rightarrow\verifier$: The prover sends $t$ ``tubes''
-$\rsoracle[.,j_u,k_u]$ for $u\in [t]$ to the verifier. Recall that
-$\rsoracle[.,j_u,k_u]$ denotes the $p$-length vector
-$(\rsoracle[1,j_u,k_u],\ldots,\rsoracle[p,j_u,k_u])$. The prover also sends the
-columns $\comoracle[.,k_u]$ for $u\in [t]$ of the oracle $\comoracle$. 
-\item The verifier proceeds as:
-\begin{itemize}
-\item It checks $\sum_{k\in [\ell]}p(\zeta_k)=0$.
-\item It runs a proximity protocol to check that $P$ is $e$-close to
-a bivariate interleaved code corresponding to Reed-Solomon codes of degrees
-$2\ell$ and $2m$ respectively.
-\item Checks that $p=\sum_{j\in n_2}p_j$.
-\item It checks $P[j,k]=\sum_{i\in [p]}R^i(\beta_j,\eta_k)\rsoracle[i,j,k]$ for
-$(j,k)\in \{(j_u,k_u):u\in [t]\}$.
-\item It checks consistency of the openings $\rsoracle[.,j_u,k_u]$ with
-commitment oracle $\comoracle$ for $u\in [t]$. 
-\end{itemize}
-\item The verifier accepts if all the above checks succeed.
-\end{enumerate}
-We now describe in detail each of verifier's checks in the final step of the
-above interaction.\smallskip
-
-\noindent{\em Checking proximity of matrix $P$}: Note that an honestly computed
-matrix $P$ in the above protocol forms a bivariate interleaved codewords where
-the rows correspond to evaluation of polynomials of degree $<2\ell$ and columns
-correspond to evaulations of polynomials of degree $<2m$. Using matrix $T$ the
-verifier can homomorphically compute the commitments to the columns of
-purported matrix $P$ and then check proximity using the proximity protocol
-described in Section \ref{sec:proximitybic}. Here we describe an optimized
-version where the verifier need not compute all the column commitments of $P$. 
-We consider the protocol of Section \ref{sec:proximitybic}, where the prover
-sends commitments $d_1,\ldots,d_{2\ell}$ in its first message (instead of $n_1$
-commitments). The prover and verifer proceed exactly as the proximity protocol.
-In testing the proximity to the interleaved code along rows, the verifier needs
-to compute the commitment to the vector $\sum_{k\in Q_1}\delta_kU[.,k]$. The
-verifier computes the commitment as $\sum\lambda_kd_k$ where
-$(\lambda_1,\ldots,\lambda_t)^T = T|_{Q_1}\delta$. Similarly for computing
-commitment for the vector $w_2=P\tau$, for random $\tau\sample \FF^{n_1}$, the
-verifier computes the commitment to $w_2$ as $\sum_{k\in
-[2\ell]}\gamma_kd_k$ where $(\gamma_1,\ldots,\gamma_{2\ell})^T=T\tau$. Note
-that naively computing commitments to all the columns would have required
-$O(\ell m)$ cryptographic operations, while in the current scheme we only need
-$O(m)$ cryptographic operations.\smallskip
-
-\noindent{\em Checking consistency of $p$ with $P$}: To check that $p=\sum_{j\in
-n_2}p_j$, the verifier evaluates $p$ on $\eta_1,\ldots,\eta_{2\ell}$ to obtain the
-evaluation vector $\bar{p}$. The verifier now needs to verify
-$\bar{p}=\bm{1}^TP'$ where $P'$ denotes the submatrix consisting of the first
-$2\ell$ columns of $P$, which probabilistically reduces to inner product check
-$\innp{\bm{1}}{P's}=\innp{\bar{p}}{s}$ for a randomly sampled $s\sample
-\FF^{2\ell}$. For the inner product protocol, the verifier can homomorphically compute the commitment to the
-vector $P's$ given $d_1,\ldots,d_{2\ell}$.\smallskip
-
-\noindent{\em Checking consistency of $P$ with $\rsoracle$}: The checks
-$P[j,k]=\sum_{i\in [p]} R^i(\beta_j,\eta_k)\rsoracle[i,j,k]$ probabilistically
-verify the computation of $P$ from the $\rsoracle$ by probing a few locations
-$(j_u,k_u)$ for $u\in [t]$. Since $P[j,k]=\innp{P[.,k]}{e_j}$, and the verifier
-can compute commitment for $P[.,k]$ the required checks can be accomplished by
-running $t$ instances of the inner product arguments.\smallskip
-
-
-\noindent{\em Checking consistency of openings of $\rsoracle$ with
-$\comoracle$}: Consider $(j,k)\in \{(j_u,k_u):u\in [t]\}$. To check the
-consistency of the opened tube $\rsoracle[.,j,k]$, verifier checks
-$\innp{\rsoracle[i,.,k]}{e_j}=\rsoracle[i,j,k]$ for all $i\in [p]$. This can be
-checked probabilistically by randomly sampling $v\in \FF^p$ and checking
-$\innp{\sum_{i\in [p]}v_i\rsoracle[i,.,k]}{e_j}=\innp{v}{\rsoracle[.,j,k]}$.
-The commitment to the vector $\sum_{i\in [p]}v_i\rsoracle[i,.,k]$ can be
-computed homomorphically as $\sum_{i\in [p]}v_i\comoracle[i,j]$. Similar
-consistency check can be done for all $t$ tubes.
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Quadratic Check}\label{sec:quadcheck}
-We now describe the interactive oracle protocol for checking the relation
-$x\circ y = z$ for vectors $x,y,z\in \FF^N$. Let $\rsoracle_x,\rsoracle_y$ and
-$\rsoracle_z$ denote the encodings of vectors $x$, $y$ and $z$ respectively via
-the bivariate code. Let $\comoracle_x,\comoracle_y$ and $\comoracle_z$ denote
-the respecitve commitment oracles. The prover and the verifier interact as
-follows:
-
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: The verifier sends a challenge $r\sample
-\FF^p$ to the prover.
-\item $\prover\rightarrow\verifier$: The prover computes as follows:
-  \begin{itemize}
-  \item For $j\in [n_2]$, $p_j(.)=\sum_{i\in [p]}
-r_i(Q^i_x(\alpha_j,.).Q^i_y(\alpha_j,.)-Q^i_z(\alpha_j,.))$.
-  \item Constructs $n_2\times n_1$ matrix $P$, where the $j^{th}$ row of $P$
-consists of evaluations of the polynomial $p_j$ on the points
-$\eta_1,\ldots,\eta_{n_1}$.
-  \item Computes commitments $d_1,\ldots,d_{2\ell}$ to the first $2\ell$
-columns of $P$.
-  \end{itemize}
-The prover sends the commitments $d_1,\ldots,d_{2\ell}$ to the verifier.
-
-\item $\verifier\rightarrow\prover$: The verifier sends $\gamma\in \FF^m$ and
-$t$ randomly sampled pairs $\{(j_u,k_u),u\in [t]\}$ from $[n_2]\times [n_1]$. 
-
-\item $\prover\rightarrow\verifier$: The prover sends the polynomial
-$p(.)=\sum_{j\in [m]}\gamma_j.p_j(.)$, the tubes $\rsoracle_a[.,j_u,k_u]$,
- the columns $\comoracle_a[.,k_u]$ for $a\in\{x,y,z\}$ and $u\in [t]$.
-
-\item The verifier proceeds as:
-  \begin{itemize}
-  \item Checks that $p(\zeta_k)=0$ for all $k\in [l]$.
-  \item Checks that $P$ is $e$-close to bivariate interleaved code with
-corresponding Reed-Solomon codes of dimensions $2\ell$ and $2m$ respectively.
-  \item Checks that $p=\sum_{j\in [m]}\gamma_jp_j$.
-  \item Checks that $P[j,k]=\sum_{i\in
-[p]}r_i(\rsoracle_x[i,j,k].\rsoracle_y[i,j,k]-\rsoracle_z[i,j,k]$ for $(j,k)\in
-\{(j_u,k_u):u\in [t]\}$.
-  \item Checks the consistency of openings $\rsoracle_a[i,j_u,k_u]$ for $a\in
-\{x,y,z\}$ and $u\in [t]$ with the commitment oracles $\comoracle_a$.
-  \end{itemize}
-The verifier accepts if all the checks succeed.
-
+\item $\prover\rightarrow \verifier$: Commitments $c_1,\ldots,c_n$ to the columns of $U$.
+\item $\verifier\rightarrow \prover$: Verifier samples $\gamma \sample \FF^n$ and sends to the prover.
+\item $\prover\rightarrow \verifier$: The prover computes $w=\gamma^T U$ and sends it to the verifier. 
+\item $\verifier\rightarrow \prover$: Verifier sends $t$ randomly sampled indexes $\{j_u\}_{u\in [t]}$ from $[n]$ to the prover.
+\item $\prover\leftrightarrow\verifier$: The prover has to now prove to the verifier that $w_{j_u} = \gamma^T U[\cdot, j_u]$, for all $u \in [t]$. The prover and the verifier will run the inner-product argument to check $\ip{\gamma}{U[\cdot, j_u]} = w_{j_u}$ for all $u \in [t]$. The verifier proceeds if the checks succeed.
+\item The verifier also checks if  $w\in L$ and accepts if it succeeds.
 \end{enumerate}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Discussion
-
-
-
-
-
-\subsection{Construction step 2: Skewing the witness matrix}
- ZK with $O(n^{1/c})$ proof size and $O(n^{1-1/c})$ pub key operations for
-verifier.
- --- Using skewed matrix and inner product arguments.
+\subsection{The pitfalls of 2D}
+The need for 3D
