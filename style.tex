@@ -1,41 +1,13 @@
-%\usepackage{geometry}
-%\geometry{letterpaper}
-%\usepackage{graphicx}
-\usepackage{amssymb}
-%\usepackage{epstopdf}
-\usepackage{amssymb}
-\usepackage{bm}
-\usepackage[lambda,
-advantage,
-operators,
-sets, 
-adversary, 
-landau,
-probability, 
-notions, 
-logic,
-ff,
-mm,
-primitives, 
-events, 
-complexity, 
-asymptotics, 
-keys]{cryptocode}
-\usepackage{tikz}
-\usetikzlibrary{shapes, shadows, arrows}
-\usepackage{amsmath}
-%\usepackage{amsthm}
-\usepackage{placeins}
-%\newtheorem{theorem}{Theorem}[section]
-%\newtheorem{corollary}{Corollary}[theorem]
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
 %\newtheorem{lemma}[theorem]{Lemma}
-\usepackage{comment}
-\usepackage[left=2cm, right=2cm, top=4cm, bottom=2cm]{geometry}
+
 
 % Nitin's macros
 
 \newcommand{\RS}[2]{\mathsf{RS}[#1,#2]}
 \newcommand{\RSC}[3]{\mathsf{RS}[#1,#2,{\bm{#3}}]}
+\newcommand{\rsc}[2]{\mathsf{RS}[\bm{#1},#2]}
 \newcommand{\KK}{\mathbb{K}}
 \newcommand{\comm}{\mathsf{Com}}
 \newcommand{\csetup}{\mathsf{Gen}}
@@ -51,7 +23,9 @@ keys]{cryptocode}
 \newcommand{\rsoracle}{\mathcal{U}^{\mathsf{RS}}}
 \newcommand{\comoracle}{\mathcal{U}^{\mathsf{Com}}}
 \newcommand{\decode}{\mathsf{Dec}}
-
+\newcommand{\dham}{\Delta}
+\newcommand{\ric}[2]{\mathsf{RIC}(#1,#2)}
+\newcommand{\cic}[2]{\mathsf{CIC}(#1,#2)}
 
 
 % 		Calligraphic and blackboard type letters.

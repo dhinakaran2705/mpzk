@@ -6,13 +6,14 @@
 \newcommand{\name}{\textsf{ours}} % Give a good name
 \newcommand{\dpname}{\textsf{DPZK}-\name{}}
 
+\setcounter{tocdepth}{3}
+
 \title{Zero-Knowledge Proof Systems with Distributed Proof Generation}
 %\author{\IEEEauthorblockN{Protik}}
+
 \begin{document}
 \maketitle
-
-\tikzstyle{line} = [draw,-latex']
-\tikzstyle{block}=[draw, rectangle]
+\tableofcontents 
 
 \input{abstract.tex}
 %Let $x$ be the witness which encoded to $U$ where $m$ is the no. of rows, $n$ is the no. of columns in a slice (one vertical matrix), and there are $p$ many slices.\\
@@ -43,7 +44,11 @@
 %
 %\input{AmortizedVerifiersComplexity.tex}
 
-
+.\dnote{
+2) Spartan: |C| to log C \\
+4) There should never be "RS oracle".. It should be "RS-encoded witness" and "commitment oracle"\\
+5) Expand Spartan \\
+7) Shared circuit complexity}
 
 	
 \end{document}

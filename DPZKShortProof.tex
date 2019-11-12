@@ -174,8 +174,7 @@ An brief recall on how our paradigm enables any improvement in single prover ZK 
 
 The first part of \name{} is obtaining the proof size of $N^{1/c}$ for any $c \geq 2$.
 We will make use of homomorphic commitments and inner product arguments to remove the linear dependence of the proof size on $m$ in \cite{ligero}. A brief summary of our idea follows. We will commit to the vector $\{\hat{f}^x_i(\alpha)\}_{i \in [m]}$ using the homomorphic vector commitments. The vectors corresponding to each $\alpha$ will be committed separately. Here, instead of ``opening'' these vectors to the verifier, the prover in \name{} will provide an inner product argument on the vectors.
-
-\dnote{provide a short comparison of this protocol with the existing works here.}
+\dnote{provide a short comparison of this protocol with the existing works here.}.
 
 \subsection{\name2D{}: A SNARK protocol with $O(N^{1/c})$ proof size}
 
@@ -270,8 +269,8 @@ To do so, $\prover$ runs an inner-product argument for each $u \in [t]$ with the
 %\end{itemize}
 \item The verifier accepts if all the above checks succeed.
 \end{enumerate}
-\dnote{self: write the formal lemma.}
-.\dnote{The proof should be straightforward when using zk inner-product arguments, right?}
+.\dnote{self: write the formal lemma.}.
+\dnote{The proof should be straightforward when using zk inner-product arguments, right?}
 
 
 \subsubsection{Quadratic Check}\label{sec:quadcheck2D}
@@ -301,10 +300,10 @@ and sends it to the verifier.
 
 \item $\prover\leftrightarrow\verifier$: The prover wants to prove that 
 $\sum_{i\in [m]} r_i(\rsoracle_x[i,j_u] \cdot \rsoracle_y[i,j_u]-\rsoracle_z[i,j_u] = p(\eta_{j_u})$ for each $u \in [t]$.
-That is, $\prover$ wants to prove the inner product $\innp{r \circ \rsoracle_x[\cdot,j_u]}{\rsoracle_y[\cdot,j_u]} - \innp{r}{\rsoracle_z[\cdot,j_u]} = p(\eta_{j_u})$.
-To do so, for each $u \in [t]$, $\prover$ runs the following inner-product argument with the verifier: 
+This is equivalent to the $\prover$ proving $\innp{r \circ \rsoracle_x[\cdot,j_u]}{\rsoracle_y[\cdot,j_u]} - \innp{r}{\rsoracle_z[\cdot,j_u]} = p(\eta_{j_u})$. There are two inner products in the above statement and the prover does not want to reveal the values of the individual inner products. Hence, \name2D{} combines them in to a single inner product relation.
+For each $u \in [t]$, $\prover$ runs the following inner-product argument with the verifier: 
 \[
-\innp{(r \circ \rsoracle_x[\cdot,j_u] || r}{\rsoracle_y[\cdot,j_u] || -\rsoracle_z[\cdot,j_u] } = p(\eta_{j_u})
+\left\langle{\left( (r \circ \rsoracle_x[\cdot,j_u] \, || \, r \right)} , {\left( \rsoracle_y[\cdot,j_u] \, || \, -\rsoracle_z[\cdot,j_u] \right)} \right\rangle = p(\eta_{j_u})
 \]
 To facilitate this, $\comoracle_x,\comoracle_y$ and $\comoracle_z$ should have been committed with different independently chosen sets of generators.\footnote{By independent, we mean that the prover does not know the Diffie-Hellman relation between any pair of generators.} And, the set of generators used for committing $r$ (to be concatenated with $r \circ \rsoracle_x[\cdot,j_u])$) should also be independent of the above three sets of generators.
 The verifier proceeds if the arguments succeed for all $u \in [t]$.
@@ -336,7 +335,7 @@ follows:
 \item $\verifier\rightarrow \prover$: Verifier samples $\gamma \sample \FF^n$ and sends to the prover.
 \item $\prover\rightarrow \verifier$: The prover computes $w=\gamma^T U$ and sends it to the verifier. 
 \item $\verifier\rightarrow \prover$: Verifier sends $t$ randomly sampled indexes $\{j_u\}_{u\in [t]}$ from $[n]$ to the prover.
-\item $\prover\leftrightarrow\verifier$: The prover has to now prove to the verifier that $w_{j_u} = \gamma^T U[\cdot, j_u]$, for all $u \in [t]$. The prover and the verifier will run the inner-product argument to check $\ip{\gamma}{U[\cdot, j_u]} = w_{j_u}$ for all $u \in [t]$. The verifier proceeds if the checks succeed.
+\item $\prover\leftrightarrow\verifier$: The prover has to now prove to the verifier that $w_{j_u} = \gamma^T U[\cdot, j_u]$, for all $u \in [t]$. The prover and the verifier will run the inner-product argument to check $\innp{\gamma}{U[\cdot, j_u]} = w_{j_u}$ for all $u \in [t]$. The verifier proceeds if the checks succeed.
 \item The verifier also checks if  $w\in L$ and accepts if it succeeds.
 \end{enumerate}
 
