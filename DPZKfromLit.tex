@@ -18,11 +18,11 @@ Spartan \cite{spartan} is a zkSNARK protocol supporting arbitrary circuits with 
 \item Further use polynomial commitments to achieve sub-linear verification time amortized over multiple verifications on the same circuit.
 \end{enumerate}
 Spartan encodes the extended witness vector $w$ as a polynomial $Z(\cdot)$ such that $Z(i)$ provides the value at wire $i$. Let $\tilde{Z}$ be the polynomial extension of $Z$.
-The first step, the construction of the polynomial $\tilde{G}$, involves a multiplication of the polynomial $\tilde{Z}$ on some set of $|C|$ variables $u_1$ with itself on a different distinct set of $|C|$ variables $u_2$ ($\tilde{G}$ will be evaluated on random points in the latter steps). This multiplication is the (only) step which will require an MPC protocol to obtain DPZK-Spartan. 
+The first step, the construction of the polynomial $\tilde{G}$, involves a multiplication of the polynomial $\tilde{Z}$ on some set of $|C|$ terms (from $\log |C|$ variables $u_1$) with itself on $|C|$ terms (from a different distinct set of $\log |C|$ variables $u_2$). $\tilde{G}$ will be evaluated on random points in the latter steps. This multiplication is the (only) step which will require an MPC protocol to obtain DPZK-Spartan. 
 
 The multilinear extension $\tilde{Z}(\cdot)$ can be obtained by an inner product of the extended witness vector $w$ with a vector of polynomials on the input variables. Hence, to enable the computation of $\tilde{Z}(u_1) \cdot \tilde{Z}(u_2)$, the prover needs to compute the pairwise product of the elements of $w$. In the DPZK setting, with $w$ being additively shared among the provers, $O(|C|^2)$ MPC multiplications have to be run by the provers. 
 \dnote{is the above explanation too succinct?}
-
+\dnote{check if the multiplication of two sets of $|C|$ terms takes $|C|^2$ MPC mults even if they are got from $\log |C|$ variables..}
 %------ Do we need Ligero in this section? since Ligero is subsumed by Aurora in all aspects of SPZK---
 %\subsection{DPZK-Ligero}
 %We discuss this because this serves as the background to our protocol.
