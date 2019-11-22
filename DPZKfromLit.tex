@@ -68,12 +68,12 @@ Consider $\cP_1,\ldots, \cP_N$ are provers for the inner product statement i.e. 
 \end{align*}
 \begin{enumerate}
 	\item In this step each party chooses their blinding vectors and commits to that vector. $\cP_i$ samples $\bm{s}^i_L, \bm{s}^i_r \leftarrow_\$ \bbZ_p^n$ and $\rho_i\leftarrow \bbZ_p$, then computes $S^i=h^{\rho_i}\bm{g}^{\bm{s}^i_L}\bm{h}^{\bm{s}^i_R}$ and sends $S^i$ to $\cA$.
-	\item $\cA$ computes $S = \prod_{i=1}^{N}S^i = h^{\sum_{i=1}^N\rho_i}\bm{g}^{\sum_{i=1}^N\bm{s}_L^i}\bm{h}^{\sum_{i=1}^N\bm{s}^i_R} = h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R}$, where $\rho = \sum_{i=1}^{N}\rho_i$, $\bm{s}_L =\sum\limits \bm{s}^i_L,  \bm{s}_R=\sum_{i=1}^{N}\bm{s}^i_R$, and $\cA$ sends $S$ to the verifier $\cV$. In this step $\cA$ computes the commitment of the blinding vector, which is sum of all the provers blinding vector.
+	\item In this step $\cA$ computes the commitment of the blinding vector, which is sum of all the provers blinding vector. $\cA$ computes $S = \prod_{i=1}^{N}S^i = h^{\sum_{i=1}^N\rho_i}\bm{g}^{\sum_{i=1}^N\bm{s}_L^i}\bm{h}^{\sum_{i=1}^N\bm{s}^i_R} = h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R}$, where $\rho = \sum_{i=1}^{N}\rho_i$, $\bm{s}_L =\sum_{i=1}^{N} \bm{s}^i_L,  \bm{s}_R=\sum_{i=1}^{N}\bm{s}^i_R$, and $\cA$ sends $S$ to the verifier $\cV$.
 	\item Prover $\cP_i$ constructs a vector polynomial $l_i(X)=\bm{a}_i + X. \bm{s}^i_L$ and $r_i(X)=\bm{b}_i + X. \bm{s}^i_R$. All the provers involve in an MPC to obtain the shares of the polynomial $T(X)=\langle \sum_{i=1}^N l_i(X),\sum_{i=1}^N r_i(X)\rangle$. Let $\cP_i$ gets the share $T_i(X)$ of $T(X)$, where $T(X)=\sum_{i=1}^{N}T_i(X)$. Let $T_i(X)= t^i_0+t^i_1.X+t^i_2.X^2$, then $\sum_{i=1}^N t^i_0=\langle \bm{a}, \bm{b} \rangle$. Now $\cP_i$ commits to $t^i_j$ using randomness $\tau^i_j$ i.e. $T^i_j=h^{\tau^i_j}g^{t^i_j}$ and sends $T^i_j$ to $\cA$ for $j\in \{1,2\}$.
 	\item $\cA$ computes $T_j=\prod_{i=1}^{N} T^i_j$ which gives the commitment of $t_j \forall j\in\{1,2\}$ and sends $T_1,T_2$ to the verifier $\cV$.
 	\item $\cV$ samples $x\leftarrow_\$\bbZ^*_p$ and sends it to the aggregator $\cA$.
 	\item $\cA$ sends the $x$ to the provers. 
-	\item $\cP$ computes $\bm{l}_i=l_i(x), \bm{r}_i=r_i(x)$, $\mu_i= \sigma_i+\rho_i.x$, $\tau^i_x= \delta_i+\tau^i_1.x+\tau^i_2.x^2$ and sends $\bm{l},\bm{r}, \mu_i, \tau^i_x$ to $\cA$.
+	\item $\cP$ computes $\bm{l}_i=l_i(x), \bm{r}_i=r_i(x)$, $\mu_i= \sigma_i+\rho_i.x$, $\tau^i_x= \delta_i+\tau^i_1.x+\tau^i_2.x^2$ and sends $\bm{l}_i,\bm{r}_i, \mu_i, \tau^i_x$ to $\cA$.
 	\item $\cA$ defines $\bm{l}=\sum_{i=1}^N\bm{l_i}$ and $\bm{r}=\sum_{i=1}^N\bm{r_i}$ and $\hat{t}=\langle \bm{l},\bm{r}\rangle =T(x)$. $\cA$ computes $Q=\bm{g^lh^r}$, $\mu=\sum_{i=1}^N \mu_i$ and $\tau_x= \sum_{i=1}^{N}\tau_x^i$. And finally $\cA$ sends $Q, \mu, \tau_x, \hat{t}$ to $\cV$.
 \end{enumerate}
 $\cV$ checks: 
@@ -114,12 +114,15 @@ Therefore A is not learning anything new. Which implies privacy of the provers a
 \subsubsection{optimization}
 We can combine the inner product $\langle \bm{r}^T \cdot A, \bm{w}\rangle = \langle \bm{r}, \bm{x} \rangle =v_1$ and $\langle \bm{r}^T \cdot C, \bm{w}\rangle = \langle \bm{r}, \bm{z} \rangle =v_3$ which can be represented as $\langle \bm{r}^T \cdot(\alpha.A+\gamma.C), \bm{w}\rangle = \langle \bm{r}, (\alpha.\bm{x}+\gamma.\bm{z}) \rangle =v_3$ where $\alpha, \gamma$ are randomly chosen by the verifier $\cV$. In the commitment we are considering that if $\langle \bm{a},\bm{b}\rangle= c$ is in the statement of the inner product, then the commitment of $\bm{a}$ and $\bm{b}$ will be of the form $h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$. Note that in the commitment there should not be any known relation between the generators and for the equation $\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle =v_4$ there should not be the known relation between the generator $\bm{g}$ which is used to commit to $\bm{x}$ with the generator which is used to commit to $\bm{y}$, for that reason the commitment for $\bm{y}$ is considered in left in $\langle \bm{y}, \bm{r} \rangle = v_2$. For that reason this inner product we could not batch with the prior inner products. In this case we need to give 6 inner product proofs instead of 8. 
 \dnote{To Protik: Rewrite the section below}.
-\subsubsection{Alternate proof for R1CS}
-In the beginning we just presented the reduction of R1CS satisfiability to 8 innerproduct argument, where each of them are inner products of vectors of size $n$. Another simple way of combining the inner products of vectors of size $n$ into a single inner product of size of $8n$, (for further optimization, this $8n$ can be reduced to $6n$) were given in \cite{Bulletproofs} in their range proofs. 
-For each inner product choose a different set of generators $(\bm{g}^{(k)},\bm{h}^{(k)})_{k=1}^{8}$ and define $\bm{g}$ as the interleaved concatenation of all $\bm{g}^{(k)}$ such that $g_i=g_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$. Define $\bm{h}$ in the similar way. The private vectors are also combined in the similar way. Therefore the final inner product will look like:
-$$\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\}$$
-where $a_i= a_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$ similarly define $\bm{b}$. $\langle\bm{a},\bm{b}\rangle=\sum_{k=1}^{4}2\times v_i$
-In this way proof size will be $2\log (8n) + 2$.
+\begin{comment}
+	\subsubsection{Alternate proof for R1CS}
+	In the beginning we just presented the reduction of R1CS satisfiability to 8 innerproduct argument, where each of them are inner products of vectors of size $n$. Another simple way of combining the inner products of vectors of size $n$ into a single inner product of size of $8n$, (for further optimization, this $8n$ can be reduced to $6n$) were given in \cite{Bulletproofs} in their range proofs. 
+	For each inner product choose a different set of generators $(\bm{g}^{(k)},\bm{h}^{(k)})_{k=1}^{8}$ and define $\bm{g}$ as the interleaved concatenation of all $\bm{g}^{(k)}$ such that $g_i=g_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$. Define $\bm{h}$ in the similar way. The private vectors are also combined in the similar way. Therefore the final inner product will look like:
+	$$\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\}$$
+	where $a_i= a_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$ similarly define $\bm{b}$. $\langle\bm{a},\bm{b}\rangle=\sum_{k=1}^{4}2\times v_i$
+	In this way proof size will be $2\log (8n) + 2$.
+	
+\end{comment}
 
 
 \subsection{Summary of existing protocols}
@@ -132,17 +135,19 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		\hline
 		&computation & communication& & & \\ 
 		\hline
-		Ligero & $O(n\log n)M$ & &$O(n)M$ & $O(\sqrt{n})$ & 4\\
+		Ligero & $O(n\log n)M$ & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
 		\hline
-		Bulletproofs & $O(nE+q(n+m)M)$ & & $O(nE+q(n+m)M)$ & $O(\log n)$ & $\log n$  \\
+		Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ $\mathsf{OT}$& $O(nE+q(n+m)M)$ & $O(\log n)$ & $\log n$  \\
 		\hline
-		\name2D & $O((n \log ⁡n)M +nE)$& & $O((n M+n^{1-1/c}E) )$& $O(n^{1/c})$ & 5 \\
+		\name2D & $O((n \log ⁡n)M +nE)$& $
+		
+		O(2N-1)$ $\mathsf{OT}$ & $O((n M+n^{1-1/c}E) )$& $O(n^{1/c})$ & 5 \\
 		\hline
-		\name3D & & & & & \\
+		\name3D & $O(nM+nE)$ & $O(2N-1)$ $\mathsf{OT}$ & $O(nM+n^{1-2/c}E)$& $O(n^{1/c})$ & $6$\\
 		\hline
 	\end{tabular}
 \end{center}
-Here $n$ is the size of the circuit and $c$ is a positive integer of our choice. 
+Here $n$ is the size of the circuit and $c$ is a positive integer of our choice. $N$ in the number provers in the DPZK setting. 
 In bulletproofs: $q$ is the linear constraint: $q\leq 2n$ and $m$ such that $W_V \in \bbZ_p^{Q×m}$  such that $W_V$ is of rank $m$.
-
+$M$ is to indicate the amount of computation required for a single multiplication on field elements, and $E$ is to indicate the amount of computation required for a single exponentiation on group elements, in which $\mathsf{Dlog}$ is assumed to be hard.
 
