@@ -123,9 +123,10 @@ $G=\{(\alpha_j,\zeta_k): j\in [m], k\in [\ell]\}$ for distinct points
 $\zeta_1,\ldots,\zeta_\ell$ and $\alpha_1,\ldots,\alpha_m$ in $\FF$. Define $n_1=\sigma_1\ell$ and
 $n_2=\sigma_2 m$ where $\sigma_1,\sigma_2 > 1$ are constants. We now define the
 evaluation domain $H=\{(\beta_j,\eta_k): j\in [n_2],k\in
-[n_1]\}$ where $\beta$'s and $\eta$'s are distinct among themselves and from
+[n_1]\}$ where %$\beta$'s and $\eta$'s are distinct among themselves and from%
+where $\beta$ should be chosen in such a way that $\beta_j=\alpha_j \forall j\in[m]$ and $\eta$'s are distinct among themselves and from
 coordinates in $G$.\smallskip
-
+\pnote{$\alpha$ and $\beta$ should be same and should we mention that $\zeta$ and $\eta$ should be chosen in such a way that FFT can be done.}
 \noindent{\em RS Encoding with bivariate polynomials}:
 We first write the witness $x=(x_1|\cdots|x_p)$ where each $x_i\in
 \FF^{m\ell}$.
@@ -146,7 +147,7 @@ For $i\in [p], k\in [n_1]$ define $c_{ik}=\comm(\rsoracle[i,.,k],\delta_{ik})$,
 where $X[i,.,k]$ denotes the $n_2$-length vector $(X[i,1,k],\ldots,X[i,n_2,k])$
 and $\delta_{ik}$ denotes the commitment randomness. We define oracle
 $\comoracle$ as $\comoracle[i,k]=c_{ik}$ for $i\in [p],k\in [n_1]$.
-
+\pnote{ambiguity in $n_1, n_2, l$ and $m$. We aren't we committing along $m$ i.e. $n_2$ direction? then $(\beta_j, \eta_k)$ such that $j\in[n_1], k\in[n_2]$ }
 \subsubsection{Bivariate Interleaved Code(BIC)}
 Let $Q(x,y)\in \FF[x,y]$ be a bivariate polynomial with $deg_x(Q) < m$ and
 $\deg_y(Q) < \ell$. Then the evaluations of $Q$ on $H$ form an $n_2\times n_1$
