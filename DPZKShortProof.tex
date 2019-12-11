@@ -211,7 +211,7 @@ in our descriptions of the 2D and the 3D versions.}
 
 \subsubsection{Linear Check with Commitment Oracle}\label{sec:lincheck2D}
 The linear check $Ax=0$ can be reduced to checking
-$\innp{r^TA}{x}=0$, where the verifier samples a random $r\sample \FF^{mn}$
+$\innp{r^TA}{x}=0$, where the verifier samples a random $r\sample \FF^{ml}$
 and sends it to the prover. As in \cite{ligero}, the prover and verifer write $r$ as
 $(r_{1}|\cdots|r_{m})$ where each $r_i\in \FF^\ell$. Both the prover and the
 verifier also compute degree $<\ell$ polynomials $\hat{r}_{i}$ interpolating
@@ -245,8 +245,7 @@ The prover and the verifier interact as follows:
 \item $\verifier\rightarrow\prover$: The verifier sends a random $r\sample
 \FF^N$ to the prover.
 
-\item Both $\verifier$ and $\prover$ interpolate polynomials $R^i:i\in [m]$ such that $R^i$ interpolates the
-vector $(r_{(i-1)n+1},\ldots,r_{in})$ for $i\in [m]$. 
+\item Both $\verifier$ and $\prover$ compute $R = r^T A$, then interpolate polynomials $R^i:i\in [m]$ in the evaluation domain $G$ such that $R^i$ interpolates the vector $(R_{(i-1)n+1},\ldots,R_{in})$ for $i\in [m]$. 
 
 \item $\prover\rightarrow\verifier$: The prover computes polynomial 
 $p(\cdot)=\sum_{i\in [m]}R^i(\cdot)\hat{f}^x_{i}(\cdot)$ and sends $p$ to the verifier.
@@ -291,8 +290,8 @@ follows:
 
 \begin{enumerate}[{\rm 1.}]
 \item $\verifier\rightarrow\prover$: The verifier sends a challenge $r\sample
-\FF^p$ to the prover.
-\item $\prover\rightarrow\verifier$: The prover computes the polynomial $p_j(.)=\sum_{i\in [m]}
+\FF^m$ to the prover.
+\item $\prover\rightarrow\verifier$: The prover computes the polynomial $p(.)=\sum_{i\in [m]}
 r_i(\hat{f}^i_x(\cdot) \cdot \hat{f}^i_y(\cdot) - \hat{f}^i_z(\cdot))$.
 and sends it to the verifier.
 
