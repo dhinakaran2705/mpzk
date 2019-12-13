@@ -107,7 +107,9 @@
 		u_{m1} & u_{m2} & \ldots & u_{mn}
 	\end{bmatrix}
 	$$
-	where $u_{ij}= \hat{f}^x_i(\eta_j)$ $\forall i\in[m], j\in[n]$ $n>k$. $\bm{\zeta}=\{\zeta_1,\ldots,\zeta_l\}$ we will call it interpolation domain and $\bm{\eta} = \{\eta_1,\ldots,\eta_n\}$ we will call it evaluation domain.
+	where $u_{ij}= \hat{f}^x_i(\eta_j)$ $\forall i\in[m], j\in[n]$ $n>k$. $\bm{\zeta}=\{\zeta_1,\ldots,\zeta_l\}$ we will call it interpolation domain and $\bm{\eta} = \{\eta_1,\ldots,\eta_n\}$ we will call it evaluation domain. 
+	
+	Let $L$ be the set of codewords and the above linear code has distance $d$. Then a correctly computed $\oracle_x$ is in $L^m$.
 	
 	\subsubsection{Commitment:}\label{subsec: commit} Then compute the commitment of $\oracle_x$. Let $\cm_x=(c_1,\ldots c_n)$ where $c_j= \com( \begin{bmatrix}
 	u_{1j} & u_{2j} & \ldots & u_{mj}
@@ -124,7 +126,11 @@
 	
 	Note that the subprotocol for innerproduct arguement has the special soundness property. So there is an $\extrac_{innp}$ for the innerproduct argument which is $\ppt$ machine and outputs the witness if the arguement is accepted.
 	\begin{theorem}\label{theo:1}
-		For $e < \frac{d}{3} $, if $\prover(\cm, \cdot) \rightarrow \pi$ such that $\innp{\prover(\cm)}{\verifier(\pi)} $ is true, then there is an expected $\extrac^{\prover}(\cm) \rightarrow \oracle_x$ such that with overwhelming probability $\oracle_x$ satisfies $\com(\oracle_x) = \cm$ and $ d(\oracle_x, L^m) < e$  or it breaks the binding of the commitment.  
+		For $e < \frac{d}{3} $, if $\innp{\prover^*(\cm, \calU^*)}{\verifier(\cm)} $ is true, then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events: 
+		\begin{itemize}
+			\item $\com(\calU^*) = \cm$ and $ d(\calU^*, L^m) < e$
+			\item $\extrac$ breaks the binding of the commitment. 
+		\end{itemize} 
 		\begin{comment}
 		There is an $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can output the witness $x$ with overwhelming probability for which $\prover$ can convince $\verifier$.
 		\end{comment}
@@ -169,7 +175,12 @@
 	\end{enumerate}
 	
 	\begin{theorem}
-		For $e < \frac{d}{3} $ if $\innp{\prover(\cm, \calU, A, b)}{\verifier(\cm, A, b)} \rightarrow 1 $ then $\extrac^{\prover}(\cm) \rightarrow \oracle_x$ such that with overwhelming probability $\oracle_x$ satisfies $\com(\oracle_x)=\cm$ and $(d(\oracle_x,L^m) > e \text{ or } [ d(\oracle_x, l^m)\leq e \text{ and } x = \dec(\oracle_x)$ satisfies $ Ax = b]) $ or $\extrac$ breaks the binding of the commitment scheme. 
+		For $e < \frac{d}{3} $, $\innp{\prover^*(\cm, \calU^*, A, b)}{\verifier(\cm, A, b)} \rightarrow 1 $ then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events:
+		\begin{itemize}
+			\item $\com(\calU^*)=\cm$ and $d(\oracle_x,L^m) > e $
+			\item $\com(\calU^*)=\cm$ and $d(\oracle_x, l^m)\leq e \text{ and } x = \dec(\oracle_x)$ satisfies $ Ax = b$
+			\item $\extrac$ breaks the commitment scheme.
+		\end{itemize}
  	\begin{comment}	
 	 There is an $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can output the witness $x$ for which $Ax=b$ holds with overwhelming probability.
 	\end{comment}
@@ -201,13 +212,13 @@
 	\end{enumerate}
 	
 	\begin{theorem}
-		For $ e < \frac{d}{3} $ if $\innp{P(\cm_x, \cm_y, \cm_z , \oracle_x, \oracle_y, \oracle_z)}{\cm_x, \cm_y, \cm_z}\rightarrow 1$ then $\extrac_P(\cm_x)\rightarrow \oracle_x$, $\extrac_P(\cm_y)\rightarrow \oracle_y$ and  $\extrac_P(\cm_z)\rightarrow \oracle_z$ satisfies 
-		$$ \com(\oracle_x) = \cm_x, \com(\oracle_y) = \cm_y, \com(\oracle_z) = \cm_z$$ and
-		$$ d(\oracle_x , L^m) > e \text{ or } d(\oracle_x , L^m)>e \text{ or } d(\oracle_x , L^m)>e$$ or
-		$$ [d(\oracle_x,L^m) \leq e \text{ and } d(\oracle_y,L^m) \leq e \text{ and } d(\oracle_z,L^m) \leq e ]$$ $$\text{ and } x= \dec(\oracle_x),  y = \dec(\oracle_y), z=\dec(\oracle_x) \text{ satisfies } x\circ y = z$$ or
-		it breaks the binding.
-		
-	There is a $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can outputthe witnesses $x, y, z$ such that $x\circ y = z$ holds.
+		For $ e < \frac{d}{3}, $ if $\innp{\prover^*(\cm_1, \cm_2, \cm_3 , \calU^*_1	, \calU^*_2, \calU^*_3)}{\verifier(\cm_1, \cm_2, \cm_3)} \rightarrow 1$ then there is an expected $\ppt$  $\extrac^{\prover^*}(\cm_i)\rightarrow \calU^*_i$ $\forall i\in [3]$ such that with overwhelming probability $\forall i \in [3]$, $\calU^*_i$ satisfies one of the following event: 
+		\begin{itemize}
+			\item $\com(\calU^*_i) = \cm_i$ and $(\vee_{i=1}^{3} d(\calU^*_i, L^m)> e)$ 
+			\item $\com(\calU^*_i) = \cm_i$ and $\wedge_{i=1}{3} d(\calU^*_i,L^m)\leq e$ and $ x_i = \dec(\calU_i)$, where $\calU_i$ is the nearest codeword to $\calU^*_i$, for all $i\in [3]$, such that $x_1 \circ x_2 = x_3$
+			\item $\extrac$ breaks the binding of the commitment scheme.
+		\end{itemize} 
+	
 	\end{theorem}
 	\begin{proof}
 	We have a $\ppt$ extractor, $\extrac_{innp}$, for the inner product arguement for the statement $\innp{\bm{a}}{\bm{b}}=c$ where $a,b$ are private, which can extract $a, b$ with overwhelming probability. Now we will use $\extrac_{innp}$ to design a $\ppt$ extractor $\extrac$ which can extract the witness for the above protocol which is $x,y,z : x \circ y = z$.
@@ -251,6 +262,8 @@
 	\begin{enumerate}
 		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec:proximity} for proximity check for the matrix $\extwit||x||y||z$. Which is encoded to the matrix $\oracle{\extwit||x||y||z}$, and $\cm_{\extwit||x||y||z}$ is the corresponding commitment.
 		
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for the linearity check for the public matrix $P_{add}$ of dimension $ml\times ml$, and the public vector is the 0-vector of length $ml$. This check ensures that the addition gates are corretly evaluated.
+		
 		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for linearity check for the public matrix $[A|-I]$ where $I$ is the identity matrix of dimension $ml \times ml$, and the public vector is the 0 vector of length $2ml$. This check ensures that $x$ is correctly computed from $\extwit$.
 		
 		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for linearity check for the public matrix $[B|-I]$ where $I$ is the identity matrix of dimension $ml \times ml$, and the public vector is the 0 vector of length $2ml$.This check ensures that $y$ is correctly computed from $\extwit$.
@@ -267,12 +280,43 @@
 	To prove the special soundness we will design an extractor which will output a witness if the arguement is accepted.
 	
 	\begin{theorem}
+		For $e < \frac{d}{3}$, if $\innp{\prover^*(\cm_{\extwit||x||y||z}, \calU^*)}{\verifier(\cm_{\extwit||x||y||z})} \rightarrow 1$, then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm_{\extwit||x||y||z}) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events:
+		\begin{itemize}
+			\item $\com(\calU^*)=\cm_{\extwit||x||y||z}$ and $A\extwit = x \wedge B \extwit = y \wedge C \extwit = z \wedge x\circ y =z \wedge P_{add} \extwit = 0$
+			\item $\extrac$ breaks the binding property of the commitment scheme.
+			
+		\end{itemize}
 		Let $\cm$ is the commitment of $\calU$, used in above protocol by $\prover$. If $\verifier$ accepts the arguement generated by $\prover$, then there is an expected $\ppt$ extrator $\extrac$ having rewinding access to $\prover$, with polynomially many rewindings either outputs a correct $\extwit$ or breaks the binding property of the commitment scheme.
 	\end{theorem}
 	\begin{proof}
 		We have extractors for the proximity check, linearity check and quadratic check, say $\extrac_{prox}, \extrac_{lin}, \extrac_{quad}$ are the extractors respectively. Using these extractors we will design  $\extrac$ for the complete protocol. 
 		
-		$\extrac$ emulates the role of the verifier and starts the protocol. In the step it cf
+		$\extrac$ emulates the role of the verifier and starts the protocol. 
+		
+		In the first step it calls $\extrac_{prox}$ and $\calU_1^*$.
+		
+		After executing the first step it calls $\extrac_{lin}$ and gets $\calU_2^*$. If $\calU_1^* = \calU_2^*$, then outputs collision and terminates.
+		
+		After executing the second if it is not terminated, it calls $\extrac_{lin}$ in the step 3, 4, 5 and gets $\calU_3^*$. 
+		
+		In the above 2 steps it gets collision that breaks the binding of the commitment otherwise proceeds.
+		
+		In this step $\extrac$ calls $\extrac_{quad}$, by concatanating the output of $\extrac_{quad}$ construct final matrix which equates with $\calU_1^* (=\calU_2^*=\calU_3^*)$. If not then that gives break of the binding property of the commitment scheme. Otherwise $\calU^*=\calU_1^*$ should satisfy the following:
+		\begin{itemize}
+			\item $\com(\calU*)=\cm_{\extwit}\cdot\cm_x\cdot\cm_y\cdot\cm_z$.
+			\item $d(\calU^*,L^{4m}) < e$ and let $\calU$ is the closest codeword of $\calU^*$. Define $\oracle_{\extwit}$ to be the first $m$ rows of $\calU$
+			
+			Define $\oracle_{x}$ to be the $(m+1)^{th}$ rows to $2m^{th}$ rows of $\calU$
+			
+			Define $\oracle_{y}$ to be the $(2m+1)^{th}$ rows to $3m^{th}$ rows of $\calU$
+			
+			Define $\oracle_{z}$ to be the $(3m+1)^{th}$ rows to $4m^{th}$ rows of $\calU$
+			
+			Let $w= \dec(\oracle_{\extwit}), x=\dec(\oracle_x), y=\dec(\oracle_y), z=\dec(\oracle_z)$ such that
+			
+			$A\extwit = x \wedge B \extwit = y \wedge C \extwit = z \wedge x\circ y =z \wedge P_{add} \extwit = 0$.
+		\end{itemize}
+		Therefore $\extwit$ is a correct witness. Since all the above extractors use polynomial number of rewindings, $\extrac$ uses polynomial number of rewindings.		
 	\end{proof}
 	\pnote{In the theorems change $\oracle$s to $\calU$.}
 \end{document}
