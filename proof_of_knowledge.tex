@@ -21,6 +21,12 @@
 \def\negl{\mathsf{neg}}
 \def\NP{\mathsf{NP}}
 \def\C{\mathsf{C}} %Circuit
+\def\wit{\mathsf{w}} %Witness
+\def\extwit{\hat{w}} %Extended witness
+\def\stmt{\hat{x}} %Statement
+\def\oracle{\mathcal{U}^{\RS}}
+\def\dec{\mathsf{Dec}}
+\def\enc{\mathsf{Enc}}
 
 \def\calA{\mathcal{A}}
 \def\calB{\mathcal{B}}
@@ -81,7 +87,7 @@
 	For \name2D protocol, we claim that the protocol has special soundness property. That is there is a $\ppt$ machine $\extrac$ that has oracle access to the prover $\prover$ such that by rewinding $\prover$, $\extrac$ can output the witness $w$ such that for which $\prover$ can convince $\verifier$.
 	
 	We will prove the above claim by proving that each subprotocols have the special correctness property. 
-	Suppose $x$ is encoded using interleaved $\RS$ encoding, then each column is commited using pederson commitment. That is if $|x|=ml$ then read $x$ as 
+	Suppose $x$ is encoded using interleaved $\RS$ encoding, then each column is commited using Pedersen commitment. That is if $|x|=ml$ then read $x$ as 
 	$$x=
 	\begin{bmatrix}
 		x_{11} & x_{12} & \ldots & x_{1l}\\
@@ -90,10 +96,10 @@
 		x_{m1} & x_{m2} & \ldots & x_{ml}
 	\end{bmatrix}
 	$$	
-	\subsubsection{Encoding:} Construct polynomials $\hat{f}^x_i(\cdot)$ of deg $k$ such that $\hat{f}^x_i(\zeta_j)=x_{ij}$ $\forall i\in [m], j\in [l]$ where $k>l$ and $l+t=k$.
+	\subsubsection{Encoding:}\label{subsec: encode} Construct polynomials $\hat{f}^x_i(\cdot)$ of deg $k$ such that $\hat{f}^x_i(\zeta_j)=x_{ij}$ $\forall i\in [m], j\in [l]$ where $k>l$ and $l+t=k$.
 	
 	Define 
-	$$\calU^{\RS}_x =
+	$$\oracle_x =
 	\begin{bmatrix}
 		u_{11} & u_{12} & \ldots & u_{1n}\\
 		u_{21} & u_{22} & \ldots & u_{2n}\\
@@ -103,29 +109,32 @@
 	$$
 	where $u_{ij}= \hat{f}^x_i(\eta_j)$ $\forall i\in[m], j\in[n]$ $n>k$. $\bm{\zeta}=\{\zeta_1,\ldots,\zeta_l\}$ we will call it interpolation domain and $\bm{\eta} = \{\eta_1,\ldots,\eta_n\}$ we will call it evaluation domain.
 	
-	\subsubsection{Commitment:} Then compute the commitment of $\calU^{\RS}_x$. Let $\cm_x=(c_1,\ldots c_n)$ where $c_j= \com( \begin{bmatrix}
+	\subsubsection{Commitment:}\label{subsec: commit} Then compute the commitment of $\oracle_x$. Let $\cm_x=(c_1,\ldots c_n)$ where $c_j= \com( \begin{bmatrix}
 	u_{1j} & u_{2j} & \ldots & u_{mj}
 	\end{bmatrix}^T)$ $\forall j\in [n]$
-\paragraph{\textbf{Proximity Check:}} In this check $\prover$ convinces $\verifier$ that $\cm_x$ is the commitment of a correct codeword matrix $\calU^{\RS}_x$ which is encoding of a matrix $x$. If $\calU^{\RS}_x$ is malformed, i.e. if it is sufficiently far away from a correct codeword matrix, then $\prover$ passes the following check with $\negl(t)$ probability.
+\paragraph{\textbf{Proximity Check:}}\label{sec:proximity} In this check $\prover$ convinces $\verifier$ that $\cm_x$ is the commitment of a correct codeword matrix $\oracle_x$ which is encoding of a matrix $x$. If $\oracle_x$ is malformed, i.e. if it is sufficiently far away from a correct codeword matrix, then $\prover$ passes the following check with $\negl(t)$ probability.
 	\begin{enumerate}
 		\item $\prover \rightarrow \verifier :$ $\prover$ sends $cm$ to $\verifier$.
 		\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
-		\item $\prover \rightarrow \verifier :$ $\prover$ computes $w=\gamma^T\calU^{\RS}_x$ and sends $w$ to $\verifier$.
+		\item $\prover \rightarrow \verifier :$ $\prover$ computes $w=\gamma^T\oracle_x$ and sends $w$ to $\verifier$.
 		\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
-		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\calU^{\RS}_x[\cdot,j_u]}=w_{j_u}$ $\forall j_u\in Q$
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=w_{j_u}$ $\forall j_u\in Q$
 		\item If $\verifier$ accepts the innerproduct arguement in step 5, then checks if $w\in L$. If yes then $\verifier$ outputs accept else outputs reject.
 	\end{enumerate}
 	
 	Note that the subprotocol for innerproduct arguement has the special soundness property. So there is an $\extrac_{innp}$ for the innerproduct argument which is $\ppt$ machine and outputs the witness if the arguement is accepted.
 	\begin{theorem}\label{theo:1}
+		For $e < \frac{d}{3} $, if $\prover(\cm, \cdot) \rightarrow \pi$ such that $\innp{\prover(\cm)}{\verifier(\pi)} $ is true, then there is an expected $\extrac^{\prover}(\cm) \rightarrow \oracle_x$ such that with overwhelming probability $\oracle_x$ satisfies $\com(\oracle_x) = \cm$ and $ d(\oracle_x, L^m) < e$  or it breaks the binding of the commitment.  
+		\begin{comment}
 		There is an $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can output the witness $x$ with overwhelming probability for which $\prover$ can convince $\verifier$.
+		\end{comment}
 	\end{theorem}
 	%\pnote{Need to check for $\extrac$ is rewinding $\prover$ or $\verifier$?}
 	\begin{proof}
 		Now we will design a $\ppt$ $\extrac$ for the above protocol.
-		In step 4 $\extrac$ emulates $\verifier$ and picks $Q$ uniformly at random, then if innerproduct arguement is accepted then run $\extrac_{innp}$, in polytime with overwhelming probability. $\extrac_{innp}$ outputs $\calU^{\RS}_x[\cdot,j_u]$ $\forall j_u\in Q$, and stores the indices of $Q$ in a set $S$. then rewinds to the step 4 and then again picks $Q$ uniformly at random, $\extrac$ keeps extracting $\calU^{\RS}_x[\cdot,j_u]$ and updates $S$ by including only the new indices repeating until $|S|>k$.
+		In step 4 $\extrac$ emulates $\verifier$ and picks $Q$ uniformly at random, then if innerproduct arguement is accepted then run $\extrac_{innp}$, in polytime with overwhelming probability. $\extrac_{innp}$ outputs $\oracle_x[\cdot,j_u]$ $\forall j_u\in Q$, and stores the indices of $Q$ in a set $S$. then rewinds to the step 4 and then again picks $Q$ uniformly at random, $\extrac$ keeps extracting $\oracle_x[\cdot,j_u]$ and updates $S$ by including only the new indices repeating until $|S|>k$.
 		
-		In the next step $\extrac$ gets $\calU^{\RS}_x[\cdot,j_u]$ $\forall j_u \in S$. Since $|S|>k$, from $\calU^{\RS}_x[\cdot,j_u]$ decoding is deterministic, so the $\extrac$ decodes $\calU^{\RS}$ to $x$ and outputs $x$.
+		In the next step $\extrac$ gets $\oracle_x[\cdot,j_u]$ $\forall j_u \in S$. Since $|S|>k$, from $\oracle_x[\cdot,j_u]$ decoding is deterministic, so the $\extrac$ decodes $\oracle$ to $x$ and outputs $x$.
 		
 		Now we need to prove that the number of rewinding is polynomial.
 		
@@ -144,71 +153,126 @@
 		From before, $E[X]$ is equal to the sum of all these expectations: i.e.
 		$$E[X] = \sum\limits_{i=1}^{n} \frac{n}{n-i+1} = n\sum\limits_{i=1}^{n} \frac{1}{i} \approx n \log n$$
 		Which is polynomial in $n$ and so polynomial in security parameter.
-		%\pnote{Remaining analysis is to check the expected number of rewinding required to obtain $\calU^{\RS}$.}
+		%\pnote{Remaining analysis is to check the expected number of rewinding required to obtain $\oracle$.}
 	\end{proof}
 	
-	\paragraph{\textbf{Linear Check:}} In this check, there is a publicly known matrix $A \in \bbF^{ml\times ml}$ and public vector $b\in \bbF^{ml}$, and $\prover$ claims that he knows a $x$ such that $Ax=b$ is true. $\prover$ starts with encoding the $x$ using interleaved $\RS$ code which is described above and gets $\calU^{\RS}_x$, then he computes the commitment $\cm_x$ in the same way mentioned above. Now the following check ensures that if a maformed $\calU$ is used for $\calU^{\RS}$, which is not far away from a correct encoding of $x$ for which $Ax\neq b$, then $\verifier$ outputs reject with very high probability.
+	\paragraph{\textbf{Linear Check:}}\label{sec: linearity} In this check, there is a publicly known matrix $A \in \bbF^{ml\times ml}$ and public vector $b\in \bbF^{ml}$, and $\prover$ claims that he knows a $x$ such that $Ax=b$ is true. $\prover$ starts with encoding the $x$ using interleaved $\RS$ code which is described above and gets $\oracle_x$, then he computes the commitment $\cm_x$ in the same way mentioned above. Now the following check ensures that if a maformed $\calU$ is used for $\oracle$, which is not far away from a correct encoding of $x$ for which $Ax\neq b$, then $\verifier$ outputs reject with very high probability.
 	\begin{enumerate}
 		\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x$ to $\verifier$.
 		\item $\verifier \rightarrow \prover: $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
 		\item $\prover$ and $\verifier$ compute $R=r^TA$, which is a vector of size $ml$. Read $R$ in a matrix form where first $l$ elements of $R$ forms the first row, next $l$ elements forms the second row, similary $R$ will have $m$ rows. Then they construct polynomials $R_i(\cdot)$ of degree $<l$ such that $R_i(\zeta_j)=R_{ij}$ $\forall i\in [m], j\in [l]$. 
 		\item $\prover \rightarrow \verifier: $  $\prover$ computes a polynomial $p(\cdot)=\sum_{i\in[m]} ( R_i(\cdot)\cdot \hat{f}^x_i(\cdot))$ and sends $p(\cdot)$ to $\verifier$.
 		\item $\verifier \rightarrow \prover: $ $\verifier$ samples $t$ distinct  indices $j_1,\ldots,j_t$ from the set $[n]$ independently at random and sends the indices to $\prover$.
-		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{R_{j_u}}{\calU^{\RS}_x[\cdot,j_u]} = p(\eta_{j_u})$ for all $j_u$ queried in the above step by $\verifier$, where $R_{j_u}=(R_1(\eta_{j_u}),\ldots,R_m(\eta_{j_u})$ and $\calU^{\RS}_x[\cdot,j_u]$ denotes the $m-$length vector $(\calU^{\RS}_x[1,j_u],\ldots, \calU^{\RS}_x[m,j_u])$. $\verifier$ proceeds if the arguments succeed for all $u \in [t]$.
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{R_{j_u}}{\oracle_x[\cdot,j_u]} = p(\eta_{j_u})$ for all $j_u$ queried in the above step by $\verifier$, where $R_{j_u}=(R_1(\eta_{j_u}),\ldots,R_m(\eta_{j_u})$ and $\oracle_x[\cdot,j_u]$ denotes the $m-$length vector $(\oracle_x[1,j_u],\ldots, \oracle_x[m,j_u])$. $\verifier$ proceeds if the arguments succeed for all $u \in [t]$.
 		\item $\verifier$ also checks that $\sum_{j\in[l]} p(\zeta_j)=0$.
 		\item $\verifier$ accepts if all the above checks are succeed.	  
 	\end{enumerate}
 	
 	\begin{theorem}
+		For $e < \frac{d}{3} $ if $\innp{\prover(\cm, \calU, A, b)}{\verifier(\cm, A, b)} \rightarrow 1 $ then $\extrac^{\prover}(\cm) \rightarrow \oracle_x$ such that with overwhelming probability $\oracle_x$ satisfies $\com(\oracle_x)=\cm$ and $(d(\oracle_x,L^m) > e \text{ or } [ d(\oracle_x, l^m)\leq e \text{ and } x = \dec(\oracle_x)$ satisfies $ Ax = b]) $ or $\extrac$ breaks the binding of the commitment scheme. 
+ 	\begin{comment}	
 	 There is an $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can output the witness $x$ for which $Ax=b$ holds with overwhelming probability.
+	\end{comment}
+	
 	\end{theorem}
 	\begin{proof}
 	We have a $\ppt$ extractor, $\extrac_{innp}$, for the inner product arguement for the statement $\innp{\bm{a}}{\bm{b}}=c$ where $a,b$ are private, which can extract $a, b$ with overwhelming probability. Now we will use $\extrac_{innp}$ to design a $\ppt$ extractor $\extrac$ which can extract the witness for the above protocol which is $x : Ax=b$.
 	
-	 $\extrac$ emulates $\verifier$'s role in the protocol till step 5, then calls $\extrac_{innp}$ to get $\calU^{\RS}_x[\cdot,j_u]$. $\extrac$ stores the indices in a set say $S$ and rewind the prover to step 5 and picks $t$ indices again uniformly at random again and follows the above procedure. $\extrac$ keeps rewinding till $|S|>k$.
+	 $\extrac$ emulates $\verifier$'s role in the protocol till step 5, then calls $\extrac_{innp}$ to get $\oracle_x[\cdot,j_u]$. $\extrac$ stores the indices in a set say $S$ and rewind the prover to step 5 and picks $t$ indices again uniformly at random again and follows the above procedure. $\extrac$ keeps rewinding till $|S|>k$.
 	 
-	 If $|S|>k$, then $\extrac$ has more than $k$ columns of $\calU^{\RS}_x$ then by the deterministic decoding algorithm will output $x$. Now it is easy to check that whether $x$ satisfies $Ax=b$ or not. 
+	 If $|S|>k$, then $\extrac$ has more than $k$ columns of $\oracle_x$ then by the deterministic decoding algorithm will output $x$. Now it is easy to check that whether $x$ satisfies $Ax=b$ or not. 
 	 
 	 Similar analysis of ~\ref{theo:1} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x$.
 	\end{proof}
-	\paragraph{\textbf{Quadratic Check:}} In this check $\prover$ claims that he knows $x,y,z\in\bbF^{ml}$ such that $x \circ y = z$. $\prover$ starts with encoding each of $x, y, z$ and obtains $\calU^{\RS}_x, \calU^{\RS}_y, \calU^{\RS}_z$. Then $\prover$ performs column wise commitments and gets $\cm_x, \cm_y, \cm_z$. The following check ensures that if any of the $\calU^{\RS}_x, \calU^{\RS}_y, \calU^{\RS}_z$ is malformed, which is not far away from a correct encoding of any of the $x, y, z$, then $\verifier$ rejects with very high probability.
+	\paragraph{\textbf{Quadratic Check:}}\label{sec: quadratic} In this check $\prover$ claims that he knows $x,y,z\in\bbF^{ml}$ such that $x \circ y = z$. $\prover$ starts with encoding each of $x, y, z$ and obtains $\oracle_x, \oracle_y, \oracle_z$. Then $\prover$ performs column wise commitments and gets $\cm_x, \cm_y, \cm_z$. The following check ensures that if any of the $\oracle_x, \oracle_y, \oracle_z$ is malformed, which is not far away from a correct encoding of any of the $x, y, z$, then $\verifier$ rejects with very high probability.
 	\begin{enumerate}
 		\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x, \cm_y, \cm_z$ to $\verifier$.
 		\item $\verifier \rightarrow \prover: $ $\verifier$ picks $r$ uniformly at random from $\bbF^{m}$ and sends $r$ to $\prover$.
 		\item $\prover \rightarrow \verifier: $ $\prover$ computes the polynomial $p(\cdot)= \sum_{i\in [m]} [r_i\cdot (\hat{f}^x_i(\cdot)\cdot \hat{f}^y_i(\cdot) - \hat{f}^z_i(\cdot))] $ and sends $p(\cdot)$ to $\verifier$. 
 		\item $\verifier \rightarrow \prover: $ $\verifier$ sends $t$ randomly sampled indices $Q=\{j_u\}_{u\in[t]}$ from $[n]$.
-		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{r\circ \calU^{\RS}_x[\cdot,j_u]}{\calU^{\RS}_y[\cdot,j_u]} - \innp{r}{\calU^{\RS}_z[\cdot,j_u]} = p(\eta_{j_u})$ $\forall u\in[t]$. 
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{r\circ \oracle_x[\cdot,j_u]}{\oracle_y[\cdot,j_u]} - \innp{r}{\oracle_z[\cdot,j_u]} = p(\eta_{j_u})$ $\forall u\in[t]$. 
 		
 		There are two inner products in the above statement and the prover does not want to reveal the values of the individual inner products. Hence, \name2D combine them into a single inner product relation.
 		
 		For each $u\in[t]$, $\prover$ runs the following inner product arguement with $\verifier$:
-		$$\innp{(r\circ \calU^{\RS}_x[\cdot,j_u]||r)}{(\calU^{\RS}_y[\cdot,j_u]||-\calU^{\RS}_z[\cdot,j_u])} = p(\eta_{j_u})$$
-		To facilitate this, $\calU^{\RS}_x, \calU^{\RS}_y$ and $\calU^{\RS}_z$ should have been committed with different independently chosen sets of generators. And, the set of generators used for committing $r$ (to be concatenated with $r \circ \calU^{\RS}_x [\cdot, j_u])$ should also be independent of the above three sets of generators. $\verifier$ proceeds if the arguements succeed for all $u\in[t]$.
+		$$\innp{(r\circ \oracle_x[\cdot,j_u]||r)}{(\oracle_y[\cdot,j_u]||-\oracle_z[\cdot,j_u])} = p(\eta_{j_u})$$
+		To facilitate this, $\oracle_x, \oracle_y$ and $\oracle_z$ should have been committed with different independently chosen sets of generators. And, the set of generators used for committing $r$ (to be concatenated with $r \circ \oracle_x [\cdot, j_u])$ should also be independent of the above three sets of generators. $\verifier$ proceeds if the arguements succeed for all $u\in[t]$.
 		\item $\verifier$ checks if $p(\zeta_j)=0$ $\forall j\in[l]$. If yes then accepts, else rejects.
 	\end{enumerate}
 	
 	\begin{theorem}
+		For $ e < \frac{d}{3} $ if $\innp{P(\cm_x, \cm_y, \cm_z , \oracle_x, \oracle_y, \oracle_z)}{\cm_x, \cm_y, \cm_z}\rightarrow 1$ then $\extrac_P(\cm_x)\rightarrow \oracle_x$, $\extrac_P(\cm_y)\rightarrow \oracle_y$ and  $\extrac_P(\cm_z)\rightarrow \oracle_z$ satisfies 
+		$$ \com(\oracle_x) = \cm_x, \com(\oracle_y) = \cm_y, \com(\oracle_z) = \cm_z$$ and
+		$$ d(\oracle_x , L^m) > e \text{ or } d(\oracle_x , L^m)>e \text{ or } d(\oracle_x , L^m)>e$$ or
+		$$ [d(\oracle_x,L^m) \leq e \text{ and } d(\oracle_y,L^m) \leq e \text{ and } d(\oracle_z,L^m) \leq e ]$$ $$\text{ and } x= \dec(\oracle_x),  y = \dec(\oracle_y), z=\dec(\oracle_x) \text{ satisfies } x\circ y = z$$ or
+		it breaks the binding.
+		
 	There is a $\ppt$ extractor $\extrac$ which has oracle access to $\prover$ such that rewinding a certain step of $\prover$, $\extrac$ can outputthe witnesses $x, y, z$ such that $x\circ y = z$ holds.
 	\end{theorem}
 	\begin{proof}
 	We have a $\ppt$ extractor, $\extrac_{innp}$, for the inner product arguement for the statement $\innp{\bm{a}}{\bm{b}}=c$ where $a,b$ are private, which can extract $a, b$ with overwhelming probability. Now we will use $\extrac_{innp}$ to design a $\ppt$ extractor $\extrac$ which can extract the witness for the above protocol which is $x,y,z : x \circ y = z$.
 	
-	 $\extrac$ emulates $\verifier$'s role in the protocol till step 4, then calls $\extrac_{innp}$ to get $(r\circ \calU^{\RS}_x[\cdot,j_u]||r)$ and $(\calU^{\RS}_y[\cdot,j_u]||-\calU^{\RS}_z[\cdot,j_u])$ forall $u\in [t]$. $\extrac$ stores all the indices in a set say $S$. From the output of $\extrac_{innp}$, $\extrac$ computes $\calU^{\RS}_x[\cdot,j_u], \calU^{\RS}_y[\cdot,j_u],\calU^{\RS}_z[\cdot,j_u]$. $\extrac$ rewinds $\prover$ to step 4 and again picks a random $Q$. $\extrac$ keeps repeating the above process till $|S|>k$.
+	 $\extrac$ emulates $\verifier$'s role in the protocol till step 4, then calls $\extrac_{innp}$ to get $(r\circ \oracle_x[\cdot,j_u]||r)$ and $(\oracle_y[\cdot,j_u]||-\oracle_z[\cdot,j_u])$ forall $u\in [t]$. $\extrac$ stores all the indices in a set say $S$. From the output of $\extrac_{innp}$, $\extrac$ computes $\oracle_x[\cdot,j_u], \oracle_y[\cdot,j_u],\oracle_z[\cdot,j_u]$. $\extrac$ rewinds $\prover$ to step 4 and again picks a random $Q$. $\extrac$ keeps repeating the above process till $|S|>k$.
 	 
-	 If $|S|>k$, then $\extrac$ has more than $k$ columns of $\calU^{\RS}_x, \calU^{\RS}_y, \calU^{\RS}_z$ then by the deterministic decoding algorithm will output $x, y, z$. Now it is easy to check that whether $x, y, z$ satisfies $x \circ y =z$ or not. 
+	 If $|S|>k$, then $\extrac$ has more than $k$ columns of $\oracle_x, \oracle_y, \oracle_z$ then by the deterministic decoding algorithm will output $x, y, z$. Now it is easy to check that whether $x, y, z$ satisfies $x \circ y =z$ or not. 
 	 
 	 Similar analysis of ~\ref{theo:1} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x, y, z$.
 	\end{proof}
 	
-	\begin{comment}	
-	\paragraph{\textbf{Complete protocol:}} Let $L$ be a language in $\NP$ and $\alpha$ is an instance of $L$. Let $\prover$ be a prover that claims that the instance $\alpha$ is true, i.e. $\prover$ has a witness $\beta$ such that there is deterministic circuit $\C$ such that $\C(\alpha,\beta)=1$ iff $\alpha \in L$. 
+		
+	\paragraph{\textbf{Complete protocol:}} Let $L$ be a language in $\NP$ and $\stmt$ is an instance of $L$. Let $\prover$ be a prover that claims that the instance $\stmt$ is true, i.e. $\prover$ has a witness $\wit$ such that there is deterministic circuit $\C$ such that $\C(\stmt,\wit)=1$ iff $\stmt \in L$. 
 	
-	Now $\prover$ wants to convince a verifier $\verifier$ that $\alpha\in L$ without revealing any information about the witness $\beta$. 
+	Now $\prover$ wants to convince a verifier $\verifier$ that $\stmt\in L$ without revealing any information about the witness $\wit$. 
 	
-	To do that $\prover$ gives a proof that $\C$ on input $(\alpha, \beta)$ is correctly executed and output 1. In other words $\prover$ proves that gate by gate evaluation is correctly done on an input which has a public part known to both $\prover$ and $\verifier$, and a private part which is only known to $\prover$. 
-	Note that $\C$ and $x$ both known to $\prover$ and $\verifier$. So without loss of generality we can assume that $x$ is hardcoded in $\C$.
+	To do that $\prover$ gives a proof that $\C$ on input $(\stmt, \wit)$ is correctly executed and output 1. In other words $\prover$ proves that gate by gate evaluation is correctly done on an input which has a public part known to both $\prover$ and $\verifier$, and a private part which is only known to $\prover$. 
+	Note that $\C$ and $x$ both known to $\prover$ and $\verifier$. So without loss of generality we can assume that $\stmt$ is hardcoded in $\C$.
 	
-	$\prover$ constructs the extended witness $w$ in the following way: \\
-	Let $\C:\bbF^{n_i}\rightarrow \bbF$ such that $\prover$ has private input $\beta = (\beta_1,\ldots, \beta_{n_i})$ such that $\C(\beta)=1$.
-	\end{comment}
+	$\prover$ constructs the extended witness $\extwit$ in the following way: \\
+	Let $\C:\bbF^{n_i}\rightarrow \bbF$ such that $\prover$ has private input $\wit = (\wit_1,\ldots, \wit_{n_i})$ such that $\C(\wit)=1$.
+	
+	Define the extended witness $\extwit = (\wit_1,\ldots,\wit_{n_i}, \beta_1,\ldots, \beta_s) \in \bbF^{ml}$, where $\beta_i$ is the output of the $i^{th}$ gate evaluating $\C(\wit)$, and $s$ is the number of gates in $\C$ and $ml>n_i + s$. $\prover$ defines a system of constraints that contains the following constraint for every multiplication gate g in the circuit $\C$ $$\beta_{a}.\beta_{b}-\beta{c}=0$$
+	and for every addition gate, the constraint 
+	$$\beta_a + \beta_b - \beta_c = 0$$
+	Where $\beta_a$, $\beta_b$ are the input values to the gate g and $\beta_c$ is the output value in the extended witness. For the output gate include the constraint $\beta_a + \beta_b - 1 = 0$ if the final gate is an addition gate, and $\beta_a\cdot \beta_b - 1 = 0$ if the final gate is an multiplication gate. 
+	
+	$\prover$ constructs vectors $x,y,z \in \bbF^{ml}$ where the $j^{th}$ entry of $x,y$ and $z$ contains the values $\beta_a, \beta_b$ and $\beta_c$ corresponding to the $j^{th}$ multiplication gate in $\extwit$.
+	
+	$\prover$ and $\verifier$ construct matrices $A, B$ and $C \in \bbF^{ml \times ml}$ such that 
+	$$x = A \extwit, y= B \extwit, z= C \extwit$$
+	
+	Finally it constructs $P_{add} \in \bbF^{ml \times ml}$ such that the $j^{th}$ position of $P_{add} \extwit$ equals $\beta_a + \beta_b - \beta_c$ where $a, b$ and $c$ correspond to the $j^{th}$ addition gate of the circuit in $\extwit$.
+	
+	$\prover$ encodes $\extwit , x, y , z$ using the defined encoding in sec:~\ref{subsec: encode} and gets $\oracle_{\extwit}, \oracle_x, \oracle_y$ and $\oracle_z$ and commit each of them using Pedersen vector commitment described in ~\ref{subsec: commit} and gets $\cm_{\extwit}, \cm_x, \cm_y, \cm_z$. To commit, pick different set of generators for each $\oracle_{\extwit}, \oracle_x, \oracle_y, \oracle_z$, which will give the property that commitment of $\oracle_{\extwit||x}$ is $\cm_{\extwit} \circ \cm_x$. Where $\extwit||x$ means that a new matrix is formed by adjoining columns of $\extwit$ followed by the columns of $x$. 
+	
+	
+	\pnote{Send the commitment independently i.e. $\cm_{\extwit}, \cm_x, \cm_y, \cm_z$. Then verifier can compute the required commitments. But the remove first step in the above 3 protocols.}
+	
+	
+	\begin{enumerate}
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec:proximity} for proximity check for the matrix $\extwit||x||y||z$. Which is encoded to the matrix $\oracle{\extwit||x||y||z}$, and $\cm_{\extwit||x||y||z}$ is the corresponding commitment.
+		
+		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for linearity check for the public matrix $[A|-I]$ where $I$ is the identity matrix of dimension $ml \times ml$, and the public vector is the 0 vector of length $2ml$. This check ensures that $x$ is correctly computed from $\extwit$.
+		
+		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for linearity check for the public matrix $[B|-I]$ where $I$ is the identity matrix of dimension $ml \times ml$, and the public vector is the 0 vector of length $2ml$.This check ensures that $y$ is correctly computed from $\extwit$.
+		
+		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: linearity} for linearity check for the public matrix $[C|-I]$ where $I$ is the identity matrix of dimension $ml \times ml$, and the public vector is the 0 vector of length $2ml$.This check ensures that $z$ is correctly computed from $\extwit$.
+		
+		\item $\prover \leftrightarrow \verifier:$ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec: quadratic} for quadratic check to prove that $x \circ y = z$.
+		
+		\item If $\prover$ passes all the above check, then $\verifier$ accepts the arguement, else rejects.
+	\end{enumerate}
+	
+	Note that if $\prover$ executed all the steps correctly, then it passes all the checks and so $\verifier$ accepts the proof. So completeness holds for the protocol.
+	
+	To prove the special soundness we will design an extractor which will output a witness if the arguement is accepted.
+	
+	\begin{theorem}
+		Let $\cm$ is the commitment of $\calU$, used in above protocol by $\prover$. If $\verifier$ accepts the arguement generated by $\prover$, then there is an expected $\ppt$ extrator $\extrac$ having rewinding access to $\prover$, with polynomially many rewindings either outputs a correct $\extwit$ or breaks the binding property of the commitment scheme.
+	\end{theorem}
+	\begin{proof}
+		We have extractors for the proximity check, linearity check and quadratic check, say $\extrac_{prox}, \extrac_{lin}, \extrac_{quad}$ are the extractors respectively. Using these extractors we will design  $\extrac$ for the complete protocol. 
+		
+		$\extrac$ emulates the role of the verifier and starts the protocol. In the step it cf
+	\end{proof}
+	\pnote{In the theorems change $\oracle$s to $\calU$.}
 \end{document}
