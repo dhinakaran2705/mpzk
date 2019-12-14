@@ -133,13 +133,14 @@
 		
 		Let $X$ be the discrete random variable that represents the number of purchases until each of the $n$ column is picked at least once.
 		
-		Let $X_i$​ be the discrete random variable that represents the number of rewindings after the $(i-1)^{th}$ distinct column to select the $i^{th}$ distinct column. As a base case, $X_1=1$, because the first column selected will always be distinct.
+		Let $X_i$ be the discrete random variable that represents the number of rewindings after the $(i-1)^{th}$ distinct column to select the $i^{th}$ distinct column. As a base case, $X_1=1$, because the first column selected will always be distinct.
 		
 		By Linearity of expectation, $E[X]=\sum_{i=1}^{n}E[X_i]$
 		
 		After the $(i-1)^{th}$ distinct column is picked, there are $n-i+1$ columns remaining to be picked. Let $A_i$ be the event that one of those columns is picked in the next rewinding. Then $Pr(A_i)=\frac{n-i+1}{n}$.
 		
-		$X_i$​ follows a geometric distribution (of trials). It's expected value is
+
+		 $X_i$ follows a geometric distribution (of trials). It's expected value is
 		 $$E[X_i]= \frac{1}{Pr(A_i)} = \frac{n}{n-i+1}$$
 		From before, $E[X]$ is equal to the sum of all these expectations: i.e.
 		$$E[X] = \sum\limits_{i=1}^{n} \frac{n}{n-i+1} = n\sum\limits_{i=1}^{n} \frac{1}{i} \approx n \log n$$
