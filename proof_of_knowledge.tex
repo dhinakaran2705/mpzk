@@ -85,7 +85,7 @@
 %-----------------------------------------
 \begin{document}
 \subsection{Proof of Knowledge}
-	For \name2D protocol, we claim that the protocol has special soundness property. That is there is a $\ppt$ machine $\extrac$ that has oracle access to the prover $\prover$ such that by rewinding $\prover$, $\extrac$ can output the witness $w$ such that for which $\prover$ can convince $\verifier$.
+	For \name2D protocol, we claim that the protocol has proof of knowledge property. That is there is a $\ppt$ machine $\extrac$ that has oracle access to the prover $\prover$ such that by rewinding $\prover$, $\extrac$ can output the witness $w$ such that for which $\prover$ can convince $\verifier$.
 	
 	We will prove the above claim by proving that each subprotocols have the special correctness property. 
 	Suppose $x$ is encoded using interleaved $\RS$ encoding, then each column is commited using Pedersen commitment. That is if $|x|=ml$ then read $x$ as 
@@ -301,7 +301,7 @@
 	
 	Note that if $\prover$ executed all the steps correctly, then it passes all the checks and so $\verifier$ accepts the proof. So completeness holds for the protocol.
 	
-	To prove the special soundness we will design an extractor which will output a witness if the arguement is accepted.
+	To prove the proof of knowledge we will design an extractor which will output a witness if the arguement is accepted.
 	
 	\begin{theorem}
 		For $e < \frac{d}{3}$, if $\innp{\prover^*(\cm_{\extwit||x||y||z}, \calU^*)}{\verifier(\cm_{\extwit||x||y||z})} \rightarrow 1$, then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm_{\extwit||x||y||z}) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events:
