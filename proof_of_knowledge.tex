@@ -12,7 +12,8 @@
 \newcommand{\pnote}[1] {\textcolor{red}  {PKP: \sl{#1}}}
 %macros-----------------------------------
 \def\ppt{\mathsf{PPT}}
-\def\extrac{\mathcal{E}}
+\def\extrac{\mathcal{E}} %Extractor
+\def\sim{\mathcal{S}} %Simulator
 \def\prover{\mathsf{P}}
 \def\verifier{\mathsf{V}}
 \def\RS{\mathsf{RS}} %Reed Solomon encoding
@@ -118,10 +119,16 @@
 	\paragraph{\textbf{Proximity Check:}}\label{sec:proximity} In this check $\prover$ convinces $\verifier$ that $\cm_x$ is the commitment of a correct codeword matrix $\oracle_x$ which is encoding of a matrix $x$. If $\oracle_x$ is malformed, i.e. if it is sufficiently far away from a correct codeword matrix, then $\prover$ passes the following check with $\negl(t)$ probability.
 	\begin{enumerate}
 		\item $\prover \rightarrow \verifier :$ $\prover$ sends $cm$ to $\verifier$.
+		
 		\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
+		
 		\item $\prover \rightarrow \verifier :$ $\prover$ computes $u=\gamma^T\oracle_x$ and sends $u$ to $\verifier$.
+		
+		\pnote{ instead of using $w = \gamma^T \oracle_{x}$, using $u$, to avoid conflict with witness.}
 		\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
-		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=w_{j_u}$ $\forall j_u\in Q$
+		
+		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=u_{j_u}$ $\forall j_u\in Q$
+		
 		\item If $\verifier$ accepts the innerproduct arguement in step 5, then checks if $w\in L$. If yes then $\verifier$ outputs accept else outputs reject.
 	\end{enumerate}
 	
@@ -152,13 +159,13 @@
 		
 		Let $X$ be the discrete random variable that represents the number of purchases until each of the $n$ column is picked at least once.
 		
-		Let $X_i$​ be the discrete random variable that represents the number of rewindings after the $(i-1)^{th}$ distinct column to select the $i^{th}$ distinct column. As a base case, $X_1=1$, because the first column selected will always be distinct.
+		Let $X_i$ be the discrete random variable that represents the number of rewindings after the $(i-1)^{th}$ distinct column to select the $i^{th}$ distinct column. As a base case, $X_1=1$, because the first column selected will always be distinct.
 		
 		By Linearity of expectation, $E[X]=\sum_{i=1}^{n}E[X_i]$
 		
 		After the $(i-1)^{th}$ distinct column is picked, there are $n-i+1$ columns remaining to be picked. Let $A_i$ be the event that one of those columns is picked in the next rewinding. Then $Pr(A_i)=\frac{n-i+1}{n}$.
 		
-		$X_i$​ follows a geometric distribution (of trials). It's expected value is
+		$X_i$ follows a geometric distribution (of trials). It's expected value is
 		 $$E[X_i]= \frac{1}{Pr(A_i)} = \frac{n}{n-i+1}$$
 		From before, $E[X]$ is equal to the sum of all these expectations: i.e.
 		$$E[X] = \sum\limits_{i=1}^{n} \frac{n}{n-i+1} = n\sum\limits_{i=1}^{n} \frac{1}{i} \approx n \log n$$
@@ -275,7 +282,7 @@
 	
 	$\prover$ encodes $\extwit , x, y , z$ using the defined encoding in sec:~\ref{subsec: encode} and gets $\oracle_{\extwit}, \oracle_x, \oracle_y$ and $\oracle_z$ and commit each of them using Pedersen vector commitment described in ~\ref{subsec: commit} and gets $\cm_{\extwit}, \cm_x, \cm_y, \cm_z$. To commit, pick different set of generators for each $\oracle_{\extwit}, \oracle_x, \oracle_y, \oracle_z$, which will give the property that commitment of $\oracle_{\extwit||x}$ is $\cm_{\extwit} \circ \cm_x$. Where $\extwit||x$ means that a new matrix is formed by adjoining columns of $\extwit$ followed by the columns of $x$. 
 	
-	
+	In the following protocol, $\verifier$ picks a random index set $Q\subseteq [n]$ of size $t$ and uses this $Q$ in all the followimg subprotocols.
 	\begin{enumerate}
 		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run the subprotocol ~\ref{sec:proximity} for proximity check for the matrix $\extwit||x||y||z$. Which is encoded to the matrix $\oracle{\extwit||x||y||z}$, and $\cm_{\extwit||x||y||z}$ is the corresponding commitment.
 		
@@ -351,7 +358,43 @@
 	Then $\prover$ sends $p(\cdot) = \sum_{i\in[m]} [r_i\cdot (\hat{f}^x_i(\cdot)\cdot \hat{f}^y_i(\cdot) - \hat{f}^z_i(\cdot)]$. $\verifier$ is allowed to learn only if $p(\zeta_j)=0$ or not for all $j\in[l]$. To avoid leaking more information about $p(\cdot)$ we need to blind it. To do that pick a random polynomial $p_{blind}(\cdot)$ such that $p_{blind}(\zeta_j) = 0$ $\forall j\in [l]$. accordingly update $\oracle_x, \oracle_y,\oracle_z$ in the following way: pick there random codewords which are encodings of zeros, and append one of them each at the last of $\oracle_{x}, \oracle_{y}, \oracle_{z}$.
 	Inner product arguement is same as Proximity and linear check, it does not require any changes. 
 	
+	\paragraph{Deisgning the simulator for the complete protocol: } In an actual execution of the protocol generates a transcript of the form:
+	\begin{align*}
+		\tau = \{ 
+				& \cm_{\extwit||x||y||z},\\
+				& \gamma(\in_R \bbF^{m}), r_1(\in_R \bbF^{ml}), r_2(\in_R \bbF^m), \\ 
+				& (u' = u+u_{blind}), (q^{lin}(\cdot) = p^{lin}(\cdot)+p^{lin}_{blind}(\cdot)), (q^{quad}(\cdot) = p^{quad}(\cdot) + p^{quad}_{blind}(\cdot)),\\
+				& Q (|Q|=t),\\
+				& \text{ inner product proof for } \\
+				& (\innp{\gamma}{\oracle_{\extwit||x||y||z}[\cdot, Q]} = u_Q, \innp{R_Q}{\oracle_{\extwit||x||y||z}[\cdot, Q]}=q^{lin}(\eta_Q),\\
+				& \innp{(r\circ \oracle_x[\cdot,j_u]||r)}{(\oracle_y[\cdot,j_u]||-\oracle_z[\cdot,j_u])} = q^{quad}(\eta_{j_u})
+			\}
+	\end{align*}
+	Consider a protocol, which is same as above protocol with the difference that $\prover$ instead of proving the inner product arguements opens the corresponding columns of $\oracle$. If this new protocol has zero knowledge property then our protocol also have zero knowledge property, since in our protocol whatever $\verifier$ can compute, $\verifier$ of the new protocol can also compute. It is easy to prove this by reduction.
 	
+	Now we will prove that the new protocol is zero-knowledge. It will have the transcript of the following form:
+	\begin{align*}
+	\tau' = \{
+	& \cm_{\extwit||x||y||z},\\
+	& \gamma(\in_R \bbF^{m}), r_1(\in_R \bbF^{ml}), r_2(\in_R \bbF^m), \\ 
+	& (u' = u+u_{blind}), (q^{lin}(\cdot) = p^{lin}(\cdot)+p^{lin}_{blind}(\cdot)), (q^{quad}(\cdot) = p^{quad}(\cdot) + p^{quad}_{blind}(\cdot)),\\
+	& Q (|Q|=t),\\
+	& \oracle_{\extwit}[\cdot, Q], \oracle_{x}[\cdot, Q], \oracle_{y}[\cdot, Q], \oracle_{z}[\cdot, Q]
+	 \}
+	\end{align*}
+	
+	Let $\sim$ be the simulator. $\sim$ does the following:
+	\begin{itemize}
+		\item  picks a random subste $Q$ of size $t$.
+		\item  uniformly at random chooses $\gamma \in \bbF^m$.
+		\item  uniformly at random chooses $r_1 \in \bbF^{ml}$ and $r_2 \in \bbF^m$.
+		\item  chooses $t$ columns for $\oracle_{\extwit||x||y||z}$ according to the indices of $Q$.
+		\item  computes the commitment of columns indexed by $Q$ for $\oracle_{\extwit||x||y||z}$, and for remaining positions picks uniform values from the range of $\com$, that fixes $\cm_{\extwit||x||y||z}$.
+		\item  computes components of $u'$ indexed by $Q$ using $\oracle_{\extwit||x||y||z}$ and $\gamma$. Out of $n$ for remaining $n-t$ picks values for $u'$ in such a way that $u'$ is a valid coedword.
+		\item  picks a random polynomial $q^{lin}(\cdot)$ such that degree is $<k+l-1$ and $\sum_{j\in [l]} q^{lin}(\zeta_j) = 0$.
+		\item  picks a random polynomial $q^{quad}(\cdot)$ such that degree is $<2k-1$ and $q^{quad}(\zeta_j) = 0$ $\forall j\in [l]$.
+	\end{itemize} 
+	Then $\sim$ outputs a transcript $\tau''$ which is computationally indistinguishable from $\tau'$. Therefore the new protocol has zero knowledge property, and hence \name2D has zero-knowledge property.
 	
 	\bibliographystyle{plain}
 	\bibliography{references}
