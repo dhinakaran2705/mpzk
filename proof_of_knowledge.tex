@@ -126,12 +126,12 @@
 		\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
 		
 		\item $\prover \rightarrow \verifier :$ $\prover$ computes $u=\gamma^T\oracle_x$ and sends $u$ to $\verifier$.
-<<<<<<< HEAD
-		\pnote{instead of $w$, using $u=\gamma^T\oracle_x$, otherwise $w$ conflicts with the witness.
+		
+		\pnote{ instead of using $w = \gamma^T \oracle_{x}$, using $u$, to avoid conflict with witness.}
 		\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
-
+		
 		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=u_{j_u}$ $\forall j_u\in Q$
-
+		
 		\item If $\verifier$ accepts the innerproduct arguement in step 5, then checks if $w\in L$. If yes then $\verifier$ outputs accept else outputs reject.
 	\end{enumerate}
 	
@@ -208,7 +208,7 @@
 	 \begin{itemize}
 	 	\item if $d(\calU^*,L^m) > e$ then $\extrac$ outputs $\calU^*$, which satisfies $\com(\calU^*)=\cm$ otherwise gets a collision for the binding property.
 	 	
-	 	\item if $d(\calU^*,L^m) \leq e$ then by soundness analysis in \cite{Ligero2017}, the nearest codeword of $\calU^*$ decodes to $x$ such that $Ax\neq b$ has $\negl(\lambda)$ probabillity. That means nearest codeword of $\calU^*$ decodes to $x$ which satisfies $Ax=b$ with very high probability and $\com(\calU^*)=\cm$.
+	 	\item if $\d(\calU^*,L^m) \leq e$ then by soundness analysis in \cite{Ligero2017}, the nearest codeword of $\calU^*$ decodes to $x$ such that $Ax\neq b$ has $\negl(\lambda)$ probabillity. That means nearest codeword of $\calU^*$ decodes to $x$ which satisfies $Ax=b$ with very high probability and $\com(\calU^*)=\cm$.
 	 \end{itemize}
  
 	 Similar analysis of Theorem:~\ref{theo:proximity} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x$.
