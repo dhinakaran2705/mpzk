@@ -125,8 +125,7 @@ $\View^{Real}_T ( \stmt, \wit_T, m) = \{ \innp { \prover_{\overline{T}}( \wit_{\
 	
 	Now we will prove that $\innp{\Pi}{\verifier}$ has $t$-privacy among provers property. 
 	
-	If not, let there is a set $T\subseteq [\Num]$ of size $leq t$ for which during the interaction among the provers, adversary corrupting provers in $T$ learns a function $h(\wit)$ which can not be computed by the advesary i.e. $h(\wit)$ cannot computed using $\stmt, \wit_T, m, z$. Therefore any simulator for ZKUC will not be able to compute $h(w)$. That imples $\innp{\Pi}{\verifier}$ does not have ZKUC property, contradiction.
-	\pnote{do a recheck for $z$}
+	If not, let there is a set $T\subseteq [\Num]$ of size $leq t$ for which during the interaction among the provers, adversary corrupting provers in $T$ learns a function $h(\wit)$ which can not be computed by the advesary i.e. $h(\wit)$ cannot computed using $\stmt, \wit_T, m, z$. Therefore $\verifier^*$ is learning $h(w)$, which he is not supposed to learn. That imples $\innp{\Pi}{\verifier}$ does not have ZKUC property, contradiction.
 	
 	Therefore $\innp{\Pi}{\verifier}$ has $t$-privacy among provers and Zero-knowledge property.
 \end{proof}
