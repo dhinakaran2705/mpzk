@@ -1,121 +1,48 @@
+%\newcommand{\enc}{\mathsf{Enc}}
 \section{DPZKQuickVerify} \label{sec:quickverify}
+While the construction of the previous section leads to smaller argument size,
+it comes with a considerable degradation to prover and verifier efficiency, as
+both the prover and the verifier incur $O(N^{1-1/c})$ exponentiations. Note
+that while the prover needs to compute $O(N)$ exponentiations while computing
+commitment $\comoracle$, one can use multi-exponentiations to compute the same
+using $O(N/\log{N})$ exponentiations which can be significant speed-up in
+practice. In this section we additionally leverage homomorphic commitments
+(introduced to facilitate distributed proof generation) to obtain a better
+trade-off between the argument size and the number of exponentiations computed
+by the prover and the verifier. Essentially, we obtain the same argument size
+of $N^{1/c}$ for $c\geq 2$ while restricting the inner product arguments to
+vectors of size at most $O(N^{1-2/c})$. For practically relevant lower values
+of $c$, the gains in efficiency are substantial.
+   
+We start by arranging the witness vector $x\in \FF^N$ as a $3$-dimensional
+array. Let $p,m$ and $\ell$ be integers such that $N=pm\ell$. We view $x$ as
+$p$ matrices, each of size $m\times \ell$, i.e, we write $x = (x_1|\cdots|x_p)$
+where $x_i\in \FF^{m\times \ell}$ for all $i\in [p]$. We will use the notation
+$x[i,j,k]$ to denote the entry $x_i[j,k]$. To obtain encoding of
+$x$, we use product code of two Reed Solomon codes to encode each matrix $x_i$,
+$i\in [p]$ as a codeword in the product code. The use of the product code is
+essential to ensure soundness of the protocol with constant number of queries.
+We now describe the encoding in more detail.
 
-We now describe how to reduce the verifier complexity while retaining the query complexity of $O(N^{1/c})$ by
-using homomorphic vector commitments over the RS encoded witness oracles. 
-%Let $x\in \FF^N$ be the witness vector. 
-Let $p,m$ and $\ell$ be integers such that $pm\ell\geq N$. 
-%We choose ordered domains $G=\{\zeta_1,\ldots,\zeta_\ell\}$ and $H=\{\eta_1,\ldots,\eta_n\}$. 
-We then write the vectors $x$ as $x =
-(x_{11},\ldots,x_{pm})$ where each $x_{ij}\in \FF^l$ for $(i,j)\in [p]\times
-[m]$. Let $\hat{f}^x_{ij}$ be the polynomial interpolating the vector $x_{ij}$
-on $G$ and let $f^x_{ij}$ denote the corresponding evaluation of
-$\hat{f}^x_{ij}$ on $H$. We define the RS-encoded witness $\rsoracle\in
-\FF^{p\times m\times l}$ as $\rsoracle[i,j,k]=\hat{f}^x_{ij}(\eta_k)$ for $i\in
-[p]$, $j\in [m]$ and $k\in [n]$. We now construct a commitment oracle
-$\comoracle$ from $\rsoracle$.
+\subsection{Witness encoding with RS product code}
+We first choose the following sets of distinct points in $\FF$:
+\begin{align}\label{eq:points}
+\bm{\zeta} =\{\zeta_1,\ldots,\zeta_{\ell}\},\quad 
+\bm{\eta}  = \{\eta_1,\ldots,\eta_n \},\quad
+\bm{\alpha} = \{\alpha_1,\ldots,\alpha_{2m}\}. 
+\end{align}
 
-\subsubsection{Commitment Oracle for 3D}
-%Throughout we assume $\FF$ is a prime field. Let $\comm$ denote the Pedersen
-%vector commitment scheme over $\FF^m$ with randomness space as $\FF$ and
-%commitment space a group $\GG$ with independent generators $g_1,\ldots,g_m$ and $h$. 
-Let $c_{ik} = \comm(\rsoracle[i,\cdot,k],\delta_{ik})$, $i\in [p]$, $k\in [n]$, where 
-%$X[i,.,k]$ denotes the $m$-length vector $(X[i,1,k],\ldots,X[i,m,k])$ and 
-$\delta_{ik}$ denotes the commitment randomness for computing the commitment $c_{ik}$. 
-We define the oracle $\comoracle$ here as $\comoracle[i,k]=c_{ik}$. The oracle
-$\comoracle$ answers queries of the type $Q\subseteq [n]$, responding with
-columns $\comoracle[.,k]$ for $k\in Q$. We will use $\comoracle$ as the witness
-oracle, and adapt the subprotocols for checking linear constraints, quadratic
-constraints and proximity to this oracle.
-
-\subsubsection{Linear Check with Commitment Oracle}
-The linear check $Ax=0$ can be reduced to checking
-$\innp{r^TA}{x}=0$, where the verifier samples a random $r\sample \FF^{pmn}$
-and sends it to the prover. As before, the prover and verifer write $r$ as
-$(r_{11}|\cdots|r_{pm})$ where each $r_i\in \FF^\ell$. Both the prover and the
-verifier also compute degree $<\ell$ polynomials $\hat{r}_{ij}$ interpolating
-the vector $r_{ij}$ on $G$. The required check in terms of polynomials can be
-expressed as:
-\begin{equation}\label{eq:lincheck}
-\sum_{\alpha\in G}\sum_{j\in [m]}\sum_{i\in [p]}
-\hat{r}_{ij}(\alpha).\hat{f}^x_{ij}(\alpha) = 0.
-\end{equation}
-The prover computes polynomials $\hat{p}_j = \sum_{i\in
-[p]}\hat{r}_{ij}.\hat{f}^x_{ij}$ for $j\in [m]$ and polynomial $\hat{p}=\sum_j
-\hat{p}_j$. Finally it sends the polynomial $\hat{p}$ of degree $< 2\ell$ to
-the verifier who checks $\sum_{\alpha\in G}\hat{p}(\alpha)=0$. To guard against
-dishonest provers, the verifier needs following additional consistency checks:
-\begin{itemize}
-\item The polynomial $\hat{p}$ is correctly computed from the polynomials
-$\hat{p}_j$, $j\in [m]$.
-\item The polynomials $p_j$, $j\in [m]$ are honestly computed from the witness
-oracle $\comoracle$.
-\end{itemize}
-To enable the above checks, the prover needs to make additional communication.
-In particular it needs to send a commitment to the set of polynomials
-$\{\hat{p}_j: j\in [m]\}$. We first describe this commitment.\smallskip
-
-\noindent{\em Commitment to set of polynomials $\hat{p}_j$}: We commit to the
-set of polynomials $\hat{p}_j$ via their evaluations on $H$. Consider a matrix
-$P\in \FF^{m\times n}$ where $P[j,k]=\hat{p}_j(\eta_k)$ for $(j,k)\in [m]\times
-[n]$. Thus the $j^{th}$ row of $P$ corresponds to the evalaution $p_j$ of the polynomial
-$\hat{p}_j$ on $H$. We commit to the matrix $P$ by sampling commitments to its
-columns. Since $P$ corresponds to evaluations of polynomials of degree
-$<2\ell$, we only generate commitments for the first $2\ell$ columns. Let
-$d_1,\ldots,d_{2\ell}$ be the commitments for the first $2\ell$ columns of $P$
-using the commitment scheme $\comm$. 
-\begin{equation*}
-P := \begin{bmatrix}
-\hat{p}_1(\eta_1) & \cdots & \hat{p}_1(\eta_{2\ell}) & \vline & \cdots &
-\hat{p}_1(\eta_n) \\
-\vdots & \ddots & \vdots & \vline & \ddots & \vdots \\
-\hat{p}_m(\eta_1) & \cdots & \hat{p}_m(\eta_{2\ell}) & \vline & \cdots &
-\hat{p}_m(\eta_n)
-\end{bmatrix}
-\end{equation*}
-Note that there exists a $2\ell\times n$ matrix $T$ such that $P'T = P$ where $P'$ denotes
-the submatrix of $P$ consisting of first $2\ell$ columns. Thus the commitments
-to other columns of $P$ can be computed from $d_1,\ldots,d_{2\ell}$ using
-homomorphism. \smallskip
-
-\noindent{\em Checking correctness of $\hat{p}$}: To check the consistency of
-the polynomial $\hat{p}$ with respect to the polynomials $\hat{p}_j:j\in [m]$,
-the prover additionally sends the commitments $d_1,\ldots,d_{2\ell}$ to the set
-of aforementioned polynomials. Then the verifier needs to check that
-$\hat{p}=\sum_{j\in [m]}\hat{p}_j$, which is equivalent to checking
-$\bm{1}^TP'=\tilde{p}$ where $\bm{1}\in \FF^m$ denotes the all $1$ vector and
-$\tilde{p}$ denotes the vector of evaluations of the polynomial $\hat{p}$ on
-$\eta_1,\ldots,\eta_{2\ell}$. The verifier checks the preceeding identity
-probabilistically by sampling $\gamma\sample \FF^{2\ell}$ and checking
-$\innp{\bm{1}^T}{P'\gamma}=\innp{\tilde{p}}{\gamma}$. Next the verifier
-computes the commitment $c$ of $P'\gamma$ using the matrix $T$ and homomorphic
-properties of $\comm$. The inner product can now be verified by running the
-inner product argument $(\pip,\vip)$ for the commitment scheme
-$\comm$.\smallskip
-
-\noindent{\em Checking correctness of $\hat{p}^j,j\in [m]$}: This check ensures
-the the commitments $d_1,\ldots,d_{2\ell}$ open to polynomials $\hat{p}_j$,
-$j\in [m]$ corresponding to honest computation. Notice that in the honest
-computation we have (i) $P[j,k]=\hat{p}_j(\eta_k)=\sum_{i\in
-[p]}\hat{r}_{ij}(\eta_k)\hat{f}^x_{ij}(\eta_k)=\sum_{i\in[p]}\hat{r}_{ij}(\eta_k)\rsoracle[i,j,k]$
-for all $j,k$. Let $R_{jk}$ denote the vector
-$(\hat{r}_{1j}(\eta_k),\ldots,\hat{r}_{pj}(\eta_k)\in \FF^p$. Then the previous
-check can be written as:
-\begin{equation}
-\innp{e_j}{P[.,k]} = \innp{R_{jk}}{\rsoracle[.,j,k]} \quad \forall j,k.
-\end{equation}
-Note that $P[.,k]$ links to the commitments $d_1,\ldots,d_{2\ell}$ (we can
-compute the commitment of $P[.,k]$ in terms of the $2\ell$ commitments). On the
-other hand, the ``tube'' $\rsoracle[.,j,k]$ links to the commitment oracle
-$\comoracle$. Thus the commitments $d_1,\ldots,d_{2\ell}$ are constrained by
-the oracle. We make this linking more explicit. The verifier randomly samples
-distinct indices $j_1,j_2,\ldots,j_q$ from $[m]$ and indices $k_1,\ldots,k_q$
-from $[n]$ independently at random. Note that the latter indices are sampled
-with repetition. It sends the tuples $\{(j_u,k_u)\}_{u\in [q]}$ to the prover. The prover responds with the tubes
-$\{\rsoracle[.,j_u,k_u]:u\in [q]\}$ and columns $\{\comoracle[.,k_u]:u\in
-[q]\}$. 
-  
-
-\subsection{Protocol with Commitment Oracle}
+Next, we define interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
+k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [2m],
+k\in [n]\}$. We encode an $m\times \ell$ matrix $a$ by interpolating a
+bivariate polynomial $Q^a(x,y)$ with $\deg_x(Q)<m$ and $\deg_y(Q)<\ell$
+satisfying $Q^a(\alpha_j,\zeta_k)=a[j,k]$ for $j\in [m],k\in [\ell]$. We define
+the encoding $\enc(a)$ of $a$ as the $2m\times n$ matrix $b$ consisting of
+evaluations of $Q^a$ on $H$, i.e, $b[j,k]=Q^a(\alpha_j,\eta_k)$ for $j\in
+[2m],k\in [n]$. It can be seen that $\enc(a)$ is a codeword in the product code
+$\rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$.  
+ 
+ 
 We describe how to use homomorphic commitment of RS-encoded oracle to reduce
 argument size and verifier's complexity. Let $x\in \FF^N$ be the witness
 vector. Let $p,m,\ell$ be positive integers such that $pm\ell > N$. We choose the interpolation domain $G\subseteq \FF\times \FF$ as
