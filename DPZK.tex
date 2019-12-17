@@ -18,7 +18,7 @@ Let $P_1, \ldots, P_N$ be $N$ parties. In our setting, we let each party have an
 A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, V)$. 
 \begin{itemize}
 \item $\Setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
-\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have the output $m_i$ of $\Exec^{\pi_i}_{P_1, \ldots, P_p}(\st^i_1, \ldots, \st^i_p)$ provided to $V$. Here, $\st^i_j$ is the state of the party $P_j$ at round $i$. $\st^1_j$ is set to $P_j$'s share of the witness $w_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
+\item The interactive proof system is an $R$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, V \rangle$ where in every round $i \in [R]$, we have the output $m_i$ of $\Exec^{\pi_i}_{P_1, \ldots, P_N}(\st^i_1, \ldots, \st^i_N)$ provided to $V$. Here, $\st^i_j$ is the state of the party $P_j$ at round $i$. $\st^1_j$ is set to $P_j$'s share of the witness $w_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $V$ is either an \textit{accept} (1) or a \textit{reject} (0). Also, let $tr$ be the transcript of the protocol.
 \end{itemize}
 A DPZK protocol for a language $L$
 satisfies the following properties: 
