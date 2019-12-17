@@ -13,7 +13,7 @@
 %macros-----------------------------------
 \def\ppt{\mathsf{PPT}}
 \def\extrac{\mathcal{E}} %Extractor
-\def\sim{\mathcal{S}} %Simulator
+\def\Sim{\mathcal{S}} %Simulator
 \def\prover{\mathsf{P}}
 \def\verifier{\mathsf{V}}
 \def\RS{\mathsf{RS}} %Reed Solomon encoding
@@ -88,7 +88,10 @@
 	For \name2D protocol, we claim that the protocol has proof of knowledge property. That is there is a $\ppt$ machine $\extrac$ that has oracle access to the prover $\prover$ such that by rewinding $\prover$, $\extrac$ can output the witness $w$ such that for which $\prover$ can convince $\verifier$.
 	
 	We will prove the above claim by proving that each subprotocols have the special correctness property. 
-	Suppose $x$ is encoded using interleaved $\RS$ encoding, then each column is commited using Pedersen commitment. That is if $|x|=ml$ then read $x$ as 
+	Suppose $x$ is encoded using interleaved $\RS$ encoding, then each column is commited using Pedersen commitment. 
+	
+	\subsubsection{Encoding:}\label{subsec: encode} 
+	If $|x|=ml$ then read $x$ as 
 	$$x=
 	\begin{bmatrix}
 		x_{11} & x_{12} & \ldots & x_{1l}\\
@@ -97,7 +100,7 @@
 		x_{m1} & x_{m2} & \ldots & x_{ml}
 	\end{bmatrix}
 	$$	
-	\subsubsection{Encoding:}\label{subsec: encode} Construct polynomials $\hat{f}^x_i(\cdot)$ of deg $k$ such that $\hat{f}^x_i(\zeta_j)=x_{ij}$ $\forall i\in [m], j\in [l]$ where $k>l$ and $l+t=k$.
+	 Construct polynomials $\hat{f}^x_i(\cdot)$ of deg $k$ such that $\hat{f}^x_i(\zeta_j)=x_{ij}$ $\forall i\in [m], j\in [l]$ where $k>l$ and $l+t=k$.
 	
 	Define 
 	$$\oracle_x =
@@ -133,7 +136,7 @@
 	\end{enumerate}
 	
 	Note that the subprotocol for innerproduct arguement has the proof of knowledge property, proof given in \cite{Bulletproofs}. So there is an expected $\ppt$ extractor $\extrac_{innp}$ for the innerproduct argument, which either outputs the witness or breaks the binding property of the committment, if the arguement is accepted.
-	\begin{theorem}\label{theo:1}
+	\begin{theorem}\label{theo:proximity}
 		For $e < \frac{d}{3} $, if $\innp{\prover^*(\cm, \calU^*)}{\verifier(\cm)} $ is true, then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events: 
 		\begin{itemize}
 			\item $\com(\calU^*) = \cm$ and $ d(\calU^*, L^m) < e$
@@ -208,8 +211,9 @@
 	 	\item if $\d(\calU^*,L^m) \leq e$ then by soundness analysis in \cite{Ligero2017}, the nearest codeword of $\calU^*$ decodes to $x$ such that $Ax\neq b$ has $\negl(\lambda)$ probabillity. That means nearest codeword of $\calU^*$ decodes to $x$ which satisfies $Ax=b$ with very high probability and $\com(\calU^*)=\cm$.
 	 \end{itemize}
  
-	 Similar analysis of ~\ref{theo:1} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x$.
+	 Similar analysis of Theorem:~\ref{theo:proximity} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x$.
 	\end{proof}
+
 	\paragraph{\textbf{Quadratic Check:}}\label{sec: quadratic} In this check $\prover$ claims that he knows $x,y,z\in\bbF^{ml}$ such that $x \circ y = z$. $\prover$ starts with encoding each of $x, y, z$ and obtains $\oracle_x, \oracle_y, \oracle_z$. Then $\prover$ performs column wise commitments and gets $\cm_x, \cm_y, \cm_z$. The following check ensures that if any of the $\oracle_x, \oracle_y, \oracle_z$ is malformed, which is not far away from a correct encoding of any of the $x, y, z$, then $\verifier$ rejects with very high probability.
 	\begin{enumerate}
 		\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x, \cm_y, \cm_z$ to $\verifier$.
@@ -254,7 +258,7 @@
 		\item if $\wedge_{i=1}^3 d(\calU^*_i, L^m) \leq e$, then by soundness analysis in \cite{Ligero2017}, the nearest codewords of $\calU^*_1, \calU^*_2, \calU^*_3$ decode to $x, y, z$ repesctively such that probability that $x \circ y \neq z$ is $\negl(\lambda)$. That means the decoded values of the nearest codewords of $\calU^*_1, \calU^*_2, \calU^*_3$ satisfy $x\circ y = z$ with very high probability.
 	\end{itemize}
 	 
-	Similar analysis of ~\ref{theo:1} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x, y, z$.
+	Similar analysis of Theorem~\ref{theo:proximity} proves that $\extrac$ requires polynomially many rewinding to extract the witness $x, y, z$.
 	\end{proof}
 	
 		
@@ -383,7 +387,7 @@
 	 \}
 	\end{align*}
 	
-	Let $\sim$ be the simulator. $\sim$ does the following:
+	Let $\Sim$ be the simulator. $\Sim$ does the following:
 	\begin{itemize}
 		\item  picks a random subste $Q$ of size $t$.
 		\item  uniformly at random chooses $\gamma \in \bbF^m$.
@@ -394,7 +398,7 @@
 		\item  picks a random polynomial $q^{lin}(\cdot)$ such that degree is $<k+l-1$ and $\sum_{j\in [l]} q^{lin}(\zeta_j) = 0$.
 		\item  picks a random polynomial $q^{quad}(\cdot)$ such that degree is $<2k-1$ and $q^{quad}(\zeta_j) = 0$ $\forall j\in [l]$.
 	\end{itemize} 
-	Then $\sim$ outputs a transcript $\tau''$ which is computationally indistinguishable from $\tau'$. Therefore the new protocol has zero knowledge property, and hence \name2D has zero-knowledge property.
+	Then $\Sim$ outputs a transcript $\tau''$ which is computationally indistinguishable from $\tau'$. Therefore the new protocol has zero knowledge property, and hence \name2D has zero-knowledge property.
 	
 	\bibliographystyle{plain}
 	\bibliography{references}

@@ -11,15 +11,17 @@
 \newcommand{\KK}{\mathbb{K}}
 \newcommand{\comm}{\mathsf{Com}}
 \newcommand{\csetup}{\mathsf{Gen}}
-\newcommand{\pip}{\mathcal{P}_\mathrm{ip}}
-\newcommand{\vip}{\mathcal{V}_\mathrm{ip}}
+\newcommand{\pip}{\mathsf{P}_\mathrm{ip}}
+\newcommand{\vip}{\mathsf{V}_\mathrm{ip}}
+\newcommand{\piplog}{\mathsf{P}_\mathrm{log}}
+\newcommand{\viplog}{\mathsf{V}_\mathrm{log}}
+\newcommand{\pipsq}{\mathsf{P}_\mathrm{sq}}
+\newcommand{\vipsq}{\mathsf{V}_\mathrm{sq}}
+
 \newcommand{\setup}{\mathsf{Setup}}
 \newcommand{\mc}[1]{\mathcal{#1}}
 \newcommand{\innp}[2]{\langle #1,#2\rangle}
-\newcommand{\piplog}{\mathcal{P}_\mathrm{log}}
-\newcommand{\viplog}{\mathcal{V}_\mathrm{log}}
-\newcommand{\pipsq}{\mathcal{P}_\mathrm{sq}}
-\newcommand{\vipsq}{\mathcal{V}_\mathrm{sq}}
+
 \newcommand{\rsoracle}{\mathcal{U}^{\mathsf{RS}}}
 \newcommand{\comoracle}{\mathcal{U}^{\mathsf{Com}}}
 \newcommand{\decode}{\mathsf{Dec}}
@@ -74,6 +76,63 @@
 
 %%%%%%%%%%%%%%%%%
 
+\def\calA{\mathcal{A}}
+\def\calB{\mathcal{B}}
+\def\calC{\mathcal{C}}
+\def\calD{\mathcal{D}}
+\def\calE{\mathcal{E}}
+\def\calF{\mathcal{F}}
+\def\calG{\mathcal{G}}
+\def\calH{\mathcal{H}}
+\def\calI{\mathcal{I}}
+\def\calJ{\mathcal{J}}
+\def\calK{\mathcal{K}}
+\def\calL{\mathcal{L}}
+\def\calM{\mathcal{M}}
+\def\calN{\mathcal{N}}
+\def\calO{\mathcal{O}}
+\def\calP{\mathcal{P}}
+\def\calQ{\mathcal{Q}}
+\def\calR{\mathcal{R}}
+\def\calS{\mathcal{S}}
+\def\calT{\mathcal{T}}
+\def\calU{\mathcal{U}}
+\def\calV{\mathcal{V}}
+\def\calW{\mathcal{W}}
+\def\calX{\mathcal{X}}
+\def\calY{\mathcal{Y}}
+\def\calZ{\mathcal{Z}}
+
+\def\bbA{\mathbb{A}}
+\def\bbB{\mathbb{B}}
+\def\bbC{\mathbb{C}}
+\def\bbD{\mathbb{D}}
+\def\bbE{\mathbb{E}}
+\def\bbF{\mathbb{F}}
+\def\bbG{\mathbb{G}}
+\def\bbH{\mathbb{H}}
+\def\bbI{\mathbb{I}}
+\def\bbJ{\mathbb{J}}
+\def\bbK{\mathbb{K}}
+\def\bbL{\mathbb{L}}
+\def\bbM{\mathbb{M}}
+\def\bbN{\mathbb{N}}
+\def\bbO{\mathbb{O}}
+\def\bbP{\mathbb{P}}
+\def\bbQ{\mathbb{Q}}
+\def\bbR{\mathbb{R}}
+\def\bbS{\mathbb{S}}
+\def\bbT{\mathbb{T}}
+\def\bbU{\mathbb{U}}
+\def\bbV{\mathbb{V}}
+\def\bbW{\mathbb{W}}
+\def\bbX{\mathbb{X}}
+\def\bbY{\mathbb{Y}}
+\def\bbZ{\mathbb{Z}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 % 		Rounding commands
 
 %\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
@@ -86,8 +145,30 @@
 
 \def\Exec{\mathsf{Exec}}
 \def\Setup{\mathsf{Setup}}
-
+\def\View{\mathsf{View}}
+\def\Num{\mathsf{N}} % number of provers
+\def\wit{\mathsf{w}} %Witness
+\def\extwit{\hat{w}} %Extended witness
+\def\stmt{\hat{x}} %Statement
+\def\prover{\mathsf{P}} %Prover
+\def\verifier{\mathsf{V}} %Verifier
+\def\ppt{\mathsf{PPT}}
+\def\extrac{\mathcal{E}} %Extractor
+\def\DPZK{\mathsf{DPZK}}
+\def\Sim{\mathcal{S}} %Simulator
+\def\bitset{\{0,1\}} %{0,1}
+\def\intpartofC{\mathsf{M}} %Interactive part of the circuit
+\def\gen{\mathsf{Gen}} %Gen
+\def\com{\mathsf{Com}} %commitment
+\def\NP{\mathsf{NP}} %NP class
+\def\C{\mathsf{C}} %Circuit
+\def\round{\mathsf{R}} %Round
+\def\tr{\mathsf{tr}} %Transcript
+\def\RS{\mathsf{RS}}
+\def\oracle{\mathcal{U}^{\RS}} %Oracle
+\def\cm{\mathsf{cm}} %Commitment vector
 % 		Notions
+
 
 \def\negl{\mathrm{negl}}
 
@@ -96,10 +177,9 @@
 \def\secp{{\lambda}}
 
 
-
 \newcommand{\Defn}[1]{\textbf{{\textit{#1}}}}
 \newcommand{\Adv}{\mathcal{A}}
-\newcommand{\com}{\mathsf{com}}
+%\newcommand{\com}{\mathsf{com}}
 \newcommand{\vc}[1]{\textbf{{#1}}}
 %\newcommand{\bb}[1]{\mathbb{#1}}
 %\newcommand{\poly}[1][2]{#1(#2)}
