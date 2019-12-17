@@ -1,132 +1,51 @@
 %\newcommand{\enc}{\mathsf{Enc}}
 \section{DPZKQuickVerify} \label{sec:quickverify}
-While the construction of the previous section leads to smaller argument size,
-it comes with a considerable degradation to prover and verifier efficiency, as
-both the prover and the verifier incur $O(N^{1-1/c})$ exponentiations. Note
-that while the prover needs to compute $O(N)$ exponentiations while computing
-commitment $\comoracle$, one can use multi-exponentiations to compute the same
-using $O(N/\log{N})$ exponentiations which can be significant speed-up in
-practice. In this section we additionally leverage homomorphic commitments
-(introduced to facilitate distributed proof generation) to obtain a better
-trade-off between the argument size and the number of exponentiations computed
-by the prover and the verifier. Essentially, we obtain the same argument size
-of $N^{1/c}$ for $c\geq 2$ while restricting the inner product arguments to
-vectors of size at most $O(N^{1-2/c})$. For practically relevant lower values
-of $c$, the gains in efficiency are substantial.
+While the construction of the previous section leads to smaller argument size, it comes with a considerable degradation to prover and verifier efficiency, as both the prover and the verifier incur $O(|\C|^{1-1/c})$ exponentiations. Note that while the prover needs to compute $O(|\C|)$ exponentiations while computing commitment $\comoracle$, one can use multi-exponentiations to compute the same using $O(|\C|/\log{|\C|})$ exponentiations which can be significant speed-up in practice. In this section we additionally leverage homomorphic commitments (introduced to facilitate distributed proof generation) to obtain a better trade-off between the argument size and the number of exponentiations computed by the prover and the verifier. Essentially, we obtain the same argument size of $|\C|^{1/c}$ for $c\geq 2$ while restricting the inner product arguments to
+vectors of size at most $O(|\C|^{1-2/c})$. For practically relevant lower values of $c$, the gains in efficiency are substantial.
    
-We start by arranging the witness vector $x\in \FF^N$ as a $3$-dimensional
-array. Let $p,m$ and $\ell$ be integers such that $N=pm\ell$. We view $x$ as
-$p$ matrices, each of size $m\times \ell$, i.e, we write $x = (x_1|\cdots|x_p)$
-where $x_i\in \FF^{m\times \ell}$ for all $i\in [p]$. We will use the notation
-$x[i,j,k]$ to denote the entry $x_i[j,k]$. To obtain encoding of
-$x$, we use product code of two Reed Solomon codes to encode each matrix $x_i$,
-$i\in [p]$ as a codeword in the product code. The use of the product code is
-essential to ensure soundness of the protocol with constant number of queries.
-We now describe the encoding in more detail.
+We start by arranging the witness vector $x\in \bbF^{|\C|}$ as a $3$-dimensional array. Let $p,m$ and $\ell$ be integers such that $pm\ell > |\C|$. We view $x$ as $p$ matrices, each of size $m\times \ell$, i.e, we write $x = (x_1|\cdots|x_p)$ where $x_i\in \bbF^{m\times \ell}$ for all $i\in [p]$. We will use the notation $x[i,j,k]$ to denote the entry $x_i[j,k]$. To obtain encoding of $x$, we use product code of two Reed Solomon codes to encode each matrix $x_i$, $i\in [p]$ as a codeword in the product code. The use of the product code is essential to ensure soundness of the protocol with constant number of queries. We now describe the encoding in more detail.
 
 \subsection{Witness encoding with RS product code}
-We first choose the following sets of distinct points in $\FF$:
+We first choose the following sets of distinct points in $\bbF$:
 \begin{align}\label{eq:points}
 \bm{\zeta} =\{\zeta_1,\ldots,\zeta_{\ell}\},\quad 
 \bm{\eta}  = \{\eta_1,\ldots,\eta_n \},\quad
 \bm{\alpha} = \{\alpha_1,\ldots,\alpha_{2m}\}. 
 \end{align}
 
-Next, we define interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
-k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [2m],
-k\in [n]\}$. We encode an $m\times \ell$ matrix $a$ by interpolating a
-bivariate polynomial $Q^a(x,y)$ with $\deg_x(Q)<m$ and $\deg_y(Q)<\ell$
-satisfying $Q^a(\alpha_j,\zeta_k)=a[j,k]$ for $j\in [m],k\in [\ell]$. We define
-the encoding $\enc(a)$ of $a$ as the $2m\times n$ matrix $b$ consisting of
-evaluations of $Q^a$ on $H$, i.e, $b[j,k]=Q^a(\alpha_j,\eta_k)$ for $j\in
-[2m],k\in [n]$. It can be seen that $\enc(a)$ is a codeword in the product code
-$\rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$.  
+Next, we define interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m], k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [2m], k\in [n]\}$. We encode an $m\times \ell$ matrix $a$ by interpolating a bivariate polynomial $Q^a(x,y)$ with $\deg_x(Q)<m$ and $\deg_y(Q)<\ell$ satisfying $Q^a(\alpha_j,\zeta_k)=a[j,k]$ for $j\in [m],k\in [\ell]$. We define the encoding $\enc(a)$ of $a$ as the $2m\times n$ matrix $b$ consisting of evaluations of $Q^a$ on $H$, i.e, $b[j,k]=Q^a(\alpha_j,\eta_k)$ for $j\in [2m],k\in [n]$. It can be seen that $\enc(a)$ is a codeword in the product code $\rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$.  
  
  
-We describe how to use homomorphic commitment of RS-encoded oracle to reduce
-argument size and verifier's complexity. Let $x\in \FF^N$ be the witness
-vector. Let $p,m,\ell$ be positive integers such that $pm\ell > N$. We choose the interpolation domain $G\subseteq \FF\times \FF$ as
-$G=\{(\alpha_j,\zeta_k): j\in [m], k\in [\ell]\}$ for distinct points
-$\zeta_1,\ldots,\zeta_\ell$ and $\alpha_1,\ldots,\alpha_m$ in $\FF$. Define $n_1=\sigma_1\ell$ and
-$n_2=\sigma_2 m$ where $\sigma_1,\sigma_2 > 1$ are constants. We now define the
-evaluation domain $H=\{(\beta_j,\eta_k): j\in [n_2],k\in
+We describe how to use homomorphic commitment of RS-encoded oracle to reduce argument size and verifier's complexity. Let $x\in \bbF^{|\C|}$ be the witness \pnote{witness or extended witness} vector. Let $p,m,\ell$ be positive integers such that $pm\ell > |\C|$. We choose the interpolation domain $G\subseteq \bbF\times \bbF$ as $G=\{(\alpha_j,\zeta_k): j\in [m], k\in [\ell]\}$ for distinct points $\zeta_1,\ldots,\zeta_\ell$ and $\alpha_1,\ldots,\alpha_m$ in $\bbF$. Define $n_1=\sigma_1\ell$ and $n_2=\sigma_2 m$ where $\sigma_1,\sigma_2 > 1$ are constants. We now define the evaluation domain $H=\{(\beta_j,\eta_k): j\in [n_2],k\in
 [n_1]\}$ where %$\beta$'s and $\eta$'s are distinct among themselves and from%
-where $\beta$ should be chosen in such a way that $\beta_j=\alpha_j \forall j\in[m]$ and $\eta$'s are distinct among themselves and from
-coordinates in $G$.\smallskip
+\pnote{As the evaluation domain is described in terms of $\alpha$, do we need $\beta$s here?}
+where $\beta$ should be chosen in such a way that $\beta_j=\alpha_j \forall j\in[m]$ and $\eta$'s are distinct among themselves and from coordinates in $G$.\smallskip
 \pnote{$\alpha$ and $\beta$ should be same and should we mention that $\zeta$ and $\eta$ should be chosen in such a way that FFT can be done.}
 \noindent{\em RS Encoding with bivariate polynomials}:
-We first write the witness $x=(x_1|\cdots|x_p)$ where each $x_i\in
-\FF^{m\ell}$.
-For each $i\in [p]$ we construct bivariate polynomial $Q^i(.,.)$ which
-interpolates the matrix $x_i$ on $G$, i.e, $Q^i(\alpha_j,\zeta_k)=x_i[j,k]$.
-Let $\mc{U}^i\subseteq \FF^{n_1n_2}$ denote the matrix of evaluations of $Q^i$
-on $H$, i.e, $\mc{U}^i[j,k]=Q^i(\beta_j,\eta_k)$ for $j\in [n_1]$, $k\in
-[n_2]$. Finally we define $\rsoracle=(\mc{U}^1|\cdots|\mc{U}^p)$. Note that
-$\rsoracle[i,j,k]=Q^i(\beta_j,\eta_k)$ for all $i$, $j$ and $k$.\smallskip
-
-\noindent{\em Commitment Oracle}: We commit the oracle $\rsoracle$ using
-homomorphic vector commitment scheme which allows us to effectively provide
-access to ``derived'' oracles, such as those obtained by suitable linear
-operations on the oracle. Assume $\FF$ is a prime field and $\comm$ is a
-commitment scheme over $\FF^{n_2}$ with randomness space $\FF$ and commitment
-space a group $\GG$ with independent generators $g_1,\ldots,g_{n_2}$ and $h$.
-For $i\in [p], k\in [n_1]$ define $c_{ik}=\comm(\rsoracle[i,.,k],\delta_{ik})$,
-where $X[i,.,k]$ denotes the $n_2$-length vector $(X[i,1,k],\ldots,X[i,n_2,k])$
-and $\delta_{ik}$ denotes the commitment randomness. We define oracle
-$\comoracle$ as $\comoracle[i,k]=c_{ik}$ for $i\in [p],k\in [n_1]$.
+We first write the witness $x=(x_1|\cdots|x_p)$ where each $x_i\in \bbF^{m\ell}$. For each $i\in [p]$ we construct bivariate polynomial $Q^i(\cdot,\cdot)$ which
+interpolates the matrix $x_i$ on $G$, i.e, $Q^i(\alpha_j,\zeta_k)=x_i[j,k]$. Let $\calU^i\subseteq \bbF^{n_1n_2}$ denote the matrix of evaluations of $Q^i$
+on $H$, i.e, $\mc{U}^i[j,k]=Q^i(\beta_j,\eta_k)$ for $j\in [n_1]$, $k\in [n_2]$. Finally we define $\rsoracle=(\calU^1|\cdots|\calU^p)$. Note that $\rsoracle[i,j,k] = Q^i(\beta_j,\eta_k)$ for all $i$, $j$ and $k$.\smallskip
+\pnote{Is $n_1, n_2$ required? as you considered $n_2=2m$ before. }
+\noindent{\em Commitment Oracle}: We commit the oracle $\rsoracle$ using homomorphic vector commitment scheme which allows us to effectively provide access to ``derived'' oracles, such as those obtained by suitable linear operations on the oracle. Assume $\bbF$ is a prime field and $\com$ is a commitment scheme over $\bbF^{n_2}$ with randomness space $\bbF$ and commitment space a group $\bbG$ with independent generators $g_1,\ldots,g_{n_2}$ and $h$. For $i\in [p], k\in [n_1]$ define $c_{ik}=\com(\rsoracle[i,\cdot,k],\delta_{ik})$, where $X[i,\cdot,k]$ denotes the $n_2$-length vector $(X[i,1,k], \ldots, X[i,n_2,k])$ and $\delta_{ik}$ denotes the commitment randomness. We define oracle $\comoracle$ as $\comoracle[i,k]=c_{ik}$ for $i\in [p],k\in [n_1]$.
 \pnote{ambiguity in $n_1, n_2, l$ and $m$. We aren't we committing along $m$ i.e. $n_2$ direction? then $(\beta_j, \eta_k)$ such that $j\in[n_1], k\in[n_2]$ }
 \subsubsection{Bivariate Interleaved Code(BIC)}
-Let $Q(x,y)\in \FF[x,y]$ be a bivariate polynomial with $deg_x(Q) < m$ and
-$\deg_y(Q) < \ell$. Then the evaluations of $Q$ on $H$ form an $n_2\times n_1$
-matrix whose rows are codewords in a Reed-Solomon code, which we call $L_1$ and columns
-are codewords in a Reed-Solomon code which we call $L_2$. In other words, the
-evaluations of $Q$ on $H$ forms a codeword in the interleaved codes $L_1^{n_2}$
-and $L_2^{n_1}$. Let $\Delta_1$ and $\Delta_2$ denote the distance function on
-the codes $L_1^{n_2}$ and $L_2^{n_1}$ respectively, and let $d_1$ and $d_2$
-denote the minimum distances for the codes $L_1^{n_2}$ and $L_2^{n_1}$
-respectively. We have the following:
+Let $Q(x,y)\in \bbF[x,y]$ be a bivariate polynomial with $deg_x(Q) < m$ and $\deg_y(Q) < \ell$. Then the evaluations of $Q$ on $H$ form an $n_2\times n_1$ matrix whose rows are codewords in a Reed-Solomon code, which we call $L_1$ and columns are codewords in a Reed-Solomon code which we call $L_2$. In other words, the
+evaluations of $Q$ on $H$ forms a codeword in the interleaved codes $L_1^{n_2}$ and $L_2^{n_1}$. Let $\Delta_1$ and $\Delta_2$ denote the distance function on
+the codes $L_1^{n_2}$ and $L_2^{n_1}$ respectively, and let $d_1$ and $d_2$ denote the minimum distances for the codes $L_1^{n_2}$ and $L_2^{n_1}$ respectively. We have the following:
 \begin{lemma}\label{lem:bicdecoding}
-Let $U^\ast\in \FF^{n_2\times n_1}$ be such that $\Delta_1(U^\ast,L_1^{n_2})<e$
-and $\Delta_2(U^\ast,L_2^{n_1})<e$ for $e < \min(d_1,d_2)/2$. Then there exists
-(unique) 
-$U\in L_1^{n_2}\cap L_2^{n_1}$ such that $\Delta_1(U^\ast,U)<e$ and
-$\Delta_2(U^\ast,U)<e$.
+Let $U^\ast\in \bbF^{n_2\times n_1}$ be such that $\Delta_1(U^\ast,L_1^{n_2})<e$ and $\Delta_2(U^\ast,L_2^{n_1})<e$ for $e < \min(d_1,d_2)/2$. Then there exists (unique) $U\in L_1^{n_2}\cap L_2^{n_1}$ such that $\Delta_1(U^\ast,U)<e$ and $\Delta_2(U^\ast,U)<e$.
 \end{lemma}
 \begin{proof}
-Let $U_1\in L_1^{n_2}$, $U_2\in L_2^{n_1}$ be such that
-$\Delta_1(U^\ast,U_1)<e$ and $\Delta_2(U^\ast,U_2)<e$. We show that $U_1=U_2$
-to prove the lemma. Let $J_1,J_2$ and $J_3$ form a partition of the set $[n_2]$
-where $J_1$ contains row indices where $U^\ast$ and $U_2$ differ, and $J_2,J_3$
-form a partition of $[n_2]\backslash J_1$ with $|J_2|=m$. Similarly let
-$K_1,K_2,K_3$ be subsets of $[n_1]$, where $K_1$ contains column indices where
-$U^\ast$ and $U_1$ differ, and $K_2,K_3$ for a partition of $[n_1]\backslash
-K_1$ with $|K_2|=\ell$. Let $Q\in \FF[x,y]$ be the unique polynomial with
-$deg_x(Q)<m$ and $deg_y(Q)<\ell$ such that for all $(j,k)\in J_2\times K_2$,
-$Q(\beta_j,\eta_k)=U[j,k]=U_1[j,k]=U_2[j,k]$. Define $U^Q$ by
-$U^Q[j,k]=Q(\beta_j,\eta_k)$ for $j\in [n_2]$ and $i\in [n_1]$. We note the
-following:
+Let $U_1\in L_1^{n_2}$, $U_2\in L_2^{n_1}$ be such that $\Delta_1(U^\ast,U_1)<e$ and $\Delta_2(U^\ast,U_2)<e$. We show that $U_1=U_2$ to prove the lemma. Let $J_1,J_2$ and $J_3$ form a partition of the set $[n_2]$ where $J_1$ contains row indices where $U^\ast$ and $U_2$ differ, and $J_2,J_3$ form a partition of $[n_2]\backslash J_1$ with $|J_2|=m$. Similarly let $K_1,K_2,K_3$ be subsets of $[n_1]$, where $K_1$ contains column indices where $U^\ast$ and $U_1$ differ, and $K_2,K_3$ for a partition of $[n_1]\backslash K_1$ with $|K_2|=\ell$. Let $Q\in \bbF[x,y]$ be the unique polynomial with $deg_x(Q)<m$ and $deg_y(Q)<\ell$ such that for all $(j,k)\in J_2\times K_2$, $Q(\beta_j,\eta_k)=U[j,k]=U_1[j,k]=U_2[j,k]$. Define $U^Q$ by $U^Q[j,k]=Q(\beta_j,\eta_k)$ for $j\in [n_2]$ and $i\in [n_1]$. We note the following:
 \begin{enumerate}[{\rm 1.}]
-\item $U_1,U_2,U^\ast$ are identical on $(j,k)\in (J_2\cup J_3)\times (K_2\cup
-K_3)$. Further $U^Q$ is identical with the other three on $(J_2\times K_2)$.
-\item Now consider $U_2$ and $U^Q$. Since both the matrices have columns as
-codewords in $L_2$, and the columns corresponding to indices in $K_2$ are
-identical on positions in $J_2$, by the distance property of the Reed-Solomon
-code $L_1$, entire columns with indices in $K_2$ are identical in $U_2$ and
-$U^Q$, i.e, $U_2[.,k]=U^Q[.,k]$ for $k\in K_2$.
-\item Since $U_2$ and $U^\ast$ are identical on all rows with indices in
-$J_2\cup J_3$, from the above we conclude $U^\ast[j,k]=U^Q[j,k]$ for $(j,k)\in
+\item $U_1,U_2,U^\ast$ are identical on $(j,k)\in (J_2\cup J_3)\times (K_2\cup K_3)$. Further $U^Q$ is identical with the other three on $(J_2\times K_2)$.
+\item Now consider $U_2$ and $U^Q$. Since both the matrices have columns as codewords in $L_2$, and the columns corresponding to indices in $K_2$ are identical on positions in $J_2$, by the distance property of the Reed-Solomon code $L_1$, entire columns with indices in $K_2$ are identical in $U_2$ and $U^Q$, i.e, $U_2[\cdot,k]=U^Q[\cdot,k]$ for $k\in K_2$.
+\item Since $U_2$ and $U^\ast$ are identical on all rows with indices in $J_2\cup J_3$, from the above we conclude $U^\ast[j,k]=U^Q[j,k]$ for $(j,k)\in
 (J_2\cup J_3)\times K_2$.
-\item Now we observe that $U^\ast$ and $U_1$ are identical on $(J_2\cup
-J_3)\times K_2$, and thus from the above, $U^Q[j,k]=U_1[j,k]$ for $(j,k)\in
-(J_2\cup J_3)\times K_2$.
-\item Finally, we notice that rows in $U_1$ and $U^Q$ are codewords in $L_1$,
-and the rows corresponding to indices in $J_2\cup J_3$ are identical on
-positions in $K_2$. Again, using the distance property of Reed-Solomon codes we
-conclude $U_1$ and $U^Q$ have identical rows for indices in $J_2\cup J_3$. 
-\item The above implies $\Delta_2(U^Q,U_1)\leq e < d_2$ and hence $U^Q=U_1$.
-Similarly we can show $U^Q=U_2$. Thus $U^Q$ satisfies $\Delta_1(U^\ast,U^Q)<e$
-and $\Delta_2(U^\ast,U^Q)<e$. Further since $e < \min(d_1,d_2)/2$, we see that
-$U^Q$ is unique such codeword. This completes the proof.
+\item Now we observe that $U^\ast$ and $U_1$ are identical on $(J_2\cup J_3)\times K_2$, and thus from the above, $U^Q[j,k]=U_1[j,k]$ for $(j,k)\in (J_2\cup J_3)\times K_2$.
+\item Finally, we notice that rows in $U_1$ and $U^Q$ are codewords in $L_1$, and the rows corresponding to indices in $J_2\cup J_3$ are identical on positions in $K_2$. Again, using the distance property of Reed-Solomon codes we conclude $U_1$ and $U^Q$ have identical rows for indices in $J_2\cup J_3$. 
+\item The above implies $\Delta_2(U^Q,U_1)\leq e < d_2$ and hence $U^Q=U_1$. Similarly we can show $U^Q=U_2$. Thus $U^Q$ satisfies $\Delta_1(U^\ast,U^Q)<e$
+and $\Delta_2(U^\ast,U^Q)<e$. Further since $e < \min(d_1,d_2)/2$, we see that $U^Q$ is unique such codeword. This completes the proof.
 \end{enumerate}
 \end{proof}
 
