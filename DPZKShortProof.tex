@@ -455,16 +455,13 @@ Throughout, we assume $\bbF$ is a prime field. Let $\com$ denote the Pedersen ve
 %oracle, and adapt the subprotocols for checking linear constraints, quadratic
 %constraints and proximity to this oracle.
 
-.\pnote{start}
 
-\subsubsection{Commitment:}\label{subsec: commit} Then compute the commitment of $\oracle_x$. 
-\pnote{Elaborate how to do the commitment.}
+
 Let $\cm_x=(c_1,\ldots c_n)$ where 
 $c_j= \com( \begin{bmatrix}
 u_{1j} & u_{2j} & \ldots & u_{mj}
-\end{bmatrix}^T)$ $\forall j\in [n]$
+\end{bmatrix}^T)$ $\forall j\in [n]=\comoracle_x$
 
-.\pnote{end}
 
 \subsubsection{Linear Check with Commitment Oracle}\label{sec:lincheck2D}
 The linear check $Ax=0$ can be reduced to checking $\innp{r^TA}{x}=0$, where the verifier samples a random $r\sample \bbF^{ml}$ and sends it to the prover. As in \cite{Ligero2017}, the prover and verifer write $r$ as $(r_{1}|\cdots|r_{m})$ where each $r_i\in \bbF^\ell$. Both the prover and the
@@ -477,6 +474,7 @@ The prover computes the polynomial $\hat{p}=\sum_{i\in[m]}\hat{r}_i \cdot \hat{f
 
 We will now formally describe the Linear check for our protocol \name2d{}. It will check that a purported commitment oracle $\comoracle$ encodes witness $x$ satisfying the constraint $Ax=0$ for a public matrix $A$. As before, we assume $x\in \bbF^{|\C|}$ and $A\in \bbF^{|\C|\times |\C|}$ and
 $|\C|=m\ell$ for some positive integers $m$ and $\ell$. We further assume that the prover has RS-encoded oracle $\rsoracle$ which opens to the commitment $\comoracle$ and is $e$-close to the interleaved code $L_1^{m}$. The prover and the verifier interact as follows: 
+\begin{comment} 
 \begin{enumerate}[{\rm 1.}]
 \item $\verifier\rightarrow\prover$: The verifier sends a random $r\sample \bbF^N$ to the prover.
 
@@ -500,7 +498,9 @@ To do so, $\prover$ runs an inner-product argument for each $u \in [t]$ with the
 \end{enumerate}
 .\dnote{self: write the formal lemma.}.
 \dnote{The proof should be straightforward when using zk inner-product arguments, right?}
+
 -----------------------------------------------------------------------------------------------------------------------------------
+\end{comment}
 \paragraph{\textbf{Linear Check:}}\label{sec: linearity} In this check, there is a publicly known matrix $A \in \bbF^{ml\times ml}$ and public vector $b\in \bbF^{ml}$, and $\prover$ claims that he knows a $x$ such that $Ax=b$ is true. Without loss of generality we can assume that the vector $b$ is the zero vector i.e. $b=\bm{0}$ $\prover$ starts with encoding the $x$ using interleaved $\RS$ code which is described above and gets $\oracle_x$, then he computes the commitment $\cm_x$ in the same way mentioned above. Now the following check ensures that if a maformed $\calU$ is used for $\oracle$, which is not far away from a correct encoding of $x$ for which $Ax\neq b$, then $\verifier$ outputs reject with very high probability.
 \begin{enumerate}
 	\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x$ to $\verifier$.
@@ -544,6 +544,7 @@ The quadratic check involves the prover convincing the verifier that $x\circ y=z
 
 We now formally describe the interactive oracle protocol for checking the relation $x\circ y = z$ for vectors $x,y,z\in \bbF^|\C|$. Let $\rsoracle_x, \rsoracle_y$ and $\rsoracle_z$ denote the encodings of vectors $x$, $y$ and $z$ respectively via the RS code. Let $\comoracle_x,\comoracle_y$ and $\comoracle_z$ denote the respective commitment oracles. The prover and the verifier interact as follows:
 
+\begin{comment} 
 \begin{enumerate}[{\rm 1.}]
 \item $\verifier\rightarrow\prover$: The verifier sends a challenge $r\sample \bbF^m$ to the prover.
 
@@ -570,7 +571,7 @@ The verifier proceeds if the arguments succeed for all $u \in [t]$.
 %\end{itemize}
 \end{enumerate}
 --------------------------------------------------------------------------------------------------------------------
-
+\end{comment}
 \paragraph{\textbf{Quadratic Check:}}\label{sec: quadratic} In this check $\prover$ claims that he knows $x,y,z\in\bbF^{ml}$ such that $x \circ y = z$. $\prover$ starts with encoding each of $x, y, z$ and obtains $\oracle_x, \oracle_y, \oracle_z$. Then $\prover$ performs column wise commitments and gets $\cm_x, \cm_y, \cm_z$. The following check ensures that if any of the $\oracle_x, \oracle_y, \oracle_z$ is malformed, which is not far away from a correct encoding of any of the $x, y, z$, then $\verifier$ rejects with very high probability.
 \begin{enumerate}
 	\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x, \cm_y, \cm_z$ to $\verifier$.
@@ -626,8 +627,11 @@ The verifier proceeds if the arguments succeed for all $u \in [t]$.
 \subsubsection{Proximity Protocol}\label{sec:proximity2D}
 We describe a protocol for ``proximity'' of a purported codeword to the interleaved code. Let $U\in \bbF^{m\times n}$ denote the purported codeword and let $e< d/3$ denote the proximity parameter. 
 \dnote{To Nitin: why did you not use the notation $\rsoracle$ for $U$? Is it that only those $U$s which satisfy the proximity test become $\rsoracle$?}
+\begin{comment}
 In its first message the prover computes commitments $c_1,\ldots,c_n$ to the columns of $U$ and sends it to verifier. Thereafter, the prover and the verifier interact as
 follows:
+
+
 \begin{enumerate}[{\rm 1.}]
 \item $\prover\rightarrow \verifier$: Commitments $c_1,\ldots,c_n$ to the columns of $U$.
 \item $\verifier\rightarrow \prover$: Verifier samples $\gamma \sample \bbF^n$ and sends to the prover.
@@ -638,7 +642,7 @@ follows:
 \end{enumerate}
 .\pnote{conflict in notations: $u = \gamma^T U$ and $u \in [t]$}
 ---------------------------------------------------------------------------------------------------------------------------
-
+\end{comment}
 \paragraph{\textbf{Proximity Check:}}\label{sec:proximity} In this check $\prover$ convinces $\verifier$ that $\cm_x$ is the commitment of a correct codeword matrix $\oracle_x$ which is encoding of a matrix $x$. If $\oracle_x$ is malformed, i.e. if it is sufficiently far away from a correct codeword matrix, then $\prover$ passes the following check with $\negl(t)$ probability.
 \begin{enumerate}
 	\item $\prover \rightarrow \verifier :$ $\prover$ sends $cm$ to $\verifier$.
