@@ -63,9 +63,9 @@ This notion captures the privacy of a prover's share of witness from other prove
 \begin{definition}
 Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if there is a $\ppt$ simulator $\Sim$ such that the following holds for any $T$ of size $\leq t$ and for every round $i \in [\round]$: 
 \[
- \{ \Sim (\stmt, \wit_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \wit_T, m_i) 
+ \{ \Sim (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \st^i_T, m_i) 
 \]
-where $\wit_T$ is the set of inputs from the corrupt provers.
+where $\st^i_j$ is the $j^{th}$ prover's state at $i^{th}$ round, which is the input for the $j^{th}$ prover when all the provers are executing an MPC to get the output of the next message generation function, so in the first round $\st^1_j = \wit_j$ and $\st^i_T$ is the state of the parties in T at $i^{th}$ round. $m_i$ is the output of the $i^{th}$ round's interaction. 
 \end{definition}
 
 %Let $T$ be any subset of $[ \Num ]$ of size $\leq t$. Then for any $T$: 
@@ -87,14 +87,15 @@ where $\wit_T$ is the set of inputs from the corrupt provers.
 \end{definition}
 
 \begin{theorem}\label{theo:equivalent}
-	A $\DPZK$ protocol $\innp{\Pi}{\verifier}$ has Zero-knowledge and $t$-privacy among provers property if and only if it has Zero-knowledge under $t$-collusion.
+	A $\round$-round$\DPZK$ protocol $\innp{\Pi}{\verifier}$ has Zero-knowledge and $t$-privacy among provers property if and only if it has Zero-knowledge under $t$-collusion.
 \end{theorem}
 
 \begin{proof}
 	\textbf{case 1:} Let $\innp{\Pi}{\verifier}$ has Zero-knowledge and $t$-privacy among provers property. That implies there are simulators $\Sim_{ZK}$ and $\Sim_{P}$ for which 
 	\begin{align*}
 		&\{ \innp{ \Pi( \wit ) }{ \verifier^*( z ) } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt, z) \} \cdots (1)\\		
-		&\{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \} \stackrel{c}{\approx} \{ \langle \Sim_P \rangle (\stmt, \wit_T, m) \} \cdots (2)
+		\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^i_{\overline{T}} ) } { \prover_T ( \st^i_T ) } ( \stmt ) , m \}
+	 \stackrel{c}{\approx} \{ \langle \Sim_P \rangle (\stmt, \st^i_T, m) \} \cdots (2)
 	\end{align*}
 	
 	A transcript of an execution of $\innp{\Pi}{\verifier^*}$ will have two types of values:
@@ -108,7 +109,7 @@ where $\wit_T$ is the set of inputs from the corrupt provers.
 	$\Sim$ on input $\stmt, \wit_T, m$ does the following: 
 	\begin{itemize}
 		\item If $\Sim$ requires to generate a value which is due to interaction among the prover and the verifier, then $\Sim$ calls $\Sim_{ZK}$ on input $\stmt, \wit_T$ and includes the output in the transcript.
-		\item If $\Sim$ requires to generate a value which is due to interactioin among the provers, then $\Sim$ calls $\Sim_{P}$ on input $\stmt, \wit_T, m$ and includes the output in the transcript.
+		\item If $\Sim$ requires to generate a value which is due to interactioin among the provers, then $\Sim$ calls $\Sim_{P}$ on input $\stmt, \st^i_T, m_i$, where if $i=1$ the $\st^i_T = \wit_T$ other set $\st^i_T$ from the output of the simulators in the previous step, then include the output in the transcript.
 	\end{itemize}
 	The following hybrids prove that $\Sim$ generates a transcript which is indistinguishable from an actual transcript.:
 	\begin{itemize}
