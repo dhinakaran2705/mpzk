@@ -12,65 +12,71 @@ Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$ su
 \[
 \stmt \in L \Leftrightarrow R(\stmt, \wit)=1 \text{ for some witness } \wit
 \]
-Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. In our setting, we let each party have an additive share of the witness $\wit$. For party $i \in [\Num]$, let $\wit_i$ be its share.  Note that $\wit$ and its shares have length equal to the number of input wires of the circuit $\C$ representing the relation $R$. We will discuss later in this section why we decided to do an additive share of the witness. Note that a partition of the witness among the provers (such that each prover owns a non-intersecting piece of the witness) is a sub-class of additive sharing since the share of a prover can be its partition of the witness padded with zeros in the rest of positions.
+Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. In our setting, we let each party have an additive share of the witness $\wit$. For party $i \in [\Num]$, let $\wit_i$ be its share.  The witness $\wit$ and its shares have length equal to the number of input wires of the circuit $\C$ representing the relation $R$. We will discuss later in this section why we decided to do an additive share of the witness. For now, note that a partition of the witness among the provers such that each prover owns a non-intersecting piece of the witness is a sub-class of additive sharing since the share of a prover can be its partition of the witness padded with zeros in the rest of positions.
 
 
 A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, \verifier)$. 
 \begin{itemize}
 \item $\Setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
-\item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in R}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$. Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $\verifier$ is either an $\tt accept$ (1) or a $\tt{reject}$ (0). Also, let $\tr$ be the transcript of the protocol.
+\item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$. Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $\verifier$ is either an $\tt accept$ (1) or a $\tt{reject}$ (0). Also, let $\tr$ be the transcript of the protocol.
 \end{itemize}
 A $\DPZK$ protocol for a language $L$ satisfies the following properties: 
 correctness, soundness, zero-knowledge and privacy among provers.
 \dnote{self: give a name for Privacy among provers}
 \paragraph{Completeness}: %We will define correctness assuming that the witness set is minimal.
-Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $\wit$ corresponding to $\stmt \in L$, when the initial states are set with $\sigma$ and the shares of $\wit$, $\langle \Pi, \verifier \rangle$ outputs an accept with probability 1.
+Given $\sigma \gets \Setup(1^\secp, \tau)$ and a valid witness $\wit$ corresponding to $\stmt \in L$, when the initial states are set with $\sigma$ and the shares of $\wit$, $\langle \Pi, \verifier \rangle$ outputs 1 with probability 1.
 
-\paragraph{Soundness}:  For every instance $\stmt \notin L$ and any $\ppt$ algorithm $\Pi^*$, $\verifier$ accepts with probability at most $\negl(\secp)$.
+\paragraph{Soundness}:  The basic definition of soundness ensures the existence of a valid witness for $\stmt \in L$. For every instance $\stmt \notin L$ and any $\ppt$ algorithm $\Pi^*$, $\verifier$ accepts with probability at most $\negl(\secp)$.
 
-Soundness ensures the existence of a valid witness for $\stmt \in L$.\dnote{rephrase the previous sentence.} The proof of knowledge of the witness by the prover is captured by the notion of knowledge extraction where an extractor extracts the witness whenever the verifier accepts using an oracle access to the prover. The stronger notion of witness extended emulation \cite{Lindell03} proposes the existence of an emulator which additionally produces a simulated transcript between the prover and the verifier irrespective of whether the verifier accepts or not. We will now define the notion of witness-extended emulation for the $\DPZK$ setting, adapted from \cite{Groth11}. 
+The notion of proof of knowledge of the witness by the prover is captured by the notion of knowledge extraction where an extractor extracts the witness whenever the verifier accepts using an oracle access to the prover. The stronger notion of witness extended emulation \cite{Lindell03} proposes the existence of an emulator which additionally produces a simulated transcript between the prover and the verifier irrespective of whether the verifier accepts or not. We will now define the notion of witness-extended emulation for the $\DPZK$ setting, adapted from \cite{Groth11}. 
 \begin{definition}
-
-A $\DPZK$ protocol $(\Setup, \Pi, \verifier)$ has computational witness-extended emulation if for all deterministic polynomial time $\Pi^*$ there exists an expected polynomial time emulator $\chi$ such that for all non-uniform polynomial time adversaries $\adv$ and all $\tau$
+The argument $(\Setup, \Pi, \verifier)$ has computational witness-extended emulation if for all deterministic polynomial time $\Pi^*$ there exists an expected polynomial time emulator $\chi$ such that for all non-uniform polynomial time adversaries $\adv$ and all $\tau$
 \begin{align*}
-&Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt, \{\wit_i\}_{i \in [\Num]}) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi^*, \verifier \rangle: \adv(\tr) = 1 \right] \\
-\approx &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt, \{\wit_i\}_{i \in [\Num]}) \leftarrow \adv(\sigma); (\tr, \wit) \leftarrow \chi^{\langle \Pi^*, \verifier \rangle}(\sigma, x): \right. \\
+& Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt, \{\wit_i\}_{i \in [\Num]}) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi^*, \verifier \rangle: \adv(\tr) = 1 \right] \\
+\approx \; & Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt, \{\wit_i\}_{i \in [\Num]}) \leftarrow \adv(\sigma); (\tr, \wit) \leftarrow \chi^{\langle \Pi^*, \verifier \rangle}(\sigma, x): \right. \\
 &\;\;\; \adv(\tr) = 1 \left. \text{ and if } \tr \text{ accepts then } \stmt \in L \text{ with } \wit \text{ as witness} \right] 
 \end{align*}
-where $\chi$ has access to the oracle $\langle \Pi^*, \verifier \rangle$ which produces the transcript. $\chi$ can rewind $\langle \Pi^*, \verifier \rangle$ to any round and resume the protocol with fresh randomness for the verifier.
+where $\chi$ has access to the oracle $\langle \Pi^*, \verifier \rangle$ which produces the transcript. $\chi$ can rewind $\langle \Pi^*, \verifier \rangle$ to any round and resume the protocol with fresh randomness from the verifier.
 \end{definition}
-.\dnote{1. should the notation $\langle \Pi, \verifier \rangle$ be modified to also take their respective inputs?\\
-2. Proof of knowledge \textit{vs} argument of knowledge}
+%.\dnote{1. should the notation $\langle \Pi, \verifier \rangle$ be modified to also take their respective inputs?\\
+%2. Proof of knowledge \textit{vs} argument of knowledge}
 Note that this follows from the single prover definition since an adversarial prover in the single prover definition can be any $\ppt$ algorithm, and this is independent of whether the $\ppt$ algorithm is run by a single prover or a protocol between multiple provers.
 Also, allowing for any adversarial $\Pi^*$ captures adversarial behaviour by all the parties.
 
 \paragraph{Zero-knowledge}: 
-The notion of zero-knowledge ensures that the proof does not reveal any information beyond the fact that the instance is in the language.
-This is a property with respect to the view of the verifier $\verifier$. The protocol $\Pi$ and the number of provers involved to produce these messages do not impact the zero-knowledge property. Hence, the $\DPZK$ definition for zero-knowledge does not change from its single prover version.
+The traditional notion of zero-knowledge ensures that the proof does not reveal any information beyond the fact that the instance is in the language.
+This is a property with respect to the view of the verifier $\verifier$. The protocol $\Pi$ and the number of provers involved to produce these messages do not impact the zero-knowledge property. The following definition captures this formally.
 \begin{definition}
-The argument $(\Setup, \Pi, \verifier)$ is a perfect special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
+The argument $(\Setup, \Pi, \verifier)$ is a special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
 \begin{align*}
 &Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (\stmt ,\wit ,\rho) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi, \verifier_\rho \rangle: x \in L \text{ with witness } \wit \text{ and } \adv(\tr)=1 \right] \\
-= &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt,\wit,\rho) \leftarrow \adv(\sigma); \tr \leftarrow S(\sigma,\stmt,\rho): \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr) = 1 \right]
+\approx \; &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt,\wit,\rho) \leftarrow \adv(\sigma); \tr \leftarrow S(\sigma,\stmt,\rho): \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr) = 1 \right]
 \end{align*}
 \end{definition}
-.\dnote{Auxiliary input zk or just without it?}
+%.\dnote{Auxiliary input zk or just without it?}
 
 \paragraph{Privacy among parties}:
-This notion is similar to the simulation security of multi-party computation. The transcript of the interaction between parties can be simulated by a simulator with access only to the secret inputs of the corrupted provers. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
-\dnote{self: include formal definition}
+This notion captures the privacy of a prover's share of witness from other provers. This notion can be formalized as a multi-party computation protocol among the provers. The transcript of the interaction between provers can be simulated by a simulator with access only to the secret inputs of the corrupted provers and the final output of the interaction. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
+\dnote{ include formal definition}
+%Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
 
-Whenever provers interactact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
-
-Let $T$ be any subset of $[ \Num ]$ of size $\leq t$. Then for any $T$: 
-We call a protocol $\Pi$ has $t$-privacy among provers if there is a simulator $\Sim$ such that $\Sim(\stmt, \wit_T, m) \rightarrow \View^{Real}_T(\stmt, \wit_T, m)$ where $\stmt$ is the statement for the execution, $\wit_T$ is the shares of the witness of the parties in $T$ and $m$ is the outcome for the next message generating function when provers are interacting. then $\View^{Real}_T(\stmt, \wit_T, m)$ is computationally indistinguishable from a real transcript: 
-
-$\View^{Real}_T ( \stmt, \wit_T, m) = \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \}$.
 \begin{definition}
-	An interactive $\DPZK$ protocol $\innp{\Pi (\wit) }{\verifier ( \stmt )}$, with $\Num$ provers,  has $t$-privacy among provers property if there is a $\ppt$ simulator $\Sim$ such that for any subset $T\subseteq [\Num]$ of size $\leq t$ following holds: 
-	$$ \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \} \stackrel{c}{\approx} \{ \langle \Sim \rangle (\stmt, \wit_T, m) \}$$  
-	Where $\prover_{\overline{T}}$ is the set of all honest provers and $\wit_{\overline{T}}$ is input for the honest provers, and $m$ is the output of the next message generating function.
+Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if there is a $\ppt$ simulator $\Sim$ such that the following holds for any $T$ of size $\leq t$ and for every round $i \in [\round]$: 
+\[
+ \{ \Sim (\stmt, \wit_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \wit_T, m_i) 
+\]
+where $\wit_T$ is the set of inputs from the corrupt provers.
 \end{definition}
+
+%Let $T$ be any subset of $[ \Num ]$ of size $\leq t$. Then for any $T$: 
+%We call a protocol $\Pi$ has $t$-privacy among provers if there is a simulator $\Sim$ such that $\Sim(\stmt, \wit_T, m) \rightarrow \View^{Real}_T(\stmt, \wit_T, m)$ where $\stmt$ is the statement for the execution, $\wit_T$ is the shares of the witness of the parties in $T$ and $m$ is the outcome for the next message generating function when provers are interacting. then $\View^{Real}_T(\stmt, \wit_T, m)$ is computationally indistinguishable from a real transcript: 
+%
+%$\View^{Real}_T ( \stmt, \wit_T, m) = \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \}$.
+%\begin{definition}
+%	An interactive $\DPZK$ protocol $\innp{\Pi (\wit) }{\verifier ( \stmt )}$, with $\Num$ provers,  has $t$-privacy among provers property if there is a $\ppt$ simulator $\Sim$ such that for any subset $T\subseteq [\Num]$ of size $\leq t$ following holds: 
+%	$$ \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \} \stackrel{c}{\approx} \{ \langle \Sim \rangle (\stmt, \wit_T, m) \}$$  
+%	Where $\prover_{\overline{T}}$ is the set of all honest provers and $\wit_{\overline{T}}$ is input for the honest provers, and $m$ is the output of the next message generating function.
+%\end{definition}
 
 \paragraph{Zero Knowledge under $t$-collusion}: Consider the scenario when $t$ out of $\Num$ provers are corrupt and collude with the verifier. This zero-knowledge ensures that verifier corrupting some of the provers will not gain anything.
 
@@ -163,6 +169,9 @@ Looking ahead, the complexity of the interaction between the provers in our DPZK
 Discussion on the definition.
 
 Discussion on the sharing the witness among the parties instead of partitioning the witness.
+\begin{itemize}
+\item clarity in defining definitions?
+\end{itemize}
 
 %\subsection{Construction step 1: The introduction of homomorphic commitments}
 %
