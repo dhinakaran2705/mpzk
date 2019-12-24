@@ -1,4 +1,12 @@
 \section{Construction of DPZK}
+A simple way to construct a DPZK protocol is to start with a single-prover protocol and run MPC among the provers to generate each message to be sent to the verifier. The randomness in turn provided by the verifier can be broadcasted to the provers.
+Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{p_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $p_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
+
+We will formalize this simple DPZK transformation based on the Polynomial IOP framework \cite{polynomialiop,ahp} proposed recently. This framework captures most of the protocols from the literature on practical zero-knowledge proofs [CHECK precision of this sentence]. Writing down this formalism simplifies our future sections on the construction of DPZK based on the single prover protocols.
+
+
+
+
 We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
 \dnote{Should I use zkSNARK protocols instead of zero-knowledge proof protocols}
 The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic}, \cite{libra}, \cite{supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{Aurora, Bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
