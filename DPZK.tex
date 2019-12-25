@@ -49,41 +49,44 @@ This is a property with respect to the view of the verifier $\verifier$. The pro
 \begin{definition}
 The argument $(\Setup, \Pi, \verifier)$ is a special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
 \begin{align*}
-&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (\stmt ,\wit ,\rho) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi, \verifier_\rho \rangle: x \in L \text{ with witness } \wit \text{ and } \adv(\tr)=1 \right] \\
+&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (\stmt ,\wit ,\rho) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi, \verifier_\rho \rangle: \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr)=1 \right] \\
 \approx \; &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt,\wit,\rho) \leftarrow \adv(\sigma); \tr \leftarrow S(\sigma,\stmt,\rho): \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr) = 1 \right]
 \end{align*}
 \end{definition}
 %.\dnote{Auxiliary input zk or just without it?}
 
 \paragraph{Privacy among parties}:
-This notion captures the privacy of a prover's share of witness from other provers. This notion can be formalized as a multi-party computation protocol among the provers. The transcript of the interaction between provers can be simulated by a simulator with access only to the secret inputs of the corrupted provers and the final output of the interaction. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
-\dnote{ include formal definition}
+This notion captures the privacy of a prover's share of witness from other provers. The provers interact to generate shares of the extended witness $\extwit$ and then to compute the messages to be sent to the verifier. The privacy notion here can be formalized as multi-party computation protocols among the provers. The transcript of the interaction between provers can be simulated by a simulator with access only to the secret inputs of the corrupted provers and the final output of the interaction. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
+%\dnote{ include formal definition}
 %Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
 
 \begin{definition}
-Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if there is a $\ppt$ simulator $\Sim$ such that the following holds for any $T$ of size $\leq t$ and for every round $i \in [\round]$: 
+Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$ and for every round $i \in [\round]$, there is a $\ppt$ simulator $\Sim$ such that the following holds: 
 \[
- \{ \Sim (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \st^i_T, m_i) 
+ \{ \Sim (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^i_j\}_{j \in [N]}) 
 \]
-where $\st^i_j$ is the $j^{th}$ prover's state at $i^{th}$ round, which is the input for the $j^{th}$ prover when all the provers are executing an MPC to get the output of the next message generation function, so in the first round $\st^1_j = \wit_j$ and $\st^i_T$ is the state of the parties in T at $i^{th}$ round. $m_i$ is the output of the $i^{th}$ round's interaction. 
+where $\st^i_T$ is the state of the parties in $T$ for the $i$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
 \end{definition}
+.\dnote{Write a formal definition that captures the linear composability between the protocols.}
 
-%Let $T$ be any subset of $[ \Num ]$ of size $\leq t$. Then for any $T$: 
-%We call a protocol $\Pi$ has $t$-privacy among provers if there is a simulator $\Sim$ such that $\Sim(\stmt, \wit_T, m) \rightarrow \View^{Real}_T(\stmt, \wit_T, m)$ where $\stmt$ is the statement for the execution, $\wit_T$ is the shares of the witness of the parties in $T$ and $m$ is the outcome for the next message generating function when provers are interacting. then $\View^{Real}_T(\stmt, \wit_T, m)$ is computationally indistinguishable from a real transcript: 
-%
-%$\View^{Real}_T ( \stmt, \wit_T, m) = \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \}$.
-%\begin{definition}
-%	An interactive $\DPZK$ protocol $\innp{\Pi (\wit) }{\verifier ( \stmt )}$, with $\Num$ provers,  has $t$-privacy among provers property if there is a $\ppt$ simulator $\Sim$ such that for any subset $T\subseteq [\Num]$ of size $\leq t$ following holds: 
-%	$$ \{ \innp { \prover_{\overline{T}}( \wit_{\overline{T}} ) } { \prover_T ( \wit_T ) } ( \stmt ) , m \} \stackrel{c}{\approx} \{ \langle \Sim \rangle (\stmt, \wit_T, m) \}$$  
-%	Where $\prover_{\overline{T}}$ is the set of all honest provers and $\wit_{\overline{T}}$ is input for the honest provers, and $m$ is the output of the next message generating function.
-%\end{definition}
-
-\paragraph{Zero Knowledge under $t$-collusion}: Consider the scenario when $t$ out of $\Num$ provers are corrupt and collude with the verifier. This zero-knowledge ensures that verifier corrupting some of the provers will not gain anything.
+\paragraph{Zero Knowledge under $t$-collusions}: 
+The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. But when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero knowledge under $t$-collusions ($t-\ZKUC$) to capture this.
 
 \begin{definition}
+	\begin{comment} 
+<<<<<<< HEAD
 	Let $\innp{ \Pi ( \wit )}{ \verifier( \stmt )}$ be an interactive $\DPZK$ protocol , with $\Num$ provers, for some language $L$. Where each messages of $\Pi$ is generated by the provers $\prover_1, \ldots, \prover_{\Num}$. Then $\innp{ \Pi ( \wit )}{ \verifier( \stmt )}$ has computational zero-knowledge under $t$-collusion ($t-ZKUC$) property if for every $\ppt$ interactive machine $\verifier^*$ and any subset $T\subseteq [\Num]$ of size $\leq t$, who is colluding with $t$-provers, $\exists$ a $\ppt$ algorithm $\Sim$ such that the following holds: 
 	$$ \{ \innp{\Pi(\wit)}{\verifier^*(z, \wit_T)} \}( \stmt)  \stackrel{c}{\approx} \{ \langle \Sim \rangle (\stmt, z, \wit_T) \} $$
 	where $\stmt \in L, \wit \in R_x, z\in \bitset^*$ and $\wit_T$ is the input of the provers in $T$. 
+=======
+\end{comment}
+
+An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t-\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T\subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
+\[
+\innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho, \wit_T)
+\]
+where $\wit_T$ is the input of the provers in $T$. 
+
 \end{definition}
 
 \begin{theorem}\label{theo:equivalent}
@@ -171,7 +174,8 @@ Discussion on the definition.
 
 Discussion on the sharing the witness among the parties instead of partitioning the witness.
 \begin{itemize}
-\item clarity in defining definitions?
+\item DPZK definitions are cleaner this way than having partitions?
+\item The circuit size does not have to take into account the number of provers.
 \end{itemize}
 
 %\subsection{Construction step 1: The introduction of homomorphic commitments}
