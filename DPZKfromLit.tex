@@ -6,9 +6,9 @@ We will formalize this simple DPZK transformation based on the Polynomial IOP fr
 
 
 
+<change from here>
 
 We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
-\dnote{Should I use zkSNARK protocols instead of zero-knowledge proof protocols}
 The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic}, \cite{libra}, \cite{supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{Aurora, Bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
 
 Among these works, only Bulletproofs \cite{Bulletproofs} discuss distributed proof generation. Even in \cite{Bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .

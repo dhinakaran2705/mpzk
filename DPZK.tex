@@ -67,7 +67,9 @@ Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the outpu
 \]
 where $\st^i_T$ is the state of the parties in $T$ for the $i$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
 \end{definition}
-.\dnote{Write a formal definition that captures the linear composability between the protocols.}
+.\dnote{A couple of questions to everyone:\\
+1) shall we notate $\pi_0$ as the 0th step in the proof system where the provers obtain the shares of the extended witness starting from their shares of the witness?
+2) Right now, we have formalized this notion such that each round of interaction between can be simulated. To capture the security of the overall protocol, is it enough to consider the linear composability between the protocols?}
 
 \paragraph{Zero Knowledge under $t$-collusions}: 
 The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. But when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero knowledge under $t$-collusions ($t-\ZKUC$) to capture this.
