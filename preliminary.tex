@@ -25,6 +25,57 @@ Note that by definition, the product code $L_1\oplus L_2$ is a row interleaved c
 \begin{definition}[Reed Solomon Code]\label{defn:rscode}
 An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
 \end{definition}
+
+The next lemma states that a vector which can be uniquely decoded to a codeword
+in both the ``row'' code and ``column'' code can be uniquely decoded to a
+codeword in the product code. We prove the assertion when the constituent codes
+are Reed Solomon codes.
+ 
+\begin{lemma}\label{lem:bicdecoding}
+Let $L_1$ and $L_2$ be Reed Solomon codes of dimensions $n_1$ and $n_2$
+respectively. Let $U^\ast$ be such that $\Delta_1(U^\ast,\ric{L_1}{n_2})<e$
+and $\Delta_2(U^\ast,\cic{L_2}{n_1})<e$ for $e < \min(d_1,d_2)/2$. Then there exists a
+unique
+$U\in L_1\oplus L_2$ such that $\Delta_1(U^\ast,U)<e$ and
+$\Delta_2(U^\ast,U)<e$.
+\end{lemma}
+\begin{proof}
+Let $U_1\in \ric{L_1}{n_2}$, $U_2\in \cic{L_2}{n_1}$ be such that
+$\Delta_1(U^\ast,U_1)<e$ and $\Delta_2(U^\ast,U_2)<e$. We show that $U_1=U_2$
+to prove the lemma. Let $J_1,J_2$ and $J_3$ form a partition of the set $[n_2]$
+where $J_1$ contains row indices where $U^\ast$ and $U_2$ differ, and $J_2,J_3$
+form a partition of $[n_2]\backslash J_1$ with $|J_2|=m$. Similarly let
+$K_1,K_2,K_3$ be subsets of $[n_1]$, where $K_1$ contains column indices where
+$U^\ast$ and $U_1$ differ, and $K_2,K_3$ for a partition of $[n_1]\backslash
+K_1$ with $|K_2|=\ell$. Let $Q\in \FF[x,y]$ be the unique polynomial with
+$deg_x(Q)<m$ and $deg_y(Q)<\ell$ such that for all $(j,k)\in J_2\times K_2$,
+$Q(\beta_j,\eta_k)=U[j,k]=U_1[j,k]=U_2[j,k]$. Define $U^Q$ by
+$U^Q[j,k]=Q(\beta_j,\eta_k)$ for $j\in [n_2]$ and $i\in [n_1]$. We note the
+following:
+\begin{enumerate}[{\rm 1.}]
+\item $U_1,U_2,U^\ast$ are identical on $(j,k)\in (J_2\cup J_3)\times (K_2\cup
+K_3)$. Further $U^Q$ is identical with the other three on $(J_2\times K_2)$.
+\item Now consider $U_2$ and $U^Q$. Since both the matrices have columns as
+codewords in $L_2$, and the columns corresponding to indices in $K_2$ are
+identical on positions in $J_2$, by the distance property of the Reed-Solomon
+code $L_1$, entire columns with indices in $K_2$ are identical in $U_2$ and
+$U^Q$, i.e, $U_2[.,k]=U^Q[.,k]$ for $k\in K_2$.
+\item Since $U_2$ and $U^\ast$ are identical on all rows with indices in
+$J_2\cup J_3$, from the above we conclude $U^\ast[j,k]=U^Q[j,k]$ for $(j,k)\in
+(J_2\cup J_3)\times K_2$.
+\item Now we observe that $U^\ast$ and $U_1$ are identical on $(J_2\cup
+J_3)\times K_2$, and thus from the above, $U^Q[j,k]=U_1[j,k]$ for $(j,k)\in
+(J_2\cup J_3)\times K_2$.
+\item Finally, we notice that rows in $U_1$ and $U^Q$ are codewords in $L_1$,
+and the rows corresponding to indices in $J_2\cup J_3$ are identical on
+positions in $K_2$. Again, using the distance property of Reed-Solomon codes we
+conclude $U_1$ and $U^Q$ have identical rows for indices in $J_2\cup J_3$. 
+\item The above implies $\Delta_2(U^Q,U_1)\leq e < d_2$ and hence $U^Q=U_1$.
+Similarly we can show $U^Q=U_2$. Thus $U^Q$ satisfies $\Delta_1(U^\ast,U^Q)<e$
+and $\Delta_2(U^\ast,U^Q)<e$. Further since $e < \min(d_1,d_2)/2$, we see that
+$U^Q$ is unique such codeword. This completes the proof.
+\end{enumerate}
+\end{proof}
    
 The following lemma will be useful to us later. Intuitively it states that for a code $L$, if a matrix is ``far'' from an interleaved code of $L$, then a random linear combination of its rows is also likely to be far from the code $L$. 
 
@@ -78,7 +129,7 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
 
 \begin{definition}[Inner Product Argument]\label{defn:innerproductarg}
-We call an interactive protocol $(\pip,\vip)$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
+We call an interactive protocol $(\pip,\vip)$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
 \begin{align*}
