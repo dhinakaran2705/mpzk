@@ -98,8 +98,15 @@ consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in \rsc{\eta}{\ell}\oplus
 \rsc{\alpha}{m}$ for all $i\in [p]$. For $U^\ast\in \mc{M}_{p,h,n}$ define
 $d_i(U^\ast,\mc{W})=\min\{\Delta_i(U^\ast,U):U\in \mc{W}\}$ for $i=1,2$.
 Further, we define
-$d(U^\ast,\mc{W})=\min(d_1(U^\ast,\mc{W}),d_2(U^\ast,\mc{W}))$. In this
-section we present an IPCP that allows a prover to convince a verifier that
+$d(U^\ast,\mc{W})=\max(d_1(U^\ast,\mc{W}),d_2(U^\ast,\mc{W}))$. Let $\mc{W}_1$
+denote the matrices $U$ in $\mc{M}_{p,h,n}$ such that $U[i,j,\cdot]\in
+\rsc{\eta}{\ell}$ for all $i,j$ and let $\mc{W}_2$ denote the matrices $U$ in
+$\mc{M}_{p,h,n}$ such that $U[i,\cdot,k]\in \rsc{\alpha}{m}$ for all $i,k$. It
+can be seen that $\mc{W}=\mc{W}_1\cap \mc{W}_2$. Further, using Lemma
+\ref{lem:bicdecoding} one can show that for $e<\min(d_1,d_2)/2$:
+\[ d(U,\mc{W}) < e \Longleftrightarrow d_1(U,\mc{W}_1) < e\wedge
+d_2(U,\mc{W}_2) < e \]
+ In this section we present an IPCP that allows a prover to convince a verifier that
 the oracle $\comoracle$ opens to a three dimensional matrix $\ewit$ such that
 $d(\ewit,\mc{W})<e$ for some proximity parameter
 $e$. To accomplish the above, we need several tools which we discuss next.
