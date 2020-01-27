@@ -30,7 +30,7 @@ $i\in [p]$ as a codeword in the product code. The use of the product code is
 essential to ensure soundness of the protocol with constant number of queries.
 We now describe the encoding in more detail.
 
-\subsection{Witness encoding with RS product code}
+\subsection{Witness encoding with RS product code}\label{sec:witencoding}
 We first choose the following sets of distinct points in $\FF$:
 \begin{align}\label{eq:points}
 \bm{\zeta} =\{\zeta_1,\ldots,\zeta_{\ell}\},\quad 
@@ -73,7 +73,8 @@ $p_j=\ifft((b[j,1],\ldots,b[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$. Further, it
 can be shown that $p_j(y)=Q^a(\alpha_j,y)$ for $j\in [h]$.\medskip
 
 
-\noindent{\bf Constructing Oracle}: We deviate from prior IOP constructions
+\subsection{Constructing Oracle}\label{sec:construct_oracle} 
+We deviate from prior IOP constructions
 such as \cite{Ligero2017,Aurora} in the way we construct the oracle. The prior
 constructions provided oracle access to linear code encoded messages. We
 additionally obtain a homomorphic commitment of the encoding $\enc(x)$ of the
@@ -84,72 +85,62 @@ $c_{ik}=\comm(\ewit[i,.,k],\delta_{ik})$ where $\delta_{ik}$ denotes the
 commitment randomness. Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[.,k]$ for
-$k\in Q$.\smallskip
+$k\in Q$.
 
-
-\subsection{Proximity Protocols}\label{sec:proximitybic}
-In this section we introduce the notion of {\em well formed} oracles and
-describe protocol to check that an oracle is close to a well formed oracle. Let
+\subsection{Proximity Protocols}\label{sec:proximityprotocols}
+In this section we introduce the notion of {\em well formed} encodings and
+describe protocols to check that an encoding is close to a well formed encoding. Let
 $\mc{M}_{p,h,n}$ denote the set of $p\times h\times n$ matrices over $\FF$. For
 $U,U'\in \mc{M}_{p,h,n}$ define $\Delta_1(U,U')=|\{k\in [n]: U[\cdot,\cdot,k]\neq
 U'[\cdot,\cdot,k]\}|$ and $\Delta_2(U,U')=|\{j\in [h]: U[\cdot,j,\cdot]\neq
 U'[\cdot,j,\cdot]\}|$. Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
 consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in \rsc{\eta}{\ell}\oplus
 \rsc{\alpha}{m}$ for all $i\in [p]$. For $U^\ast\in \mc{M}_{p,h,n}$ define
-$d_i(U^\ast,\mc{W})=\min\{\Delta_i(U^\ast,U):U\in \mc{W}\}$ for $i=1,2$. In this
+$d_i(U^\ast,\mc{W})=\min\{\Delta_i(U^\ast,U):U\in \mc{W}\}$ for $i=1,2$.
+Further, we define
+$d(U^\ast,\mc{W})=\min(d_1(U^\ast,\mc{W}),d_2(U^\ast,\mc{W}))$. In this
 section we present an IPCP that allows a prover to convince a verifier that
 the oracle $\comoracle$ opens to a three dimensional matrix $\ewit$ such that
-$d_1(\ewit,\mc{W})<e$ and $d_2(\ewit,\mc{W})<e$ for some proximity parameter
+$d(\ewit,\mc{W})<e$ for some proximity parameter
 $e$. To accomplish the above, we need several tools which we discuss next.
-
-\subsubsection{Proximity to Product Code:}
-We describe a protocol for checking the proximity of a matrix to product of
-two linear codes $L_1$ and $L_2$ given commitments to its columns. More
-precisely, let $L_1$ be an $[n,\ell]$ linear code and $L_2$ be an $[h,m]$ linear
-code. Let $\mc{M}_{h,n}$ be the set of $h\times n$ matrices over $\FF$. Let
+ 
+\subsubsection{Membership in Product Code:}
+We describe a protocol for checking the membership of a matrix in the  product of
+two linear codes $L_1$ and $L_2$, given commitments to its columns. More
+precisely, let $L_1$ be an $[n,\ell]$ linear code, $L_2$ be an $[h,m]$ linear
+code and $\mc{M}_{h,n}$ be the set of $h\times n$ matrices over $\FF$. Let
 $\Delta_1$ (resp., $\Delta_2$) be distance metrics on $\mc{M}_{h,n}$ denoting the
 number of rows (resp., columns) where the matrices differ. For $U^\ast\in
 \mc{M}_{h,n}$ we define $d_i(U^\ast, L_1\oplus L_2) :=
-\min\{\Delta_i(U^\ast,U):U\in L_1\oplus L_2)\}$ for
-$i=1,2$. Let $\mc{H}_1$ and $\mc{H}_2$ be the parity check matrices for the
-linear codes $L_1$ and $L_2$ respectively. 
+\min\{\Delta_i(U^\ast,U):U\in L_1\oplus L_2\}$ for $i=1,2$. Let $\mc{H}_1$ and $\mc{H}_2$ be the parity check matrices for the
+linear codes $L_1$ and $L_2$ respectively. We also define $\mc{C}_1$ and
+$\mc{C}_2$ to be the interleaved codes of $L_1$ and $L_2$, where $\mc{C}_1=\ric{L_1}{h}$
+and $\mc{C}_2=\cic{L_2}{n}$.  
 
-Assume that $U$ is an $h\times n$ matrix with $\mathbf{c}=(c_1,\ldots,c_n)$ as
-the vector of its column commitments. Let $e < \min(\delta(L_1),\delta(L_2))/3$
-denote the proximity parameter. The protocol below checks that $d(U,L_1\oplus
-L_2)<e$. 
-The protocol has the overall flavour of the
-``interleaved check'' discussed in \cite{ligero}, but checks are
-carried out under commitments using inner product protocols.
+Assume that $U$ is an $h\times n$ matrix, purported to be a codeword in
+$L_1\oplus L_2$. Let $\bar{U}$ denote the $h\times \ell$ matrix consisting of
+the first $\ell$ columns of $U$. We note that for $U\in L_1\oplus L_2$, we must
+have $U=\bar{U}\mc{T}$ for some $l\times n$ matrix $\mc{T}$ of rank $\ell$. Thus, the membership protocol involves the prover sending the column
+commitments $\bm{c}=(c_1,\ldots,c_\ell)$ and prove that they correspond to a matrix
+$\bar{U}$ such that $\bar{U}\mc{T}\in \mc{C}_2$ (because $\bar{U}\mc{T}\in
+\mc{C}_1$ for all $\bar{U}$). We describe the complete
+protocol below:
 \begin{figure}[ht]
 \begin{framed}
 \begin{itemize}
-\item {\bf ProximityTest2D} $(\FF, L_1, L_2, e, \mathbf{c}; U)$:
-\item {\bf Relation}: $U=\open(\mathbf{c})$ and $d_i(U,L_1\oplus
-L_2)<e$ for $i=1,2$.
+\item {$\proximityTwoD$} $(\FF,\GG, L_1, L_2,\mathbf{c}; \bar{U})$:
+\item {\bf Relation}: $\bar{U}=\open(\mathbf{c})$ and $\bar{U}\mc{T}\in \mc{C}_2$.
 \begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow \prover$: Verifier samples $\gamma\sample
-\FF^h$, $\delta_1\sample \FF^{n-\ell}$, $\delta_2\sample \FF^{h-m}$ and sends
-$\gamma,\delta_1, \delta_2$ to the prover.
-\item $\prover \text{ and } \verifier$ compute:
-	\begin{itemize}
-	\item $x = \mc{H}_1\delta_1$, $y = \mc{H}_2\delta_2$, $z=Ux$.
-	\item $\mathsf{cm}_1 = \sum_{k\in [n]}x_kc_k$.
-	\end{itemize}
+\item $\verifier\rightarrow \prover$: Verifier samples $\tau\sample
+\FF^n$, $\delta\sample \FF^{h-m}$ and sends them to the prover.
+\item $\prover\leftrightarrow \verifier$ compute: $\mu=\mc{T}\tau$,
+$\mathsf{cm} = \sum_{i\in [\ell]} \mu_ic_i$, $x=\mc{H}_2\delta$.
+\item $\prover$ computes: $z=\bar{U}\mu$.
 \item $\prover$ and $\verifier$ run the subprotocol:
 	\begin{itemize}
-	\item $b_1=\mathbf{InnerProduct}(\GG,\bm{g},\gamma,\mathsf{cm}_1,0;z)$
+	\item $b=\innerproduct(\GG,\bm{g},x,\mathsf{cm},0;z)$
 	\end{itemize}
-\item $\verifier\rightarrow \prover$: Verifier samples $\tau\sample \FF^n$ and
-sends $\tau$ to the prover.
-\item $\prover$ computes: $w=U\tau$.
-\item $\prover \text{ and } \verifier$ compute: $\mathsf{cm}_2=\sum_{i\in
-[n]}\tau_ic_i$.
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b_2=\mathbf{InnerProduct}(\GG,\bm{g},y,\mathsf{cm}_2,0;w)$.
-	\end{itemize}
-\item $\verifier$ accepts if $b_i=1$ for $i=1,2$.
+\item $\verifier$ accepts if $b=1$.
 \end{enumerate}
 \end{itemize}
 \end{framed}
@@ -158,23 +149,23 @@ sends $\tau$ to the prover.
 \end{figure}
 
 In the above,
-$\mathbf{InnerProduct}(\GG,\bm{g},x,\mathsf{cm},v;y)$ denotes an interactive
-protocol for proving the relation $\innp{x}{y}=v$ and $\open(y)=\mathsf{cm}$,
+$\mathbf{InnerProduct}(\GG,\bm{g},x,\mathsf{cm},v;z)$ denotes an interactive
+protocol for proving the relation $\innp{x}{z}=v$ and $\open(\mathsf{cm})=z$,
 where $\GG$ denotes the commitment group and $\bm{g}$ denotes the generators for
-vector commitment. We prove the correctness of the above proximity protocol.
+vector commitment. We prove the correctness of the above membership protocol.
 
 \begin{lemma}[Completeness]\label{lem:proximity2d_complete}
-For $U\in L_1\oplus L_2$, the protocol $\proximityTwoD$ accepts.
+For $\bar{U}$ such that $\bar{U}\mc{T}\in \mc{C}_2$, the protocol $\proximityTwoD$ accepts.
 \end{lemma}
 \begin{proof}
-Observe that $U\in L_1\oplus L_2$ implies $U\mc{H}_1=\bm{0}$ and
-$U^T\mc{H}_2=\bm{0}$. The former equality implies $\gamma^TU\mc{H}_1\delta_1=0$
-or $\innp{\gamma}{Uz}=0$. Also by homomorphism of the commitment scheme $\comm$,
-$\mathsf{cm}_1=\sum_{k\in [n]}x_kc_k$ opens to $Ux=z$. Thus from the
-completeness property of the inner product protocol, the subprotocol
-$\mathbf{InnerProduct}(\GG,\bm{g},\gamma,\mathsf{cm}_1,0;z)$ accepts. Similarly,
-it can be shown that $\mathbf{InnerProduct}(\GG,\bm{g},y,\mathsf{cm}_2,0;w)$
-also accepts.
+Observe that $\bar{U}\mc{T}\in L_2 \Leftrightarrow (\bar{U}\mc{T})^T\mc{H}_2=\bm{0}$, or
+$\mc{T}^T\bar{U}^T\mc{H}_2=\bm{0}$. Thus for any $\tau,\delta$ we have
+$\tau^T\mc{T}^T\bar{U}^T\mc{H}_2\delta=0$. The preceeding identity reduces to
+$\innp{x}{z}=0$ for  $z=\bar{U}\mc{T}\tau$ and
+$x=\mc{H}_2\delta$. Further,
+$\comm(z)=\sum_{i\in [\ell]}\mu_ic_i=\mathsf{cm}$ for $\mu=\mc{T}\tau$. The
+completeness property of the inner product protocol now guarentees that it
+accepts.
 \end{proof}
  
 \begin{lemma}[Soundness]\label{lem:proximity2d_sound}
@@ -184,81 +175,290 @@ rewinding access to the transcript oracle $\mc{O}=\langle P^\ast(\bm{c},\cdot),V
 such that:
 \begin{align*}
 \condprob{
-d(U, L_1\oplus L_2) \leq e
+\begin{array}{l}
+\bar{U} = \open(\bm{c}) \wedge \\
+\bar{U}\mc{T}\not\in \mc{C}_2
+\end{array}
 }{
 \begin{array}{l}
 \sigma\sample \gen(\secparam) \\
-U\sample \extr^{\mc{O}}(\bm{c},\sigma)
+\bar{U}\sample \extr^{\mc{O}}(\bm{c},\sigma)
 \end{array}}
 \geq 
 \condprob{\langle P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle =
-1}{\sigma\sample \gen(\secparam)} - s(\secpar)
+1}{\sigma\sample \gen(\secparam)} - \kappa_{2d}(\secpar)
 \end{align*}
-for a negligible function $s$.
+for a negligible function $\kappa_{2d}$.
 \end{lemma}
 \begin{proof}
-We will use the witness extraction lemma to construct an extractor $\extr$ for
-the protocol $\proximityTwoD$. Let $\extr_{ip}$ denote the extractor for the
-inner product protocol with knowledge soundness $\kappa(\cdot)$, and
-$\mc{B}(\cdot)$ denote the bound on polynomial time adversary's ability to break
-the binding of the commitment scheme $\comm$. The extractor $\extr$ starts by
-emulating the verifier in the protocol $\proximityTwoD$. At step (3), it uses
-the extractor $\extr_{ip}$ to extract witness $z$ for the inner product
-protocol. Similarly it uses $\extr_{ip}$ to extract witness $w$ for inner
-product protocol at step (7). If the resulting transcript is accepting, $\extr$
-rewinds the interaction to step (4) further $n-1$ times. Let $w_i$ denote the
-witness extracted for the inner product protocol at step (7) in the $i^{th}$
-rewinding with $\tau^i$ as the corresponding randomness $\tau$. The extractor $\extr$ fails with output $\bot$ if the initial
-transcript is not accepting or any of the extractors for the inner product
-protocols fail. Otherwise, the witness $U$ is constructed as follows: The values
-$z$, $w_1,\ldots,w_n$ extracted by the subprotocol extractors satisfy the
+The extractor $\extr$ starts by emulating the verifier in the protocol
+$\proximityTwoD$. At the step 4, it uses the extractor $\extr_{ip}$ for the
+inner product protocol to extract the witness $z$ for the $\innerproduct$
+subprotocol. If the initial transcript rejects, $\extr$ fails with output
+$\bot$. Otherwise, it rewinds transcript to step (1) till it finds $\ell$
+additional accepting transcripts. Let $\tau^i,\delta^i$ denote the random
+vectors in step 1, in the $i^{th}$ accepting transcript (we let $i=0$ denote the
+initial transcript). Similarly, let $x^i$, $\mathsf{cm}^i$ denote the values of
+vectors $x$ and $\mathsf{cm}$ in the $i^{th}$ accepting transcript, while $z^i$
+denotes the witness extracted by the inner product extractor $\extr_{ip}$
+corresponding to $x^i$ and $\mathsf{cm}^i$. If the inner product extractor
+$\extr_{ip}$ fails with $z^i=\bot$ for any $i\in [\ell]$, the extractor $\extr$
+fails with output $\bot$. From the inner product extractions we have the
 following:
-\begin{align}
-\innp{\gamma}{z}=0 & \quad \text{ and } \quad z = \open(\mathsf{cm}_1) \nonumber \\
-\innp{y}{w_i}=0 & \quad \text{ and } \quad w_i = \open(\sum_{j\in [n]}\tau^i_jc_j) 
-\end{align}
-Let $\Upgamma$ denote the $n\times n$ matrix with $\Upgamma[i,j]=\tau^i_j$. With
-probability $1-1/|\FF|$, $\Upgamma$ is invertible. Let $a^i$, $i\in [n]$ be vectors
-such that $(a^i)^T\Upgamma = e_i$. Let $W$ denote the $h\times n$ matrix given
-by $W[k,i]=w^i_k$. Define $U_i=Wa^i$ for $i\in [n]$ and let $U$ denote the
-$h\times n$ matrix with columns as $U_1,\ldots,U_n$. We first prove that for all
-$i\in [n]$, $U_i$ opens to commitment $c_i$. We have 
 \begin{align*}
-\comm(U_i) &= \sum_{k\in [n]}a^i_k\comm(w_k) \\
-&= \sum_{k\in [n]}a^i_k\sum_{j\in [n]}\tau^k_jc_j \\
-&= \sum_{j\in [n]}\big(\sum_{k\in [n]}a^i_k\tau^k_j\big)c_j = c_i 
+\begin{array}{cccc}
+\comm(z^1)=&  \mu^1_1c_1+ & \hdots & +\mu^1_{\ell}c_{\ell} \\
+\vdots & \vdots & \ddots & \vdots \\
+\comm(z^l)=& \mu^{\ell}_1c_1+ & \hdots & +\mu^{\ell}_{\ell}c_{\ell} 
+\end{array}
+\end{align*}
+Let $\Lambda$ denote the $\ell\times \ell$ matrix with $\Lambda[i,j]=\mu^i_j$.
+Since $\mc{T}$ is a rank $\ell$ matrix, we see that $\Lambda$ is an invertible
+matrix for random choices of vectors $\tau^i$, except with probability
+$1/|\FF|$. Let $\Omega$ be the $\ell\times \ell$ matrix such that
+$\Omega\Lambda=I_{\ell}$. Define $U_k = \sum_{i\in [\ell]}\Omega[k,i]z^i$ for
+$k\in [\ell]$. Then we have,
+\begin{align*}
+\comm(U_k) &= \sum_{i\in [\ell]}\Omega[k,i]\comm(z^i)  \\
+	&= \sum_{i\in [\ell]}\Omega[k,i]\sum_{j\in [\ell]}\mu^i_jc_j \\
+	&= \sum_{j\in [\ell]}\big(\sum_{i\in [\ell]}\Omega[k,i]\mu^i_j\big)c_j \\
+	&= \sum_{j\in [\ell]}\big(\sum_{i\in [\ell]}\Omega[k,i]\Lambda[i,j]\big)c_j
+\\
+	&= c_k \text{ (using $\Omega\Lambda=I_{\ell})$ }
+\end{align*}
+Thus $\bar{U}=(U_1,\ldots,U_{\ell})$ satisfies $\open(U)=\bm{c}$. Now we
+consider the probability that $\bar{U}\mc{T}\in \mc{C}_2$. Let $A$ denote the event
+that the first transcript accepts. Let $B\subseteq A$ be the event that
+$(\bar{U}\neq\bot)\cap (\bar{U}\mc{T}\in \mc{C}_2)$. We have,
+\begin{align*}
+\prob{B} &= \prob{A} - \prob{A\cap \neg B} \\
+	&\geq \prob{A} - \prob{A\cap (\bar{U}=\bot)} - \prob{A\cap
+(\bar{U}\mc{T}\not\in \mc{C}_2)} \\
+	&= \prob{A} - \prob{A\cap (\bar{U}=\bot)} - \prob{A\cap
+(\mc{T}^T\bar{U}^T\mc{H}_2\neq 0)} \\
+	&\geq \prob{A} - \prob{A\cap (\bar{U}=\bot)} -
+\condprob{\tau^T\mc{T}^T\bar{U}^T\mc{H}_2\delta=
+0}{\mc{T}^T\bar{U}^T\mc{H}_2\neq 0} \\
+	&\geq \prob{\langle P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle=1}
+- \big(\ell.\kappa_{ip}(\secpar)+1/|\FF|\big) - 2/|\FF|
 \end{align*} 
-By construction, we also observe that $\langle y, U_i\rangle = 0$ for all $i\in
-[n]$, i.e, $U^T\mc{H}_2\delta_2 = 0$. Thus with probability at least
-$1-1/|\FF|$, we must have $U^T\mc{H}_2=0$ (note this uses the fact that random
-variables $U$ and $\delta_2$ are independent). Let $A$ denote the event that the
-first transcript is accepting. Let $B$ denote the event that $\extr$ outputs $U$
-such that $d_1(U,L_1\oplus L_2)\leq e$ and $d_2(U,L_1\oplus L_2)\leq e$. Clearly
-$B\subseteq A$. Let $B_i$ denote the event that $d_i(U,L_1\oplus L_2)>e$ and $F$
-denote the event that $U=\bot$. Thus 
-$\neg B = B_1\cup B_2\cup F$. We have:
-\begin{align}
-\prob{B} &= \prob{A} - \prob{A \cap \neg B} \nonumber \\ 
-	 &\geq \prob{A} - \prob{A\cap B_1} - \prob{A\cap B_2} -\prob{A\cap F} \\
-	 &\geq \prob{A} - \condprob{A}{B_1} - \prob{B_2} - \prob{F}
-\end{align}  
-Since $\prob{B_2}\leq \prob{U\mc{H}_2\delta_2=0 \wedge d_2(U,L_1\oplus
-L_2)>e}\leq \prob{U^T\mc{H}_2\delta_2=0 \wedge U^T\mc{H}_2\neq 0} < 1/|\FF|$ as
-$\delta_2$ is chosen randomly and independently of $U$. Similarly $F$ occurs
-when one of the inner product extractors fail, or when $\Gamma$ is not
-invertible. Therefore, $\prob{F}\leq (n+1)\kappa(\secpar) + 1/|\FF|$.
-Next we consider
-$\condprob{A}{B_1}$. We have, $z=\open(\mathsf{cm}_1)=\open(\sum_{i\in
-[n]}x_ic_i)=\sum_{i\in [n]}x_iU_i=Ux$. Thus either (i) $z=Ux$ or, (ii) $(z,Ux)$
-breaks the binding of the commitment scheme $\comm$. By assumption, the second
-event happens with probability at most $\mc{B}(\secpar)$. Assume then that
-$z=Ux$ and thus $\gamma^TU\mc{H}_1\delta_1=0$. Since $\gamma$ and $\delta_1$
-were chosen uniformly and independently of $U$, it implies $U\mc{H}_1=0$, except
-with probability $2/|\FF|$. Thus $\condprob{A}{B_1}\leq 2/|\FF|$. Thus the
-statement of the lemma is satisfied for $s(\secpar) := (n+1)\kappa(\secpar) +
-\mc{B}(\secpar) + 4/|\FF|$. 
+In the above, we bound the probability $\condprob{\tau^T\mc{T}^T\bar{U}^T\mc{H}_2\delta=
+0}{\mc{T}^T\bar{U}^T\mc{H}_2\neq 0}$ by $2/|\FF|$ as $\tau$ and $\delta$ are
+distributed uniformly and independently of the extracted witness $\bar{U}$. The
+probability $\prob{A\cap (\bar{U}=\bot)}$ is bound in terms of the probability
+of inner product extractor returning an invalid witness or $\Lambda$ being
+singular which is at most $\ell.\kappa_{ip}(\secpar)+1/|\FF|$. The
+statement of the lemma now holds by setting
+$\kappa_{2d}(\secpar):=\ell.\kappa_{ip}(\secpar) + 3/|\FF|$.
 \end{proof}
 
+\subsubsection{Proximity to Well Formed Oracle}: We now describe the protocol
+that allows a prover to prove that oracle $\comoracle$ opens to a three
+dimensional matrix $\ewit\in \mc{M}_{p,h,n}$ which is close to a well formed
+encoding. To minimize communication, the key idea is that the verifier chooses
+$r\sample \FF^p$ and asks the prover to send commitments to the two dimensional
+matrix $\tilde{U}:=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$, i.e,
+$\tilde{U}[j,k]=\sum_{i\in [p]}r_i\ewit[i,j,k]$. Thereafter we use the protocol
+$\proximityTwoD$ to check that $\tilde{U}\in L_1\oplus L_2$ where
+$L_1=\rsc{\eta}{\ell}$ and $L_2=\rsc{\alpha}{m}$. The soundness of the overall
+protocol follows from the fact that if $\ewit$ is far from a well formed
+encoding, with high probability $\tilde{U}$ is far from $L_1\oplus L_2$.
+Additionally, we also have to ascertain that the column commitments to
+$\tilde{U}$ are consistent with $\comoracle$ with minimal communication. The
+protocol description follows:
+\begin{figure}[h!]
+\begin{framed}
+\begin{itemize}
+\item {$\proximityThreeD(\FF,L_1,L_2,e,[\pi];\ewit)$}
+\item {\bf Relation}: $\ewit=\open(\pi)$, $\ewit\in \mc{W}$.
+\item {\bf Oracle Setup}: Prover computes $\comoracle$ from $\ewit$ as in
+Section \ref{sec:construct_oracle} and sets
+$\pi := \comoracle$ as the oracle.
+\begin{enumerate}[{1.}]
+\item $\verifier\rightarrow \prover$: Verifier samples $r\sample \FF^p$ and
+sends $r$ to $\prover$.
+\item $\prover$ computes: 
+	\begin{itemize}
+	\item $\tilde{U}=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$.
+	\item $\tilde{c}_k = \sum_{i\in [p]}r_i\comoracle[i,k]$ for $k\in [\ell]$.
+	\end{itemize}
+\item $\prover\rightarrow \verifier$: Prover sends
+$\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to the verifier.
+\item $\prover \text{ and } \verifier$: Prover and verifier run the subprotocol:
+	\begin{itemize}
+	\item $b=\proximityTwoD(\FF,L_1,L_2,\tilde{\bm{c}};\tilde{U})$
+	\end{itemize}
+\item $\verifier$ queries: Verifier samples $Q\subseteq [n]$ of size
+$t$ and makes oracle queries for positions in $Q$.
+\item Oracle Answers: The oracle responds with columns $\pi[.,k]$ for
+$k\in Q$.
+\item $\verifier$ checks: The verifier checks $\sum_{i\in
+[p]}r_i\pi[i,k]=\sum_{i\in [\ell]}\mc{T}[i,k]\tilde{c}_i$ for $k\in Q$ (the matrix $\mc{T}$ as defined earlier).
+\item $\verifier$ accepts if the check passes and $b=1$.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Protocol 2}
+\end{figure}
+
+\begin{lemma}[Completeness]\label{lem:proximity3d_complete}
+For $\ewit\in\mc{W}$, the protocol $\proximityThreeD$ accepts.
+\end{lemma}
+\begin{proof}
+The assertion follows from the fact that $\ewit\in \mc{W}$ and
+$\ewit=\open(\comoracle)$ implies $\tilde{U}\in L_1\oplus L_2$ and
+$\tilde{U}=\open(\tilde{\mathbf{c}})$, and from the completeness of the protocol
+$\proximityTwoD$.
+\end{proof}
+
+\begin{lemma}[Soundness]\label{lem:proximity3d_sound}
+For every bounded prover $P^\ast$ and every oracle $\pi\in \FF^{p\times n}$,
+there exists a polynomial time extractor $\extr$ with rewinding access to
+transcript oracle $\mc{O}=\langle P^\ast(\cdot),\verifier^{\pi}(\cdot)\rangle$
+such that:
+\begin{align*}
+\condprob{
+\begin{array}{l}
+\ewit=\open(\pi) \wedge \\
+d(\ewit,\mc{W})>e
+\end{array}
+}{
+\begin{array}{l}
+\sigma\sample \gen(\secparam)\\
+\ewit\sample \extr^{\mc{O}}(\sigma)
+\end{array}
+}\geq \condprob{\langle
+P^\ast(\sigma),\verifier^\pi(\sigma)\rangle=1}{\sigma\sample
+\gen(\secparam)}-s_{3d}(\secpar)
+\end{align*}
+for some negligible function $s_{3d}$. Note that in the above, $\extr$ can
+rewind and proceed with fresh queries to the oracle $\pi$. 	
+\end{lemma}
+\begin{proof}
+As before the extractor $\extr$ emulates the verifier in the protocol
+$\proximityThreeD$. In case the first transcript is accepting, the extractor
+rewinds the prover sufficiently many times to obtain a tree of accepting transcripts with $p$ distinct
+choices of the randomness $r$ in step (1) and $\theta := tn$ different values of $Q$
+on step (5). Let $r^{1},\ldots,r^{p}$ denote the values of $r$ in step (1)
+and let $\tilde{\mathbf{c}}^{1},\ldots,\tilde{\mathbf{c}}^{p}$ denote the corresponding
+commitment vectors in step (3). Similarly, let $Q^{uv}$ denote the $v^{th}$
+choice of $Q$ corresponding to $u^{th}$ value of $r$ for $u\in [p]$ and $v\in
+[\theta]$. We do not consider the initial transcript as part of the tree of
+transcripts. We notice that we have $\cup_{v\in [\theta]}Q^{uv}=[n]$ for all
+$u\in [p]$, except with probability at most $pn(1-1/n)^{nt}\leq pne^{-t}$. At
+step (4), $\extr$ uses extractor $\extr_{2d}$ for the protocol $\proximityTwoD$
+to extract $h\times \ell$ matrix $W^{u}$ for $u\in [p]$. The extractor $\extr$ fails with output $\bot$
+if $\extr_{2d}$ fails in any of its invocations. By the property of $\extr_{2d}$
+we have that $\open(\tilde{\bm{c}}^u)=W^u$ and $W^u\in L_1\oplus L_2$ for all
+$u\in [p]$. We construct the witness $\ewit$ by solving for each $h$-length
+vector $\ewit[i,\cdot,k]$ for $i\in [p], k\in [n]$ according to
+\eqref{eq:extraction3d}. Let $T_1,\ldots,T_n$ denote the columns of matrix
+$\mc{T}$. 
+\begin{align}\label{eq:extraction3d}
+\text{For each $k\in [n]$ we have:}  \nonumber \\
+\begin{array}{cccc}
+r^1_1\ewit[1,\cdot,k]+ &\hdots & +r^1_p\ewit[p,\cdot,k] &= W^1T_k \\
+\vdots & \ddots & \vdots & \vdots \\
+r^p_1\ewit[1,\cdot,k]+ &\hdots & +r^p_p\ewit[p,\cdot,k] &= W^pT_k 
+\end{array}
+\end{align}
+Let $\Lambda$ denote the $p\times p$ matrix with $\Lambda[i,j]=r^i_j$. We may
+assume that $\Lambda$ is invertible, except with probability $1/|\FF|$. Let
+$\Omega$ be such that $\Omega\Lambda = I_p$. It can be seen that the system of
+equations \eqref{eq:extraction3d} is satisfied by setting $\ewit[i,\cdot,k]=\sum_{j\in
+[p]}\Omega[i,j]W^jT_k$ for $i\in [p],k\in [n]$. First we prove that
+$\comm(\ewit[i,\cdot,k])=\pi[i,k]$ for all $i$ and $k$. Indeed,
+\begin{align*}
+\comm(\ewit[i,\cdot,k]) & =\sum_{j\in [p]}\Omega[i,j]\comm(W^jT_k) \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in [\ell]}\mc{T}[a,k]\comm(W^j[.,a]) \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in
+[\ell]}\mc{T}[a,k]\tilde{\bm{c}}^j_a \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in [p]}r^j_a\pi[a,k] \text{ (using check
+(7)) } \\
+	& = \sum_{a\in [p]} \big(\sum_{j\in [p]}\Omega[i,j]\Lambda[j,a]\big)\pi[a,k]
+\\
+	& = \pi[i,k]
+\end{align*}
+
+Next we compute the probability that $d(U,\mc{W})\leq e$. Note that the columns
+$\ewit[i,\cdot,k]$ are linear combinations of the columns of extracted matrices
+$W^u, u\in [p]$ which are codewords in the code $L_2$. Thus, each column
+$\ewit[i,\cdot,k]$ in the extracted witness $\ewit$ is a codeword in $L_2$. Thus
+$d_2(\ewit,\mc{W})=0$, and hence $d(U,\mc{W})=d_1(U,\mc{W})$. We define the
+following events of interest:
+\begin{itemize}
+\item $A$: denotes the event that the first transcript is accepting. By
+definition, $\prob{A}$ is the accepting probability $\prob{\langle
+P^\ast(\sigma),\verifier(\sigma)\rangle=1}$.
+\item $B$: denotes the sub-event of $A$ when the extracted opening $\ewit$ to the
+commitment oracle $\pi$ is valid, i.e $d(\ewit,\mc{W})<e$. 
+\item $F_1$: denotes the event that $\extr$ fails with output $\bot$. This
+happens when one of the invocations subprotocol extractor $\extr_{2d}$ fails, or
+unlikely events that the matrix $\Lambda$ is singular, or that $\theta=tn$
+repetitions of the random query locations $Q$ fail to cover the set of indices
+$[n]$. As discussed in the proof, we can bound $\prob{F_1}$ by
+$p\kappa_{2d}(\secpar) + pne^{-t} + 1/|\FF|$. 
+\end{itemize}
+Using an analysis similar to the one in the proof of Lemma
+\ref{lem:proximity2d_sound}, we have:
+\begin{equation}\label{eq:probeq1}
+\prob{B}\geq \prob{A} - \prob{F_1} - \condprob{A}{d_1(\ewit,\mc{W})>e}   
+\end{equation}
+Let $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ denote the vector sent
+by the prover in step (3). We consider the vector $n$-length vector $C_{adv}$
+defined by $C_{adv}[k]=\sum_{i\in [\ell]}\mc{T}[i,k]\tilde{c}_i$ for $k\in [n]$. Let
+$C_{hon}$ denote the honestly computed vector defined by $C_{hon}[k]=\sum_{i\in
+[p]}r_i\pi[i,k]$. Note that for honest oracle $\pi\in\mc{W}$ and honest prover
+we would have $C_{adv}=C_{hon}$. Let $\varepsilon := \Delta(C_{adv},C_{hon})$ denote the
+hamming distance between the two vectors. Now we can write
+$\condprob{A}{d_1(\ewit,\mc{W})>e}$ as:
+\begin{align}\label{eq:probeq3}
+\condprob{A}{d_1(\ewit,\mc{W})>e} &\leq \max(\condprob{A}{d_1(\ewit,\mc{W})>e,
+\varepsilon \leq e},\condprob{A}{d_1(\ewit,\mc{W})>e, \varepsilon > e})
+\end{align}
+The above follows from the identity $\condprob{A}{X}\leq
+\max(\condprob{A}{X_1},\condprob{A}{X_2})$ for $X=X_1\uplus X_2$. Next we note
+that for $\varepsilon > e$, the check in step 7, succeeds with probability at most
+$(n-e)^t/n^t=(1-e/n)^t$. Thus $\condprob{A}{d_1(\ewit,\mc{W})>e,\varepsilon > e}\leq
+(1-e/n)^t$. Next we bound $\condprob{A}{d_1(\ewit,\mc{W})>e,\varepsilon\leq e}$.
+With probability at least $1-\kappa_{2d}(\secpar)$, the extractor $\extr_{2d}$
+produces a witness $\bar{U}$ such that $\bar{U}\mc{T}\in L_1\oplus L_2$, and
+$\bar{U}=\open(\tilde{\bm{c}})$.  Let
+$U_{adv} = \bar{U}\mc{T}$ denote the codeword in $L_1\oplus L_2$. We note that
+$U_{adv}=\open(C_{adv})$. Define $U_{hon}=\sum_{i\in [p]}r_i\ewit[i,.,.]$. Note
+that $U_{hon}=\open(C_{hon})$ by homomorphism of the commitment scheme. Since
+$\varepsilon=d(C_{adv},C_{hon})\leq e$, we must have:
+\begin{enumerate}[{\rm (i)}]
+\item $\Delta_1(U_{adv},U_{hon})\leq e$ or,
+\item There exists an index $j\in [n]$ such that $C_{adv}[j]=C_{hon}[j]$, but
+their corresponding openings $U_{adv}[j]$ and $U_{hon}[j]$ are different. This
+constitutes breakage to the binding property of the commitment scheme $\comm$. 
+\end{enumerate}
+Assuming $\Delta_1(U_{adv},U_{hon})\leq e$, we have $d_1(U_{hon},\mc{C}_1)\leq
+e$. From the above, we can now write:
+\begin{equation}\label{eq:probeq4}
+\condprob{A}{d_1(\ewit,\mc{W})>e,\varepsilon\leq e}\leq
+\condprob{d_1(U_{hon},\mc{C}_1)\leq e}{d_1(\ewit,\mc{W})>e} + \mc{B}(\secpar)
+\end{equation}
+Since $U_{hon}=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$, from Lemma
+\ref{lem:3dcompression}, we have $\condprob{d_1(U_{hon},\mc{C}_1)\leq
+e}{d_1(\ewit,\mc{W})>e}<d_1/|\FF|$ where $d_1$ is the minimum distance of the
+code $L_1$. Thus, Equation \eqref{eq:probeq3} gives us
+\begin{equation}\label{eq:probeq5}
+\condprob{A}{d_1(\ewit,\mc{W})>e}\leq \max\left\{\left(1-\frac{e}{n}\right)^t,
+\frac{d_1}{|\FF|}+\kappa_{2d}(\secpar) + \mc{B}(\secpar)\right\}
+\end{equation}
+From Equations \eqref{eq:probeq1} and \eqref{eq:probeq5} we see that the
+statement of the Lemma holds for 
+\[\kappa_{3d}(\secpar) := (p+1)\kappa_{2d}(\secpar) + pne^{-t} +
+\left(1-\frac{e}{n}\right)^t + \frac{d_1+1}{|\FF|} + \mc{B}(\secpar) \]
+\end{proof}
+
+\subsection{Linear Check Protocol}
+In this section, we describe an IPCP that allows a prover to prove knowledge of
+witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
+for some $A\in \FF^{M\times N}$ and $b\in \FF^M$. As before we veiw $\wit$ as
+$p\times m\times \ell$ matrix where $N=pm\ell$. 
 
 \subsubsection{Linear Check}
 We now describe a protocol to check that a purported commitment oracle
