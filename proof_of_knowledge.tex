@@ -120,22 +120,22 @@
 	\end{bmatrix}^T)$ $\forall j\in [n]$
 	
 	\paragraph{\textbf{Proximity Check:}}\label{sec:proximity} In this check $\prover$ convinces $\verifier$ that $\cm_x$ is the commitment of a correct codeword matrix $\oracle_x$ which is encoding of a matrix $x$. If $\oracle_x$ is malformed, i.e. if it is sufficiently far away from a correct codeword matrix, then $\prover$ passes the following check with $\negl(t)$ probability.
+	
+	$\prover$ sets $\cm$ as the oracle.
 	\begin{enumerate}
-		\item $\prover \rightarrow \verifier :$ $\prover$ sends $cm$ to $\verifier$.
-		
 		\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
 		
 		\item $\prover \rightarrow \verifier :$ $\prover$ computes $u=\gamma^T\oracle_x$ and sends $u$ to $\verifier$.
 		
-		\pnote{ instead of using $w = \gamma^T \oracle_{x}$, using $u$, to avoid conflict with witness.}
+		%\pnote{ instead of using $w = \gamma^T \oracle_{x}$, using $u$, to avoid conflict with witness.}
 		\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
 		
 		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=u_{j_u}$ $\forall j_u\in Q$
 		
-		\item If $\verifier$ accepts the innerproduct arguement in step 5, then checks if $w\in L$. If yes then $\verifier$ outputs accept else outputs reject.
+		\item If $\verifier$ accepts the innerproduct arguement in step 4, then checks if $u\in L$. If yes then $\verifier$ outputs accept else outputs reject.
 	\end{enumerate}
 	
-	Note that the subprotocol for innerproduct arguement has the proof of knowledge property, proof given in \cite{Bulletproofs}. So there is an expected $\ppt$ extractor $\extrac_{innp}$ for the innerproduct argument, which either outputs the witness or breaks the binding property of the committment, if the arguement is accepted.
+	Note that the subprotocol for innerproduct arguement has the proof of knowledge property, proof given in \cite{bulletproofs}. So there is an expected $\ppt$ extractor $\extrac_{innp}$ for the innerproduct argument, which either outputs the witness or breaks the binding property of the committment, if the arguement is accepted.
 	\begin{theorem}\label{theo:proximity}
 		For $e < \frac{d}{3} $, if $\innp{\prover^*(\cm, \calU^*)}{\verifier(\cm)} $ is true, then there is an expected $\ppt$ $\extrac^{\prover^*}(\cm) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events: 
 		\begin{itemize}
@@ -177,14 +177,21 @@
 	\end{proof}
 	
 	\paragraph{\textbf{Linear Check:}}\label{sec: linearity} In this check, there is a publicly known matrix $A \in \bbF^{ml\times ml}$ and public vector $b\in \bbF^{ml}$, and $\prover$ claims that he knows a $x$ such that $Ax=b$ is true. $\prover$ starts with encoding the $x$ using interleaved $\RS$ code which is described above and gets $\oracle_x$, then he computes the commitment $\cm_x$ in the same way mentioned above. Now the following check ensures that if a maformed $\calU$ is used for $\oracle$, which is not far away from a correct encoding of $x$ for which $Ax\neq b$, then $\verifier$ outputs reject with very high probability.
+	
+	$\prover$ sets $\cm_x$ as the oracle.
 	\begin{enumerate}
-		\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x$ to $\verifier$.
 		\item $\verifier \rightarrow \prover: $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
+		
 		\item $\prover$ and $\verifier$ compute $R=r^TA$, which is a vector of size $ml$. Read $R$ in a matrix form where first $l$ elements of $R$ forms the first row, next $l$ elements forms the second row, similary $R$ will have $m$ rows. Then they construct polynomials $R_i(\cdot)$ of degree $<l$ such that $R_i(\zeta_j)=R_{ij}$ $\forall i\in [m], j\in [l]$. 
+		
 		\item $\prover \rightarrow \verifier: $  $\prover$ computes a polynomial $p(\cdot)=\sum_{i\in[m]} ( R_i(\cdot)\cdot \hat{f}^x_i(\cdot))$ and sends $p(\cdot)$ to $\verifier$.
+		
 		\item $\verifier \rightarrow \prover: $ $\verifier$ samples $t$ distinct  indices $j_1,\ldots,j_t$ from the set $[n]$ independently at random and sends the indices to $\prover$.
+		
 		\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{R_{j_u}}{\oracle_x[\cdot,j_u]} = p(\eta_{j_u})$ for all $j_u$ queried in the above step by $\verifier$, where $R_{j_u}=(R_1(\eta_{j_u}),\ldots,R_m(\eta_{j_u})$ and $\oracle_x[\cdot,j_u]$ denotes the $m-$length vector $(\oracle_x[1,j_u],\ldots, \oracle_x[m,j_u])$. $\verifier$ proceeds if the arguments succeed for all $u \in [t]$.
+		
 		\item $\verifier$ also checks that $\sum_{j\in[l]} p(\zeta_j)=0$.
+		
 		\item $\verifier$ accepts if all the above checks are succeed.	  
 	\end{enumerate}
 	
@@ -215,9 +222,9 @@
 	\end{proof}
 
 	\paragraph{\textbf{Quadratic Check:}}\label{sec: quadratic} In this check $\prover$ claims that he knows $x,y,z\in\bbF^{ml}$ such that $x \circ y = z$. $\prover$ starts with encoding each of $x, y, z$ and obtains $\oracle_x, \oracle_y, \oracle_z$. Then $\prover$ performs column wise commitments and gets $\cm_x, \cm_y, \cm_z$. The following check ensures that if any of the $\oracle_x, \oracle_y, \oracle_z$ is malformed, which is not far away from a correct encoding of any of the $x, y, z$, then $\verifier$ rejects with very high probability.
+	
+	$\prover$ sets $\cm_x, \cm_y$ and $\cm_z$ as the oracles.
 	\begin{enumerate}
-		\item $\prover \rightarrow \verifier: $ $\prover$ sends $\cm_x, \cm_y, \cm_z$ to $\verifier$.
-		
 		\item $\verifier \rightarrow \prover: $ $\verifier$ picks $r$ uniformly at random from $\bbF^{m}$ and sends $r$ to $\prover$.
 		
 		\item $\prover \rightarrow \verifier: $ $\prover$ computes the polynomial $p(\cdot)= \sum_{i\in [m]} [r_i\cdot (\hat{f}^x_i(\cdot)\cdot \hat{f}^y_i(\cdot) - \hat{f}^z_i(\cdot))] $ and sends $p(\cdot)$ to $\verifier$. 
