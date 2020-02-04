@@ -136,6 +136,8 @@ We will now formally describe the linear check for our protocol \name2D{}. It wi
 $\circsize = m \ell$ for some positive integers $m$ and $\ell$. We further assume that the prover has RS-encoded oracle $\rsoracle$ which opens to the commitment $\comoracle$ and is $e$-close to the interleaved code $L_1^{m}$. The prover and the verifier interact as follows: 
 
 $\prover$ sets $\cm_x$ as the oracle.
+\begin{figure}[h!]
+	\begin{framed}
 \begin{enumerate}
 	\item $\verifier \rightarrow \prover: $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
 	
@@ -151,7 +153,9 @@ $\prover$ sets $\cm_x$ as the oracle.
 	
 	\item $\verifier$ accepts if all the above checks are succeed.	  
 \end{enumerate}
-
+\end{framed}
+\caption{Linear Check for $\name$2D}
+\end{figure}
 The correctness of the above protocol follows from the correctness of \cite{Ligero} and the inner product argument. We now prove the proof of knowledge of the protocol through the following lemma.
 \begin{lemma}
 For a $P^*$ which makes a verifier accept the above linear check protocol, there is an expected $\ppt$ extractor $\extr$ with rewinding access to $P^*$ which outputs a valid witness or breaks the binding of the commitment scheme with overwhelming probability.
@@ -198,6 +202,8 @@ We now formally describe the interactive oracle protocol for checking the relati
 More formally, the quadratic check as follows:
 
 	$\prover$ sets $\cm_x, \cm_y$ and $\cm_z$ as the oracles.
+	\begin{figure}[h!]
+		\begin{framed}
 \begin{enumerate}
 	\item $\verifier \rightarrow \prover: $ $\verifier$ picks $r$ uniformly at random from $\bbF^{m}$ and sends $r$ to $\prover$.
 	
@@ -215,6 +221,9 @@ More formally, the quadratic check as follows:
 	
 	\item $\verifier$ checks if $p(\zeta_j)=0$ $\forall j\in[l]$. If yes then accepts, else rejects.
 \end{enumerate}
+\end{framed}
+\caption{Quadratic Check for $\name$2D}
+\end{figure}
 
 The correctness of the above protocol again follows from the correctness of \cite{Ligero} and the inner product argument. Its proof of knowledge property is proved through the following lemma.
 \begin{lemma}
@@ -263,19 +272,23 @@ We finally describe our protocol for ``proximity'' of a purported codeword to th
 \dnote{To Nitin: why did you not use the notation $\rsoracle$ for $U$? Is it that only those $U$s which satisfy the proximity test become $\rsoracle$?}
 The prover and the verifier interact as follows:
 	$\prover$ sets $\cm$ as the oracle.
-\begin{enumerate}
-	\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
+	\begin{figure}[h!]
+		\begin{framed}
+			\begin{enumerate}
+			\item $\verifier \rightarrow \prover :$ $\verifier$ as a challenge picks $\gamma \in \bbF^m$ uniformly at random and sends it to $\prover$.
 	
-	\item $\prover \rightarrow \verifier :$ $\prover$ computes $u=\gamma^T\oracle_x$ and sends $u$ to $\verifier$.
+			\item $\prover \rightarrow \verifier :$ $\prover$ computes $u=\gamma^T\oracle_x$ and sends $u$ to $\verifier$.
 	
 	%\pnote{ instead of using $w = \gamma^T \oracle_{x}$, using $u$, to avoid conflict with witness.}
-	\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
+			\item $\verifier \rightarrow \prover :$ $\verifier$ picks a random subset $Q\subseteq [n]$ such that $|Q|=t$ and sends $Q$ to $\prover$.
 	
-	\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=u_{j_u}$ $\forall j_u\in Q$
+			\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a subprotocol to prove the innerproduct arguement for the following statement $\innp{\gamma}{\oracle_x[\cdot,j_u]}=u_{j_u}$ $\forall j_u\in Q$
 	
-	\item If $\verifier$ accepts the innerproduct arguement in step 4, then checks if $u\in L$. If yes then $\verifier$ outputs accept else outputs reject.
-\end{enumerate}
-
+			\item If $\verifier$ accepts the innerproduct arguement in step 4, then checks if $u\in L$. If yes then $\verifier$ outputs accept else outputs reject.
+			\end{enumerate}
+		\end{framed}
+	\caption{Proximity Check for $\name$2D}
+	\end{figure}
 The correctness of the above protocol follows from \cite{ligero} and the inner product argument. The following lemma captures its proof of knowledge property.
 \begin{lemma}\label{lem:proximity}
 For a $P^*$ which makes a verifier accept the proximity protocol, there is an expected $\ppt$ extractor $\extr$ with rewinding access to $P^*$ which outputs a valid witness or breaks the binding of the commitment scheme with overwhelming probability.
