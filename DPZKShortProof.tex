@@ -490,17 +490,31 @@ Now we will describe how provers are responding to the challenges given by the v
 Provers choose an aggregator $\Ag$, need not be trusted, such that $\Ag$ interacts with the verifier $\verifier$. 
 
 Set $\sum_{\nu \in [\Num]} \comoracle_{\nu} = \comoracle$ as the oracle.
-\begin{enumerate}
-	\item $\verifier \rightarrow \Ag : $ The verifier samples $\gamma \stackrel{\$} {\leftarrow} \bbF^m$ and sends to the $\Ag$.
-	\item $\Ag \rightarrow \prover_{\nu} : $ The aggregator $\Ag$ forwards the challenge $\gamma$ to all the provers $\prover_{\nu}$ $\forall \nu\in [\Num]$.
-	\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ computes $u_{\nu} = \gamma^T\oracle_{\extwit_{\nu}}$.
-	\item $\Ag \rightarrow \verifier : $ The aggregator aggregates $u_{\nu}$'s from all the provers and computes $u=\sum_{\nu\in[\Num]} u_{\nu}$ and sends $u$ to the verifier.
-	\item $\verifier \rightarrow \comoracle : $ The verifier sends $t$ randomly picked sampled indexes $\{j_u\}_{u\in[t]}$ from $[n]$ to the oracle as oracle query.
-	\item $\comoracle \rightarrow \verifier : $ Verifier gets $\comoracle[j_u]$ $\forall u\in[t]$ as responses to his queries.
-	\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ sends the columns vectors $\oracle_{\extwit_{\nu}}[\cdot,j_u]$ to the aggregator $\Ag$.
-	\item $\Ag \leftrightarrow \verifier : $ $\Ag$ computes $\oracle_{\extwit}[\cdot,j_u] = \sum_{\nu\in[\Num]} \oracle_{\extwit_{\nu}}[\cdot,j_u]$. Then $\Ag$ and $\verifier$ run a subprotocol to prove the innerproduct argument for the following statement $u_{j_u} = \innp{\gamma}{\oracle_{\extwit}[\cdot, j_u]}$ $\forall u\in[t]$.
-	\item If $\verifier$ accepts the inner product argument in the previous step, then checks if $u\in L$. If yes then $\verifier$ outputs accept, else output rejects.
-\end{enumerate}
+\begin{figure}[h!]
+	\begin{framed}
+		\begin{enumerate}
+			\item $\verifier \rightarrow \Ag : $ The verifier samples $\gamma \stackrel{\$} {\leftarrow} \bbF^m$ and sends to the $\Ag$.
+		
+			\item $\Ag \rightarrow \prover_{\nu} : $ The aggregator $\Ag$ forwards the challenge $\gamma$ to all the provers $\prover_{\nu}$ $\forall \nu\in [\Num]$.
+	
+			\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ computes $u_{\nu} = \gamma^T\oracle_{\extwit_{\nu}}$.
+			
+			\item $\Ag \rightarrow \verifier : $ The aggregator aggregates $u_{\nu}$'s from all the provers and computes $u=\sum_{\nu\in[\Num]} u_{\nu}$ and sends $u$ to the verifier.
+	
+			\item $\verifier \rightarrow \comoracle : $ The verifier sends $t$ randomly picked sampled indexes $\{j_u\}_{u\in[t]}$ from $[n]$ to the oracle as oracle query.
+			
+			\item $\comoracle \rightarrow \verifier : $ Verifier gets $\comoracle[j_u]$ $\forall u\in[t]$ as responses to his queries.
+	
+			\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ sends the columns vectors 
+			$\oracle_{\extwit_{\nu}}[\cdot,j_u]$ to the aggregator $\Ag$.
+	
+			\item $\Ag \leftrightarrow \verifier : $ $\Ag$ computes $\oracle_{\extwit}[\cdot,j_u] = \sum_{\nu\in[\Num]} \oracle_{\extwit_{\nu}}[\cdot,j_u]$. Then $\Ag$ and $\verifier$ run a subprotocol to prove the innerproduct argument for the following statement $u_{j_u} = \innp{\gamma}{\oracle_{\extwit}[\cdot, j_u]}$ $\forall u\in[t]$.
+	
+			\item If $\verifier$ accepts the inner product argument in the previous step, then checks if $u\in L$. If yes then $\verifier$ outputs accept, else output rejects.
+		\end{enumerate}
+	\end{framed}
+\caption{Proximity Check for $\name$2D in $\DPZK$ setting}
+\end{figure}
 
 \paragraph{Linear Check: }
 Provers choose an aggregator $\Ag$, need not be trusted, such that $\Ag$ interacts with the verifier $\verifier$ to prove that $Ax=b$ where $\prover_{\nu}$ has $x_{\nu}$ such that $\sum_{\nu\in[\Num]} x_{\nu}=x$.
@@ -512,7 +526,8 @@ Then each prover doess the following:
 \end{itemize}
 
 Set $\sum_{\nu \in [\Num]} \comoracle_{\nu} = \comoracle$ as the oracle.
-
+\begin{figure}[h!]
+\begin{framed}
 \begin{enumerate}
 	\item $\verifier \rightarrow \Ag : $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
 	%\item $\Ag \rightarrow \prover_{\nu} : $ $\Ag$ forwards $r$ to all the provers $\prover_{\nu}$ $\forall \nu\in[\Num]$. 
@@ -526,7 +541,9 @@ Set $\sum_{\nu \in [\Num]} \comoracle_{\nu} = \comoracle$ as the oracle.
 	\item $\Ag \leftrightarrow \verifier : $ $\Ag$ computes $\oracle_{x}[\cdot,j_u] = \sum_{\nu \in [\Num]} \oracle_{x_{\nu}}[\cdot, j_u]$. Then $\Ag$ and $\verifier$ run a subprotocol to prove the inner product argument for the following statement $\innp{R_{j_u}}{\oracle_{x}[\cdot, j_u]} = p(\eta_{j_u})$ for all $j_u$ queries made by $\verifier$ to the oracle, where $R_{j_u} = (R_1(j_u), \ldots, R_m(j_u))$. $\verifier$ proceeds if the arguments succeed for all $u\in[t]$.
 	\item If $\verifier$ accepts the inner product arguments, then checks if $\sum_{j\in[l]} p(\zeta_j) = r^Tb$. If yes then accepts, else outputs reject.
 \end{enumerate}
-
+\end{framed}
+\caption{Linear Check for $\name$2D in $\DPZK$ setting}
+\end{figure}
 \paragraph{Quadratic Check: }
 Provers choose an aggregator $\Ag$, need not be trusted, such that $\Ag$ interacts with the verifier $\verifier$ to prove that $x \circ y = z$ where $\prover_{\nu}$ has $x_{\nu}, y_{\nu}$ and $z_{\nu}$ such that $\sum_{\nu \in [\Num]}x_{\nu} = x, \sum_{\nu \in [\Num]}y_{\nu} = y$ and $\sum_{\nu \in [\Num]}z_{\nu} = z$
 
@@ -537,18 +554,27 @@ Then each prover doess the following:
 \end{itemize}
 
 Set $\sum_{\nu \in [\Num]} \comoracle_{x_{\nu}} = \comoracle_x$, $\sum_{\nu \in [\Num]} \comoracle_{y_{\nu}} = \comoracle_y$ and $\sum_{\nu \in [\Num]} \comoracle_{z_{\nu}} = \comoracle_z$ as the oracles.
-
-\begin{enumerate}
-	\item $\verifier \rightarrow \Ag : $ $\verifier$ picks a random $r\in \bbF^m$ and sends $r$ to $\Ag$.
-	\item $\Ag \rightarrow \prover_{\nu} : $ $\Ag$ forwards $r$ to all the provers $\prover_{\nu}$.
-	\item $MPC\text{ among the provers}: $ Provers interact to compute the polynomial $\hat{f}^{xy}_i(\cdot) = \hat{f}^{x}_i(\cdot)\cdot\hat{f}^{y}_i(\cdot)$ with the inputs $\hat{f}^{x_{\nu}}_i(\cdot)$ and $\hat{f}^{y_{\nu}}_i(\cdot)$. and $\prover_{\nu}$ gets the output $\hat{f}^{{xy}_{\nu}}_i(\cdot)$ such that $\sum_{\nu \in [\Num]} \hat{f}^{{xy}_{\nu}}_i(\cdot) = \hat{f}^{xy}_i(\cdot)$ $\forall i\in [m]$.
-	\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ computes the polynomial $p_{\nu}(\cdot) = \sum_{i\in [m]} [r_i \cdot (\hat{f}^{{xy}_{\nu}}_i(\cdot)  - \hat{f}^{z_{\nu}}_i(\cdot))]$ and sends $p_{\nu}(\cdot)$ to $\Ag$.
-	\item $\Ag \rightarrow \verifier : $ $\Ag$ aggregates the polynomials and computes $p(\cdot) = \sum_{\nu \in [\Num]} \prover_{\nu}(\cdot)$ and sends $p(\cdot)$ polynomial to the verifier $\verifier$.
-	\item $\verifier \rightarrow \comoracle_{x}, \comoracle_{y}, \comoracle_{z} : $ $\verifier$ sends $t$ randomly picked sampled indexes $\{j_u\}_{u\in[t]}$ from $[n]$ to the oracles as oracle queries.
-	\item $\comoracle_{x}, \comoracle_{y}, \comoracle_{z} \rightarrow \verifier : $ $\verifier$ gets $\comoracle_{x}[\cdot, j_u], \comoracle_{y}[\cdot, j_u]$ and $\comoracle_{z}[\cdot, j_u]$ $\forall u\in[t]$ as responses to his queries.
-	\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ sends $\oracle_{x_{\nu}}[\cdot, j_u], \oracle_{y_{\nu}}[\cdot, j_u]$ and $\oracle_{z_{\nu}}[\cdot,j_u]$ $\forall u\in[t]$.
-	\item $\Ag \leftrightarrow \verifier : $ $\Ag$ computes $\oracle_{x}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{x_{\nu}}[\cdot, j_u]$, $\oracle_{y}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{y_{\nu}}[\cdot, j_u]$ and $\oracle_{z}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{z_{\nu}}[\cdot, j_u]$.
-	Then $\Ag$ and $\verifier$ run a subprotocol to prove the inner product argument for the following statement : $\innp{r\circ \oracle_x[\cdot, j_u]}{\oracle_y[\cdot,j_u]} - \innp{r}{\oracle_{z}[\cdot, j_u]} = p(\eta_{j_u})$ $\forall u\in [t]$.
+\begin{figure}[h!]
+	\begin{framed}
+		\begin{enumerate}
+			\item $\verifier \rightarrow \Ag : $ $\verifier$ picks a random $r\in \bbF^m$ and sends $r$ to $\Ag$.
+	
+			\item $\Ag \rightarrow \prover_{\nu} : $ $\Ag$ forwards $r$ to all the provers $\prover_{\nu}$.
+			
+			\item $MPC\text{ among the provers}: $ Provers interact to compute the polynomial $\hat{f}^{xy}_i(\cdot) = \hat{f}^{x}_i(\cdot)\cdot\hat{f}^{y}_i(\cdot)$ with the inputs $\hat{f}^{x_{\nu}}_i(\cdot)$ and $\hat{f}^{y_{\nu}}_i(\cdot)$. and $\prover_{\nu}$ gets the output $\hat{f}^{{xy}_{\nu}}_i(\cdot)$ such that $\sum_{\nu \in [\Num]} \hat{f}^{{xy}_{\nu}}_i(\cdot) = \hat{f}^{xy}_i(\cdot)$ $\forall i\in [m]$.
+			
+			\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ computes the polynomial $p_{\nu}(\cdot) = \sum_{i\in [m]} [r_i \cdot (\hat{f}^{{xy}_{\nu}}_i(\cdot)  - \hat{f}^{z_{\nu}}_i(\cdot))]$ and sends $p_{\nu}(\cdot)$ to $\Ag$.
+	
+			\item $\Ag \rightarrow \verifier : $ $\Ag$ aggregates the polynomials and computes $p(\cdot) = \sum_{\nu \in [\Num]} \prover_{\nu}(\cdot)$ and sends $p(\cdot)$ polynomial to the verifier $\verifier$.
+	
+			\item $\verifier \rightarrow \comoracle_{x}, \comoracle_{y}, \comoracle_{z} : $ $\verifier$ sends $t$ randomly picked sampled indexes $\{j_u\}_{u\in[t]}$ from $[n]$ to the oracles as oracle queries.
+			
+			\item $\comoracle_{x}, \comoracle_{y}, \comoracle_{z} \rightarrow \verifier : $ $\verifier$ gets $\comoracle_{x}[\cdot, j_u], \comoracle_{y}[\cdot, j_u]$ and $\comoracle_{z}[\cdot, j_u]$ $\forall u\in[t]$ as responses to his queries.
+			
+			\item $\prover_{\nu} \rightarrow \Ag : $ $\prover_{\nu}$ sends $\oracle_{x_{\nu}}[\cdot, j_u], \oracle_{y_{\nu}}[\cdot, j_u]$ and $\oracle_{z_{\nu}}[\cdot,j_u]$ $\forall u\in[t]$.
+	
+			\item $\Ag \leftrightarrow \verifier : $ $\Ag$ computes $\oracle_{x}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{x_{\nu}}[\cdot, j_u]$, $\oracle_{y}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{y_{\nu}}[\cdot, j_u]$ and $\oracle_{z}[\cdot, j_u] = \sum_{\nu \in [\Num]} \oracle_{z_{\nu}}[\cdot, j_u]$.
+			Then $\Ag$ and $\verifier$ run a subprotocol to prove the inner product argument for the following statement : $\innp{r\circ \oracle_x[\cdot, j_u]}{\oracle_y[\cdot,j_u]} - \innp{r}{\oracle_{z}[\cdot, j_u]} = p(\eta_{j_u})$ $\forall u\in [t]$.
 	
 	There are two inner products in the above statement and the prover does not want to reveal the values of the individual inner products. Hence, $\name$2D combine them into a single inner product relation. 
 	
@@ -556,9 +582,12 @@ Set $\sum_{\nu \in [\Num]} \comoracle_{x_{\nu}} = \comoracle_x$, $\sum_{\nu \in 
 	$$\innp{(r \circ \oracle_{x}[\cdot, j_u]|| r)}{(\oracle_{y}[\cdot, j_u]|| - \oracle_{z}[\cdot, j_u])} = p(\eta_{j_u})$$
 	
 	$\verifier$ proceeds if the arguments succeed for all $u\in[t]$.
-	\item $\verifier$ checks if $p(\zeta_j) = 0$ $\forall j \in [l]$. If yes then accepts, else rejects.
-\end{enumerate}
-
+	
+			\item $\verifier$ checks if $p(\zeta_j) = 0$ $\forall j \in [l]$. If yes then accepts, else rejects.
+		\end{enumerate}
+	\end{framed}
+	\caption{Quadratic Check for $\name$2D in $\DPZK$ setting}
+\end{figure}
 Run the complete protocol mentioned ~\ref{completeprotocol} before, using these distributed version of the checks.
 
 \paragraph{Correctness: } It is easy to see that correctness holds if all the provers together possess the extended witness $\extwit$. 
