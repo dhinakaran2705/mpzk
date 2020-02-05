@@ -137,19 +137,19 @@ We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \l
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
 \begin{center}
-	\begin{tabular}{ |c|c|c|c|c|c| } 
+	\begin{tabular}{ |c|c|c|c|c|c|c| } 
 		\hline
-		Protocols & \multicolumn{2}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
+		Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
 		\hline
-		&computation & communication& & & \\ 
+		&computation & communication & MPC rounds& & & \\ 
 		\hline
-		Ligero & $O(n\log n)M$ & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
+		Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
 		\hline
-		Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ $\mathsf{OT}$& $O(nE+q(n+m)M)$ & $O(\log n)$ & $\log n$  \\
+		Bulletproofs & $O(nE+q(n+m)M)$ & $O(\log n)$ & $O(2N-1)$& $O(nE+q(n+m)M)$ & $O(\log n)$ & $\log n$  \\
 		\hline
-		\name2D & $O(n \log n) M + nE)$ & $O(2N-1)$ $\mathsf{OT}$ & $O((nM + n^{1-1/c}E))$ & $O(n^{1/c})$ & 5 \\
+		\name2D & $O(n \log n) M + nE)$ & $O(2N-1)$ & 1 &$O((nM + n^{1-1/c}E))$ & $O(n^{1/c})$ & $O(\log n)$ \\
 		\hline
-		\name3D & $O(nM+nE)$ & $O(2N-1)$ $\mathsf{OT}$ & $O(nM+n^{1-2/c}E)$& $O(n^{1/c})$ & $6$\\
+		\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
 		\hline
 	\end{tabular}
 \end{center}

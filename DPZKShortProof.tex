@@ -72,7 +72,7 @@ quadratic check rely on the fact that the witness oracles are evaluations of
 from PCP literature. The protocol in \cite{Aurora} uses a recent test for
 proximity by Ben-Sasson et al.\cite{IOPP_FRI2018} with particularly efficient
 prover and $O(\log d)$ query complexity for polynomials of degree at most $d$. 
-We use a variant of proximity test from \cite{Ligero}, adapting it to work
+We use a variant of proximity test from \cite{ligero}, adapting it to work
 with homomorphic commitments of the RS-encoded oracles and reducing the query
 complexity.
 
@@ -236,7 +236,7 @@ $\extr$ would use $\extr_\ip$ to obtain $\left( (r \circ \rsoracle_x[\cdot,j_u] 
 To obtain a set of valid witnesses for the quadratic check protocol, $\extr$ rewinds the prover to Step 3 after obtaining an accepting transcript. $\extr$ adds the set of $j_u$ indices obtained to a set $S$ and repeats the rewinding process till $|S| = n$. At this point, $\extr$ has the complete $U_x$, $U_y$ and $U_z$. There are two possibilities here:
 \begin{itemize}
 \item if $d(U_\delta,L^m) > e$ for each $\delta = \{x, y, z\}$, $\extr$ outputs $U_\delta$. (The proximity check would have verified $d(U,L^m) \leq e$, and hence a $U$ otherwise would mean $\extr$ outputs a collision to the commitment scheme used).
-\item if $d(U_\delta,L^m) \leq e$ for each $\delta = \{x, y, z\}$, the soundness analysis for the quadratic check in \cite{Ligero} ensures that $U_\delta$ decodes to $\delta$ such that $x\circ y = z$ with overwhelming probability.
+\item if $d(U_\delta,L^m) \leq e$ for each $\delta = \{x, y, z\}$, the soundness analysis for the quadratic check in \cite{ligero} ensures that $U_\delta$ decodes to $\delta$ such that $x\circ y = z$ with overwhelming probability.
 \end{itemize}
 An analysis similar to the one in the proof of Lemma~\ref{lem:proximity} proves that $\extr$ can attain $|S| = n$ in an expected polynomial time.
 \end{proof}
