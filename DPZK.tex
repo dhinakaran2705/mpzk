@@ -7,6 +7,11 @@ Framework
 \item concrete improvements and adjustments to obtain sublinear communication for custom MPC. - only for interactive part of circuit
 \end{itemize}
 .\pnote{Describe the differences between our setting and Marcel et al. \cite{EfficientTZ} paper} 
+\pnote{Difference in the defintion: 
+	1) Their defintion is based on Combiner, whereas DPZK can be achieved without any such entity
+	2) Nothing about interaction among the provers: why this is important? If we design some protocol which requires interaction according to 
+	their definition it may be secure but which is not secure according to our definition
+}
 \subsection{Definition of DPZK}
 Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$ such that
 \[
@@ -61,9 +66,9 @@ This notion captures the privacy of a prover's share of witness from other prove
 %Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
 
 \begin{definition}
-Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$ and for every round $i \in [\round]$, there is a $\ppt$ simulator $\Sim$ such that the following holds: 
+Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$, there is a $\ppt$ simulator $\Sim_{P}$ such that for every round $i \in [\round]$, $\Sim_{P}$ has a subalgorithm  $\Sim_{\pi_i}$ which can output the state of the corrupt provers and it satisfies the following condition: 
 \[
- \{ \Sim (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^i_j\}_{j \in [N]}) 
+ \{ \Sim_{\pi_i} (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^i_j\}_{j \in [N]}) 
 \]
 where $\st^i_T$ is the state of the parties in $T$ for the $i$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
 \end{definition}
@@ -114,7 +119,7 @@ where $\wit_T$ is the input of the provers in $T$.
 	$\Sim$ on input $\stmt, \wit_T, m$ does the following: 
 	\begin{itemize}
 		\item If $\Sim$ requires to generate a value which is due to interaction among the prover and the verifier, then $\Sim$ calls $\Sim_{ZK}$ on input $\stmt, \wit_T$ and includes the output in the transcript.
-		\item If $\Sim$ requires to generate a value which is due to interactioin among the provers, then $\Sim$ calls $\Sim_{P}$ on input $\stmt, \st^i_T, m_i$, where if $i=1$ the $\st^i_T = \wit_T$ other set $\st^i_T$ from the output of the simulators in the previous step, then include the output in the transcript.
+		\item If $\Sim$ requires to generate a value which is due to interactioin among the provers, then $\Sim$ calls $\Sim_{P}$ on input $\stmt, \st^i_T, m_i$ and internally $\Sim_{P}$ calls $\Sim_{\pi_i}$ if $\Sim_{P}$ is called at the $i$th round of the ZK protocol, where if $i=1$ the $\st^i_T = \wit_T$ other set $\st^i_T$ from the output of the simulators in the previous step, then include the output in the transcript.
 	\end{itemize}
 	The following hybrids prove that $\Sim$ generates a transcript which is indistinguishable from an actual transcript.:
 	\begin{itemize}
