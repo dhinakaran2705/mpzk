@@ -38,7 +38,7 @@ A polynomial commitment scheme is \textbf{evaluation binding} if no efficient ad
 \paragraph{\textbf{knowledge soundness: }} Any successful prover in the $\eval$ protocol must know a polynomial $f(X)$ such that $f(z)=y$ and $c$ is a commitment to $f(X)$. More formally, since $\eval$ is a public-coin interactive argument, we define this knowledge property as a special case of witness-extended emulation.
 
 Define the following $\NP$ relation given $\pp\leftarrow \setup(\secparam)$:
-$$\calR_{\eval}(\pp)=\{\innp{(c,z,y,d)}{(f(X,r))}: f\in R[X] \text{ and } deg(f(X))\leq d
+$$\calR_{\eval}(\pp)=\{\innp{(c,z,y,d)}{(f(X,r))}: f\in R[X] \text{ and } deg(f(X))\leq d\\
 \text{ and } f(z)=y \text{ and }\open(\pp,c,f(X),r) =1 \}$$
 
 the correctness definition above implies that if $\Gamma = (\setup, \commit, \open, \eval)$ is correct then $\eval$ is a correct interactive argument for $\calR_{\eval}(\pp)$, with overwhelming probability over the randomness of $\setup$. We say that $\Gamma$ has \textbf{witness-extended emulation} if $\eval$ has witness-extended emulation as an interactive for $\calR_{\eval}(\pp)$.

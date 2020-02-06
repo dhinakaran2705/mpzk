@@ -225,7 +225,7 @@ More formally, the quadratic check as follows:
 \caption{Quadratic Check for $\name$2D}
 \end{figure}
 
-The correctness of the above protocol again follows from the correctness of \cite{Ligero} and the inner product argument. Its proof of knowledge property is proved through the following lemma.
+The correctness of the above protocol again follows from the correctness of \cite{ligero} and the inner product argument. Its proof of knowledge property is proved through the following lemma.
 \begin{lemma}
 For a $P^*$ which makes a verifier accept the quadratic check protocol, there is an expected $\ppt$ extractor $\extr$ with rewinding access to $P^*$ which outputs valid witnesses $U_x$, $U_y$ and $U_z$ with overwhelming probability.
 \end{lemma}
@@ -434,19 +434,19 @@ To prove the proof of knowledge we will design an extractor which will output a 
 \end{proof}
 %--------------------------------------------------------------------------------------------------------------------------------------
 \subsection{Zero - Knowledge}\label{subsec:zeroknowledge}
-Above defined three subprotocols are not zero-knowledge inherently. But converting them into zero-knowledge is easy. 
+Above defined three subprotocols are not zero-knowledge inherently. However, converting them into zero-knowledge is easy. 
 
-Consider the proximity check: In this subprotocol, $\verifier$ is learning $u = \gamma^T\oracle_{x}$, whihc he can't compute on his own. To prevent that modify $\oracle_{x}$ in the following way: include a random codeword in $(m+1)^{th}$ row, which blinds $u$ and makes $u$ a random codeword. 
-In the remaining part, $\prover$ sends $\cm$, hiding property of the commitment scheme ensures that it does reveal any information.
-Innerproduct proofs are given for $t$ columns. Instead of giving the proof, If $\prover$ opens $t$ columns of $\oracle_{x}$, still it does not reveal any information about $x$, since $t$ is smaller than the degrees of the polynomials used in $\enc$.
+Consider the proximity check: In this subprotocol, $\verifier$ is learning $u = \gamma^T\oracle_{x}$, which he cannot compute on his own. To prevent that modify $\oracle_{x}$ in the following way: include a random codeword in $(m+1)^{th}$ row, which blinds $u$ and makes $u$ a random codeword. 
+In the remaining part, $\prover$ sends $\cm$, hiding property of the commitment scheme ensures that it does not reveal any information.
+Inner product proofs are given for $t$ columns. Instead of giving the proof, If $\prover$ opens $t$ columns of $\oracle_{x}$, still it does not reveal any information about $x$ since $t$ is smaller than the degrees of the polynomials used in $\enc$.
 
 Consider the linear check: In the first step $\prover$ sends $\cm_x$ to $\verifier$. The hiding property of the commitment scheme ensures that $\verifier$ is getting no information about $\calU^*_x$ or $x$.
-Then $\prover$ sends $p(\cdot) = \sum_{i\in[m]} R_i \cdot \hat{f}^x_i(\cdot)$ to check that if $\sum_{j\in [l]} p(\zeta_j) = 0$. But $\verifier$ instead of learning whether $\sum_{j\in[l]} p(\zeta_j) = 0$ or not, gets the complete polynomial $p(\cdot)$. To avoid leaking additional information we need to blind $p(\cdot)$ by adding a blinding polynomial $p_{blind}(\cdot)$ of degree $< k + l - 1$ such that $\sum_{j\in[l]} p_{blind}(\zeta_j) = 0$. Include a new row to $\oracle_x$ at the end where $j^{th}$ entry of the row is $p_{blind}(\eta_j)$ $\forall j\in [n]$.
-Since number of inner product proofs is less than $t$, no information is leaked.
+Then $\prover$ sends $p(\cdot) = \sum_{i\in[m]} R_i \cdot \hat{f}^x_i(\cdot)$ to check that if $\sum_{j\in [l]} p(\zeta_j) = 0$. But $\verifier$ instead of learning whether $\sum_{j\in[l]} p(\zeta_j) = 0$ or not, gets the complete polynomial $p(\cdot)$. To avoid leaking additional information we need to blind $p(\cdot)$ by adding a blinding polynomial $p_{blind}(\cdot)$ of degree $< k + l - 1$ such that $\sum_{j\in[l]} p_{blind}(\zeta_j) = 0$. Include a new row to $\oracle_x$ at the end where $j$th entry of the row is $p_{blind}(\eta_j)$ $\forall j\in [n]$.
+Since the number of inner product proofs is less than $t$, no information is leaked.
 
-Consider the quadratic check: In the first step commitments do not leak any information about the witness or it's encoded values.
+Consider the quadratic check: In the first step, commitments do not leak any information about the witness, or the encoded values.
 Then $\prover$ sends $p(\cdot) = \sum_{i\in[m]} [r_i\cdot (\hat{f}^x_i(\cdot)\cdot \hat{f}^y_i(\cdot) - \hat{f}^z_i(\cdot)]$. $\verifier$ is allowed to learn only if $p(\zeta_j)=0$ or not for all $j\in[l]$. To avoid leaking more information about $p(\cdot)$ we need to blind it. To do that pick a random polynomial $p_{blind}(\cdot)$ such that $p_{blind}(\zeta_j) = 0$ $\forall j\in [l]$. accordingly update $\oracle_x, \oracle_y,\oracle_z$ in the following way: pick there random codewords which are encodings of zeros, and append one of them each at the last of $\oracle_{x}, \oracle_{y}, \oracle_{z}$.
-Inner product argument is same as Proximity and linear check, it does not require any changes. 
+Inner product argument is the same as Proximity and linear check; it does not require any changes. 
 
 \paragraph{Deisgning the simulator for the complete protocol: } In an actual execution of the protocol generates a transcript of the form:
 \begin{align*}
