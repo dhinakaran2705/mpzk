@@ -18,59 +18,80 @@ of $N^{1/c}$ for $c\geq 2$ while restricting the inner product arguments to
 vectors of size at most $O(N^{1-2/c})$. For practically relevant lower values
 of $c$, the gains in efficiency are substantial.
    
-We start by arranging the witness vector $\wit\in \FF^N$ as a $3$-dimensional
- matrix. Let $p,m$ and $\ell$ be integers such that $N=pm\ell$. We view the
+
+\subsection{Witness encoding with RS product code}\label{sec:witencoding}
+In this section we describe a randomized encoding of the witness using product
+of Reed Solomon Codes. Let $N$ be the length of the witness, and let $p,m$ and
+$s$ be integers such that $N=pms$. We canonically view the
 witness $\wit$ 
-as $p\times m\times\ell$ matrix with entries $\wit[i,j,k]$ for $i\in [p]$,
-$j\in [m]$ and $k\in [\ell]$. Let $\wit^i$ denote the (two dimensional) sub-matrix
+as $p\times m\times s$ matrix with entries $\wit[i,j,k]$ for $i\in [p]$,
+$j\in [m]$ and $k\in [s]$. Let $\wit^i$ denote the (two dimensional) sub-matrix
 $\wit[i,\cdot,\cdot]$ for $i\in [p]$. To obtain the encoding of
 $\wit$, we use product code of two Reed Solomon codes to encode each matrix
 $\wit^i$,
 $i\in [p]$ as a codeword in the product code. The use of the product code is
 essential to ensure soundness of the protocol with constant number of queries.
-We now describe the encoding in more detail.
-
-\subsection{Witness encoding with RS product code}\label{sec:witencoding}
-We first choose the following sets of distinct points in $\FF$:
+We now describe the encoding in more detail. Let $\ell := s + \bi$, where we
+call $\bi$ as the {\em bounded independence} parameter. 
+Throughout the remainder of the paper, let $\bm{\zeta}$, $\bm{\eta}$ and
+$\bm{\alpha}$ denote distinct set of points in $\FF$ as specified:
 \begin{align}\label{eq:points}
 \bm{\zeta} =\{\zeta_1,\ldots,\zeta_{\ell}\},\quad 
 \bm{\eta}  = \{\eta_1,\ldots,\eta_n \},\quad
 \bm{\alpha} = \{\alpha_1,\ldots,\alpha_{h}\} \text{ where } h>2m. 
 \end{align}
 
-Next, we define interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
+We define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
 k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [h],
-k\in [n]\}$. We encode an $m\times \ell$ matrix $a$ by interpolating a
-bivariate polynomial $Q^a(x,y)$ with $\deg_x(Q)<m$ and $\deg_y(Q)<\ell$
-satisfying $Q^a(\alpha_j,\zeta_k)=a[j,k]$ for $j\in [m],k\in [\ell]$. We define
-the encoding $\enc(a)$ of $a$ as the $h\times n$ matrix $b$ consisting of
-evaluations of $Q^a$ on $H$, i.e, $b[j,k]=Q^a(\alpha_j,\eta_k)$ for $j\in
-[h],k\in [n]$. It can be seen that $\enc(a)$ is a codeword in the product code
-$\rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$. To compute encoding of $\wit$, we
-encode each submatrix $\wit^i$ as $\ewit^i=\enc(\wit^i)$ for all $i\in [p]$.
-Finally we define the encoding $\ewit=\enc(\wit)$ by $\ewit[i,j,k]=\ewit^i[j,k]$
-for $i\in [p], j\in [h], k\in [n]$.\medskip
+k\in [n]\}$. We encode $\wit$ as follows:
+\begin{enumerate}[{\rm (i)}]
+\item First we embed $\wit$ into a $p\times m\times \ell$ matrix $\hat{\wit}$
+where $\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$, while the entries
+$\hat{\wit}[i,j,k]$ for $k>s$ are sampled from $\FF$ uniformly at random.
+\item We construct bivariate polynomials $Q^i(x,y)$ with $deg_x(Q)<m$ and
+$deg_y(Q)<\ell$ such that $Q^i$ interpolates the slice
+$\hat{\wit}[i,\cdot,\cdot]$ on $G$, i.e,
+$Q^i(\alpha_j,\zeta_k)=\hat{\wit}[i,j,k]$. 
+\item Let $\ewit$ denote the $p\times h\times n$ matrix, where the slice
+$\ewit[i,\cdot,\cdot]$ consists of evaluations of $Q^i$ on $H$, i.e,
+$\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$.
+Then $\ewit$ is a randomized encoding of $\wit$.
+\end{enumerate}
+We denote the above computation as $\ewit\sample \enc(\wit)$, where $\enc(\wit)$
+denotes the random variable denoting the encodings of $\wit$. It is easily seen
+that $\ewit\in \rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$.\smallskip
 
-\noindent{\bf Efficiently computing the encoding}: Although the above
-description of the encoding of matrix $a$ involves the bivariate polynomial
-$Q^a$, the prover does not explicitly need to compute the polynomial $Q^a$ to compute the
-encoding, or any of the messages in the protocols we discuss. Given an $m\times \ell$
-matrix $a$, the prover first computes the polynomials $p_j$ for $j\in
-[m]$ as $p_j(y) := \ifft(a[j,\cdot], \bm{\zeta})$. Then it constructs a $m\times n$
-matrix $X$, where the $j^{th}$ row of $X$ is evaluation of $p_j$ on the set
-$\bm{\eta}$, i.e, $X[j,\cdot] := \fft(p_j, \bm{\eta})$. Next, the prover constructs
-polynomials $q_k$ for $k\in [n]$ by interpolating the column $X[\cdot,k]$ on
-$\bm{\alpha}^0 = (\alpha_1,\ldots,\alpha_m)$, i.e, $q_k(x) := \ifft(X[\cdot,k],
-\bm{\alpha}^0)$. It obtains the encoding $\enc(a)$ as the $h\times n$ matrix
-whose columns are evaluations of polynomials $q_k$ on the set $\bm{\eta}$, i.e,
-$b[\cdot,k]=\fft(q_k,\bm{\alpha})$. The above computation involves
-$O(mn\log(mn))$ operations in $\FF$. Thus, computing $\enc(\wit)$ takes
-$O(pmn\log(mn))$ which is $O(N\log{N})$. We also remark that $X$ is a submatrix
-of $b$, and thus
-$p_j=\ifft((b[j,1],\ldots,b[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$ for $j\in
+\noindent{\em Efficiently computing the encoding}: Although the previous
+description of the encoding involves the bivariate polynomials, 
+the prover does not explicitly need to compute the bivariate polynomials to
+construct the encoding. We describe an efficient method to construct the
+encoding. Given an $m\times \ell$
+matrix $\matx$, the prover first computes polynomials $p_j$ for $j\in
+[m]$ as $p_j(y) := \ifft(\matx[j,\cdot], \bm{\zeta})$. Then it constructs a $m\times n$
+matrix $\maty$, where the $j^{th}$ row of $\maty$ is evaluation of $p_j$ on the set
+$\bm{\eta}$, i.e, $\maty[j,\cdot] := \fft(p_j, \bm{\eta})$. Next, the prover constructs
+polynomials $q_k$ for $k\in [n]$ by interpolating the column $\maty[\cdot,k]$ on
+$\bm{\alpha}^0 = (\alpha_1,\ldots,\alpha_m)$, i.e, $q_k(x) := \ifft(\maty[\cdot,k],
+\bm{\alpha}^0)$. It obtains the encoding $\enc(\matx)$ as the $h\times n$ matrix
+$\matz$ whose columns are evaluations of polynomials $q_k$ on the set $\bm{\eta}$, i.e,
+$\matz[\cdot,k]=\fft(q_k,\bm{\alpha})$. The above computation involves
+$O(mn\log(mn))$ operations in $\FF$ for each $m\times \ell$ matrix. Thus, computing $\enc(\wit)$ takes
+$O(pmn\log(mn))$ which is $O(N\log{N})$. We also remark that $\maty$ is a submatrix
+of $\matz$, and thus
+$p_j=\ifft((\matz[j,1],\ldots,\matz[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$ for $j\in
 [m]$. This allows us to consistently define polynomials $p_j$ for $m<j\leq h$ by
-$p_j=\ifft((b[j,1],\ldots,b[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$. Further, it
-can be shown that $p_j(y)=Q^a(\alpha_j,y)$ for $j\in [h]$.\medskip
+$p_j=\ifft((\matz[j,1],\ldots,\matz[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$.
+
+The following property of the encoding, that we call {\em bounded independence}
+is key to showing privacy properties of our protocol.
+\begin{lemma}[Bounded Independence]\label{lem:boundedindependence}
+Let $B\subseteq [n]$ be a set of size $\bi$. Let $\mc{U}(p,h,b)$ denote the
+set of $p\times h\times b$ matrices $\matx$ such
+that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{m}$ for all $i\in
+[p],k\in [\bi]$. Then for any $p\times m\times s$ matrix $\wit$, the random
+variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is
+distributed uniformly on $\mc{U}(p,h,b)$.
+\end{lemma}
 
 
 \subsection{Constructing Oracle}\label{sec:construct_oracle} 
@@ -795,7 +816,62 @@ for $u\in [t]$. The verifier then checks the following:
 commitments $\pi_x[\cdot,k_u]$ as in linear check protocol. Similar checks are
 made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
 \end{enumerate}
-We present the full protocol in Figure \ref{fig:quadcheck}
+We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
+the protocol can again be verified by direct calculation. We state the soundness
+of the protocol below:
+\begin{lemma}[Soundness]\label{lem:quadcheck_sound}
+For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{3p\times n}$,
+there exists an expected polynomial time extractor $\extr$ with rewinding access
+to the transcript oracle $\mc{O}=\innp{P^\ast(\cdot)}{\verifier^{\pi}(\cdot)}$
+such that:
+\begin{align*}
+\condprob{\wit_x\circ\wit_y=\wit_z}{
+\begin{array}{c}
+\sigma\sample \gen(\secparam) \\
+(\wit_x,\wit_y,\wit_z)\sample \extr^{\mc{O}}(\sigma)
+\end{array}
+}\geq \condprob{\innp{P^\ast(\sigma)}{\verifier^{\pi}(\sigma)}=1}{\sigma\sample
+\gen(\secparam)} - \kappa_{qd}(\secpar)
+\end{align*}
+for some negligible function $\kappa_{qd}$.
+\end{lemma}
+\begin{proof}
+The proof is similar to the proof of the linear check protocol. Using similar
+arguments, one can show that the above Lemma holds with:
+\begin{equation*}
+\kappa_{qd}(\secpar) := \left(1-\frac{e}{n}\right)^t +
+\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
++ \frac{O(|C|)}{|\FF|} + \mc{B}(\secparam)
+\end{equation*}
+\end{proof}
+
+\subsection{Extension to Zero Knowledge}
+For the zero knowledge variant of our protocol, we assume the availability of a
+zero knowledge inner product protocol
+$\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$. The inner product argument
+presented in \cite[Section 3]{Bulletproofs} can be easily modified to be zero
+knowledge (see Appendix). Alternatively, a zero knowledge inner product argument
+from *Bootle's Paper* can also be used. We proceed to show how the constituent
+protocols can be made honest verifier zero knowledge. As the linear check and
+quadratic check protocols involve the prover revealing parts of the witness
+encoding $\ewit$, we consider the encoding $\enc$ to be a randomized encoding
+with {\em bounded independence} property, as we desribe next.
+
+\noindent{\bf Randomized Witness Encoding}: To encode a witness $\wit\in \FF^N$,
+we write $N=pms$ for some integers $p$, $m$ and $s$. We view $\wit$ as a
+$p\times m\times s$ matrix. For independence parameter
+$\mathsf{b}$, we set $\ell := s + \mathsf{b}$. We encode $\wit$ by embedding
+$\wit$ in a $p\times m\times \ell$ matrix $\hat{\wit}$ where
+$\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$ and $\hat{\wit}[i,j,k]\sample
+\FF$ for $k\in (s,\ell]$. We encode $\hat{\wit}$ as in Section
+\ref{sec:witencoding} and output $\enc(\hat{\wit})$ as a random encoding of
+$\wit$.  
+
+
+
+\subsection{Extension to DIZK}
+
+
 \begin{figure}[h!]
 \centering
 \begin{framed}
