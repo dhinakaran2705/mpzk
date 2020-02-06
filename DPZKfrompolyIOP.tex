@@ -14,7 +14,7 @@
 \begin{document}
 \section{DPZK from Polynomial IOP zkSNARK}
 \subsection{Polynomial commitment scheme}
-We will start with defining the notion of polynomial commitment scheme. The notion of polynomial commitment scheme was given by kate et al. \cite{KGZ10} later generalized in \cite{DARK19}.
+We will start by defining the notion of a polynomial commitment scheme. The idea of a polynomial commitment scheme was given by kate et al. \cite{KGZ10} later generalized in \cite{DARK19}.
 \begin{definition}[Polynomial Commitment]\label{defn:polycomm}
 A polynomial commitment scheme is a tuple of protocols $\Gamma =(\setup, \commit, \open, \eval)$ where $(\setup, \commit, \open)$ is a binding commitment scheme for a message space $R[X]$ of polynomials over some ring $R$, and 
 \\ $\eval(\pp, c, z, y, \mu; f(X)) \rightarrow b \in \bitset$ is an interactive public coin protocol between a $\ppt$ prover $\prover$ and verifier $\verifier$. Both $\prover$ and $\verifier$ have as input a commitment $c$, points $z,y\in R$, and a degree $d$. The prover additionally knows the opening of $c$ to a secret polynomial $f(X)\in R[X]$ with deg$(f(X))\leq d$. The protocol convinces the verifier that $f(z)=y$. In a multivariate extension of polynomial commitments, the input $\mu > 1$ indicates the number of variables in the committed polynomial and $z\in R^{\mu}$.  
@@ -35,24 +35,24 @@ A polynomial commitment scheme is \textbf{correct} if an honest committer can su
 
 A polynomial commitment scheme is \textbf{evaluation binding} if no efficient adversary can convince the verifier that the committed polynomial $f(X)$ evaluates to a different value $y_0 \neq y_1 \in R$ in the same point $z\in R$.
 
-\paragraph{\textbf{knowledge soundness: }} Any successful prover in the $\eval$ protocol must know a polynomial $f(X)$ such that $f(z)=y$ and $c$ is a commitment to $f(X)$. More formally, since $\eval$ is a public-coin interactive argument we define this knowledge property as a special case of witness-extended emulation.
+\paragraph{\textbf{knowledge soundness: }} Any successful prover in the $\eval$ protocol must know a polynomial $f(X)$ such that $f(z)=y$ and $c$ is a commitment to $f(X)$. More formally, since $\eval$ is a public-coin interactive argument, we define this knowledge property as a special case of witness-extended emulation.
 
 Define the following $\NP$ relation given $\pp\leftarrow \setup(\secparam)$:
 $$\calR_{\eval}(\pp)=\{\innp{(c,z,y,d)}{(f(X,r))}: f\in R[X] \text{ and } deg(f(X))\leq d
 \text{ and } f(z)=y \text{ and }\open(\pp,c,f(X),r) =1 \}$$
- 
-the correctness definition above implies that if $\Gamma = (\setup, \commit, \open, \eval)$ is correct then $\eval$ is a correct interactive argument for $\calR_{\eval}(\pp)$, with overwhelming probability over the randomness of $\setup$. We say that $\Gamma$ gas \textbf{witness-extended emulation} if $\eval$ has witness-extended emulation as an interactive for $\calR_{\eval}(\pp)$.
+
+the correctness definition above implies that if $\Gamma = (\setup, \commit, \open, \eval)$ is correct then $\eval$ is a correct interactive argument for $\calR_{\eval}(\pp)$, with overwhelming probability over the randomness of $\setup$. We say that $\Gamma$ has \textbf{witness-extended emulation} if $\eval$ has witness-extended emulation as an interactive for $\calR_{\eval}(\pp)$.
 
 It is easy to see that witness-extended emulation implies evaluation binding when the $\setup$, $\commit$ and $\open$ part of $\Gamma$ form a binding commitment scheme. If the adversary succeeds in $\eval$ on both $(c,z, y_0,d_0)$ and $(c,z,y_1,d_1)$ for $y_0\neq y_1$ or $d_0\neq d_1$ then the emulator obtains two distinct witness $f(X)\neq f'(X)$ such that $c$ is a valid commitment to both. This would contradict the binding property of the commitment scheme.
 
 Here the $\eval$ interactive protocol can be made zero knowledge as well, described in \cite{DARK19}
-$\eval$ can be made non-interactive zero knowkedge as well.
-We will define a special type of proof, called \textbf{aggregatable proof}, which we will use later.
+$\eval$ can be made non-interactive zero-knowledge as well.
+We will define a particular type of proof, called \textbf{aggregatable proof}, which we will use later.
 
 \begin{definition}\label{defn:aggregatable}
 	A proof system (interactive or non-interactive) $\Pi=(\prover, \verifier)$ is called aggregatable if for any instances $\stmt_1, \stmt_2$ there are witnesses $\wit_1, \wit_2$ such that $\prover(\stmt_1,\wit_1) \rightarrow \pi_1$ and $\prover(\stmt_2, \wit_2) \rightarrow \pi_2$ and $\verifier(\stmt_1,\pi_1) \rightarrow 1$ and $\verifier(\stmt_2,\pi_2) \rightarrow 1$. Then there is a operation $\oplus$ such that $\verifier(\stmt_1+\stmt_2, \pi_1 \oplus \pi_2) \rightarrow 1$, where $\wit_1 + \wit_2$ is a correct witness for $\stmt_1+\stmt_2$.
 \end{definition}
-In other words there is a deterministic way to generate a proof for a combined statement, given the proof of the individual statements, where aggregating the witnesses of the statements give a witness for the combined statement.
+In other words, there is a deterministic way to generate a proof for a combined statement, given the proof of the individual statements, where aggregating the witnesses of the statements give a witness for the combined statement.
 
 \subsection{Algebraic Linear IOPs}
 An Interactive Oracle Proof(IOP)\cite{BCS16, RRR16} is a multi-round interactive PCP: in each round of an IOP the verifier sends a message to the prover and the prover responds with a polynomial length proof, which the verifier can query via raqndom access.
@@ -67,7 +67,7 @@ Linear IOPs\cite{BBC+19} are defined analogously except that in each round the p
 		
 		The verifier samples public random coins $\coins_i \leftarrow \bitset^*$ and the query generator computes a query matrix from the verifier state and these coins: $\calQ(\st^{\verifier}_{i-1}, \coins_i)\rightarrow \bm{Q}_i \in \bbF^{m_i\times l}$. The verifier obtains the linear oracle response vector $\bm{\pi}_i^T\bm{Q}_i = \bm{a}_i \in \bbF^{1\times l}$. The updated prover state is $\st^{\prover}_i\leftarrow (\st^{\prover}_{i-1}, \bm{Q}_i)$ and verifier state is $\st^{\verifier}_{i-1}, \coins_i, \bm{a}_i)$. Finally $\calD(\st^{\verifier}_t)$ returns 1 or 0.
 		
-		\item \underline{Argument of Knowledge:} As a proof system, $(\prover, \verifier)$ satisfies perfect completeness, soundness with respect to the relation $\calR$ and with soundness error $\epsilon$, and witness-extended emulation with respect $\calR$ with knowledge error $\delta$.
+		\item \underline{Argument of Knowledge:} As a proof system, $(\prover, \verifier)$ satisfies perfect completeness, soundness for the relation $\calR$ and with soundness error $\epsilon$, and witness-extended emulation with respect $\calR$ with knowledge error $\delta$.
 	\end{itemize}
 \end{definition}
 
@@ -77,7 +77,7 @@ A linear IOP has \textbf{algebraic queries} if it is stateless and for each $i\i
 
 
 \subsection{Polynomial IOPs}
-Polynomial IOP is an special case of the algebraic linear IOP, where proof given by the prover is a polynomial. prover commits to the polynomial using polynomial commitment scheme, and verifier instead of inner product queries for the evaluation at a random point.
+Polynomial IOP is a special case of the algebraic linear IOP, where proof given by the prover is a polynomial. The prover commits to the polynomial using a polynomial commitment scheme, and verifier instead of inner product queries for the evaluation at a random point.
 
 \begin{definition}[Public coin polynomial IOP]\label{defn:polyIOP}
 	Let $\calR$ be a binary relation and $\bbF$ a finite field. Let $\bm{X}=(X_1,\ldots, X_{\mu})$ be a vector of $\mu$ indeterminates. A $(\mu, d)$ Polynomial IOP for $\calR$ over $\bbF$ with soundness error $\epsilon$ and knowledge error $\delta$ consists of two stateful $\ppt$ algorithms, the prover $\prover$, and the verifier $\verifier$, that satisfy the following requirements: 
@@ -108,7 +108,7 @@ If $\verifier$ does not abort in any of these subprotocols, then it receives a s
 \begin{theorem}
 	If the polynomial commitment scheme $\Gamma$ has witness-extended emulation and the $t$-round Polynomial IOP for $\calR$ has negligible knowledge error, then $\Pi$ is a public-coin interactive argument for $\calR$ that has witness-extended emulation. The compilation also preserves HVZK if $\Gamma$ is hiding and $\eval$ is HVZK.
 \end{theorem}
-.\pnote{Define what is aggregatable. and also mention about non interactive version of $\eval$}
+%\pnote{Define what is aggregatable. and also mention about non interactive version of $\eval$}
 \subsection{DPZK for zkSNARK based on Polynomial IOP}
 \begin{theorem}
 	If there is a polynomial IOP based zkSNARK where the underlying polynomial commitment scheme $\Gamma = (\setup, \commit, \open, \eval)$ has the following properties :
