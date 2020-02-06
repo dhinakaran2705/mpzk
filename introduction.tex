@@ -1,4 +1,28 @@
 \section{Introduction} \label{sec:intro}
+In a zero-knowledge proof protocol, a verifier tries to verify that an instance $x$ is in a language $L$, and a prover with a witness $w$ to $x \in L$ tries to convince the verifier on this without revealing any additional information to the verifier than what he already knows. Be it proving that a user is spending a coin that he has earned before, or a shipping container proving the timeliness of its delivery along a particular route, ZK protocols have garnered immense interest over the last few years and has become a basic building for private and decentralized world. Still in the dream of a decentralized world, the powerful applications have multiple co-opetitive entities interacting with each other to obtain insights and maximize their goals. The traditional ZK protocol is restrictive here since there is a single prover holding the witness. In this work, we study the general setting where multiple co-opetitive entities each possessing their own secret data want to prove to a verifier that their secret data together satisfies a predicate of common interest. In abstract terms, we have multiple provers $P_1,\ldots,P_p$ respectively possessing witnesses $w_1, \ldots, w_p$. For a predicate $C$ from the supported class of predicates $\cC$, the provers want to prove to a verifier that $C(w_1,\cdots,w_p) = 1$.
+
+The notion of distributed proof generation was first studied by Pedersen \cite{PedThesis}.
+He provides a construction where each round of proof generation is implemented by an MPC among the provers to generate the message to be sent to the verifier.
+This generic construction is optimal in proof size and verifier complexity in that it retains those off the single-prover protocol irrespective of the number of parties. But, the prover complexity will be extremely high unless the single-prover protocol is ``MPC-friendly''. 
+\dnote{can we say about the asymptotics here? Or can we argue only in terms of concrete numbers?} 
+
+In this work, we will study single-prover zero-knowledge protocols where the proof generation algorithm is MPC-friendly while supporting arbitrary predicates. %We will focus on honest-verifier zero-knowledge protocols
+In an interactive zero-knowledge protocol, the efficiency of a proof generation algorithm is usually measured in terms of the number of group operations. When applying a transformation \cite{BCS16} to obtain a non-interactive version of the protocol in a provably secure manner, the number of rounds of interaction between prover and verifier also impact the efficiency. 
+The first part of this work has been in identifying other parameters that heavily impact the complexity of proof generation. 
+In BCS or in Fiat-Shamir heuristic, the commitment has to be compact, the generation of which requires MPC.
+The multiplicative complexity of the prover message generation increases the MPC complexity of that round of proof generation.
+Also, the number of rounds which do not have the message generation to be an affine function on the extended witness also impact the complexity.
+%But, the literature till now studies instantiations for signatures \cite{} and sigma protocols \cite{KMR12}
+
+We then study the existing single-prover protocols in the light of these parameters. 
+
+Then, our main contribution, a single-prover protocol which achieves ??? efficiency for all these parameters.
+
+
+The class of threshold signatures \cite{Ped} and sigma protocols \cite{KMR12}
+
+their models avoid communication among the provers - but it is necessary(???) when proving a general class of predicates?
+Difference in definition when involving multiple rounds with more than one round involving communication among provers -- the input to provers in Round i+1 is a function of protocol execution from previous rounds.
 
 
 Applications: 
@@ -10,14 +34,14 @@ Joint loan application
 Positioning:  Distributed protocols
 - Threshold signature
 - Sigma Protocols
-- Trusted Setup (Trinnochio)
+- Trusted Setup (Trinocchio)
 - Transparent Setup (Bulletproof - Range proofs)
 
 Efficiency Desiderata:  
 - Transparent setup 
 - Minimum interaction between the provers (\# of rounds of MPC) 
 - Total communication complexity of the msgs exchanged
-- verifiers view is indistinguisable from a single prover setting
+- verifiers view is indistinguishable from a single prover setting
 - How efficient is underlying zkp protocol (public key operations, size of proof, prover/ verification time)
 - Applicability to a general class of computation
 
