@@ -608,38 +608,38 @@ Run the complete protocol mentioned ~\ref{completeprotocol} before, using these 
 \paragraph{Soundness: } The following theorem proves that if the provers do not have a valid witness for the statement $\stmt$, then the verifier rejects the proof with very high probability.
 
 \begin{theorem}
-		For $e < \frac{d}{3}$, if $\innp{\Pi^*(\cm_{\extwit||x||y||z}, \calU^*)}{\verifier(\cm_{\extwit||x||y||z})} \rightarrow 1$, then there is an expected $\ppt$ $\extrac^{\Pi^*}(\cm_{\extwit||x||y||z}) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events:
+	For $e < \frac{d}{3}$, if $\innp{\Pi^*(\cm_{\extwit||x||y||z}, \calU^*)}{\verifier(\cm_{\extwit||x||y||z})} \rightarrow 1$, then there is an expected $\ppt$ $\extrac^{\Pi^*}(\cm_{\extwit||x||y||z}) \rightarrow \calU^*$ such that with overwhelming probability $\calU^*$ satisfies one of the following events:
 	\begin{itemize}
 		\item $\com(\calU^*)=\cm_{\extwit||x||y||z}$ and $A\extwit = x \wedge B \extwit = y \wedge C \extwit = z \wedge x\circ y =z \wedge P_{add} \extwit = 0$
 		\item $\extrac$ breaks the binding property of the commitment scheme.
 		
 	\end{itemize}
-	Let $\cm$ is the commitment of $\calU^*$, computed by the aggregator $\Ag$ in above protocol. If $\verifier$ accepts the argument, then there is an expected $\ppt$ extrator $\extrac$ having rewinding access to $\Ag$ with polynomially many rewindings either outputs a correct $\extwit$ or breaks the binding property of the commitment scheme.
+	Let $\cm$ is the commitment of $\calU^*$, computed by the aggregator $\Ag$ in the above protocol. If $\verifier$ accepts the argument, then there is an expected $\ppt$ extractor $\extrac$ having rewinding access to $\Ag$ with polynomially many rewindings either outputs a correct $\extwit$ or breaks the binding property of the commitment scheme.
 \end{theorem}
- 
+
 \begin{proof}
-	Proof is same as the proof of Theorem 2.
+	The proof is the same as the proof of Theorem 2.
 \end{proof}
 
-\paragraph{Zero-knowledge: } The protocol has zero-knowledge property after blinding which was used for single prover protocol as $\verifier$ is not learning anything more than what he was learning in the standard(single prover) zero knowledge protocol described before. The same theorem follows here.
+\paragraph{Zero-knowledge: } The protocol has zero-knowledge property after blinding, which was used for single prover protocol as $\verifier$ is not learning anything more than what he was learning in the standard(single prover) zero-knowledge protocol described before. The same theorem follows here.
 
 \paragraph{Privacy among the provers: } The following theorem proves that the above protocol has the $t$-privacy among the provers property if the $MPC$ used in quadratic check is secure under $t$-corruption.
 
 \begin{theorem}
-	Let out of the $\Num$ provers, $t$ of them are corrupt and $\Ag$ is one of the provers who may be corrupt. If the $MPC$ used in the quadratic check for the function that outputs $\hat{f}^{xy}_i(\cdot)$ is secure under $t$ malicious adversary then the distributed proof generation protocol described above has the privacy among the provers property. 
+	Let out of the $\Num$ provers, $t$ of them are corrupt, and $\Ag$ is one of the provers who may be corrupt. If the $MPC$ used in the quadratic check for the function that outputs $\hat{f}^{xy}_i(\cdot)$ is secure under $t$ malicious adversary, then the distributed proof generation protocol described above has the privacy among the provers property. 
 \end{theorem} 
 
 \begin{proof}
 	Let $T\subset [\Num]$ is the set of corrupt parties.
 	We will discuss two cases: 
 	
-	case I: When $\Ag$ is not a corrupt party.
+	Case I: When $\Ag$ is not a corrupt party.
 	Then other than $MPC$ for the function that outputs $\hat{f}^{xy}_i(\cdot)$, there is no interaction among the provers. So the protocol is secure only if the above $MPC$ is secure. By the hypothesis of the theorem, the protocol is secure.
 	
-	case II: When $\Ag$ is corrupt.
-	To prove the secrecy we will design a simulator. 
-	By the hypothesis of the theorem the $MPC$ used is secure, therefore there is a simulator $\Sim_{M}$ which can generate a transcript of the interactions for the a $MPC$.
-	And As the protocol is zero-knowledge, a simulator designed in ~\ref{subsec:zeroknowledge} gives a simulator, say $\Sim_{Z}$.
+	Case II: When $\Ag$ is corrupt.
+	To prove the secrecy, we will design a simulator. 
+	By the hypothesis of the theorem, the $MPC$ used is secure; therefore, there is a simulator $\Sim_{M}$, which can generate a transcript of the interactions for the $MPC$.
+	Moreover, As the protocol is zero-knowledge, a simulator designed in ~\ref{subsec:zeroknowledge} gives a simulator, say $\Sim_{Z}$.
 	
 	Now we will design a simulator $\Sim$ using $\Sim_{M}$ and $\Sim_{Z}$.
 	
@@ -684,12 +684,12 @@ Run the complete protocol mentioned ~\ref{completeprotocol} before, using these 
 	
 	For generating the shares of $q^{quad}(\cdot)$, $\Sim$ calls $\Sim_{M}$.
 	
-	And the remaining shares $\Sim$ generates using the transcript generated by $\Sim_{Z}$.
-	Which gives complete transcript of the interactions.
+	Furthermore, the remaining shares $\Sim$ generates using the transcript generated by $\Sim_{Z}$, which gives a complete transcript of the interactions.
 	
 	This proves that the above protocol has the property of privacy among the provers. 
 \end{proof}
 
-\paragraph{Zero knowledge under collusion: } Protocol described above has zero knowledge under collusion property. By theorem ~\ref{theo:equivalent}, as the protocol has zero knowledge and privacy among the provers property, which implies zero knowledge under collusion.
+\paragraph{Zero knowledge under collusion: } protocol described above has zero knowledge under collusion property. By theorem ~\ref{theo:equivalent}, as the protocol has zero knowledge and privacy among the provers property, which implies zero-knowledge under collusion.
+
 \subsection{The pitfalls of 2D}
 The need for 3D
