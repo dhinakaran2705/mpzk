@@ -105,7 +105,7 @@ where $\wit_T$ is the input of the provers in $T$.
 	\begin{align*}
 		&\{ \innp{ \Pi( \wit ) }{ \verifier^*( z ) } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt, z) \} \cdots (1)\\		
 		\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^i_{\overline{T}} ) } { \prover_T ( \st^i_T ) } ( \stmt ) , m \}
-	 \stackrel{c}{\approx} \{ \langle \Sim_P \rangle (\stmt, \st^i_T, m) \} \cdots (2)
+	 \stackrel{c}{\approx} \{ \langle \Sim_{\pi_i} \rangle (\stmt, \st^i_T, m) \} \cdots (2)
 	\end{align*}
 	
 	A transcript of an execution of $\innp{\Pi}{\verifier^*}$ will have two types of values:
