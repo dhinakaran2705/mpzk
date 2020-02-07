@@ -137,15 +137,15 @@ We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \l
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
 \begin{center}\label{tab:SPZK}
-	\begin{tabular}{|p{1.8cm}|p{2cm}|p{2cm}|p{1.5cm}|p{1.8cm}|p{1.2cm}|p{1.2cm}| } 
+	\begin{tabular}{|>{\centering}p{1.8cm}|p{2cm}|p{1.8cm}|>{\centering}p{1.3cm}|p{1.8cm}|p{1.2cm}|p{1.2cm}| } 
 		\hline
 		Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
 		\hline
-		&computation & communi cation & MPC rounds& & & \\ 
+		&computation & communi- cation & MPC rounds& & & \\ 
 		\hline
 		Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
 		\hline
-		Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ $q(n+m)M)$ & $O(\log n)$ & $\log n$  \\
+		Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ $q(n+m)M)$ & $O(\log n)$ & $O(\log n)$  \\
 		\hline
 		Spartan & & & & & &\\
 		\hline
