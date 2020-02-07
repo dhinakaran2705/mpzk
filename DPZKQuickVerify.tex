@@ -92,14 +92,15 @@ that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{m}$ for all $i\in
 variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is
 distributed uniformly on $\mc{U}(p,h,b)$.
 \end{lemma}
-
+We defer the proof of the above Lemma to the Appendix.
 
 \subsection{Constructing Oracle}\label{sec:construct_oracle} 
 We deviate from prior IOP constructions
-such as \cite{Ligero2017,Aurora} in the way we construct the oracle. The prior
-constructions provided oracle access to linear code encoded messages. We
-additionally obtain a homomorphic commitment of the encoding $\enc(x)$ of the
-witness $x$ and provide oracle access to the commitment. Concretely, we use a
+such as \cite{ligero,Aurora} in the way we construct the oracle. The prior
+constructions provided oracle access to the encoding of the witness using linear
+codes. We
+additionally obtain a homomorphic commitment of the encoding $\enc(\wit)$ of the
+witness $\wit$ and provide oracle access to the commitment. Concretely, we use a
 homomorphic vector commitment scheme $\comm$ with message space $\FF^h$,
 commitment space $\GG$ and randomness space $\FF$. We compute commitments
 $c_{ik}=\comm(\ewit[i,.,k],\delta_{ik})$ where $\delta_{ik}$ denotes the
@@ -313,7 +314,8 @@ $k\in Q$.
 \end{enumerate}
 \end{itemize}
 \end{framed}
-\caption{Protocol 2}
+\caption{Proximity Protocol for 3D encoding}
+\label{fig:prox3d}
 \end{figure}
 
 \begin{lemma}[Completeness]\label{lem:proximity3d_complete}
@@ -845,27 +847,92 @@ arguments, one can show that the above Lemma holds with:
 \end{equation*}
 \end{proof}
 
-\subsection{Extension to Zero Knowledge}
-For the zero knowledge variant of our protocol, we assume the availability of a
-zero knowledge inner product protocol
-$\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$. The inner product argument
-presented in \cite[Section 3]{Bulletproofs} can be easily modified to be zero
-knowledge (see Appendix). Alternatively, a zero knowledge inner product argument
-from *Bootle's Paper* can also be used. We proceed to show how the constituent
-protocols can be made honest verifier zero knowledge. As the linear check and
-quadratic check protocols involve the prover revealing parts of the witness
-encoding $\ewit$, we consider the encoding $\enc$ to be a randomized encoding
-with {\em bounded independence} property, as we desribe next.
+\subsection{Zero Knowledge}
+We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier zero knowledge by
+designing simulators for them. We will infact simulate ``extended'' view of the
+verifier. This will help us in proving the privacy of our protocol in
+distributed setting (in particular, the protocol specific messages received by
+the aggregator do not {\em leak}). Consider the view of the verifier in the
+protocol $\linearcheck$. We start by specifying the extended views of various
+subprotocols. We use $\vert$ to seperate components in extended view which are
+not part of verifier's view in the protocol. In our descriptions of the views of
+the protocols we will use $\sigma$ to denote setup information such as
+description of the field $\FF$, group $\GG$, codes $L_1,L_2$ etc. From Figure
+\ref{fig:protocol1}, we have:
+\begin{align}
+\View^{\rm M2D}_{\verifier}(\sigma,\bm{c};\bar{U}) &\equiv
+	\big\{\tau,\delta,\underline{\bar{U}\mu},\View^{IP}_{\verifier}(\sigma,\cdots;\bar{U}\mu)\big\}
+\end{align}
+In the above we have $\mu=\mc{T}\tau$, while $\ldots$ denote the entries which are
+computed in terms of other entries in the view. For the protocol
+$\proximityThreeD$ we have (see Figure \ref{fig:prox3d}).
+\begin{align}
+\View^{\rm P3D}_{\verifier}(\sigma,[\pi];\ewit)& \equiv
+\big\{r,\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_{\ell}),Q,\{\pi[\cdot,k]\}_{k\in
+Q}, \nonumber \\
+	&\quad \View^{\rm M2D}_{\verifier}(\sigma,\bm{\tilde{c}};\tilde{U})\big\}
+\nonumber \\
+	&\equiv
+\big\{r,\bm{\tilde{c}},\tau,\delta,Q,\{\pi[\cdot,k]\}_{k\in Q},\underline{\tilde{U}\mu},\View^{IP}_{\verifier}(\sigma,\cdots)\big\}
+\end{align}
+In the above $\tilde{U}=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$ and
+$\mu=\mc{T}\tau$. Now we assemble the extended view for the linear check
+protocol from its messages, and those of constituent subprotocols:
 
-\noindent{\bf Randomized Witness Encoding}: To encode a witness $\wit\in \FF^N$,
-we write $N=pms$ for some integers $p$, $m$ and $s$. We view $\wit$ as a
-$p\times m\times s$ matrix. For independence parameter
-$\mathsf{b}$, we set $\ell := s + \mathsf{b}$. We encode $\wit$ by embedding
-$\wit$ in a $p\times m\times \ell$ matrix $\hat{\wit}$ where
-$\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$ and $\hat{\wit}[i,j,k]\sample
-\FF$ for $k\in (s,\ell]$. We encode $\hat{\wit}$ as in Section
-\ref{sec:witencoding} and output $\enc(\hat{\wit})$ as a random encoding of
-$\wit$.  
+\begin{align}
+\View^{\rm LC3D}_{\verifier}(\sigma,A,b;\wit)&\equiv \nonumber \\
+&\big\{r,c_1,\ldots,c_{2\ell},\{j_u,k_u\}_{u\in [t]},
+\underline{\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}},\{\pi[\cdot,k_u]\}_{u\in [t]},
+\nonumber \\
+& \{\tau, \delta, \mu=\mc{T}\tau, \underline{\bar{P}\mu}, \View^{\rm
+IP}(\sigma,\cdots)\}, \nonumber \\
+& \{\underline{\bar{P}\varphi}, \View^{\rm IP}(\sigma,\cdots)\}, \nonumber \\
+& \{r',\tilde{\bm{c}},\tau',\delta',\mu':=\mc{T}\tau',\underline{\tilde{U}\mu'},
+	\View^{\rm IP}(\sigma,\cdots)\}\big\}
+\end{align}
+
+
+	
+
+
+We use indentation to denote subprotocol components of
+the view.
+\begin{itemize}
+\item $\View^{\rm LC3D}_{\verifier}(\FF,\GG,A,b) \equiv$
+\begin{enumerate}[{\rm 1.}]
+\item $r_1\in \FF^N$ (step 1).
+\item $(c_1,\ldots,c_{2\ell})\in \GG^{2\ell}$ in step 4.
+\item $Q=\{(j_u,k_u):u\in [t]\}$ in step 5.
+\item Instead of $\{\ewit[\cdot,j_u,k_u]\}_{u\in [t]}$, we consider extended
+view $\{\ewit[\cdot,\cdot,k_u]: u\in [t]\}$ in step 6.
+\item $\{\pi[\cdot,k_u]:u\in [t]\}$ as part of oracle response in step 8.
+\item $\View^{\rm Mem2D}_{\verifier}(c_1,\ldots,c_{2\ell})\equiv$
+	\begin{enumerate}[{\rm 1.}]
+	\item $\tau_1,\delta_1$ where $\tau\in \FF^n$ and $\delta\in \FF^{h-m}$.
+	\item $z_1=\bar{P}\mu$ for $\mu_1=\mc{H}_2\delta_1$. Note that $z_1$ is not part
+of the verifier's view, but we consider it as part of extended view.
+	\item $\View^{\rm ip}_{\verifier}(\FF,\GG,x_1,\mathsf{cm}_1,0;z_1)$ where
+$\mathsf{cm}_1$ can be computed from other variables in the view.
+	\end{enumerate}
+\item $\View^{\rm ip}_{\verifier}(\FF,\GG,x_2,\mathsf{cm}_2,v_2;\bar{P}\varphi)$,
+$z_2=\bar{P}\varphi$ in step 11. We consider $z_2=\bar{P}\varphi$ as part of extended view, as
+it is not part of verifier's view.
+\item $\{\View^{\rm ip}(\FF,\GG,x_3,\mathsf{cm}_3,v_3;P[\cdot,k_u]\}_{u\in
+[t]}$ in step 13. We note that the witnesses $P[\cdot,k_u]$ can be computed from
+$r_1$ and
+$\ewit[\cdot,\cdot,k_u]$.
+\item $\{\View^{\rm
+aggip}_{\verifier}(\FF,\GG,x_4,\pi[\cdot,k_u],\ewit[\cdot,j_u,k_u];\ewit[\cdot,\cdot,k_u])\}_{u\in
+[t]}$.
+\item $\View^{\rm prox3D}_{\verifier}(\FF,\GG,L_1,L_2,e,[\pi];\ewit)\equiv$
+	\begin{enumerate}[{\rm 1.}]
+	\item We consider $Q_2 = \{k_u:u\in [t]\}$ as we multiplex the oracle
+access between the main protocol and subprotocols.
+	\item $\tilde{\bm{c}} = (\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+	\end{enumerate}
+
+\end{enumerate}
+\end{itemize}
 
 
 
