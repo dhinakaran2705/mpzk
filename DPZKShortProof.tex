@@ -36,18 +36,18 @@ $P_{add} \wit = 0$ for public matrices $A,B,C$ and $P_{add}$ (depending on $\C$)
 
 \subsection{Interactive Protocols for RS-code Oracles}
 \subsubsection{Reed Solomon Witness Encoding}
-The linear and quadratic constraints discussed above do not naively admit a sublinear query, i.e, the verifier needs to access complete vectors to be convinced with high probability. Error correcting codes have been used to encode the witness in PCP constructions to enable verification with sublinear query. We discuss two such encodings based on Reed-Solomon codes which have been used in recent constructions \cite{ligero}, \cite{Aurora}, \cite{STARK2019}.
+The linear and quadratic constraints discussed above do not naively admit a sublinear query, i.e, the verifier needs to access complete vectors to be convinced with high probability. Error correcting codes have been used to encode the witness in PCP constructions to enable verification with sublinear query. We discuss two such encodings based on Reed-Solomon codes which have been used in recent constructions \cite{ligero}, \cite{aurora}, \cite{STARK2019}.
 
-To encode a vector $x\in \bbF^\circsize$, one specifies two domains $G,H\subseteq \bbF$. We will call $G$ as {\em interpolation} domain and $H$ as {\em evaluation} domain. The encoding in \cite{Aurora} encodes the vector $x$ as a single Reed-Solomon codeword. This is done by first constructing a polynomial $\hat{f}^x$ which interpolates the vector $x$ on $G$, and then computing its evaluations $\langle \hat{f}^x(\eta) \rangle_{\alpha\in H}$ on points in $H$. The sizes of domains $G$ and $H$ need to be $\Omega(\circsize)$ in the above encoding. For a vector $x$, we will use the notation $\hat{f}^x$ to denote the polynomial interpolating $x$ on $G$, and $f^x$ to denote the vector of evaluations of $\hat{f}^x$ on $H$. Thus in the above scheme, $f^x$ is an encoding of the vector $x$.
+To encode a vector $x\in \bbF^\circsize$, one specifies two domains $G,H\subseteq \bbF$. We will call $G$ as {\em interpolation} domain and $H$ as {\em evaluation} domain. The encoding in \cite{aurora} encodes the vector $x$ as a single Reed-Solomon codeword. This is done by first constructing a polynomial $\hat{f}^x$ which interpolates the vector $x$ on $G$, and then computing its evaluations $\langle \hat{f}^x(\eta) \rangle_{\alpha\in H}$ on points in $H$. The sizes of domains $G$ and $H$ need to be $\Omega(\circsize)$ in the above encoding. For a vector $x$, we will use the notation $\hat{f}^x$ to denote the polynomial interpolating $x$ on $G$, and $f^x$ to denote the vector of evaluations of $\hat{f}^x$ on $H$. Thus in the above scheme, $f^x$ is an encoding of the vector $x$.
 \dnote{should we replace the notation $\langle \hat{f}^x(\eta) \rangle_{\alpha\in H}$ with $\langle \hat{f}^x(\eta) \rangle_{\eta \in H}$? Isn't $\eta$ the variable?}
 
-An alternative encoding used in \cite{Ligero} encodes parts of a vector separately, and thus the encoded vector corresponds to a set of Reed-Solomon codewords, or a single codeword of an Interleaved Reed-Solomon code (see Definition \ref{defn:interleavedcode}). More specifically, one chooses integers $m$ and $\ell$ such that $m\ell \geq \circsize$ and domains $G$ and $H$ of size $\Omega(\ell)$. The vector $x\in \bbF^\circsize$ is written as
-$x=(x_1|\cdots|x_m)$ where $x_i\in \bbF^l$ for all $i\in [m]$. The vector $x$ is encoded as $(f^x_1,\ldots,f^x_m)$ where $f^x_i$ encodes $x_i$ as described before, i.e $f^x_i=\langle \hat{f}^x_i(\eta)\rangle_{\alpha\in H}$ where the polynomial $\hat{f}^x_i$ interpolates the vector $x_i$ on $G$. 
+An alternative encoding used in \cite{ligero} encodes parts of a vector separately, and thus the encoded vector corresponds to a set of Reed-Solomon codewords, or a single codeword of an Interleaved Reed-Solomon code (see Definition \ref{defn:interleavedcode}). More specifically, one chooses integers $m$ and $\ell$ such that $m\ell \geq \circsize$ and domains $G$ and $H$ of size $\Omega(\ell)$. The vector $x\in \bbF^\circsize$ is written as
+$x=(x_1|\cdots|x_m)$ where $x_i\in \bbF^{\ell}$ for all $i\in [m]$. The vector $x$ is encoded as $(f^x_1,\ldots,f^x_m)$ where $f^x_i$ encodes $x_i$ as described before, i.e $f^x_i=\langle \hat{f}^x_i(\eta)\rangle_{\alpha\in H}$ where the polynomial $\hat{f}^x_i$ interpolates the vector $x_i$ on $G$. 
 
 \subsubsection{Linear Check}
 	Without loss of generality, we will discuss an argument for proving linear constraints of the form $Ax=0$ where $A$ is a public matrix and $x$ is a (secret) vector. The case $Ax=y$ is easily transformed to the required form by defining $A'=[A|-I]$ and $x'=(x,y)$, and running the protocol on $A'$ and $x'$. Assume that $x\in \bbF^\circsize$ and $A\in \bbF^{\circsize\times \circsize}$. To achieve sublinear query complexity, we do two things: (i) we make a high probability reduction to the problem of proving $\innp{r^TA}{x}=0$ where $r\sample \bbF^\circsize$ is sent by the verifier (ii) encode the witness $x$ using Reed-Solomon code as we described earlier.
 	
-	We first consider the encoding used in \cite{Aurora} which encodes $x$ as a single codeword $f^x$. The prover then provides oracle access to $f^x$. Let $\hat{r}\in\bbF[x]$ be the polynomial that interpolates the vector $r^TA$ on $G$. Then the linear check reduces to checking $\sum_{\zeta\in G}\hat{r}(\zeta) \cdot \hat{f}^x(\zeta) = 0$. In \cite{Aurora}, the aforementioned identity is checked with query size of $O(\log|H|)$ using specially developed sumcheck protocol for univariate polynomials. The verifier still incurs $O(\circsize)$ work to compute the encoding $\hat{r}$ for the size $\circsize$ vector $r^TA$. 
+	We first consider the encoding used in \cite{aurora} which encodes $x$ as a single codeword $f^x$. The prover then provides oracle access to $f^x$. Let $\hat{r}\in\bbF[x]$ be the polynomial that interpolates the vector $r^TA$ on $G$. Then the linear check reduces to checking $\sum_{\zeta\in G}\hat{r}(\zeta) \cdot \hat{f}^x(\zeta) = 0$. In \cite{aurora}, the aforementioned identity is checked with query size of $O(\log|H|)$ using specially developed sumcheck protocol for univariate polynomials. The verifier still incurs $O(\circsize)$ work to compute the encoding $\hat{r}$ for the size $\circsize$ vector $r^TA$. 
 	
 	We now consider the interleaved encoding of the witness. Looking ahead, the interleaved encoding will have a direct impact on the circuit share complexity of the distributed proof generation in \name{}. Here, we write the vector $x\in \bbF^\circsize$ as $x=(x_1|\cdots|x_m)$ where each $x_i\in \bbF^\ell$ for some $m\ell \geq \circsize$, and $x_m$ padded as necessary. For suitable domains $G$ and $H$, we interpolate each chunk of the vector on $G$ 
 	separately via polynomials $\hat{f}^x_1,\ldots,\hat{f}^x_m$. Similarly, we write $r^TA=(r_1,\ldots,r_m)$ with $r_i\in \bbF^n$ and construct polynomials $\hat{r}_i$	for $i\in [m]$. The inner product check $\innp{r^TA}{x}=0$ is then equivalent to checking $\sum_{i\in [m]}\sum_{\zeta\in G}\hat{r}_i(\zeta)\hat{f}^x_i(\zeta)=0$. The	latter is checked by the prover sending the polynomial $\hat{p}=\sum_{i\in
@@ -69,7 +69,7 @@ verifier sending a random vector $r\sample \bbF^m$ to the prover, and prover sen
 The correctness of the previous two checks, namely the linear check and the
 quadratic check rely on the fact that the witness oracles are evaluations of
 ``low'' degree polynomials. There are several known low degree tests for polynomials
-from PCP literature. The protocol in \cite{Aurora} uses a recent test for
+from PCP literature. The protocol in \cite{aurora} uses a recent test for
 proximity by Ben-Sasson et al.\cite{IOPP_FRI2018} with particularly efficient
 prover and $O(\log d)$ query complexity for polynomials of degree at most $d$. 
 We use a variant of proximity test from \cite{ligero}, adapting it to work
@@ -82,7 +82,7 @@ complexity.
 We will now describe \name2D{}. In brief, \name2D{} will make use of homomorphic commitments over the RS-encoded witness oracles.
 %We will commit to the vector $\{\hat{f}^x_i(\eta)\}_{i \in [m]}$ using the homomorphic vector commitments. The vectors corresponding to each $\eta$ will be committed separately. Inner product arguments will then be used to remove the linear dependence of the proof size on the parameter $m$. 
 And, instead of ``opening'' vectors from these oracles to the verifier, the prover in \name2D{} will provide an inner product argument on the vectors.
-Using the inner-product arguments of \cite{InnerProductDLS, Bulletproofs}, \name2D{} achieves the proof size of $O(\circsize^{1/c})$ for any $c \geq 2$ with $O(\circsize^{1-1/c})$ public key operations and $O(\circsize)$ overall complexity for the verifier. 
+Using the inner-product arguments of \cite{InnerProductDLS, bulletproofs}, \name2D{} achieves the proof size of $O(\circsize^{1/c})$ for any $c \geq 2$ with $O(\circsize^{1-1/c})$ public key operations and $O(\circsize)$ overall complexity for the verifier. 
 
 \subsection{Encoding}\label{subsec:encode2D} 
 Let $extwit \in \bbF^{|\C|}$ be the witness vector. Let $m$ and $\ell$ be integers such that $m\ell\geq \circsize$. We choose ordered domains $G=\{\zeta_1,\ldots,\zeta_\ell\}$ and $H=\{\eta_1,\ldots,\eta_n\}$. We then write the vectors $\extwit$ as $\extwit = (\extwit_{1},\ldots,\extwit_{m})$ where each $\extwit_{i}\in \bbF^\ell$ for $i \in [m]$. Construct $Q_i(\cdot)$, a polynomial of degree $<k$, by interpolating the vector $\extwit_{i}$ on $G$ and $Q_{i}$ denotes the corresponding evaluation of $Q_{i}$ on $H$. We define the RS-encoded witness $\ewit\in \bbF^{m\times n}$ as $\ewit[i,j]=Q_{i}(\eta_j)$ for $ i\in [m]$ and $j\in [n]$. We now construct a commitment oracle $\comoracle$ from $\ewit$.
@@ -598,12 +598,12 @@ Let $\Sim$ be the simulator. $\Sim$ does the following:
 \begin{itemize}
 	\item  picks a random subset $Q$ of size $t$.
 	\item  uniformly at random chooses $\gamma \in \bbF^m$.
-	\item  uniformly at random chooses $r_1 \in \bbF^{ml}$ and $r_2 \in \bbF^m$.
+	\item  uniformly at random chooses $r_1 \in \bbF^{m\ell}$ and $r_2 \in \bbF^m$.
 	\item  chooses $t$ columns for $\ewit_{\extwit||x||y||z}$ according to the indices of $Q$.
 	\item  computes the commitment of columns indexed by $Q$ for $\ewit_{\extwit||x||y||z}$, and for remaining positions picks uniform values from the range of $\com$, that fixes $\comoracle_{\extwit||x||y||z}$.
 	\item  computes components of $\w'$ indexed by $Q$ using $\ewit_{\extwit||x||y||z}$ and $\gamma$. Out of $n$ for remaining $n-t$ picks values for $\w'$ in such a way that $\w'$ is a valid codeword.
 	\item  picks a random polynomial $q^{lin}(\cdot)$ such that degree is $<k+l-1$ and $\sum_{j\in [l]} q^{lin}(\zeta_j) = 0$.
-	\item  picks a random polynomial $q^{quad}(\cdot)$ such that degree is $<2k-1$ and $q^{quad}(\zeta_j) = 0$ $\forall j\in [l]$.
+	\item  picks a random polynomial $q^{quad}(\cdot)$ such that degree is $<2k-1$ and $q^{quad}(\zeta_j) = 0$ $\forall j\in [\ell]$.
 \end{itemize} 
 Then $\Sim$ outputs a transcript $\tau''$ which is computationally indistinguishable from $\tau'$. Therefore the new protocol has zero knowledge property, and hence \name2D has zero-knowledge property.
 

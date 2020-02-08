@@ -193,7 +193,7 @@ We mention some concrete instantiations of commitment schemes and corresponding 
 O(\sqrt{n}).\bbG$.
 
 \subsection{Forking Lemma and Knowledge Soundness}
-We use the Forking Lemma from \cite{InnerProductDLS,Bulletproofs} to describe 
+We use the Forking Lemma from \cite{InnerProductDLS,bulletproofs} to describe 
 expected polynomial time knowledge extractors for our protocols. Let
 $(\prover,\verifier)$ be a public coin $(2\mu+1)$-move interactive protocol with
 challenges $x_1,\ldots,x_\mu$ in sequence. Let $n_i\geq 1$ for $1\leq i\leq
@@ -229,12 +229,12 @@ can be rewound to any previous state, and resumed with fresh randomness for the
 verifier $\verifier$.
 \end{definition}
 
-Our argument of knowledge proofs rely on the following result from \cite{Bulletproofs}.
+Our argument of knowledge proofs rely on the following result from \cite{bulletproofs}.
 While the result is originally stated and proved for showing witness-extended
 emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
 
-\begin{lemma}[Forking Lemma,\cite{Bulletproofs}]\label{lem:forkinglemma}
+\begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
 Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-move public coin interactive
 protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
 witness with probability $1-\kappa(\secpar)$ from an $(n_1,\ldots,n_\mu)$-tree
