@@ -160,7 +160,7 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
 
 \begin{definition}[Inner Product Argument]\label{defn:innerproductarg}
-We call an interactive protocol $(\pip,\vip)$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $innp{\pip}{\vip}$ satisfies the following:
+We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
 \begin{align*}
@@ -187,7 +187,7 @@ We call an interactive protocol $(\pip,\vip)$ consisting of $\ppt$ interactive a
 
 We mention some concrete instantiations of commitment schemes and corresponding inner product arguments that we use in our protocol.
 
-\noindent{\em Logarithmic Inner Product Argument}: In this setting we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner product argument $(\piplog,\viplog)$ from Bootle et.al in \cite{Bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. Time complexity of the verifier $\viplog$ is given by $t(\viplog)=O(n).\bbZ_p + O(n).\bbG$.\smallskip
+\noindent{\em Logarithmic Inner Product Argument}: In this setting we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner product argument $(\piplog,\viplog)$ from Bootle et.al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. Time complexity of the verifier $\viplog$ is given by $t(\viplog)=O(n).\bbZ_p + O(n).\bbG$.\smallskip
 
 
 \noindent{\em Square Root Inner Product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS} or \cite{Groth09b}. The construction in \cite{InnerProductDLS} gives a $5$-move protocol with total communication complexity $O(\sqrt{n})$. The construction in \cite{Groth09b} gives a 7-move protocol with $O(\sqrt{n})$ communication complexity. In both the constructions $t(\vipsq) = O(n).\bbZ_p +
@@ -213,6 +213,8 @@ Let $(\setup,\prover,\verifier)$ be an public coin interactive protocol. We say 
 $(\setup,\prover,\verifier)$ is an {\em argument of knowledge} for the language
 $\mc{L}$ if for every $\ppt$
 prover $P^\ast$, there exists an expected polynomial time extractor $\extr$ such that for all $x$:
+%\begin{comment}
+\small
 \begin{align}
 \condprob{(x,w)\in \mc{L}}{
 \begin{array}{c}
@@ -224,9 +226,12 @@ w\sample \extr^{\mc{O}}(x,\sigma)
 P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
 \kappa(\lambda)
 \end{align}
-for some negligible function $\kappa$. In the above $\mc{O}$ denotes the
-transcript oracle $\langle P^\ast(x,\sigma),\verifier(x,\sigma)\rangle$ which
-can be rewound to any previous state, and resumed with fresh randomness for the
+%\end{comment}
+%\begin{align}
+%&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
+%\geq & \prob{\innp{P^*(x,\sigma)}{\verifier(x, \sigma)} = 1|\sigma\sample \setup(\secparam)} - \kappa(\lambda)
+%\end{align}
+for some negligible function $\kappa$. In the above $\mc{O}$ denotes the transcript oracle  $\langle P^\ast(x,\sigma)$ ,$\verifier(x,\sigma)\rangle$ which can be rewound to any previous state, and resumed with fresh randomness for the
 verifier $\verifier$.
 \end{definition}
 
