@@ -1,7 +1,8 @@
 \section{Preliminaries}\label{sec:prelims}
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
-For positive integers $n,k$ and a finite field $\bbF$, a $k$-dimensional subspace $L$ of $\bbF^n$ is called an $[n,k]$ linear code. Elements of $L$ are conventionally called {\em codewords}. 
+\commentA{this looks like general definition for code. why is it called linear? change}
+For positive integers $n,k$ and a finite field $\bbF$, a $k$-dimensional linear subspace $L$ of $\bbF^n$ is called an $[n,k]$ linear code. Elements of $L$ are conventionally called {\em codewords}. 
 \end{definition}
 
 For codewords $x,y\in L$ where $x=(x_1,\ldots,x_n)$ and $y=(y_1,\ldots,y_n)$ we define the hamming distance $\dham(x,y)=|\{i\in [n]: x_i\neq y_i\}|$. It is easily checked that $\dham$ defines a metric on $L$. The minimum distance of the code $L$, denoted by $\delta(L)$ is defined as $\min\{\dham(x,y):x,y\in L, x\neq y\}$.
@@ -12,7 +13,7 @@ For an $[n,k]$ code $L$, a $n\times k$ matrix $\calG$ is called a {\em generator
 For an $[n,k]$-linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
 \end{definition}
 
-For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as a symbol in the field $\bbF^m$. Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as a symbol in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
+For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as an element in the field $\bbF^m$. Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
  
 \begin{definition}[Product Code]\label{defn:productcode}
 Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\oplus L_2$ to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
