@@ -50,9 +50,10 @@ The traditional notion of zero-knowledge ensures that the proof does not reveal 
 This is a property with respect to the view of the verifier $\verifier$. The protocol $\Pi$ and the number of provers involved to produce these messages do not impact the zero-knowledge property. The following definition captures this formally.
 \begin{definition}
 The argument $(\Setup, \Pi, \verifier)$ is a special honest verifier zero-knowledge argument for $L$ if there exists a PPT simulator $S$ such that for all non-uniform polynomial time adversaries $A$ and all $\tau \in \secp^{O(1)}$ 
+
 \begin{align*}
-&Pr \left[ \sigma \leftarrow \Setup(1^\secp, \tau); (\stmt ,\wit ,\rho) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi, \verifier_\rho \rangle: \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr)=1 \right] \\
-\approx \; &Pr \left[\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt,\wit,\rho) \leftarrow \adv(\sigma); \tr \leftarrow S(\sigma,\stmt,\rho): \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr) = 1 \right]
+&\prob {\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt ,\wit ,\rho) \leftarrow \adv(\sigma); \tr \leftarrow \langle \Pi, \verifier_\rho \rangle: \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr)=1} \\
+\approx \; &\prob{\sigma \leftarrow \Setup(1^\secp, \tau); (\stmt,\wit,\rho) \leftarrow \adv(\sigma); \tr \leftarrow S(\sigma,\stmt,\rho): \stmt \in L \text{ with witness } \wit \text{ and } \adv(\tr) = 1}
 \end{align*}
 \end{definition}
 %.\dnote{Auxiliary input zk or just without it?}
@@ -63,18 +64,18 @@ This notion captures the privacy of a prover's share of witness from other prove
 %Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
 
 \begin{definition}
-Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$, there is a $\ppt$ simulator $\Sim_{P}$ such that for every round $i \in [\round]$, $\Sim_{P}$ has a subalgorithm  $\Sim_{\pi_i}$ which can output the state of the corrupt provers and it satisfies the following condition: 
+Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$, there is a $\ppt$ simulator $\Sim_{P}$ such that for every round $i \in [\round]$, $\Sim_{P}$ has a subalgorithm  $\Sim_{\pi_i}$ which can output the view of the corrupt provers of  $i$th round and it satisfies the following condition: 
 \[
- \{ \Sim_{\pi_i} (\stmt, \st^i_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^i_j\}_{j \in [N]}) 
+ \{ \Sim_{\pi_i} (\stmt, \st^{i-1}_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^{i-1}_j\}_{j \in [N]}) 
 \]
-where $\st^i_T$ is the state of the parties in $T$ for the $i$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
+where $\st^{i-1}_T$ is the state of the parties in $T$ for the $i-1$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
 \end{definition}
 .\dnote{A couple of questions to everyone:\\
 1) shall we notate $\pi_0$ as the 0th step in the proof system where the provers obtain the shares of the extended witness starting from their shares of the witness?
 2) Right now, we have formalized this notion such that each round of interaction between can be simulated. To capture the security of the overall protocol, is it enough to consider the linear composability between the protocols?}
 
 \paragraph{Zero Knowledge under $t$-collusions}: 
-The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. But when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero knowledge under $t$-collusions ($t-\ZKUC$) to capture this.
+The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. However, when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero-knowledge under $t$-collusions ($t-\ZKUC$) to capture this.
 
 \begin{definition}
 	\begin{comment} 
@@ -85,11 +86,11 @@ The notion of zero-knowledge, as we discussed earlier, considers the knowledge g
 =======
 \end{comment}
 
-An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t-\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T\subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
+An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t$-$\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T\subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
 \[
-\innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho, \wit_T)
+ \{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i): i\in [\round] \} \cup \innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho, \wit_T)
 \]
-where $\wit_T$ is the input of the provers in $T$. 
+where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the states of the corrupt parties of $i$th round and $\st^{i-1}_{\overline{T}}$ consists of the states of the honest parties of $i$th round. 
 
 \end{definition}
 
@@ -99,11 +100,11 @@ where $\wit_T$ is the input of the provers in $T$.
 
 \begin{proof}
 	\textbf{case 1:} Let $\innp{\Pi}{\verifier}$ has honest verifier zero-knowledge and $t$-privacy among provers property. That implies there are simulators $\Sim_{ZK}$ and $\Sim_{P}$ for which 
-	\begin{align*}
-	&\{ \innp{ \Pi( \wit ) }{ \verifier^*( z ) } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt, z) \} \cdots (1)\\        
-	\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^i_{\overline{T}} ) } { \prover_T ( \st^i_T ) } ( \stmt ) , m \}
-	\stackrel{c}{\approx} \{ \langle \Sim_{\pi_i} \rangle (\stmt, \st^i_T, m) \} \cdots (2)
-	\end{align*}
+	\begin{align}
+	&\{ \innp{ \Pi( \wit ) }{ \verifier^*( z ) } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt, z) \}\\        
+	\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i) \}
+	\stackrel{c}{\approx} \{ \langle \Sim_{\pi_i} \rangle (\stmt, \st^{i-1}_T, m) \}
+	\end{align}
 	
 	A transcript of actual execution of $\innp{\Pi}{\verifier^*}$ will have three types of values:
 	
