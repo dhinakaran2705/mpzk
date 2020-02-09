@@ -7,116 +7,127 @@ In this work, we study the general setting where multiple co-opetitive i.e., col
 -verifiably publishing cross-industry statistics in trade logistics networks-
 In abstract terms, we have multiple provers $P_1, \ldots, P_p$ respectively possessing witnesses $w_1, \ldots, w_p$. For a predicate $C$ from the supported class of predicates $\cC$, the provers want to prove to a verifier that $C(w_1,\cdots,w_p) = 1$.
 
-A natural solution for distributed proof generation is to start with the prover code from a single prover protocol and run this code between multiple provers using multi-party computation. Pedersen \cite{Ped92} proposed this notion and discussed the generic construction using MPC.
+A natural solution for distributed proof generation is to start with the prover code from a single prover protocol and run this code between multiple provers using multi-party computation. Pedersen \cite{Ped92} proposed this notion and discussed this generic construction using MPC.
 %Each round of proof generation is implemented by an MPC among the provers to generate the message to be sent to the verifier.
-This generic construction is optimal in proof size and verifier complexity in that it retains these from the single-prover protocol irrespective of the number of parties. But, a naive application of MPC would make the proof generation extremely expensive. \dnote{can we say about the asymptotics here? Or we have to argue only in terms of concrete numbers?} 
-Prior works have improved the complexity of distributed proof generation but only when considering simple predicates as in threshold signatures \cite{} and sigma protocols \cite{KMR12}, or when working with a restricted adversarial model \cite{trinocchio}
+This generic construction is optimal in proof size and verifier complexity in that it retains these complexities from the single-prover version irrespective of the number of provers. But, the complexity of proof generation suffers when the single prover protocol is not constructed with distributed proof generation in mind. Even an optimal $R$-round proof generation algorithm with $O(N)$ complexity might result in a distributed proof generation algorithm with $\Omega(R \cdot N)$ communication.
+Prior works have improved the complexity of distributed proof generation but only when considering simple predicates as in threshold signatures \cite{} and simple sigma protocols \cite{KMR12}, or when working with a weaker adversarial model \cite{trinocchio}
 
-The goal of this work is to study zero-knowledge protocols supporting \textit{arbitrary} predicates where the proof generation algorithm is ``MPC-friendly''. We will focus our discussions on honest-verifier protocols with transparent setup producing common reference strings (CRS), though most of our discussions would also apply to protocols with a trusted setup producing a fixed or an updatable structured reference strings (SRS).
-In a single-prover setting, the efficiency of a proof generation algorithm is usually measured in terms of the number of group operations. Additionally, the number of rounds of interaction between prover and verifier is also considered an efficiency parameter when starting with an interactive protocol and obtaining a non-interactive prover from it in a provably secure manner \cite{BCS16}. But, these parameters do not capture the core bottleneck in the setting of multiple provers. For instance, Spartan \cite{spartan} has a very efficient proof generation algorithm, but due to the high multiplicative complexity of proof generation its distributed version performs $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate involved. Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}.
-\dnote{mention the asymptotics in the above claims}
+The goal of this work is to study zero-knowledge protocols supporting \textit{arbitrary} predicates where the proof generation algorithm is ``MPC-friendly''. %The proof generation algorithm is usually measured for efficiency in terms of number of group operations and number of rounds of interaction with the verifier.
+Our work first identifies new parameters that a ZK protocol should optimize for to admit efficient distributed proof generation. We then construct a ZK protocol which is the state-of-art in these parameters.
 
-The first part of our work is to identify parameters of significant impact in distributed proof generation. 
-As indicated earlier, the first parameter of interest is \textit{multiplicative complexity} of the proof generation process. The complexity of an MPC protocol would grow with this parameter. More specifically, the parameter of interest would be multiplicative complexity of witnesses from different parties. Since an affine function over the witnesses can be computed without any interaction
-\dnote{fine tune the last two sentences. currently, they allude to secret-sharing based MPC. Is it okay for me to include a separate sentence to capture GC based MPC protocols?}
+\subsection{Efficiency parameters for DPZK}
+Our discussion will focus on honest-verifier protocols with transparent setup, though most of this would also apply to protocols with a trusted setup. %producing a fixed or an updatable structured reference strings (SRS).
+In a single-prover setting, the efficiency of a proof generation algorithm is usually measured in terms of the number of group operations. Additionally, the number of rounds of interaction between prover and verifier is also considered an efficiency parameter when a non-interactive prover from the interactive version in a provably secure manner \cite{BCS16}. But, these parameters do not capture the core bottleneck in the setting of multiple provers. For instance, Spartan \cite{spartan} has a very efficient proof generation algorithm, but due to the high multiplicative complexity of proof generation its distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved. %Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
 
-In a multi-round interactive protocol, the next parameter of interest is the number of rounds which require interactive MPC i.e., the number of rounds which require a multiplication of witness bits from different parties. \dnote{can we say anything non-trivial here from the NI-MPC literature?}
-This parameter is also of interest in cryptographic terms, not just for efficiency. If there is more than one round of prover message generation which require MPC care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol secure.
-Bulletproofs \cite{bulletproofs} requires MPC to be performed for each round of prover message generation.
+As a first step, we identify parameters with significant impact in distributed proof generation. 
+As indicated earlier, the first parameter of interest is \textit{cross-multiplicative complexity} of the proof generation process. 
+This would be the number of multiplications between the witness bits from different parties, since an affine function over the witnesses and a multiplication between witness bits from the same prover can be computed without any interaction in a secret-sharing based MPC.
+%The complexity of an MPC protocol would grow with this parameter. 
+\dnote{fine tune the last two sentences. currently, they allude to secret-sharing based MPC. Is it okay to include a separate sentence to capture GC based MPC protocols?}
 
-In all these protocols, the verifier can collude with a subset of provers to learn the witnesses of the other provers. A subtle point to note here is that the strongest notion of zero-knowledge should ensure that the collusion of the verifier and a subset of provers should not be able to learn about the number of other provers involved in the proof generation. \dnote{is it even feasible to get this notion?!} In our definition, we will relax it slightly to allow all the provers know the total number of provers involved. This implies that a verifier colluding with a prover will learn the total number of provers. But, a standalone verifier should still be not able to learn the number of provers from the messages that he receives.
+In a multi-round interactive protocol, the next parameter of interest is the \textit{number of MPC rounds}. This denotes the number of rounds in the prover-verifier protocol which require multiplication of witness bits from different parties. For instance, even though Bulletproofs \cite{bulletproofs} is optimal in terms of prover complexity, each of the $\log N$ rounds of protocol involves multiplications between witness bits from different provers. And this requires an MPC to be performed for each round of prover message generation.\dnote{1) can we say anything non-trivial here from the NI-MPC literature?\\
+2) do we have a stronger motivation, in terms of efficiency, for optimizing the number of rounds rather than just optimizing our first parameter, the multiplicative complexity for the end-to-end prover protocol?}
+This parameter is also of cryptographic interest. If there is more than one round of prover message generation which require MPC, care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol secure.
 
-This subtle point also impacts the size of the oracles for the protocols in the IOP framework \cite{Aurora, Ligero}. The size of the oracle and hence the answers to the oracle queries would have to be independent of the number of provers. Hence, for the IOP protocols, the discussed parameters have to be optimized for oracle generation and query answering.\footnote{In principle, generating the oracle or answering a query  would form a part of the prover message generation when IOP is viewed in the lens of an arbitrary interactive protocol.}
-We then study the existing single-prover protocols in the light of these parameters. 
+\subsection{Subtlety in proving zero-knowledge}
+Before we delve into our DPZK construction, we would provide a subtle note regarding the zero-knowledge property of DPZK protocols. This would shed some light on the rationale for some of the artefacts of DPZK protocols. In an DPZK protocol, the verifier is allowed to collude with a subset of provers to learn the witnesses of the other provers. A strong definition of zero-knowledge should ensure that the collusion of the verifier and a subset of provers should not be able to learn about the number of other provers involved in the proof generation. \dnote{is it even feasible to achieve this notion?!} In our protocols, we will allow all the provers to know the total number of provers involved. This will lead to a relaxed definition where a verifier colluding with a prover will additionally learn the total number of provers. This still does not let a standalone verifier learn the total number of provers during its interaction with the provers.
 
-Our main contribution then is to propose a single-prover protocol which achieves the best efficiency for all these parameters among the state-of-art protocols. ---Start here---
+This subtle note also impacts the size of the oracles for the protocols in the IOP framework \cite{aurora, ligero}. The oracle and the answers to the oracle queries should be independent of the total number of provers. Hence, for the IOP-based protocols, the two parameters that we discussed earlier should also be optimized for the oracle generation and the query answering.\footnote{In principle, generating the oracle or answering a query would form a part of the prover message generation when IOP is viewed in the lens of an arbitrary interactive protocol.}
+The IOP-based protocols in the literature \cite{aurora, ligero} market their non-use of public-key cryptography and thus a potential post-quantum security feature. To achieve zero-knowledge in the distributed prover setting while retaining these features, at a high level, they have to incur the overhead of using information-theoretic MPC to construct the oracle and answer oracle queries, in addition to using it for generating the prover messages.
+
+\subsection{\name{}: a DPZK protocol with linear cross-multiplications and one MPC round}
+The main contribution of our work is an MPC-friendly single-prover protocol \name{} with $O(N)$ cross-multiplications all in the same round of the prover-verifier interaction. These cross-multiplications can also be done concurrently, and hence the MPC is performed on an $N$ mult-gates circuit of depth 1. \name{} achieves these properties while achieving proof size and verification complexity competitive with the state-of-art zero-knowledge protocols which do not admit efficient distributed proof generation. In particular, \name{} achieves a proof size of $O(N^{1/c})$ for arbitrary $c\geq 2$, and a verification complexity of $O(N^{1-2/c})$ public key operations and $O(N)$ field operations. \name{} achieves the zero-knowledge property while supporting a threat model of choice - semi-honest/malicious and threshold - to be plugged in for the provers.
+
+\subsection{Circuit share complexity}
+
+
+
+
 
 
 their models avoid communication among the provers - but it is necessary(???) when proving a general class of predicates?
 Difference in definition when involving multiple rounds with more than one round involving communication among provers -- the input to provers in Round i+1 is a function of protocol execution from previous rounds.
 
 
-Applications: 
-Proof of joint stake: 
+%Applications: 
+%Proof of joint stake: 
+%
+%Joint loan application
+%
+%
+%Positioning:  Distributed protocols
+%- Threshold signature
+%- Sigma Protocols
+%- Trusted Setup (Trinocchio)
+%- Transparent Setup (Bulletproof - Range proofs)
+%
+%Efficiency Desiderata:  
+%- Transparent setup 
+%- Minimum interaction between the provers (\# of rounds of MPC) 
+%- Total communication complexity of the msgs exchanged
+%- verifiers view is indistinguishable from a single prover setting
+%- How efficient is underlying zkp protocol (public key operations, size of proof, prover/ verification time)
+%- Applicability to a general class of computation
+%
+%
+%
+%
+%
+%
+%Applications of ZK proofs - mention those which naturally extend to multiple provers holding witness - think about applications both in the real-world setting, and also in crypto settings (eg. does our setting lead to more efficient MPC protocols?)\\
+%
+%A typical zero-knowledge protocol...\\
+%In this work, we study the setting where the witness is present among multiple provers - secret shared / partitioned \\
+%Motivate by extending above use-cases\\
+%Create new use-cases which do not exist with single prover protocols?\\
+%
+%What are our main selling points?\\
+%-- the notion of distributed proof generation (fine-tune it based on state-of-art? with concrete efficiency for general predicates)\\
+%-- single-prover protocol with ?? (what are the exact parameters we should highlight? concrete prover complexity, transparency)\\
+%
+%Related work for the above mentioned claims
+%\dnote{CHECK: our protocol needs MPC in only one of the rounds among the log n rounds. How does it get better than others? }
 
-Joint loan application
+\subsection{Technical overview of \name{}}
 
 
-Positioning:  Distributed protocols
-- Threshold signature
-- Sigma Protocols
-- Trusted Setup (Trinocchio)
-- Transparent Setup (Bulletproof - Range proofs)
-
-Efficiency Desiderata:  
-- Transparent setup 
-- Minimum interaction between the provers (\# of rounds of MPC) 
-- Total communication complexity of the msgs exchanged
-- verifiers view is indistinguishable from a single prover setting
-- How efficient is underlying zkp protocol (public key operations, size of proof, prover/ verification time)
-- Applicability to a general class of computation
-
-
-
-
-
-
-Applications of ZK proofs - mention those which naturally extend to multiple provers holding witness - think about applications both in the real-world setting, and also in crypto settings (eg. does our setting lead to more efficient MPC protocols?)\\
-
-A typical zero-knowledge protocol...\\
-In this work, we study the setting where the witness is present among multiple provers - secret shared / partitioned \\
-Motivate by extending above use-cases\\
-Create new use-cases which do not exist with single prover protocols?\\
-
-What are our main selling points?\\
--- the notion of distributed proof generation (fine-tune it based on state-of-art? with concrete efficiency for general predicates)\\
--- single-prover protocol with ?? (what are the exact parameters we should highlight? concrete prover complexity, transparency)\\
-
-Related work for the above mentioned claims
-\dnote{CHECK: our protocol needs MPC in only one of the rounds among the log n rounds. How does it get better than others? }
-
-\subsection{Overview}
---- Overview of our work: the notion, techniques.--- 
---- define the notion of distributed proof generation--- 
---- provide a protocol which satisfies these notions
-
-\subsection*{Distributed proof generation}
---- Informal notion of Distributed Provers Zero Knowledge Protocol $\innp{\Pi}{\verifier}$--- 
-
-A na\"ive approach to build a $\DPZK$ protocol is to take a single-prover ZK protocol and execute a multi-party computation among the provers of each message to be generated by the prover in the single-prover protocol. This satisfies the required security properties, but suffers in concrete efficiency when MPC is used over the proof generation as a black box. 
-
-\subsubsection*{Need for homomorphic commitments} 
-(Oracle access for IOP).
-The (non-interactive) zero-knowledge proof generation protocols based on the Interactive oracle proofs (IOP) or the Interactive PCP (IPCP) paradigms make use of \textit{oracles}. The prover establishes an oracle based on her witness. Once established, the IOP/IPCP protocols ensure that a prover will not modify the oracle further in the protocol. The verifier queries the oracle later in the protocol to verify some the claims made by the prover. When IOP/IPCP based proof systems are converted into the non-interactive setting, the establishment of the oracle is done by producing a commitment to the oracle entries.
-
-We will now run through a mental experiment on achieving distributed proof generation following the blueprint of the single-prover proof generation algorithm. We desire to not have the proof length depend on the number of parties. As we would discuss in depth later, we would also avoid running an MPC protocol on the proof generation circuit(s) of some zero-knowledge protocol. This would trivially, in theory, satisfy our goals, but it would be very inefficient in practice. The way we satisfy these goals for the establishment of the oracle is by requiring the oracle entries and their commitments satisfy homomorphic properties.
-\dnote{self: Sounds somewhat weak. Make it more compelling.}
-
-\subsection*{Technical summary}
-We will now provide a high-level summary of our work and along the way mention our core ideas.
-
-%Our contributions are two-fold: first in defining and constructing a zero-knowledge protocol with distributed proof generation and the second in proposing the first protocol with (expected) sub-linear verifier complexity.
-
-Our main contribution is defining and constructinf a zero-knowledge protocol with distributed proof generation.
-
-\paragraph{DPZK}
-We design a framework for constructing DPZK protocols starting from a single-prover ZK protocol.
-%To construct our DPZK protocol \name{} we follow the strategy of designing a (public coin honest verifier) single-prover ZK protocol whose proofs are ``aggregatable'' at minimal cost. 
-Let the parties $\prover_1, \ldots, \prover_{\Num}$ hold their respective witnesses $\wit_1, \ldots, \wit_{\Num}$ to the relation $R(\stmt, (\wit_1, \ldots,\wit_{\Num}))$. 
-Starting with a (public coin honest verifier) single-prover ZK protocol, there are two steps involved in our proof generation.
-\begin{itemize}
-\item The first step involves performing a secret sharing based MPC protocol on $R$ between the provers. As a result, each prover obtains her share of the extended witness, which includes all the wires (correspondingly variables) of a circuit (correspondingly R1CS) representation of R. 
-\item Next, for each message from the prover to the verifier, the parties perform the following two steps:
-\begin{itemize}
-\item The parties run an MPC protocol to obtain their share of the message. This step has a major implication on the efficiency of distributed proof generation. Depending on the single-prover protocol, some messages already posses homomorphism properties. Hence, the output of a local run of the single-prover algorithm for this round on a prover's shares of extended witness is already her share of the message in the distributed proof generation. When the message is not homomorphic, we design custom efficient protocols to obtain the shares of the message.
-\item One of the prover parties or an external entity trusted with the correctness of execution is chosen as an ``aggregator''. Aggregator is not trusted with the privacy of the inputs. The aggregator receives the shares of the messages from all the parties and performs the steps of the single-prover protocol to be performed with the aggregated message. Also, a prover acting as an aggregator does not have an incentive to deviate from executing the correct protocol during this step. This is because she could have caused the protocol to abort in any of the previous steps, and there is no additional information that she gains in the intermediate steps that aids her deviation in the aggregation step.
-\end{itemize}
-\end{itemize}
-
-Starting with the single-prover protocol of \cite{ours}, we design custom protocols so that the only additional interaction between the parties during the second step involves MPC for $\intpartofC$ concurrent multiplications, where $\intpartofC$ is the number of wires in the \textit{interactive} part of the circuit. Consider the check $x+y \stackrel{?}{=} z$ when given their respective hashes. If the inputs are present with three different parties, the corresponding circuit for the hash check followed by the addition and equality check involves extensive local computations for the hash before the interaction happens. \dnote{self: Provide a compelling real world use-case here} The additional communication complexity of our $\DPZK$ protocol grows only with the size of the interactive part. To enable this, we do.... start with \cite{ours} --- arrange the rows accordingly in the witness matrix --- 
-
-proof size independent of number of parties --- Oracle queries outputs should be independent of the number of parties --- we do it having parties generate a homomorphic oracle starting with their shares on the extended witness --- we would achieve indistinguishability between proof generated in a distributed manner and the proof generated by a single party ---
-In this, we use homomorphic commitments --- we follow from \cite{ours} --- 
+%\subsection*{Distributed proof generation}
+%--- Informal notion of Distributed Provers Zero Knowledge Protocol $\innp{\Pi}{\verifier}$--- 
+%
+%A na\"ive approach to build a $\DPZK$ protocol is to take a single-prover ZK protocol and execute a multi-party computation among the provers of each message to be generated by the prover in the single-prover protocol. This satisfies the required security properties, but suffers in concrete efficiency when MPC is used over the proof generation as a black box. 
+%
+%\subsubsection*{Need for homomorphic commitments} 
+%(Oracle access for IOP).
+%The (non-interactive) zero-knowledge proof generation protocols based on the Interactive oracle proofs (IOP) or the Interactive PCP (IPCP) paradigms make use of \textit{oracles}. The prover establishes an oracle based on her witness. Once established, the IOP/IPCP protocols ensure that a prover will not modify the oracle further in the protocol. The verifier queries the oracle later in the protocol to verify some the claims made by the prover. When IOP/IPCP based proof systems are converted into the non-interactive setting, the establishment of the oracle is done by producing a commitment to the oracle entries.
+%
+%We will now run through a mental experiment on achieving distributed proof generation following the blueprint of the single-prover proof generation algorithm. We desire to not have the proof length depend on the number of parties. As we would discuss in depth later, we would also avoid running an MPC protocol on the proof generation circuit(s) of some zero-knowledge protocol. This would trivially, in theory, satisfy our goals, but it would be very inefficient in practice. The way we satisfy these goals for the establishment of the oracle is by requiring the oracle entries and their commitments satisfy homomorphic properties.
+%\dnote{self: Sounds somewhat weak. Make it more compelling.}
+%
+%\subsection*{Technical summary}
+%We will now provide a high-level summary of our work and along the way mention our core ideas.
+%
+%%Our contributions are two-fold: first in defining and constructing a zero-knowledge protocol with distributed proof generation and the second in proposing the first protocol with (expected) sub-linear verifier complexity.
+%
+%Our main contribution is defining and constructinf a zero-knowledge protocol with distributed proof generation.
+%
+%\paragraph{DPZK}
+%We design a framework for constructing DPZK protocols starting from a single-prover ZK protocol.
+%%To construct our DPZK protocol \name{} we follow the strategy of designing a (public coin honest verifier) single-prover ZK protocol whose proofs are ``aggregatable'' at minimal cost. 
+%Let the parties $\prover_1, \ldots, \prover_{\Num}$ hold their respective witnesses $\wit_1, \ldots, \wit_{\Num}$ to the relation $R(\stmt, (\wit_1, \ldots,\wit_{\Num}))$. 
+%Starting with a (public coin honest verifier) single-prover ZK protocol, there are two steps involved in our proof generation.
+%\begin{itemize}
+%\item The first step involves performing a secret sharing based MPC protocol on $R$ between the provers. As a result, each prover obtains her share of the extended witness, which includes all the wires (correspondingly variables) of a circuit (correspondingly R1CS) representation of R. 
+%\item Next, for each message from the prover to the verifier, the parties perform the following two steps:
+%\begin{itemize}
+%\item The parties run an MPC protocol to obtain their share of the message. This step has a major implication on the efficiency of distributed proof generation. Depending on the single-prover protocol, some messages already posses homomorphism properties. Hence, the output of a local run of the single-prover algorithm for this round on a prover's shares of extended witness is already her share of the message in the distributed proof generation. When the message is not homomorphic, we design custom efficient protocols to obtain the shares of the message.
+%\item One of the prover parties or an external entity trusted with the correctness of execution is chosen as an ``aggregator''. Aggregator is not trusted with the privacy of the inputs. The aggregator receives the shares of the messages from all the parties and performs the steps of the single-prover protocol to be performed with the aggregated message. Also, a prover acting as an aggregator does not have an incentive to deviate from executing the correct protocol during this step. This is because she could have caused the protocol to abort in any of the previous steps, and there is no additional information that she gains in the intermediate steps that aids her deviation in the aggregation step.
+%\end{itemize}
+%\end{itemize}
+%
+%Starting with the single-prover protocol of \cite{ours}, we design custom protocols so that the only additional interaction between the parties during the second step involves MPC for $\intpartofC$ concurrent multiplications, where $\intpartofC$ is the number of wires in the \textit{interactive} part of the circuit. Consider the check $x+y \stackrel{?}{=} z$ when given their respective hashes. If the inputs are present with three different parties, the corresponding circuit for the hash check followed by the addition and equality check involves extensive local computations for the hash before the interaction happens. \dnote{self: Provide a compelling real world use-case here} The additional communication complexity of our $\DPZK$ protocol grows only with the size of the interactive part. To enable this, we do.... start with \cite{ours} --- arrange the rows accordingly in the witness matrix --- 
+%
+%proof size independent of number of parties --- Oracle queries outputs should be independent of the number of parties --- we do it having parties generate a homomorphic oracle starting with their shares on the extended witness --- we would achieve indistinguishability between proof generated in a distributed manner and the proof generated by a single party ---
+%In this, we use homomorphic commitments --- we follow from \cite{ours} --- 
 
 
 \input{Related_work.tex}
