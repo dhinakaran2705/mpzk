@@ -1,7 +1,5 @@
 %\newcommand{\enc}{\mathsf{Enc}}
-\newcommand{\fft}{\mathsf{FFT}}
-\newcommand{\ifft}{\mathsf{IFFT}}
-\newcommand{\open}{\mathsf{Open}}
+
 
 \section{DPZKQuickVerify} \label{sec:quickverify}
 While the construction of the previous section leads to smaller argument size,
@@ -49,7 +47,7 @@ k\in [n]\}$. We encode $\wit$ as follows:
 where $\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$, while the entries
 $\hat{\wit}[i,j,k]$ for $k>s$ are sampled from $\FF$ uniformly at random.
 \item We construct bivariate polynomials $Q^i(x,y)$ with $deg_x(Q)<m$ and
-$deg_y(Q)<\ell$ such that $Q^i$ interpolates the slice
+$deg_y(Q) $ $<\ell$ such that $Q^i$ interpolates the slice
 $\hat{\wit}[i,\cdot,\cdot]$ on $G$, i.e,
 $Q^i(\alpha_j,\zeta_k)=\hat{\wit}[i,j,k]$. 
 \item Let $\ewit$ denote the $p\times h\times n$ matrix, where the slice
@@ -96,7 +94,7 @@ We defer the proof of the above Lemma to the Appendix.
 
 \subsection{Constructing Oracle}\label{sec:construct_oracle} 
 We deviate from prior IOP constructions
-such as \cite{ligero,Aurora} in the way we construct the oracle. The prior
+such as \cite{ligero, aurora} in the way we construct the oracle. The prior
 constructions provided oracle access to the encoding of the witness using linear
 codes. We
 additionally obtain a homomorphic commitment of the encoding $\enc(\wit)$ of the

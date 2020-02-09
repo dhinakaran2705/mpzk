@@ -9,9 +9,9 @@ We will formalize this simple DPZK transformation based on the Polynomial IOP fr
 <change from here>
 
 We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
-The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic}, \cite{libra}, \cite{supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{Aurora, Bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
+The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.\pnote{Which paper is "Check"?}
 
-Among these works, only Bulletproofs \cite{Bulletproofs} discuss distributed proof generation. Even in \cite{Bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
+Among these works, only Bulletproofs \cite{bulletproofs} discuss distributed proof generation. Even in \cite{bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
 
 \subsection{DPZK-Aurora}
@@ -87,7 +87,7 @@ $\verifier$ checks:
 \begin{enumerate}
 	\item $h^{\tau_x}g^{\hat{t}} \stackrel{?}{=} V\cdot T_1^x\cdot T_2^{x^2}$ to check the correct evaluation of the committed polynomial $T$ at $x$.
 	\item $P\cdot S^x \stackrel{?}{=} h^{\mu}\cdot Q$. 
-	\item Runs the inner product proof from \cite{Bulletproofs}, which need not be zero knowledge on the input $(Q, \hat{t}, \bm{g}, \bm{h}, g)$ with the aggregator $\cA$.
+	\item Runs the inner product proof from \cite{bulletproofs}, which need not be zero knowledge on the input $(Q, \hat{t}, \bm{g}, \bm{h}, g)$ with the aggregator $\cA$.
 \end{enumerate}
 The verifier $\verifier$ accepts the proof if the checks succeed and the inner product argument accepts.
 
