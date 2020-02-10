@@ -16,6 +16,13 @@ The goal of this work is to study zero-knowledge protocols supporting \textit{ar
 Our work first identifies new parameters that a ZK protocol should optimize for to admit efficient distributed proof generation. We then construct a ZK protocol which is the state-of-art in these parameters.
 
 \subsection{Efficiency parameters for DPZK}
+\begin{itemize}
+\item Proof generation communication
+\item Proof generation rounds
+\item Zero-knowledge communication
+\item Zero-knowledge rounds
+\end{itemize}
+
 Our discussion will focus on honest-verifier protocols with transparent setup, though most of this would also apply to protocols with a trusted setup. %producing a fixed or an updatable structured reference strings (SRS).
 In a single-prover setting, the efficiency of a proof generation algorithm is usually measured in terms of the number of group operations. Additionally, the number of rounds of interaction between prover and verifier is also considered an efficiency parameter when a non-interactive prover from the interactive version in a provably secure manner \cite{BCS16}. But, these parameters do not capture the core bottleneck in the setting of multiple provers. For instance, Spartan \cite{spartan} has a very efficient proof generation algorithm, but due to the high multiplicative complexity of proof generation its distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved. %Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
 

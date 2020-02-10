@@ -1,15 +1,6 @@
-\section{Distributed Prover Zero Knowledge}
-Framework
-\begin{itemize}
-\item Proof size independent of no. of parties.
-\item Notion of homomorphic oracles
-\item custom aggregation protocols for non-homomorphic messages
-\item concrete improvements and adjustments to obtain sublinear communication for custom MPC. - only for interactive part of circuit
-\end{itemize}
-.\pnote{Describe the differences between our setting and Marcel et al. \cite{EfficientTZ} paper} 
-\pnote{Difference in the defintion: 
-	1) Their defintion is based on Combiner, whereas DPZK can be achieved without any such entity}
-\subsection{Definition of DPZK}
+\subsection{Distributed Prover Zero Knowledge}
+This discussion will formally define a zero-knowledge protocol which supports distributed proof generation.
+\subsubsection{Definition of DPZK}
 Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$ such that
 \[
 \stmt \in L \Leftrightarrow R(\stmt, \wit)=1 \text{ for some witness } \wit
