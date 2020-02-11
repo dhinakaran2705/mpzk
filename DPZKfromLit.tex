@@ -2,16 +2,16 @@
 A simple way to construct a DPZK protocol is to start with a single-prover protocol and run MPC among the provers to generate each message to be sent to the verifier. The randomness in turn provided by the verifier can be broadcasted to the provers.
 Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{p_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $p_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
 
-We will formalize this simple DPZK transformation based on the Polynomial IOP framework \cite{polynomialiop,ahp} proposed recently. This framework captures most of the protocols from the literature on practical zero-knowledge proofs [CHECK precision of this sentence]. Writing down this formalism simplifies our future sections on the construction of DPZK based on the single prover protocols.
+%We will formalize this simple DPZK transformation based on the Polynomial IOP framework \cite{polynomialiop,ahp} proposed recently. This framework captures most of the protocols from the literature on practical zero-knowledge proofs [CHECK precision of this sentence]. Writing down this formalism simplifies our future sections on the construction of DPZK based on the single prover protocols.
 
 
 
-<change from here>
+%<change from here>
 
 We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
-The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic}, \cite{libra}, \cite{supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{Aurora, Bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
+The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup with reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}. \cite{Check} Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.\pnote{Which paper is "Check"?}
 
-Among these works, only Bulletproofs \cite{Bulletproofs} discuss distributed proof generation. Even in \cite{Bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
+Among these works, only Bulletproofs \cite{bulletproofs} discuss distributed proof generation. Even in \cite{bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
 
 \subsection{DPZK-Aurora}
@@ -37,101 +37,75 @@ The multilinear extension $\tilde{Z}(\cdot)$ can be obtained by an inner product
 
 \subsection{DPZK-Bulletproofs}
 .\dnote{TODO: circuit share complexity for the Bulletproofs protocol for arbitrary arithmetic circuits}
-\begin{comment}
-We will give two constructions of distributed proof generation for R1CS with zero knowledge property. In the first construction we will start with reducing the proof for single prover R1CS to single prover zero knowledge inner product argument, then we will give a transformation for zero knwoledge inner product argument from single prover to multiple provers, which will directly imply the proof generation system for multiprover R1CS. In the second construction we will  
-\end{comment}
-Consider the setting of distributed prover, i.e. that witness is distributed among the provers, say $\Num$ provers together hold the witness. Here we will discuss the distributed prover version of the bulletproofs for R1CS circuits. We will start with describing the distributed prover version of zero knowledge innerproduct, then we will use the protocol to design a protocol for R1CS.
+Consider the setting of the distributed prover, i.e., that witness is distributed among the provers, say $\Num$ provers together hold the witness. Here we will discuss the distributed prover version of the bulletproofs for R1CS circuits. We will start by describing the distributed prover version of zero-knowledge inner produc; then, we will use the protocol to design a protocol for R1CS.
 
 We will start with reducing a R1CS circuit into multiple inner product. Then we will use the zero knowledge inner product to construct the proof of R1CS circuit. Consider that the circuit has $n$ multiplcation gates. Corresponding to the $j^{th}$ wire let $x_j, y_j$ and $z_j$ are the left input, right input and output wires respectively. Then the vectors $\bm{x}, \bm{y}, \bm{z}\in \bbF^n$ can be obtained from the extended witness $\extwit$, by multiplying public matrices $A, B, C$ which is depended only on the circuit. Therefore we have 
-\begin{align*}
-A \extwit = \bm{x} \cdots (1)\\
-B \extwit = \bm{y} \cdots (2)\\
-C \extwit = \bm{z} \cdots (3)
-\end{align*}
-and $\bm{x}, \bm{y}, \bm{z}$ will satisfy the following eqution: $\bm{x} o \bm{y} =\bm{z} \cdots (4)$ 
-
+\begin{align}
+A \extwit = \bm{x} \\
+B \extwit = \bm{y} \\
+C \extwit = \bm{z} 
+\end{align}
+and $\bm{x}, \bm{y}, \bm{z}$ will satisfy the following eqution:
+\begin{equation}
+	\bm{x} o \bm{y} =\bm{z}
+\end{equation}
 For any $\bm{r}\in \bbF^n$, from equation (1), (2), (3) and (4), the following conditions are true:
 \begin{align*}
 \langle \bm{r}^T \cdot A, \extwit \rangle = \langle \bm{r}, \bm{x} \rangle = v_1 \\
 \langle \bm{r}^T \cdot B, \extwit \rangle = \langle \bm{y}, \bm{r} \rangle = v_2 \\
 \langle \bm{r}^T \cdot C, \extwit \rangle = \langle \bm{r}, \bm{z} \rangle = v_3 \\
-\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4 \\
+\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4 
 \end{align*} 
-We have zero knowledge inner product argument protocol for the following instance:\\
-$$\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\} \cdots (5)$$
+We have zero knowledge inner product argument protocol for the following instance:
+\begin{equation} 
+\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\} 
+\end{equation}
 where the public part is $\{(P,V,\bm{g},\bm{h},g,h)$ and secret to the prover is $(\bm{a},\bm{b},\sigma,\delta)$.\\
 Define: $v=\langle \bm{a},\bm{b}\rangle$\\
 %Finally proving the circuit satisfiability for R1CS can be viewed as 
 %$$\{(P_1,P_2,P_3,P_4,P_5,P_6,P_7,P_8, V_1,V_2,V_3,V_4,V_5,V_6,V_7,V_8, P_1=)\}$$
-So if we apply the above protocol on these 8 inner products that gives a proof of circuit satisfiability of R1CS, for example consider $\langle \bm{r}^T \cdot A, \extwit \rangle = v_1$, in this case consider $\bm{a}=\bm{r}^T\cdot A$, $\bm{b}=\extwit$ and $v=v_1$, and use the protocol (5) in these setting.\\
+So if we apply the above protocol on these 8 inner products that gives a proof of circuit satisfiability of R1CS, for example consider $\langle \bm{r}^T \cdot A, \extwit \rangle = v_1$, in this case consider $\bm{a}=\bm{r}^T\cdot A$, $\bm{b}=\extwit$ and $v=v_1$, and use the protocol (9) in these setting.
 \subsubsection{Multiprover version of zero knowledge inner product argument}
-Now we will discuss the multiprover version of the zero knowledge inner product proof: where there will an aggregator $\calA$(need not be trusted) who will iinteract with the verifier.\\
+Now we will discuss the multiprover version of the zero knowledge inner product proof: where there will an aggregator $\Ag$(need not be trusted) who will iinteract with the verifier.\\
 Consider $\prover_1,\ldots, \prover_{\Num}$ are provers for the inner product statement i.e. $\{(P,V,\bm{g},\bm{h},g,h)\}$ and the corresponding witness is $(\bm{a},\bm{b}, \sigma, \delta)$, where $P= h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$, $V=h^{\delta}g^{v}$. Let party $\prover_i$ has $(\bm{a}_i,\bm{b}_i,\sigma_i,\delta_i)$ such that
-\begin{align*}
+\begin{align}
 	\sum\limits_{i=1}^{N}\bm{a}_i=\bm{a},\text{ }
 	\sum\limits_{i=1}^{N}\bm{b}_i=\bm{b},\text{ }
 	\sum\limits_{i=1}^{N}\sigma_i=\sigma,\text{ }
-	\sum\limits_{i=1}^{N}\delta_i=\delta \text{ }\cdots(5)
-\end{align*}
+	\sum\limits_{i=1}^{N}\delta_i=\delta \text{ }
+\end{align}
 \begin{enumerate}
-	\item In this step each party chooses their blinding vectors and commits to that vector. $\prover_i$ samples $\bm{s}^i_L, \bm{s}^i_r \leftarrow_\$ \bbZ_p^n$ and $\rho_i\leftarrow \bbZ_p$, then computes $S^i=h^{\rho_i}\bm{g}^{\bm{s}^i_L}\bm{h}^{\bm{s}^i_R}$ and sends $S^i$ to $\cA$.
-	\item In this step $\cA$ computes the commitment of the blinding vector, which is sum of all the provers blinding vector. $\cA$ computes $S = \prod_{i=1}^{\Num}S^i = h^{\sum_{i=1}^{\Num}\rho_i}\bm{g}^{\sum_{i=1}^{\Num}\bm{s}_L^i}\bm{h}^{\sum_{i=1}^{\Num}\bm{s}^i_R} = h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R}$, where $\rho = \sum_{i=1}^{\Num}\rho_i$, $\bm{s}_L =\sum_{i=1}^{\Num} \bm{s}^i_L,  \bm{s}_R=\sum_{i=1}^{\Num}\bm{s}^i_R$, and $\cA$ sends $S$ to the verifier $\verifier$.
-	\item Prover $\prover_i$ constructs a vector polynomial $l_i(X)=\bm{a}_i + X. \bm{s}^i_L$ and $r_i(X)=\bm{b}_i + X. \bm{s}^i_R$. All the provers involve in an MPC to obtain the shares of the polynomial $T(X)=\langle \sum_{i=1}^{\Num} l_i(X),\sum_{i=1}^{\Num} r_i(X)\rangle$. Let $\prover_i$ gets the share $T_i(X)$ of $T(X)$, where $T(X)=\sum_{i=1}^{\Num}T_i(X)$. Let $T_i(X)= t^i_0+t^i_1.X+t^i_2.X^2$, then $\sum_{i=1}^{\Num} t^i_0=\langle \bm{a}, \bm{b} \rangle$. Now $\prover_i$ commits to $t^i_j$ using randomness $\tau^i_j$ i.e. $T^i_j=h^{\tau^i_j}g^{t^i_j}$ and sends $T^i_j$ to $\cA$ for $j\in \{1,2\}$.
-	\item $\cA$ computes $T_j=\prod_{i=1}^{\Num} T^i_j$ which gives the commitment of $t_j \forall j\in\{1,2\}$ and sends $T_1,T_2$ to the verifier $\verifier$.
-	\item $\verifier$ samples $x\leftarrow_\$\bbZ^*_p$ and sends it to the aggregator $\cA$.
-	\item $\cA$ sends the $x$ to the provers. 
-	\item $\prover$ computes $\bm{l}_i=l_i(x), \bm{r}_i=r_i(x)$, $\mu_i= \sigma_i+\rho_i.x$, $\tau^i_x= \delta_i+\tau^i_1.x+\tau^i_2.x^2$ and sends $\bm{l}_i,\bm{r}_i, \mu_i, \tau^i_x$ to $\cA$.
-	\item $\cA$ defines $\bm{l}=\sum_{i=1}^{\Num}\bm{l_i}$ and $\bm{r}=\sum_{i=1}^{\Num}\bm{r_i}$ and $\hat{t}=\langle \bm{l},\bm{r}\rangle =T(x)$. $\cA$ computes $Q=\bm{g^lh^r}$, $\mu=\sum_{i=1}^{\Num} \mu_i$ and $\tau_x = \sum_{i=1}^{\Num}\tau_x^i$. And finally $\cA$ sends $Q, \mu, \tau_x, \hat{t}$ to $\verifier$.
+	\item In this step each party chooses their blinding vectors and commits to that vector. $\prover_i$ samples $\bm{s}^i_L, \bm{s}^i_R \sample \bbZ_p^n$ and $\rho_i\sample \bbZ_p$, then computes $S^i=h^{\rho_i}\bm{g}^{\bm{s}^i_L}\bm{h}^{\bm{s}^i_R}$ and sends $S^i$ to $\Ag$.
+	\item In this step $\Ag$ computes the commitment of the blinding vector, which is sum of all the provers blinding vector. $\Ag$ computes $S = \prod_{i=1}^{\Num}S^i = h^{\sum_{i=1}^{\Num}\rho_i}\bm{g}^{\sum_{i=1}^{\Num}\bm{s}_L^i}\bm{h}^{\sum_{i=1}^{\Num}\bm{s}^i_R} = h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R}$, where $\rho = \sum_{i=1}^{\Num}\rho_i$, $\bm{s}_L =\sum_{i=1}^{\Num} \bm{s}^i_L,  \bm{s}_R=\sum_{i=1}^{\Num}\bm{s}^i_R$, and $\Ag$ sends $S$ to the verifier $\verifier$.
+	\item Prover $\prover_i$ constructs a vector polynomial $l_i(X)=\bm{a}_i + X. \bm{s}^i_L$ and $r_i(X)=\bm{b}_i + X. \bm{s}^i_R$. All the provers involve in an MPC to obtain the shares of the polynomial $T(X)=\langle \sum_{i=1}^{\Num} l_i(X),\sum_{i=1}^{\Num} r_i(X)\rangle$. Let $\prover_i$ gets the share $T_i(X)$ of $T(X)$, where $T(X)=\sum_{i=1}^{\Num}T_i(X)$. Let $T_i(X)= t^i_0+t^i_1.X+t^i_2.X^2$, then $\sum_{i=1}^{\Num} t^i_0=\langle \bm{a}, \bm{b} \rangle$. Now $\prover_i$ commits to $t^i_j$ using randomness $\tau^i_j$ i.e. $T^i_j=h^{\tau^i_j}g^{t^i_j}$ and sends $T^i_j$ to $\Ag$ for $j\in \{1,2\}$.
+	\item $\Ag$ computes $T_j=\prod_{i=1}^{\Num} T^i_j$ which gives the commitment of $t_j \forall j\in\{1,2\}$ and sends $T_1,T_2$ to the verifier $\verifier$.
+	\item $\verifier$ samples $x\leftarrow_\$\bbZ^*_p$ and sends it to the aggregator $\Ag$.
+	\item $\Ag$ sends the $x$ to the provers. 
+	\item $\prover$ computes $\bm{l}_i=l_i(x), \bm{r}_i=r_i(x)$, $\mu_i= \sigma_i+\rho_i.x$, $\tau^i_x= \delta_i+\tau^i_1.x+\tau^i_2.x^2$ and sends $\bm{l}_i,\bm{r}_i, \mu_i, \tau^i_x$ to $\Ag$.
+	\item $\Ag$ defines $\bm{l}=\sum_{i=1}^{\Num}\bm{l_i}$ and $\bm{r}=\sum_{i=1}^{\Num}\bm{r_i}$ and $\hat{t}=\langle \bm{l},\bm{r}\rangle =T(x)$. $\Ag$ computes $Q=\bm{g^lh^r}$, $\mu=\sum_{i=1}^{\Num} \mu_i$ and $\tau_x = \sum_{i=1}^{\Num}\tau_x^i$. And finally $\Ag$ sends $Q, \mu, \tau_x, \hat{t}$ to $\verifier$.
 \end{enumerate}
 $\verifier$ checks: 
 \begin{enumerate}
 	\item $h^{\tau_x}g^{\hat{t}} \stackrel{?}{=} V\cdot T_1^x\cdot T_2^{x^2}$ to check the correct evaluation of the committed polynomial $T$ at $x$.
 	\item $P\cdot S^x \stackrel{?}{=} h^{\mu}\cdot Q$. 
-	\item Runs the inner product proof from \cite{Bulletproofs}, which need not be zero knowledge on the input $(Q, \hat{t}, \bm{g}, \bm{h}, g)$ with the aggregator $\cA$.
+	\item Runs the inner product proof from \cite{bulletproofs}, which need not be zero knowledge on the input $(Q, \hat{t}, \bm{g}, \bm{h}, g)$ with the aggregator $\Ag$.
 \end{enumerate}
 The verifier $\verifier$ accepts the proof if the checks succeed and the inner product argument accepts.
 
-\begin{comment}
-\subsubsection{Completeness} Consider the provers are honest i.e. $\cP_1,\ldots, \cP_N$ together hold the witness i.e. equation (5) is true, then the checks succeed. We will see one by one how all the checks succeed.\\
-The first check succeeds because:
-\begin{align*}
-	h^{\tau_x}g^{\hat{t}} &= h^{\delta+\tau_1 x+ \tau_2 x^2}\cdot g^{\langle \bm{a},\bm{b}\rangle + t_1x+t_2x^2}\\
-	&= h^{\sum\limits_{i=1}^N(\delta_i+\tau^i_1x+\tau^i_2x^2)}\cdot g^{\sum\limits_{i=1}^N (t^i_0+t^i_1x+t^i_2x^2)}\\
-	&= \prod\limits_{i=1}^N h^{\delta_i}.h^{\tau^i_1x}.h^{\tau^i_2x^2}\prod\limits_{i=1}^N g^{t_0}.g^{t^i_1x}.g^{t^i_2x^2}\\
-	&= (h^{\delta}\cdot g^{\langle \bm{a},\bm{b}\rangle})\cdot(h^{\tau_1}g^{t_1})^x\cdot(h^{\tau_2}g^{t_2})^{x^2}\\
-	&= V\cdot T_1^x \cdot T_2^{x^2}
-\end{align*} 
-The second check succeeds because:
-\begin{align*}
-	P\cdot S^x &= h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}\cdot (h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R})^x\\
-	&= h
-\end{align*}
-\subsubsection{Soundness}
-\end{comment}
 The completeness, soundness and zero knowledge hold and the proof is similar to zero knowledge inner product argument.
+\pnote{are we adding Nitin's write up of zk-inner product?}
+We can argue the privacy by saying that provers are interacting only to get the shares of $T(X)$ and that is being done using secure MPC, and remaining all the interactions are done with the aggregator $\Ag$ only. Who is learning nothing more than whatever $\verifier$ learns in zero knowledge inner produt argument. 
+$\Ag$ has commitments of the shares of $s_L$ and $s_R$, and computes the commitments of $s_L$ and $s_R$, hiding property of the commitment ensures that $\Ag$ learns no information about the secrets $s_L, s_R$ as well as their shares.
 
-We can argue the privacy by saying that provers are interacting only to get the shares of $T(X)$ and that is being done using secure MPC, and remaining all the interactions are done with the aggregator $\cA$ only. Who is learning nothing more than whatever $\verifier$ learns in zero knowledge inner produt argument. 
-$\cA$ has commitments of the shares of $s_L$ and $s_R$, and computes the commitments of $s_L$ and $s_R$, hiding property of the commitment ensures that $\cA$ learns no information about the secrets $s_L, s_R$ as well as their shares.
+$\Ag$ receives the commitments of the coefficients of the shares of the polynomial $T(X)$, and reconstructs the commitments of the coefficients of $T(X)$, again hiding property of the commitment ensures that $\Ag$ learns no information about the polynomial $T(X)$.
 
-$\cA$ receives the commitments of the coefficients of the shares of the polynomial $T(X)$, and reconstructs the commitments of the coefficients of $T(X)$, again hiding property of the commitment ensures that $\cA$ learns no information about the polynomial $T(X)$.
+In the next step, $\Ag$ gets $\hat{l}, \hat{r}, \mu, \tau_x$, which verifier gets in single prover zero knowledge inner product argument, the zero knowledge property of the above ensures that $\hat{l}, \hat{r}, \mu, \tau_x$ is not leaking any information about the secrets.
 
-In the next step, $\cA$ gets $\hat{l}, \hat{r}, \mu, \tau_x$, which verifier gets in single prover zero knowledge inner product argument, the zero knowledge property of the above ensures that $\hat{l}, \hat{r}, \mu, \tau_x$ is not leaking any information about the secrets.
-
-Therefore $\cA$ is not learning anything new. Which implies privacy of the provers are preserved.
+Therefore $\Ag$ is not learning anything new. Which implies privacy of the provers are preserved.
 
 \subsubsection{optimization}
 We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \langle \bm{r}, \bm{x} \rangle = v_1$ and $\langle \bm{r}^T \cdot C, \extwit \rangle = \langle \bm{r}, \bm{z} \rangle = v_3$ which can be represented as $\langle \bm{r}^T \cdot(\alpha.A+\gamma.C), \extwit \rangle = \langle \bm{r}, (\alpha.\bm{x}+\gamma.\bm{z}) \rangle = v_3$ where $\alpha, \gamma$ are randomly chosen by the verifier $\verifier$. In the commitment we are considering that if $\langle \bm{a},\bm{b}\rangle= c$ is in the statement of the inner product, then the commitment of $\bm{a}$ and $\bm{b}$ will be of the form $h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$. Note that in the commitment there should not be any known relation between the generators and for the equation $\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4$ there should not be the known relation between the generator $\bm{g}$ which is used to commit to $\bm{x}$ with the generator which is used to commit to $\bm{y}$, for that reason the commitment for $\bm{y}$ is considered in left in $\langle \bm{y}, \bm{r} \rangle = v_2$. For that reason this inner product we could not batch with the prior inner products. In this case we need to give 6 inner product proofs instead of 8. 
 \dnote{To Protik: Rewrite the section below}.
-\begin{comment}
-	\subsubsection{Alternate proof for R1CS}
-	In the beginning we just presented the reduction of R1CS satisfiability to 8 innerproduct argument, where each of them are inner products of vectors of size $n$. Another simple way of combining the inner products of vectors of size $n$ into a single inner product of size of $8n$, (for further optimization, this $8n$ can be reduced to $6n$) were given in \cite{Bulletproofs} in their range proofs. 
-	For each inner product choose a different set of generators $(\bm{g}^{(k)},\bm{h}^{(k)})_{k=1}^{8}$ and define $\bm{g}$ as the interleaved concatenation of all $\bm{g}^{(k)}$ such that $g_i=g_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$. Define $\bm{h}$ in the similar way. The private vectors are also combined in the similar way. Therefore the final inner product will look like:
-	$$\{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\}$$
-	where $a_i= a_{\lceil \frac{i}{8} \rceil}^{(i \mod 9)}$ similarly define $\bm{b}$. $\langle\bm{a},\bm{b}\rangle=\sum_{k=1}^{4}2\times v_i$
-	In this way proof size will be $2\log (8n) + 2$.
-	
-\end{comment}
-
 
 \subsection{Summary of existing protocols}
 Argue why we need a better a single prover protocol amenable to multiple provers. 
