@@ -16,15 +16,16 @@ For an $[n,k]$-linear code $L$ and a positive integer $m$, we define a {\em row 
 For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as an element in the field $\bbF^m$ \commentA{this isn't clear at all }. Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
  
 \begin{definition}[Product Code]\label{defn:productcode}
-Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\oplus L_2$ \commentA{notation is very bad; } to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
+Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\otimes L_2$ \commentA{bad notation for product code; better now? } to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
 \end{definition}
 
 Note that by definition, the product code $L_1\oplus L_2$ is a row interleaved code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\oplus L_2 =
 \ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\oplus L_2$, we define $\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and $\dham_2(A,A')=|\{i\in
 [n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance $\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$ corresponds to the distance function of the code $\cic{L}{n_1}$.
+\commentA{where is the proof for existence of such code?}
 
 \begin{definition}[Reed Solomon Code]\label{defn:rscode}
-An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
+An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ \commentA{less than equal to?} where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
 \end{definition}
 
 \begin{lemma}\label{lem:bicdecoding}
