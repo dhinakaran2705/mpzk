@@ -841,6 +841,88 @@ made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
 We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item $\quadcheck(\FF,\GG,L_1,L_2,[\pi];\wit_x,\wit_y,\wit_z)$:
+\item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
+s.t. $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)$, $\wit_{a}=\dec(\ewit_a)$ for $a\in
+\{x,y,z\}$ and $\wit_x\circ \wit_y = \wit_z$.
+\item {\bf Oracle Setup}: The prover $\prover$ computes $\comoracle_a=\comm(\ewit_a)$ 
+for $a\in \{x,y,z\}$. It sets $\pi :=
+[\comoracle_x||\comoracle_y||\comoracle_z]$ where the notation denotes vertical
+stacking of the matrices. 
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: Verifier samples $r\sample\FF^p$ and sends
+it to $\prover$.
+\item $\prover$ computes:
+	\begin{itemize}
+	\item polynomials $p_j(\cdot):=\sum_{i\in
+[p]}r_i\big(Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot)\big)$
+for $j\in [h]$.
+	\item $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
+	\item commitments $c_1,\ldots,c_{2\ell}$ to the first $2\ell$ columns of
+$P$.
+	\end{itemize}
+\item $\prover\rightarrow\verifier$: The prover sends $c_1,\ldots,c_{2\ell}$ to
+the verifier.
+\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample
+[h]\times [n]$ for $u\in [t]$. The verifier also samples $\tau\sample
+\FF^{\ell}$. It sends $Q=\{(j_u,k_u):u\in [t]\}$ and $\tau$ to $\prover$.
+\item $\prover\rightarrow\verifier$: The prover sends vectors
+$X_u=\ewit_x[\cdot,j_u,k_u],Y_u=\ewit_y[\cdot,j_u,k_u],Z_u=\ewit_z[\cdot,j_u,k_u]$
+to the verifier, for all $u\in [t]$.
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u: u\in
+[t]\}$.
+\item Oracle Response: The oracle responds with columns $\pi[\cdot,k_u]$ for
+$u\in [t]$.
+\item $\prover\leftrightarrow\verifier$: Both $\prover$ and $\verifier$ compute
+$\varphi := \Phi^T\tau$ and $\mathsf{cm}:= \sum_{k\in [2\ell]}\phi_kc_k$.
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm
+2d}=\proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\bar{P})$ where
+$\bm{c}=(c_1,\ldots,c_{2\ell})$ and $\bar{P}$ is the submatrix of $P$ consisting
+of the first $2\ell$ columns. Here $\dashL_1=\rsc{\eta}{2\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$
+with $x=(\gamma,0^{h-m})$, $v=0$ and $z=\bar{P}\varphi$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\bar{P}T$.
+\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i] - Z_u[i])$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_{1u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_x[\cdot,k_u],X_u;\ewit_x[\cdot,\cdot,k_u])$
+	\item
+$a_{2u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_y[\cdot,k_u],Y_u;\ewit_y[\cdot,\cdot,k_u])$
+	\item
+$a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} =
+\proximityThreeD(\FF,L_1,L_2,e,[\pi];[\ewit_x||\ewit_y||\ewit_z])$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Quadratic Check Protocol}
+\label{fig:quadcheck}
+\end{figure}
+
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{3p\times n}$,
 there exists an expected polynomial time extractor $\extr$ with rewinding access
@@ -1025,88 +1107,58 @@ of the protocol $\quadcheck$ for $t\leq \bi$.
 
 
 \subsection{Extension to DIZK}
+We now describe variants of the protocols discussed previously when the witness
+is shared among several provers. We assume that there are $K$ provers
+$P_1,\ldots,P_K$. For $\xi\in [K ]$, let $[[\wit]]_\xi$ denote the prover
+$P_{\xi}'s$ share of the witness $\wit$. We assume that the sharing is additive,
+i.e, $\sum_{\xi\in [K]}\wit_\xi=\wit$. When denoting witnesses to certain
+protocols, we use the $[[\cdot]]$ to denote that the witness is additively
+shared among the provers, i.e, notation $[[x]]$ in the witness list of the
+protocol denotes that the provers have shares $[[x]]_\xi$ of $x$. We assume that
+there is a designated party $\Ag$ which aggregates the messages received from
+provers $P_1,\ldots,P_K$ and constructs the message to be sent to the verifier
+$\verifier$. The verifier's  messages are assumed to be available to every
+prover through a broadcast channel. Finally, we mention that aggregator's role
+is conceptual, and may be played by one of the provers. We proceed to describe
+distributed versions of the key subprotocols.\smallskip
+\nnote{Probably move it to some common section}
 
+\noindent{\bf Distributed Membership Test}: We describe the variant of the
+protocol $\proximityTwoD$ for the case when the matrix $\bar{U}$ is shared
+across several parties. The complete protocol appears in Figure
+\ref{fig:distprox2d}. 
 
 \begin{figure}[h!]
 \centering
 \begin{framed}
 \begin{itemize}
-\item $\quadcheck(\FF,\GG,L_1,L_2,[\pi];\wit_x,\wit_y,\wit_z)$:
-\item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
-s.t. $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)$, $\wit_{a}=\dec(\ewit_a)$ for $a\in
-\{x,y,z\}$ and $\wit_x\circ \wit_y = \wit_z$.
-\item {\bf Oracle Setup}: The prover $\prover$ computes $\comoracle_a=\comm(\ewit_a)$ 
-for $a\in \{x,y,z\}$. It sets $\pi :=
-[\comoracle_x||\comoracle_y||\comoracle_z]$ where the notation denotes vertical
-stacking of the matrices. 
+\item $\distproxTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};[[\bar{U}]],[[\bm{\omega}]])$:
+\item {\bf Relation}: $(\bar{U},\bm{\omega})=\open(\bm{c})$ and
+$\bar{U}\mc{T}\in \mc{C}_2$.
 \begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: Verifier samples $r\sample\FF^p$ and sends
-it to $\prover$.
-\item $\prover$ computes:
+\item $\distprover\rightarrow \Ag$: Samples random codeword $u^\xi_0\in L_2$ and
+computes $d^\xi_0=\comm(u^\xi_0,\nu^\xi_0)$ for randomly sampled $\nu^\xi_0$.
+Sends $d^\xi_0$ to $\Ag$.
+\item {\color{red} $\Ag\rightarrow \verifier$: $\Ag$ computes $d_0=\sum_{\xi\in
+K}d^\xi_0$ and sends $d_0$ to $\verifier$ }.
+\item $\verifier\rightarrow \distprover$: Verifier samples $\tau\sample \FF^m$,
+$\delta\sample \FF^{h-m}$ and sends them to $\distprover$.
+\item $\Ag\leftrightarrow \verifier$ compute: $\mu=\mc{T}\tau$,
+$\mathsf{cm}=d_0+\sum_{i\in [\ell]}\mu_ic_i$, $x=\mc{H}_2\delta$.
+\item $\distprover$ computes: $[[z]]^\xi=u^\xi_0+[[\bar{U}]]^\xi\mu$,
+$[[\nu]]_\xi=\nu^\xi_0+\sum_{i\in [\ell]}\mu_i[[\omega_i]]^\xi$.
+\item {\color{red} $\Ag$ computes: $z=\combine([[z]]^\xi)$,
+$\nu=\combine([[\nu]]^\xi)$}.
+\item $\Ag$ and $\verifier$ run the subprotocol:
 	\begin{itemize}
-	\item polynomials $p_j(\cdot):=\sum_{i\in
-[p]}r_i\big(Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot)\big)$
-for $j\in [h]$.
-	\item $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
-	\item commitments $c_1,\ldots,c_{2\ell}$ to the first $2\ell$ columns of
-$P$.
+	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},0;z,\nu)$.
 	\end{itemize}
-\item $\prover\rightarrow\verifier$: The prover sends $c_1,\ldots,c_{2\ell}$ to
-the verifier.
-\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample
-[h]\times [n]$ for $u\in [t]$. The verifier also samples $\tau\sample
-\FF^{\ell}$. It sends $Q=\{(j_u,k_u):u\in [t]\}$ and $\tau$ to $\prover$.
-\item $\prover\rightarrow\verifier$: The prover sends vectors
-$X_u=\ewit_x[\cdot,j_u,k_u],Y_u=\ewit_y[\cdot,j_u,k_u],Z_u=\ewit_z[\cdot,j_u,k_u]$
-to the verifier, for all $u\in [t]$.
-\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u: u\in
-[t]\}$.
-\item Oracle Response: The oracle responds with columns $\pi[\cdot,k_u]$ for
-$u\in [t]$.
-\item $\prover\leftrightarrow\verifier$: Both $\prover$ and $\verifier$ compute
-$\varphi := \Phi^T\tau$ and $\mathsf{cm}:= \sum_{k\in [2\ell]}\phi_kc_k$.
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b_{\rm
-2d}=\proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\bar{P})$ where
-$\bm{c}=(c_1,\ldots,c_{2\ell})$ and $\bar{P}$ is the submatrix of $P$ consisting
-of the first $2\ell$ columns. Here $\dashL_1=\rsc{\eta}{2\ell}$ and
-$\dashL_2=\rsc{\alpha}{2m}$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$
-with $x=(\gamma,0^{h-m})$, $v=0$ and $z=\bar{P}\varphi$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
-\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\bar{P}T$.
-\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
-[t]$:
-	\begin{itemize}
-	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
-$x=e_{j_u}$, $v=\sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i] - Z_u[i])$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
-$u\in [t]$:
-	\begin{itemize}
-	\item
-$a_{1u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_x[\cdot,k_u],X_u;\ewit_x[\cdot,\cdot,k_u])$
-	\item
-$a_{2u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_y[\cdot,k_u],Y_u;\ewit_y[\cdot,\cdot,k_u])$
-	\item
-$a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\cdot,k_u])$
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol: 
-	\begin{itemize}
-	\item $b_{\rm prox} =
-\proximityThreeD(\FF,L_1,L_2,e,[\pi];[\ewit_x||\ewit_y||\ewit_z])$
-	\end{itemize}
-\item The verifier accepts if all the subprotocols accept.
+\item $\verifier$ accepts if the subprotocol accepts.
 \end{enumerate}
 \end{itemize}
 \end{framed}
-\caption{Quadratic Check Protocol}
-\label{fig:quadcheck}
+\caption{Distributed Membership Test}
+\label{fig:distprox2d}
 \end{figure}
 
 
