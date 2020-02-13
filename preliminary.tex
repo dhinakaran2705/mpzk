@@ -19,13 +19,13 @@ For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}
 Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\otimes L_2$ \commentA{bad notation for product code; better now? } to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
 \end{definition}
 
-Note that by definition, the product code $L_1\oplus L_2$ is a row interleaved code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\oplus L_2 =
-\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\oplus L_2$, we define $\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and $\dham_2(A,A')=|\{i\in
+Note that by definition, the product code $L_1\otimes L_2$ is a row interleaved code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\otimes L_2 =
+\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\otimes L_2$, we define $\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and $\dham_2(A,A')=|\{i\in
 [n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance $\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$ corresponds to the distance function of the code $\cic{L}{n_1}$.
 \commentA{where is the proof for existence of such code?}
 
 \begin{definition}[Reed Solomon Code]\label{defn:rscode}
-An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ \commentA{less than equal to?} where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
+An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
 \end{definition}
 
 \begin{lemma}\label{lem:bicdecoding}
@@ -33,10 +33,33 @@ Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ be $[n,\ell]$ and
 $[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and
 $\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. Suppose
 a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast,\mc{C}_1)<e_1$ and
-$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$. Then, there exists $U\in L_1\oplus L_2$ and sets
+$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$\commentA{what are $d_1$ and $d_2$? These are never defined. }. Then, there exists $U\in L_1\otimes L_2$ and sets
 $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $S_2>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
+\commentA{where is the proof?}
 \end{lemma}
+
+\begin{proof}
+	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
+	Therefore $U^\ast$ differs from $U_1$ in $\beta_1$ many columns, i.e. in the remaining $n-\beta_1$ columns $U^\ast$ and $U_1$ are identical.
+	So, there are columns $S_1 = \{j_{s} : s\in [n - \beta_1] \}$ for which $U^\ast[i,j] = U_1[i,j]$ $\forall j\in S$.
+	Let $U_2 \in \mc{C}_2$  such that $\dham_2(U^\ast, U_2) \leq \dham(U^\ast, U) \forall U\in \mc{C}_2$ and let $\dham_1(U^\ast, U_2) = \beta_2$ with $\beta_2<e_2$
+	Therefore $U^\ast$ differs from $U_2$ in $\beta_2$ many rows, i.e. in the remaining $n-\beta_1$ rows $U^\ast$ and $U_2$ are identical.
+	So, there are rows $S_2 = \{i_{t} : t\in [h - \beta_2] \}$ for which $U^\ast[i,j] = U_2[i,j]$ $\forall i\in T$.
+	
+	$U_1\in \mc{C}_1 \implies \exists$ polynomials $p_1(\cdot), \ldots, p_h(\cdot)$ of degree $< \ell$
+	
+	$U_2\in \mc{C}_2 \implies \exists$ polynomials $q_1(\cdot), \ldots, q_n(\cdot)$ of degree $< m$
+	
+	Such that $p_i(\eta_j) = U_1[i,j] \& q_i(\alpha_j) = U_2[j,i]$
+	
+	Therefore, $U_1[i,j] = U_2[i,j]$ $\forall i\in S_1, j\in S_2$. Choose a bivariate polynomial $Q(x,y)$ such that $deg_x(Q)<\ell $ and $deg_y(Q)<m$ and $Q(\eta_{i_s}, \alpha_{j_t}) = U_1[i_s,j_t] = U_2[i_s,j_t] \forall (i, j)\in S_1\times S_2$. 
+	
+	Defne $U = Q(\eta_i,\alpha_j)$ $\forall i\in[h], j\in[n]$, Then $U \in \L_1\otimes L_2$ and $U^\ast[i,j] = U[i,j]$ $\forall (i,j) \in S_1 \times S_2$.
+	
+	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
+	This proves the above claim.	
+\end{proof}
  
 
 \subsection{Geometric Results on Linear Codes}
@@ -59,7 +82,7 @@ $d(x,L)$ is maximum. By assumption $d(x,L)\leq e$. Let $v\in L$ be such that
 $\Delta(x,v)=d(x,L)$. Let $E\subseteq [n]$ be the set of positions where $x$ and
 $v$ differ. Since $d(U^\ast,\mc{C})>e$, there exists row $R$ of $U^\ast$ and
 position $j\in [n]$ 
-such that $R_j\neq 0$. Let
+such that $R_j\neq 0$.\pnote{Is this for all $j\in[n]$ or $\exists j\in [n]$? Why this is true?} Let
 $\alpha_1,\ldots,\alpha_{e+1}$ be distinct non zero elements in $\FF$. Let $E_k$
 for $k=1,\ldots,e+1$ denote the set of positions where $x+\alpha_kR$ and $v$
 differ. Fix a position $i\in E$. Then there exists at most one $k\in [e+1]$ such
@@ -94,7 +117,7 @@ of $U$, while we refer to $U[\cdot,\cdot,k]$ as the $k^{th}$ {\em plane} of $U$.
 each slice of $U$ is a codeword in $\mc{C}$. Let $\Delta_1$ denote the distance
 metric on the set of $p\times m\times n$ matrices denoting the number of planes
 where they differ, i.e, $\Delta_1(U,U')=|\{k\in [n]:
-U[\cdot,\cdot,k]=U'[\cdot,\cdot,k]\}|$. As before, define $d(U^\ast,\mc{C}^p)$ to be
+U[\cdot,\cdot,k]=U'[\cdot,\cdot,k]\}|$. \pnote{It should be $\neq$, right?} As before, define $d(U^\ast,\mc{C}^p)$ to be
 the minimum value $\Delta_1(U^\ast,U)$ for $U\in \mc{C}^p$. The next result
 states that if a three dimensional matrix $U$ is far away from the code
 $\mc{C}^p$, a random linear combination of slices of $U$ is far away from $C$.

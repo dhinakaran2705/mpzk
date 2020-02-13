@@ -62,6 +62,8 @@ Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the outpu
  \{ \Sim_{\pi_i} (\stmt, \st^{i-1}_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^{i-1}_j\}_{j \in [N]}) 
 \]
 where $\st^{i-1}_T$ is the state of the parties in $T$ for the $i-1$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
+
+And $\Sim_P$ picks uniform $r$ on behalf of $\verifier$ to update the states.
 \end{definition}
 .\dnote{A couple of questions to everyone:\\
 1) shall we notate $\pi_0$ as the 0th step in the proof system where the provers obtain the shares of the extended witness starting from their shares of the witness?
@@ -90,7 +92,7 @@ where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the
 	\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i) \}
 	\stackrel{c}{\approx} \{ \langle \Sim_{\pi_i} \rangle (\stmt, \st^{i-1}_T, m) \}
 	\end{align}
-	
+
 	A transcript of actual execution of $\innp{\Pi}{\verifier^*}$ will have three types of values:
 	
 	\begin{itemize}
@@ -103,13 +105,15 @@ where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the
 	$\Sim$ on input $\stmt, \wit_T$ does the following: 
 	\begin{itemize}
 		\item $\Sim$ sets $st^0_T = \wit_T$.
-		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and gets $m_{1}$ as the first round message to the verifier.
+		\item $\Sim$ calls $\Sim_P$ to get the random $r_1$ which is going to be used before the next round to update the provers states.
+		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $r_1$ to get $m_{1}$ as the first round message to the verifier.
 		\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_1}$ on input $(\stmt, \st^0_T , m_{1})$ and gets $\tau_{1}$.
-		\item $\Sim$ sends $m_1$ to the verifier, and gets the response $r_1$, a random challenge (honest verifier).
+		%\item $\Sim$ sends $m_1$ to the verifier, and gets the response $r_1$, a random challenge (honest verifier).
 		\item $\Sim$ updates the states of the adversarial provers i.e. $\st^i_T = (\st^{i-1}_T, r_i)$ $\forall i>0$.
-		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and verifier's randomness $\{r_1, \ldots, r_i\}$ for the previous $i$ rounds and gets $m_{i+1}$.
-		\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_{i+1}}$ on input $(\stmt, \st^{i}_T , m_{i+1})$ and gets $\tau_{i+1}$ $\forall i>0$. 
-		\item $\Sim$ keeps repeating the above steps and stops when $i=\round - 1$. 
+		\item $\Sim$ calls $\Sim_P$ to get the random $r_i$, for all $1<i <R$.
+		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $(r_1, \ldots, r_i)$ to get $m_i$ for all $1<i<R$.
+		\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_{i}}$ on input $(\stmt, \st^{i-1}_T , m_{i})$ and gets $\tau_{i}$ $\forall i>0$. 
+		%\item $\Sim$ keeps repeating the above steps and stops when $i=\round - 1$. 
 	\end{itemize}
 	$\Sim$ outputs $\Gamma = \{\tau_1, m_1 ,r_1, \ldots, \tau_{\round}, m_{\round}, r_{\round} \}$ 
 	
