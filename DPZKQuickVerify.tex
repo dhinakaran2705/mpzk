@@ -1165,9 +1165,170 @@ $\nu=\combine([[\nu]]^\xi)$}.
 multiple provers, each having share of the witness, to construct commitment to
 the encoded witness as in Section \ref{sec:witencoding}, and convince the
 verifier that the commitment opens to a well formed encoding by providing oracle
-access to the commitment. The protocol appears in Figure \ref{fig:distprox3d}.
+access to the commitment. The protocol appears in Figure
+\ref{fig:distprox3d}.\smallskip
 
-%\begin{figure}[h!]
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item {$\distproxThreeD(\FF,\GG,L_1,L_2,[\pi];[[\ewit]])$}:
+\item {\bf Relation}: $\ewit=\open(\pi)$, $\ewit\in \mc{W}$.
+\item {\bf Oracle Setup}: 
+	\begin{itemize}
+	\item $\distprover\rightarrow \Ag$: Each prover computes shares $[[\comoracle]]^\xi$ from $[[\ewit]]^\xi$ as $[[\comoracle]]^\xi=\comm([[\ewit]]^\xi)$ as in Section \ref{sec:construct_oracle}. 
+	\item {\color{red} $\Ag$ computes: $\comoracle :=
+\combine([[\comoracle]]^\xi)$ and sets $\pi := \comoracle$ as the oracle}.
+	\end{itemize}
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\distprover$: Verifier samples $r\sample \FF^p$ and
+sends $r$ to $\distprover$.
+\item $\distprover$ computes:
+	\begin{itemize}
+	\item $\shr{\tilde{U}} := \sum_{i\in [p]}r_i\shr{\ewit}[i,\cdot,\cdot]$.
+	\item $\shr{\tilde{c}_k} := \sum_{i\in [p]}\shr{\comoracle}[i,k]$ for
+$k\in [\ell]$.
+	\item $\shr{\tilde{\omega}_k} := \sum_{i\in [p]}O^\xi[i,k]$ for
+$k\in [\ell]$.
+	\end{itemize}
+\item $\distprover\rightarrow\Ag$: The provers send $\shr{\tilde{\bm{c}}} :=
+(\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$ to $\Ag$.
+\item {\color{red} $\Ag\rightarrow\verifier$: $\Ag$ computes $\tilde{\bm{c}} :=
+\combine(\shr{\tilde{\bm{c}}})$ and sends
+$\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\verifier$}.
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item
+$b=\distproxTwoD(\FF,\GG,\ell,L_1,L_2,\tilde{\bm{c}};\shr{\tilde{U}})$.
+	\end{itemize}
+\item $\verifier$ queries: $\verifier$ samples $Q\subseteq [n]$ of size $t$ and
+makes oracle queries for positions in $Q$.
+\item Oracle Answers: The oracle responds with columns $\pi[\cdot,k]$ for $k\in
+Q$.
+\item $\verifier$ checks: The verifier checks $\sum_{i\in
+[p]}r_i\pi[i,k]=\sum_{i\in [\ell]}\mc{T}[i,k]\tilde{c}_i$ for $k\in Q$.
+\item $\verifier$ accepts if the above check succeeds and $b=1$. 
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Distributed 3D Proximity Protocol}
+\label{fig:distprox3d}
+\end{figure}
+
+\noindent{\bf Distributed Linear Check}: In the distributed linear check, the
+provers with shares $\shr{\wit}$ of the witness $\wit$ try to convince the
+verifier that $A\wit=b$ for public matrix $A$ and a public vector $b$. In Figure
+\ref{fig:distlincheck}, we present the adaptation of the protocol $\linearcheck$ to
+the distributed setting. We will assume that the parties have shares of $0^h$.
+Without loss of efficiency, this may be obtained as part of obtaining shares of
+the witness.
+
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item {$\distlinearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in
+\FF^M,[\pi];\shr{\ewit},\shr{0^h})$}
+\item {\bf Relation}: $\exists \ewit$ s.t. $\ewit=\open(\pi)$ and $A\wit = b$
+for $\wit=\dec(\ewit)$.
+\item {\bf Oracle Setup}: 
+	\begin{itemize}
+	\item $\distprover\rightarrow\Ag$: The prover $\distprover$ computes
+$\shr{\comoracle} = \comm(\shr{\ewit})$ as in Section
+\ref{sec:construct_oracle}. It sends $\shr{\comoracle}$ to $\Ag$. 
+	\item {\color{red} $\Ag$ computes: $\comoracle := \combine(\shr{\comoracle})$ and
+sets $\pi := \comoracle$}.
+	\end{itemize}
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\distprover$: $\verifier$ samples $r\sample \FF^N$ and
+sends it to $\distprover$.
+\item $\distprover\leftrightarrow\verifier$: Provers ($\distprover$) and $\verifier$
+compute polynomials $R^i$, $i\in [p]$ such that
+$R^i(\alpha_j,\zeta_k)=R[i,j,k]$ where $R=r^TA$. 
+\item $\distprover$ computes:
+	\begin{enumerate}
+	\item Polynomials $\shr{p_j}(\cdot) := \sum_{i\in
+[p]}R^i(\alpha_j,\cdot).\shr{Q^i}(\alpha,\cdot)$ for $j\in [h]$. Here the
+polynomial $\shr{Q^i}$ interpolates the witness share
+$\shr{\wit}[i,\cdot,\cdot]$ on $G$.
+	\item An $h\times n$ matrix $\shr{P}$ such that $\shr{P}[j,k]=\shr{p_j}(\eta_k)$.
+	\item Commitments $\shr{c_k}=\comm(\shr{P}[\cdot,k],\shr{\omega}_k)$ for $k\in [s+\ell]$
+where $\shr{\omega}_k\sample \FF$.
+	\item Sample a codeword $\shr{P_0}\in \dashL_2$ s.t $\sum_{j\in
+[m]}\shr{P_0}[j]=0$.
+Compute $\shr{c_0}=\comm(\shr{P_0},\shr{\omega_0}$ for $\shr{\omega_0}\sample \FF$.
+	\item Compute $\shr{Z} := \beta\shr{P_0} + \shr{P}\varphi + \shr{0^h}$ for
+$\varphi=\Phi^T[1^s]$.
+	\end{enumerate}
+\item $\distprover\rightarrow\Ag$: Provers send
+$\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell}}$ and $\shr{Z}$ to $\Ag$.
+
+% Aggregation step
+\item {\color{red} $\Ag$ computes: $(c_0,c_1,\ldots,c_{s+\ell}) :=
+\combine(\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell}})$ and $Z :=
+\combine(\shr{Z})$}.
+
+\item $\verifier\rightarrow\distprover$: $\verifier$ samples $(j_u,k_u)\sample [h]\times
+[n]$ for $u\in [t]$. It also samples $\beta\sample\FF$. The verifier sends
+$Q=\{(j_u,k_u):u\in [t]\}$ and $\beta$ to provers $\distprover$.
+\item $\distprover\rightarrow\Ag$: The provers sends vectors
+$\shr{Y_u}=\shr{\ewit}[\cdot,\cdot,k_u]$ for $u\in [t]$ to $\Ag$.
+
+% Aggregation step
+\item {\color{red} $\Ag$ computes: 
+	\begin{itemize}
+	\item $Y_u=\combine(\shr{Y_u})$ for $u\in [t]$.
+	\item $X_u=Y_u[j_u,\cdot]$ for $u\in [t]$.
+	\item Compute $P[\cdot,k_u]$ from $R$ and $Y_u$ for $u\in [t]$.
+	\end{itemize}
+} 
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u:u\in
+[t]\}$. 
+\item Oracle Answers: The oracle replies with columns $\pi[\cdot,k_u]$, $u\in
+[t]$.
+\item $\Ag\leftrightarrow\verifier$: Both $\Ag$ and $\verifier$
+compute $\varphi := \Phi^T[1^s]$ and $\mathsf{cm} := \beta c_0 + \sum_{k\in
+[s+\ell]}\varphi_kc_k$.
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm 2d} =
+\distproxTwoD(\FF,\GG,s+\ell,\dashL_1,\dashL_2,\bm{c};[[\bar{P}]])$
+where $\bm{c}=(c_1,\ldots,c_{s+\ell})$ and $\bar{P}$ is the submatrix of $P$
+consisting of the first $s+\ell$ columns. Here $\dashL_1=\rsc{\eta}{s+\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b = \innerproduct(\GG,\bm{g},x,\mathsf{cm},v;z)$
+with $x=(1^m,0^{h-m})$, $v=r^Tb$ and $z=Z$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\bar{P}T$.
+\item $\Ag$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} = \proximityThreeD(\FF,\GG,L_1,L_2,[\pi];U)$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Distributed Linear Check Protocol}
+\label{fig:distlincheck}
+\end{figure}
+
+
 
 %\end{enumerate}
    
