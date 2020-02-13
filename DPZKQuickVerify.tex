@@ -1126,7 +1126,7 @@ distributed versions of the key subprotocols.\smallskip
 \noindent{\bf Distributed Membership Test}: We describe the variant of the
 protocol $\proximityTwoD$ for the case when the matrix $\bar{U}$ is shared
 across several parties. The complete protocol appears in Figure
-\ref{fig:distprox2d}. 
+\ref{fig:distprox2d}. \smallskip
 
 \begin{figure}[h!]
 \centering
@@ -1161,7 +1161,13 @@ $\nu=\combine([[\nu]]^\xi)$}.
 \label{fig:distprox2d}
 \end{figure}
 
+\noindent{\bf Distributed Proximity Test}: We describe a protocol that allows
+multiple provers, each having share of the witness, to construct commitment to
+the encoded witness as in Section \ref{sec:witencoding}, and convince the
+verifier that the commitment opens to a well formed encoding by providing oracle
+access to the commitment. The protocol appears in Figure \ref{fig:distprox3d}.
 
+%\begin{figure}[h!]
 
 %\end{enumerate}
    
