@@ -1,16 +1,16 @@
-\subsection{Distributed Prover Zero Knowledge}
-This discussion will formally define a zero-knowledge protocol which supports distributed proof generation.
+\subsection{Distributed-prover Zero-knowledge Protocols}
+This discussion will formally define a zero-knowledge protocol which supports multiple proves and distributed proof generation.
 \subsubsection{Definition of DPZK}
-Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$ such that
+Consider a language $L \in \npol$ and the corresponding relation $R \in \pol$  \commentA{what is $\pol$} such that
 \[
 \stmt \in L \Leftrightarrow R(\stmt, \wit)=1 \text{ for some witness } \wit
 \]
-Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. In our setting, we let each party have an additive share of the witness $\wit$. For party $i \in [\Num]$, let $\wit_i$ be its share.  The witness $\wit$ and its shares have length equal to the number of input wires of the circuit $\C$ representing the relation $R$. We will discuss later in this section why we decided to do an additive share of the witness. For now, note that a partition of the witness among the provers such that each prover owns a non-intersecting piece of the witness is a sub-class of additive sharing since the share of a prover can be its partition of the witness padded with zeros in the rest of positions.
+Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. In our setting, we let each party have an additive share of the witness $\wit$. For prover $i \in [\Num]$, let $\wit_i$ be its share.  The witness $\wit$ and its shares have length equal to the number of input wires of the circuit $\C$ representing the relation $R$. We will discuss later in this section why we decided to do an additive share of the witness. For now, note that a partition of the witness among the provers such that each prover owns a non-intersecting piece of the witness is a sub-class of additive sharing since the share of a prover can be its partition of the witness padded with zeros in the rest of positions.
 
 
-A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\Setup, \Pi, \verifier)$. 
+A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\setup, \Pi, \verifier)$. 
 \begin{itemize}
-\item $\Setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
+\item $\setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
 \item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$. Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$ and the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $\verifier$ is either an $\tt accept$ (1) or a $\tt{reject}$ (0). Also, let $\tr$ be the transcript of the protocol.
 \end{itemize}
 A $\DPZK$ protocol for a language $L$ satisfies the following properties: 
