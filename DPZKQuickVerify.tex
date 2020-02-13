@@ -1328,6 +1328,22 @@ $a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_
 \label{fig:distlincheck}
 \end{figure}
 
+Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
+knowledge from the messages sent by the provers in the distributed protocol
+$\distlinearcheck$. 
+
+\begin{lemma}\label{lem:distlincheckzk}
+For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
+linear check protocol consisting of messages from the prover $\distprover$ with
+witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
+which outputs a view indistinguishalbe from the joint view $\langle
+\View^1_\Ag,\ldots,\View^K_\Ag\rangle$ whenever $A\wit=b$ for
+$\wit=\combine(\shr{\wit})$.
+\end{lemma}
+\begin{proof}
+
+
+\end{proof}
 
 
 %\end{enumerate}
