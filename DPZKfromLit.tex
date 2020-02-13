@@ -116,6 +116,8 @@ $W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, \\
 $W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,\\
 and $\bm{c} = [c_1, \ldots, c_q]^T$\\
 \pnote{what is $W_v$ and $\bm{v}$ is not clear.}
+
+Here we are following the same notations which are used in \cite{bulletproofs}.
 For arithmetic circuit satisfiability zero knowledge proof, \cite{bulletproofs} proves the following statement:
 
 \noindent{\bf Statement:} $\{g,h\in\GG, \bm{g},\bm{h}\in \GG^n, \V\in \GG^m, W_L, W_R, W_O \in \ZZ^{Q\times n}_p, \bm{c}\in \ZZ^Q_p\}$
@@ -124,7 +126,78 @@ For arithmetic circuit satisfiability zero knowledge proof, \cite{bulletproofs} 
 
 \noindent{\bf Relation:} $V_j = g^{v_j}h^{\gamma_j} \forall j\in[m] \wedge \bm{a}_L \circ \bm{a}_R = \bm{a}_O \wedge W_L\cdot \bm{a}_L + W_R\cdot \bm{a}_R + W_O\cdot \bm{a}_O = W_v\cdot \bm{v} +\bm{c}$
 
-\noindent In \cite[Protocol 3]{bulletproofs} is explained how 
+\noindent In \cite[Protocol 3]{bulletproofs} is explained how to generate the proof for an arbitrary arithmetic circuit. Here we will describe how to convert the protocol given in \cite[Protocol 3]{bulletproofs}. Let $\Num$ parties are there such that $\prover_i$ has $\bm{a}_{L,i}, \bm{a}_{R,i}, \bm{a}_{O,i}$ and $\bm{v}_{i}, \bm{\gamma}_i$ as the shares of the witness such that 
+$\sum_{i\in[\Num]} \bm{a}_{L,i} = \bm{a}_L$,
+$\sum_{i\in[\Num]} \bm{a}_{R,i} = \bm{a}_R$,
+$\sum_{i\in[\Num]} \bm{a}_{O,i} = \bm{a}_O$,
+$\sum_{i\in[\Num]} \bm{v}_{i} = \bm{v}$,
+$\sum_{i\in[\Num]} \bm{\gamma}_{i} = \bm{\gamma}$. 
+
+Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
+
+\begin{enumerate}
+	\item $i$th prover randomly picks $\alpha_i, \beta_i, \rho_i \sample \ZZ_p$ and $\bm{s}_{L,i}, \bm{s}_{R,i} \sample \ZZ_p^n$ to blind there inputs, and computes $A_I^i = h^{\alpha_i}\bm{g}^{\bm{a}_{L,i}}\bm{h}^{\bm{a}_{R,i}}$, $A^i_O = h^{\beta_i}\bm{g}^{\bm{a}_O}$ and $S^i = h^{\rho}\bm{g}^{\bm{s}_{L,i}}\bm{h}^{\bm{s}_{R,i}}$
+	and sends $A^i_I, A^i_O, S^i$ to the aggregator $\Ag$, $\forall i\in [\Num]$.
+	
+	\item $\Ag$ computes $A_I = \prod_{i \in [\Num]} A_I^i$, $A_O = \prod_{i \in [\Num]} A_O^i$ and $S = \prod_{i \in [\Num]} S^i$ and sends to $\verifier$.
+	
+	\item $\verifier$ picks $y,z \sample \ZZ^*_p$ and sends to $\Ag$.
+	
+	\item $\Ag$ forwards $y,z$ to all the provers.
+	
+	\item All the provers and the verifier computes :\\
+	$\bm{y}^n = (1, y, y^2, \ldots, y^{n-1}) \in \ZZ^n_p$\\
+	$\bm{z}^{Q+1}_{[1:]} = (z, z^2, \ldots, z^Q) \in \ZZ^Q_p$\\
+	$\delta(y,z) = \innp{\bm{y}^{-n}\circ (\bm{z}^{Q+1}_{[1:]}\cdot W_R)}{\bm{z}^{Q+1}_{[1:]}\cdot W_L}$\\
+	
+	\item $\prover_i$ computes:
+	if 
+	\begin{align*}
+	i=1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3 + \bm{y}^{-n}\circ (\bm{z}_{[1:]}^{Q+1} \cdot W_R)\cdot X \\
+	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3 - \bm{y}^n + \bm{z}^{Q+1}_{[1:]} \cdot (W_L\cdot X + W_O)\\
+	i \neq 1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3\\
+	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3
+	\end{align*}
+	
+	\item MPC phase: Provers interact among with $\prover_i$'s input $l_i(X)$ and $r_i(X)$ to compute the polynomial $t(X) = \innp{\sum_{i \in [\Num]}l_i(X)}{\sum_{i \in [\Num]}r_i(X)}$ and $\prover_i$ gets the output $t_i(X)$ such that $\sum_{i\in[\Num]} t_i(X) = t(X)$.
+	and $t(X)= \sum_{j=1}^6 t_j\cdot X^j \in \ZZ_p[X]$ and $t^i(X)= \sum_{j=1}^6 t^i_j\cdot X^j \in \ZZ_p[X]$ $\forall i\in [\Num]$
+	\item $\prover_i$ comutes $\bm{w}_i = W_L\cdot \bm{a}_{L,i} + W_R\cdot \bm{a}_{R,i} + W_O\cdot \bm{a}_{O,i}$
+	
+	\item $\prover_i$ picks $\tau^i_j \sample \ZZ_p$ $\forall j\in\{1,3,4,5,6\}$\\
+	and computes $T_j^i = g^{t_j^i}h^{\tau_j^i}$ and sends $T_j^i$ to $\Ag$ for all $i\in [\Num]$ and $j\in \{1,3,4,5,6\}$.
+	
+	\item $\Ag$ computes $T_j = \prod_{i=1}^{\Num} T_j^i$ for $j \in \{1,3,4,5,6\}$ and sends these values to the verifier $\verifier$.
+	
+	\item $\verifier$ picks $x\sample \ZZ^ast_p$ and sends to $\Ag$.
+	
+	\item $\Ag$ forwards $x$ to all the provers.
+	
+	\item $\prover_i$ computes:
+	\begin{itemize}
+		\item $\bm{l}_i = l_i(x) \in \ZZ^n_p$
+		\item $\bm{r}_i = r_i(x) \in \ZZ^n_p$
+		\item $\tau_x^j = \sum\limits_{j=1, j\neq 2}^{6} \tau_j^i\cdot x^i \in \ZZ_p$
+		\item $\mu_i = \alpha_i\cdot x +\beta_i \cdot x^2 +\rho_i\cdot x^3 \in \ZZ_p$
+	\end{itemize}  
+	sends these values to $\Ag$.
+	
+	\item $\Ag$ combines and gets 
+	\begin{itemize} 
+		\item $\bm{l} = \sum_{i\in[\Num]} \bm{l}_i$
+		\item $\bm{r} = \sum_{i\in[\Num]} \bm{r}_i$
+		\item $\hat{t} = \innp{\bm{l}}{\bm{r}}$
+		\item $\tau_x = \sum_{i\in [\Num]} \tau_x^i + x^2\cdot \innp{\bm{z}_{[1:]}^{Q+1}}{W_V\cdot \gamma} \in \ZZ_p$
+		\item $\mu = \sum_{i\in [\Num]} \mu_i$
+	\end{itemize}
+	
+	\item $\Ag$ sends $\tau_x, \mu, \hat{t}$ to $\verifier$. 
+	
+	\item $\Ag \leftrightarrow \verifier$ run a subprotocol for the following inner product argument:
+	\begin{itemize}
+		\item $\innerproduct(\bm{g}, \bm{h'}, P\cdot h^{-\mu}, \hat{t}; \bm{l},\bm{r})$, where $\bm{h'}$ is such that $h'_i = h_i^{y^{-i+1}}$ $\forall i\in[n]$
+	\end{itemize} 
+\end{enumerate}
+
 \subsection{Summary of existing protocols}
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 

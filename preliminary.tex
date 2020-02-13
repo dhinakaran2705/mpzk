@@ -28,11 +28,11 @@ An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1)
 \end{definition}
 
 \begin{lemma}\label{lem:bicdecoding}
-Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ be $[n,\ell]$ and
+Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ \commentA{include the length of codeword $n$ and $h$ in the argument i.e. $\rsc{\eta}{n,\ell}$} be $[n,\ell]$ and
 $[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and
 $\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. Suppose
 a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast,\mc{C}_1)<e_1$ and
-$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$\commentA{what are $d_1$ and $d_2$? These are never defined. }. Then, there exists $U\in L_1\otimes L_2$ and sets
+$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$\commentA{what are $d_1$ and $d_2$? These are never defined. can you simplify notation; remove $e_1$ and $e_2$ }. Then, there exists $U\in L_1\otimes L_2$ and sets
 $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $S_2>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \commentA{where is the proof?}
@@ -65,7 +65,7 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 In this section, we prove some ``geometric'' results about subspaces spanned by linear codes. 
 These results will play a key role in protocols for checking that the witness has been correctly encoded with small query complexity. Some variants of results presented in this section appear as lemmas and conjectures in \cite[Section 4]{ligero}.
 
-Throughout this section, let $L$ be a linear $[n,k,d]$ code over field a finite $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
+Throughout this section, let $L$ be a linear $[n,k,d]$ \commentA{new notation. what does $d$ signify? before it was just [n,k]; please be consistent}code over field a finite $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
 \begin{equation}\label{eq:affspace}
 \aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
 \end{equation}
@@ -139,23 +139,23 @@ $\mc{C}$, we have the desired bound.
 \end{proof}
 
 
-\subsection{Inner Product Arguments}
-We define an interactive protocol that allows proving inner product relation over committed values. 
+\subsection{Inner-product Arguments}
+We define an interactive protocol that allows proving inner-product relation over committed values, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme. We start with a definition of such a commitment scheme. 
 \begin{definition}\label{defn:commscheme}
  A pair of $\ppt$ algorithms $(\gen,\com)$ constitute a non-interactive commitment scheme if $\sigma\sample \gen(\secparam)$ consists of description of sets $\calM_\sigma$ (message space), $\calR_\sigma$ (randomness space), $\calC_\sigma$ (commitment space) and an efficiently computable function $\com_\sigma: \calM_\sigma\times \calR_\sigma\rightarrow \calC_\sigma$ which is {\em hiding} and {\em binding} as defined later.
 \end{definition}
 
-For $x\in \calM_p$, we generate a {\em commitment} of $x$ as $\com_\sigma(x,r)$ where $r\sample \calR_p$ is drawn uniformly at random. For ease of notaion, we simply use $\com$ instead of $\com_\sigma$ and use $\com(x)$ to denote the random variable corresponding to commitment of $x$. 
+For $x\in \calM_p$ \commentA{p or $\sigma?$}, we generate a {\em commitment} of $x$ as $\com_\sigma(x,r)$ where $r\sample \calR_p$ \commentA{p or $\sigma?$; there are occurrences of $p$ below} is drawn uniformly at random. For ease of notaion, we simply use $\com$ instead of $\com_\sigma$ and use $\com(x)$ to denote the random variable corresponding to commitment of $x$. 
 
 \begin{definition}[Hiding Commitment]\label{defn:hidingcomm}
-A commitment scheme $(\gen,\com)$ is called {\em hiding} (perfectly) if for all $\ppt$ adversaries $\adv$, the following probability is negligibly close to $1/2$:
+A commitment scheme $(\gen,\com)$ is called perfectly {\em hiding}  if for all $\ppt$ \commentA{for perfect hiding, the adversary is no longer $\ppt$} adversaries $\adv$, the following probability is negligibly close to $1/2$ \commentA{for perfect, it is not negligible close to 1/2, it is 1/2; also not that if you want define this as statistical, the statistical sec parameter needs to be distinguished from computational parameter $\lambda$ }:
 \begin{align*}
 \condprob{b=b'}{
 \begin{array}{l}
 \sigma\sample \gen(\secparam); \\
 (x_0,x_1)\in \calM^2_p\sample \adv(\sigma); \\
 b\sample \bitset; c\sample \com(x_b);\\
-b'\sample \adv(\sigma,c)
+b'\sample \adv(\secparam,\sigma,c)
 \end{array}
 }
 \end{align*}
@@ -167,14 +167,14 @@ A commitment scheme $(\gen,\com)$ is called {\em binding} if for all $\ppt$ adve
 \condprob{\com_p(x_0,r_0)=\com_p(x_1,r_1)\wedge x_0\neq x_1}{
 \begin{array}{l}
 \sigma\sample \gen(\secparam) \\
-x_0,x_1,r_0,r_1 \sample \adv(\sigma)
+x_0,x_1,r_0,r_1 \sample \adv(\secparam,\sigma)
 \end{array}
-} < \negl
+} < \negl(\lambda)
 \end{align*}
 
 \end{definition}
 
-We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner product operator $\innp{.}{.}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
+We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{.}{.}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
 \begin{equation*}
 \calL_\sigma = \{(c_1,c_2,v):\exists x_1,x_2,r_1,r_2 \text{ s.t. }
 c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\} 
@@ -182,39 +182,40 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
 
-\begin{definition}[Inner Product Argument]\label{defn:innerproductarg}
-We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
+\begin{definition}[Inner-product Argument]\label{defn:innerproductarg}
+We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following: \commentA{what do  you mean by adversary picking an instance uniformly at random? what does $\sample$ mean? adversary may have arbitrary stategy}
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
 \begin{align*}
-\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle={\tt accept}}{
+\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
 \begin{array}{l}
 \sigma\sample \gen(\secparam);\\
-(\stmt,\wit)\sample \adv(\sigma)
+(\stmt,\wit)\sample \adv(\secparam,\sigma)
 \end{array}
 }=1
 \end{align*}
 
-\item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
+\item{\bf Soundness}: For all deterministic \commentA{why deterministic? any reason to be so?}polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
 \begin{align*}
 \condprob{\stmt\not\in \calL_\sigma \wedge \langle
-\prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle={\tt accept}}{
+\prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1}{
 \begin{array}{l}
 \sigma\sample \gen(\secparam);\\
-(\stmt,s)\sample \adv(\sigma)
+(\stmt,s)\sample \adv(\secparam,\sigma)
 \end{array}
 } = \negl(\lambda)
 \end{align*}
+\commentA{no zero-knowledge  property needed for the above definition?}
 \end{enumerate}
+
 \end{definition}
 
-We mention some concrete instantiations of commitment schemes and corresponding inner product arguments that we use in our protocol.
+We mention some concrete instantiations of  commitment schemes and corresponding inner-product arguments that we use in our protocol.
 
-\noindent{\em Logarithmic Inner Product Argument}: In this setting we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner product argument $(\piplog,\viplog)$ from Bootle et.al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. Time complexity of the verifier $\viplog$ is given by $t(\viplog)=O(n).\bbZ_p + O(n).\bbG$.\smallskip
+\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a Pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. Time complexity of the verifier $\viplog$ is given by $t(\viplog)=O(n).\bbZ_p + O(n).\bbG$.\smallskip
 
 
-\noindent{\em Square Root Inner Product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS} or \cite{Groth09b}. The construction in \cite{InnerProductDLS} gives a $5$-move protocol with total communication complexity $O(\sqrt{n})$. The construction in \cite{Groth09b} gives a 7-move protocol with $O(\sqrt{n})$ communication complexity. In both the constructions $t(\vipsq) = O(n).\bbZ_p +
-O(\sqrt{n}).\bbG$.
+\noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS} or \cite{Groth09b}. The construction in \cite{InnerProductDLS} gives a $5$-move \commentA{move=round? better to stick to one term; i prefer round} protocol with total communication complexity $O(\sqrt{n})$. The construction in \cite{Groth09b} gives a 7-move protocol with $O(\sqrt{n})$ communication complexity. In both the constructions $t(\vipsq) = O(n).\bbZ_p +O(\sqrt{n}).\bbG$ \commentA{something wrong in the expression.  you mean size of the group/field? same for the earlier argument. secondly, why would anyone be using the latter which has more round complexity? Just say that the second paper proposes a construction same argument size and verifier complexity, yet with 2 more number of rounds}.
 
 \subsection{Forking Lemma and Knowledge Soundness}
 We use the Forking Lemma from \cite{InnerProductDLS,bulletproofs} to describe 
@@ -223,7 +224,7 @@ $(\prover,\verifier)$ be a public coin $(2\mu+1)$-move interactive protocol with
 challenges $x_1,\ldots,x_\mu$ in sequence. Let $n_i\geq 1$ for $1\leq i\leq
 \mu$. We call a collection of $n=\prod_{i=1}^\mu n_i$ accepting transcripts to be
 $(n_1,\ldots,n_\mu)$-tree of accepting transcripts, if the challenges are
-organized in the tree format that we describe now: The root of the tree is
+organized in the tree format that we describe now: \commentA{the following didn't make sense. what does a path from root to a leaf node signify? one sequence of challenges for an accepting execution? at any rate this portion needs a clean write-up} The root of the tree is
 labelled with the statement being proved. Each node of depth $i<\mu$ has exactly
 $n_i$ children, each labelled with a distinct value of the $i^{th}$ challenge
 $x_i$. We call a $\ppt$ algorithm $\chi$ to be a {\em witness extraction
@@ -247,14 +248,14 @@ w\sample \extr^{\mc{O}}(x,\sigma)
 }
 \geq \condprob{\langle
 P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
-\kappa(\lambda)
+\negl(\lambda)
 \end{align}
 %\end{comment}
 %\begin{align}
 %&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
 %\geq & \prob{\innp{P^*(x,\sigma)}{\verifier(x, \sigma)} = 1|\sigma\sample \setup(\secparam)} - \kappa(\lambda)
 %\end{align}
-for some negligible function $\kappa$. In the above $\mc{O}$ denotes the transcript oracle  $\langle P^\ast(x,\sigma)$ ,$\verifier(x,\sigma)\rangle$ which can be rewound to any previous state, and resumed with fresh randomness for the
+for some negligible function $\negl$. In the above $\mc{O}$ denotes the transcript oracle  $\langle P^\ast(x,\sigma)$ ,$\verifier(x,\sigma)\rangle$which can be rewound to any previous state, and resumed with fresh randomness for the
 verifier $\verifier$.
 \end{definition}
 
@@ -266,12 +267,13 @@ emulation, we restate it for the case of argument of knowledge. The proof in
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
 Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-move public coin interactive
 protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
-witness with probability $1-\kappa(\secpar)$ from an $(n_1,\ldots,n_\mu)$-tree
+witness with probability $1-\negl(\secpar)$ from an $(n_1,\ldots,n_\mu)$-tree
 of accepting transcripts. Assuming that $\prod_{i=1}^\mu n_i$ is bounded by a
 polynomial in security parameter $\secpar$, the protocol
 $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
 
+.\commentA{change 'move' to 'round' in all the above text.}
  
 %--------------------------------Protik's prelims--------------------------------
 %\subsection{Codes}
