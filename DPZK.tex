@@ -62,7 +62,7 @@ Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the outpu
  \{ \Sim_{\pi_i} (\stmt, \st^{i-1}_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^{i-1}_j\}_{j \in [N]}) 
 \]
 where $\st^{i-1}_T$ is the state of the parties in $T$ for the $i-1$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
-
+\pnote{Define this notion for malicious adversary}
 And $\Sim_P$ picks uniform $r$ on behalf of $\verifier$ to update the states.
 \end{definition}
 .\dnote{A couple of questions to everyone:\\
@@ -78,7 +78,7 @@ An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of comp
  \{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i): i\in [\round] \} \cup \innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho, \wit_T)
 \]
 where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the states of the corrupt parties of $i$th round and $\st^{i-1}_{\overline{T}}$ consists of the states of the honest parties of $i$th round. 
-
+\pnote{Define this notion for malicious adversary}
 \end{definition}
 
 \begin{theorem}\label{theo:equivalent}

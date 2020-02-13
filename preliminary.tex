@@ -1,7 +1,6 @@
 \section{Preliminaries}\label{sec:prelims}
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
-.\commentA{this looks like general definition for code. why is it called linear? change}
 For positive integers $n,k$ and a finite field $\bbF$, a $k$-dimensional linear subspace $L$ of $\bbF^n$ is called an $[n,k]$ linear code. Elements of $L$ are conventionally called {\em codewords}. 
 \end{definition}
 
@@ -13,7 +12,7 @@ For an $[n,k]$ code $L$, a $n\times k$ matrix $\calG$ is called a {\em generator
 For an $[n,k]$-linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
 \end{definition}
 
-For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as an element in the field $\bbF^m$ \commentA{this isn't clear at all }. Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
+For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as an element in the field $\bbF^m$ (and accordingly modifying the generator and parity-check matrices). Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
  
 \begin{definition}[Product Code]\label{defn:productcode}
 Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\otimes L_2$ \commentA{bad notation for product code; better now? } to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
@@ -80,9 +79,9 @@ For sake of contradiction, assume that $d(u,L)\leq e$ for all $u\in
 \aff{u_0}{U^\ast}$. Let $x$ be the point in $\aff{u_0}{U^\ast}$ such that
 $d(x,L)$ is maximum. By assumption $d(x,L)\leq e$. Let $v\in L$ be such that
 $\Delta(x,v)=d(x,L)$. Let $E\subseteq [n]$ be the set of positions where $x$ and
-$v$ differ. Since $d(U^\ast,\mc{C})>e$, there exists row $R$ of $U^\ast$ and
+$v$ differ. Since $d(U^\ast,\mc{C})>e$, there exists row $R$ of $U^\ast$ and there is some 
 position $j\in [n]$ 
-such that $R_j\neq 0$.\pnote{Is this for all $j\in[n]$ or $\exists j\in [n]$? Why this is true?} Let
+such that $R_j\neq 0$. Let
 $\alpha_1,\ldots,\alpha_{e+1}$ be distinct non zero elements in $\FF$. Let $E_k$
 for $k=1,\ldots,e+1$ denote the set of positions where $x+\alpha_kR$ and $v$
 differ. Fix a position $i\in E$. Then there exists at most one $k\in [e+1]$ such
