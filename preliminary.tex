@@ -1,15 +1,73 @@
-\section{Preliminaries}\label{sec:prelims}
+\section{Notation and Preliminaries}\label{sec:prelims}
+\subsection{Basic Notation}\label{sec:basicnotation}
+In this section, we describe the notation that will be followed in rest of the
+paper. We will often recall the notation in appropriate places. 
+We use $[n]$ to
+denote the set $\{1,\ldots,n\}$. All the arithmetic circuits and constraint
+systems are assumed to be defined over finite field denoted by $\FF$. For a
+vector $x\in \FF^m$, we implicitly assume $x_i$ represents the $i^{th}$
+component of $x$ for $i\in [m]$. Whenever suitable, we will also use $x[i]$ to
+denote $i^{th}$ entry of a vector $x$. We naturally extend the notation $[]$ to
+index matrices and three dimensional matrices. For an $m\times n$ matrix over
+$\FF$, we use $A[i,j]$ to denote $(i,j)^{th}$ entry of $A$. We use $A[i,\cdot]$
+to denote the $i^{th}$ row of $A$ and $A[\cdot,j]$ to denote $j^{th}$ column of
+$A$. Similarly, for an $m\times n\times p$ matrix $X$, we use $X[i,j,k]$ to
+denote the $(i,j,k)^{th}$ entry of $X$. The notation $X[i,\cdot,\cdot]$ denotes
+the $n\times p$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$. 
+Analogously,
+$X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $m\times p$ and $m\times n$
+matrices respectively. For three dimensional
+matrix $X$, we will refer to submatrices $X[i,\cdot,\cdot]$ as {\em slices} of
+$X$, and submatrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
+
+Throughout the paper we use several distance metrics on vectors and matrices,
+which we now introduce. For two vectors $x,y$ of length $n$, we define
+$\Delta(x,y)=|\{i\in [n]: x_i\neq y_i\}|$. For two $m\times n$ matrices $A,B$ we
+define $\Delta_1(A,B)=|\{j\in [n]: A[\cdot,j]\neq B[\cdot,j]\}|$ and
+$\Delta_2(A,B)=|\{i\in [m]: A[i,\cdot]\neq B[i,\cdot]\}|$. For $p\times m\times
+n$ matrices $X$ and $Y$, we define $\Delta_1(X,Y)=\{k\in
+[n]:X[\cdot,\cdot,k]\neq Y[\cdot,\cdot,k]\}$. Similarly we define $\Delta_2(X,Y)
+= |\{j\in [m]: X[\cdot,j,\cdot]\neq Y[\cdot,j,\cdot]\}|$. Let $u$ be a vector
+and $S$ be a set of vectors. We use $d(u,S) := \min\{\Delta(u,v):v\in S\}$ to
+denote distance between $u$ and $S$. Similarly for a matrix (two or three
+dimenional) $U$ and a set of matrices $\mc{M}$, we define $d_i(U,\mc{M}) :=
+\min\{\Delta_i(U,M): M\in \mc{M}\}$ for $i=1,2$.
+
+\subsection{Notation for Protocols}
+We describe some of the notation that we use to describe our protocols. We
+notate our interactive protocols with a name and a list of parameters. The
+parameters to the left of semicolon ($;$) are assumed to be {\em public}, while those to the
+right of the semicolon are considered {\em private} inputs of the prover. For example
+$\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$ denotes a protocol with $6$
+public parameters and a private parameter $z$. We enclose a public parameter in
+brackets ($[\,]$) to denote ``oracle'' access to the parameter (i.e, it can only
+be partially queried by the verifier). As an illustration
+$\proximityThreeD(\FF,\GG,L_1,L_2,[\pi];\ewit)$ denotes a protocol, where the
+verifier only has oracle access to $\pi$. Finally, in the distributed setting,
+some of the private inputs may be secret shared across multiple provers. We notate it
+by enclosing those private inputs in $[[\,]]$. For example, in the protocol
+$\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};[[\bar{U}]])$, each prover
+$\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
+
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
-For positive integers $n,k$ and a finite field $\bbF$, a $k$-dimensional linear subspace $L$ of $\bbF^n$ is called an $[n,k]$ linear code. Elements of $L$ are conventionally called {\em codewords}. 
+Let $n,k,d$ be positive integers with $n\geq k$ and $\FF$ be a finite field. We
+call $L\subseteq \FF^n$ to be an $[n,k,d]$ linear code if $L$ is a $k$-dimnensional
+subspace of $\FF^n$ and $d$ is the minimum value of $\Delta(x,y)$ for distinct
+$x,y\in L$. Elements of $L$ are conventionally called {\em codewords}.
 \end{definition}
 
-For codewords $x,y\in L$ where $x=(x_1,\ldots,x_n)$ and $y=(y_1,\ldots,y_n)$ we define the hamming distance $\dham(x,y)=|\{i\in [n]: x_i\neq y_i\}|$. It is easily checked that $\dham$ defines a metric on $L$. The minimum distance of the code $L$, denoted by $\delta(L)$ is defined as $\min\{\dham(x,y):x,y\in L, x\neq y\}$.
-
-For an $[n,k]$ code $L$, a $n\times k$ matrix $\calG$ is called a {\em generator matrix} iff (i) $\calG x\in L$ for all $x \in \bbF^k$ and (ii) $\calG x\neq \calG y$ for $x\neq y$. Clearly, such a matrix $\calG$ has rank $k$. Similarly an $n\times (n-k)$ matrix $\calH$ such that $y^T \calH = 0$ for all $y\in L$ is called a {\em parity check} matrix for $L$. It is easily seen that the above two matrices exist for any $[n,k]$ linear code $L$. We will assume that description of the linear code $L$ includes a generator matrix $\calG$ and a parity check matrix $\calH$.
+For an $[n,k,d]$ code $L$, an $n\times k$ matrix $\calG$ is called a {\em
+generator matrix} for $L$ iff (i) $\calG x\in L$ for all $x \in \bbF^k$ and (ii)
+$\calG x\neq \calG y$ for $x\neq y$. Clearly, such a matrix $\calG$ has rank
+$k$. Similarly an $n\times (n-k)$ matrix $\calH$ such that $y^T \calH = 0$ for
+all $y\in L$ is called a {\em parity check} matrix for $L$. It is easily seen
+that the above two matrices exist for any $[n,k,d]$ linear code $L$. We will
+assume that description of the linear code $L$ includes a generator matrix
+$\calG$ and a parity check matrix $\calH$.
 
 \begin{definition}[Interleaved Code]\label{defn:interleavedcode}
-For an $[n,k]$-linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
+For an $[n,k,d]$ linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
 \end{definition}
 
 Let $L$ be a linear $[n,k,d]$ code over the field $\FF$ and let
@@ -75,33 +133,47 @@ that the code $\tilde{f}(\mc{C})=\tilde{\mc{C}}$ also has the same parity check
 matrix as the code $L$, and hence has the same minimum distance $d$. We skip the
 proof as it is standard. 
 \end{proof}
- 
-For a linear $[n,k]$-code $L$ over the field $\bbF$, we observe that $\ric{L}{m}$ forms an $[n,k]$-code over the field $\bbF^m$ by viewing each column of the codeword $A\in \ric{L}{m}$ as an element in the field $\bbF^m$ (and accordingly modifying the generator and parity-check matrices). Similarly, $\cic{L}{m}$ forms an $[n,k]$ code over $\bbF^m$ by viewing each row of the codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. For $A,A'\in \ric{L}{m}$, we define the distance $\dham(A,A')=|\{i\in [n]: A[\cdot,i]\neq A'[\cdot,i]\}|$ where the notation $X[\cdot,i]$ denotes the $i^{th}$ column of the matrix $X$. Similarly for $B,B'\in \cic{L}{m}$ we define $\dham(B,B')=|\{i\in [n]: B[i,\cdot]\neq B'[i,\cdot]\}|$.
 
-
+Analogous to the row interleaved code, a column interleaved code $\cic{L}{m}$ 
+can be viewed as an $[n,k,d]$ code over $\bbF^m$ by viewing each row of the
+codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. Here the distance metric
+for $\ric{L}{m}$ is given by the matrix distance $\Delta_1$, while the distance
+metric for $\cic{L}{m}$ is given by the matrix distance $\Delta_2$ as defined in
+Section \ref{sec:basicnotation}.  
  
 \begin{definition}[Product Code]\label{defn:productcode}
-Let $L_i$ be an $[n_i,k_i]$-linear code for $i=1,2$. We define the product code $L_1\otimes L_2$ \commentA{bad notation for product code; better now? } to be the code consisting of $n_2\times n_1$ matrices $A$ such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a codeword in $L_2$. 
+Let $L_i$ be an $[n_i,k_i,d_i]$-linear code for $i=1,2$. We define the product
+code $L_1\otimes L_2$ to be the code consisting of $n_2\times n_1$ matrices $A$
+such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a
+codeword in $L_2$.
 \end{definition}
 
-Note that by definition, the product code $L_1\otimes L_2$ is a row interleaved code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\otimes L_2 =
-\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\otimes L_2$, we define $\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and $\dham_2(A,A')=|\{i\in
-[n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance $\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$ corresponds to the distance function of the code $\cic{L}{n_1}$.
-\commentA{where is the proof for existence of such code?}
+Note that by definition, the product code $L_1\otimes L_2$ is a row interleaved
+code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\otimes L_2 =
+\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\otimes L_2$, we define
+$\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and
+$\dham_2(A,A')=|\{i\in [n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance
+$\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we
+view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$
+corresponds to the distance function of the code $\cic{L}{n_1}$.
 
 \begin{definition}[Reed Solomon Code]\label{defn:rscode}
-An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use $\rsc{\eta}{k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
+An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors
+$(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less
+than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use
+$\rsc{\eta}{k}$ to denote the Reed Solomon code with
+$\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
 \end{definition}
 
 \begin{lemma}\label{lem:bicdecoding}
-Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ \commentA{include the length of codeword $n$ and $h$ in the argument i.e. $\rsc{\eta}{n,\ell}$} be $[n,\ell]$ and
+Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ be $[n,\ell]$ and
 $[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and
 $\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. Suppose
 a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast,\mc{C}_1)<e_1$ and
-$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$\commentA{what are $d_1$ and $d_2$? These are never defined. can you simplify notation; remove $e_1$ and $e_2$ }. Then, there exists $U\in L_1\otimes L_2$ and sets
-$S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $S_2>h-e_2$ such
+$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$.
+Then, there exists $U\in L_1\otimes L_2$ and sets
+$S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
-\commentA{where is the proof?}
 \end{lemma}
 
 \begin{proof}
@@ -127,11 +199,11 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \end{proof}
  
 
-\subsection{Geometric Results on Linear Codes}
-In this section, we prove some ``geometric'' results about subspaces spanned by linear codes. 
-These results will play a key role in protocols for checking that the witness has been correctly encoded with small query complexity. Some variants of results presented in this section appear as lemmas and conjectures in \cite[Section 4]{ligero}.
+\subsection{Coding Theoretic Results for Soundness}
 
-Throughout this section, let $L$ be a linear $[n,k,d]$ \commentA{new notation. what does $d$ signify? before it was just [n,k]; please be consistent}code over field a finite $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
+These results in this section play a key role in protocols for checking that the witness has been correctly encoded with small query complexity. Some variants of results presented in this section appear as lemmas and conjectures in \cite[Section 4]{ligero}.
+
+Throughout this section, let $L$ be a linear $[n,k,d]$ code over field a finite $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
 \begin{equation}\label{eq:affspace}
 \aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
 \end{equation}
