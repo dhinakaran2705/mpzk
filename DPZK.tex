@@ -153,7 +153,7 @@ For computational security, the adversaries are defined to be $\ppt$, the advers
 %-In this section we will describe the notion of distributed proof generation for zero-knowledge and the adversarial model.
 
 \noindent We will model this distributed proof generations for zero-knowledge in the same way described in above section ~\ref{sec:security model}. Here $\Partyset$ consists of $\Num$ provers $\{\prover_1, \ldots, \prover_{\Num}\}$ and a verifier $\verifier$. For some NP language $L$ and instance $\stmt$ of $L$, parties in $\Partyset$ involves in a protocol $\innp{\Pi}{\verifier}$ so that all the provers in $\Partyset$ convince the verifier that there is a witness $\wit$ such that the deterministic verification algorithm $R$ for $L$ outputs $R(\stmt,\wit) = 1$, and claim of the prover is that $\prover_i$ has $\wit_i$, for all $i\in[\Num]$ such that $\wit = (\wit_1, \ldots, \wit_{[\Num]})$. Therefore the funcitonality is as follows: 
-\begin{figure}[H]\label{func:DPZK}
+\begin{figure}[H]
 	\centering
 	\begin{framed}
 		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)
@@ -162,11 +162,12 @@ For computational security, the adversaries are defined to be $\ppt$, the advers
 			\item[--] Upon receiving input $(\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$, check that $R(\stmt, (\wit_1, \ldots, \wit_{[\Num]})) = 1$. If so send 1 to the verifier $\verifier$, else send 0. 
 		\end{itemize}
 	\end{framed}
-	%\caption{text}
-\end{figure} 
+	\caption{Ideal Functionality}
+\end{figure} \label{func:DPZK}
 In contrast to the definition in section ~\ref{sec:security model}, all the parties except for the verifier, in the execution of the protocol they may deviate arbitrarily, but the verifier is not allowed to deviate from the protocol. The reason behind considering a preposterously looking adversarial model is that we want to design a zkSNARK which is efficient, secure, publicly verifiable and distributed proof generation property. We know from \cite{}, any interactive honest (public coin) verifier can be transformed into Non-interactive zero-knowledge using \textit{Fiat–Shamir heuristic}. Here the verifier can be semi-honest, i.e., verifier will follow the protocol steps and sends all the challenges uniformly at random.
 %-Start with corruption model and give a brief reasoning.
-.\pnote{Describe honest verifier}
+%.\pnote{Describe honest verifier}
+
 If all the parties in $\Partyset$ are honest, then the protocol should return 1, this property is called \textbf{\textit{completeness}}.
 
 In this setting, we have two types of corruption models, and that depends on which parties are corrupt:
