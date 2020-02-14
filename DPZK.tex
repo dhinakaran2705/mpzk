@@ -51,48 +51,64 @@ The argument $(\Setup, \Pi, \verifier)$ is a special honest verifier zero-knowle
 \end{definition}
 %.\dnote{Auxiliary input zk or just without it?}
 
-\paragraph{Privacy among parties}:
-This notion captures the privacy of a prover's share of witness from other provers. The provers interact to generate shares of the extended witness $\extwit$ and then to compute the messages to be sent to the verifier. The privacy notion here can be formalized as multi-party computation protocols among the provers. The transcript of the interaction between provers can be simulated by a simulator with access only to the secret inputs of the corrupted provers and the final output of the interaction. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
-%\dnote{ include formal definition}
-%Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
-
-\begin{definition}
-Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$, there is a $\ppt$ simulator $\Sim_{P}$ such that for every round $i \in [\round]$, $\Sim_{P}$ has a subalgorithm  $\Sim_{\pi_i}$ which can output the view of the corrupt provers of  $i$th round and it satisfies the following condition: 
-\[
- \{ \Sim_{\pi_i} (\stmt, \st^{i-1}_T, m_i) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^{i-1}_j\}_{j \in [N]}) 
-\]
-where $\st^{i-1}_T$ is the state of the parties in $T$ for the $i-1$th round, and $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
-\pnote{Define this notion for malicious adversary}
-And $\Sim_P$ picks uniform $r$ on behalf of $\verifier$ to update the states.
-\end{definition}
-.\dnote{A couple of questions to everyone:\\
-1) shall we notate $\pi_0$ as the 0th step in the proof system where the provers obtain the shares of the extended witness starting from their shares of the witness?
-2) Right now, we have formalized this notion such that each round of interaction between can be simulated. To capture the security of the overall protocol, is it enough to consider the linear composability between the protocols?}
-
 \paragraph{Zero Knowledge under $t$-collusions}: 
 The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. However, when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero-knowledge under $t$-collusions ($t$-$\ZKUC$) to capture this.
 
 \begin{definition}
 An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t$-$\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T\subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
 \[
- \{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i): i\in [\round] \} \cup \innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho, \wit_T)
+ \{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i): i\in [\round] \} \cup \innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho)
 \]
-where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the states of the corrupt parties of $i$th round and $\st^{i-1}_{\overline{T}}$ consists of the states of the honest parties of $i$th round. 
-\pnote{Define this notion for malicious adversary}
+where in the malicious setting, $\Sim$ has access to the ideal functionality $\IF{DPZK}$ that outputs 1 or 0 according to the extracted input of the corrupt parties, and in the semi-honest setting, $\Sim$ has input, $\wit_T$, of the corrupt parties and output of the execution.
+$\st^{i-1}_T$ consists of the states of the corrupt parties of $i$th round and $\st^{i-1}_{\overline{T}}$ consists of the states of the honest parties of $i$th round. 
 \end{definition}
 
+.\pnote{Define this notion for malicious adversary}
+%-----------------------------------------------------------------------------------------------
+\subsection{Strongly Private DPZK}
+Here we will define a notion which is strictly stronger than the scenario when the some the provers are corrupt; we will call it \text{strongly private} DPZK, if it has the property that each interaction among the prover is simulatable separately and there is an outer simulator which can simulate each of the interaction.
+
+We will show that some of the constructions that we are presenting this paper it satisfy this property, and we will prove in theorem ~\ref{theo:equivalent} that this stronger notion of privacy together with zero-knowledge property is as strong as zero-knowledge under collusion.
+
+This notion can be defined for both semi-honest and malicious corruption models; in our work, we will present \textit{strongly private} DPZK protocols under semi-honest corruption.
+
+%This notion captures the privacy of a prover's share of witness from other provers. The provers interact to generate shares of the extended witness $\extwit$ and then to compute the messages to be sent to the verifier. The privacy notion here can be formalized as multi-party computation protocols among the provers. The transcript of the interaction between provers can be simulated by a simulator with access only to the secret inputs of the corrupted provers and the final output of the interaction. Hence, for a protocol supporting $t$ corruptions, the input witnesses of the remaining honest prover cannot be inferred by an adversary possessing the inputs and controlling the actions of these $t$ provers.
+%\dnote{ include formal definition}
+%Whenever provers interact, there is a simulator with access to corrupt provers' input and output of the interaction can generate a transcript which is indistinguishable (computationally) from a real transcript. 
+
+\begin{definition}
+	Let $T\subseteq [\Num]$ be the set of corrupt parties and let $m_i$ be the output of $\Exec^{\pi_i}(\st^i_1, \ldots, \st^i_{\Num})$. An argument $\innp{\Pi = \{\pi_i\}_{i \in [\round]}}{\verifier}$ with $\Num$ provers has $t$-privacy if for any $T$ of size $\leq t$, there is a $\ppt$ simulator $\Sim_{P}$ such that for every round $i \in [\round]$, $\Sim_{P}$ has a subalgorithm  $\Sim_{\pi_i}$ which can output the view of the corrupt provers of  $i$th round and it satisfies the following condition: 
+	\[
+	\{ \Sim_{\pi_i} (\stmt) \} \stackrel{c}{\approx}  \View^{Real, i}_T ( \stmt, \{\st^{i-1}_j\}_{j \in [N]}) 
+	\]
+	where in the malicious case, $\Sim_{\pi_{i}}$ has access to the ideal functionality $\IF{\Exec^{\pi_i}}$ and in the semi-honest case, simulator has $\st^{i-1}_T$, the state of the corrupt parties and $m_i$, the output of the execution of $\Exec^{\pi{i}}$ of the $i$th round, as inputs. $\View^{Real, i}_T$ is the view of the parties in $T$ during an honest execution of $\pi_i$.
+	\pnote{Define this notion for malicious adversary}
+	And $\Sim_P$ can pick uniform $r$ on behalf of $\verifier$ to update the states.
+\end{definition}
+.\dnote{A couple of questions to everyone:\\
+	1) shall we notate $\pi_0$ as the 0th step in the proof system where the provers obtain the shares of the extended witness starting from their shares of the witness?
+	2) Right now, we have formalized this notion such that each round of interaction between can be simulated. To capture the security of the overall protocol, is it enough to consider the linear composability between the protocols?}
+
+
+
+
+
+
 \begin{theorem}\label{theo:equivalent}
-	A $\round$-round $\DPZK$ protocol $\innp{\Pi}{\verifier}$ has honest verifier zero-knowledge and $t$-privacy among provers property if and only if it has honest verifier zero-knowledge under $t$-collusion.
+	A $\round$-round strongly private $\DPZK$, private under $t$ corruption, protocol $\innp{\Pi}{\verifier}$ has honest verifier zero-knowledge property if and only if it has honest verifier zero-knowledge under $t$-collusion.
 \end{theorem}
 
 \begin{proof}
+	%\input{diagram1.tex}
+	We will discuss the malicious case, semi-honest case trivially follows from that.
+	
 	\textbf{case 1:} Let $\innp{\Pi}{\verifier}$ has honest verifier zero-knowledge and $t$-privacy among provers property. That implies there are simulators $\Sim_{ZK}$ and $\Sim_{P}$ for which 
 	\begin{align}
-	&\{ \innp{ \Pi( \wit ) }{ \verifier^*( z ) } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt, z) \}\\        
+	&\{ \innp{ \Pi( \wit ) }{ \verifier^* } ( \stmt) \} \stackrel{c}{\approx} \{ \langle \Sim_{ZK} \rangle(\stmt) \}\\        
 	\text{for all }i \in [\round] \text{, } &\{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i) \}
-	\stackrel{c}{\approx} \{ \langle \Sim_{\pi_i} \rangle (\stmt, \st^{i-1}_T, m) \}
+	\stackrel{c}{\approx} \{  \Sim_{\pi_i}^{\IF{\Exec_{\pi}}}  (\stmt) \}
 	\end{align}
-
+	
 	A transcript of actual execution of $\innp{\Pi}{\verifier^*}$ will have three types of values:
 	
 	\begin{itemize}
@@ -100,28 +116,46 @@ where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the
 		\item Interaction among the provers to generate the next message.
 		\item verifier's random challenges.         
 	\end{itemize}
-	Now we will design a simulator $\Sim$.
+	Now we will design a simulator $\Sim$, which on input $\stmt$, runs in the following way:
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth]{Diagram1.jpg}
+		\caption{Simulation of the $i$th round}
+		\label{fig:simulation}
+	\end{figure}
 	
-	$\Sim$ on input $\stmt, \wit_T$ does the following: 
+	At $i$th round $\Sim$ on input $\stmt$ does the following: 
 	\begin{itemize}
-		\item $\Sim$ sets $st^0_T = \wit_T$.
-		\item $\Sim$ calls $\Sim_P$ to get the random $r_1$ which is going to be used before the next round to update the provers states.
-		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $r_1$ to get $m_{1}$ as the first round message to the verifier.
-		\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_1}$ on input $(\stmt, \st^0_T , m_{1})$ and gets $\tau_{1}$.
+		\item $\Sim$ calls $\Sim_P$ on input $\stmt$, which internally calls $\Sim_{\pi_i}$ om input $\stmt$. 
+		
+		\item $\Sim_{\pi_i}$ starts interacting with the adversary and extracts $st^i_T$.
+		
+		\item 
+		\begin{itemize} 
+			\item $\Sim$ on first round, i.e., i=1 calls $\IF{DPZK}$ and checks whether corrupt provers are using correct shares of the witness or not, and stores state {\bf true} if $\IF{DPZK}$ outputs 1, else stores {\bf false}.
+			\item If $i \neq 1$ $\Sim$ checks whether the extracted witnesses at the $i$th round is consistent with the prior rounds witnesses. if yes then sets state {\bf true}, else {\bf false}.
+		\end{itemize}
+		%\item $\Sim$ calls $\Sim_P$ to get the random $r_1$ which is going to be used before the next round to update the provers states.
+		\item If state of $\Sim$ is {\bf true}, then $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and gets the output $m_i$, and if state of $\Sim$ is {\bf false}, then $\Sim$ picks a random $m_i$.
+		
+		%\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $r_1$ to get $m_{1}$ as the first round message to the verifier.
+		\item $\Sim$ feeds $m_i$ as the output of $\IF{\Exec_{\pi_i}}$ to the simulator $\Sim_{\pi_i}$ and gets a transcript of the interaction among the provers, which is indistinguishable from the actual execution of $\pi_i$.
+		\item Finally $\Sim$ sends $m_i$ to the verifier.
+		\item and gets challenge $r$ from the verifier.
+		%\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_1}$ on input $(\stmt, \st^0_T , m_{1})$ and gets $\tau_{1}$.
 		%\item $\Sim$ sends $m_1$ to the verifier, and gets the response $r_1$, a random challenge (honest verifier).
-		\item $\Sim$ updates the states of the adversarial provers i.e. $\st^i_T = (\st^{i-1}_T, r_i)$ $\forall i>0$.
-		\item $\Sim$ calls $\Sim_P$ to get the random $r_i$, for all $1<i <R$.
-		\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $(r_1, \ldots, r_i)$ to get $m_i$ for all $1<i<R$.
-		\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_{i}}$ on input $(\stmt, \st^{i-1}_T , m_{i})$ and gets $\tau_{i}$ $\forall i>0$. 
+		%\item $\Sim$ updates the states of the adversarial provers i.e. $\st^i_T = (\st^{i-1}_T, r_i)$ $\forall i>0$.
+		%\item $\Sim$ calls $\Sim_P$ to get the random $r_i$, for all $1<i <R$.
+		%\item $\Sim$ calls $\Sim_{ZK}$ on input $\stmt$ and feeds $(r_1, \ldots, r_i)$ to get $m_i$ for all $1<i<R$.
+		%\item Then $\Sim$ calls $\Sim_{P}$, which calls $\Sim_{\pi_{i}}$ on input $(\stmt, \st^{i-1}_T , m_{i})$ and gets $\tau_{i}$ $\forall i>0$. 
 		%\item $\Sim$ keeps repeating the above steps and stops when $i=\round - 1$. 
 	\end{itemize}
 	$\Sim$ outputs $\Gamma = \{\tau_1, m_1 ,r_1, \ldots, \tau_{\round}, m_{\round}, r_{\round} \}$ 
 	
-	Let $\Gamma' = \{\tau'_1, m'_1 ,r'_1, \ldots, \tau'_{\round}, m'_{\round}, r'_{\round} \}$ be a transcript of an actual execution of the propotocl.
+	\noindent If corrupt parties used the correct shares of the input, then the transcript is accepting. Therefore, $\Gamma$ is indistinguishable from a transcript $\Gamma'$ of actual execution of the complete protocol where corrupt provers did not deviate from there shares of the witness, where
+	Let $\Gamma' = \{\tau'_1, m'_1 ,r'_1, \ldots, \tau'_{\round}, m'_{\round}, r'_{\round} \}$ be a transcript of an actual execution of the protocol.
 	
-	Claim: for any $\ppt$ algorithms, the distribution of $\Gamma$ and $\Gamma'$ is a negligible distance apart.
-	
-	
+	Furthermore, if corrupt provers used some input which either not correct shares of the witness or inconsistent states, that leads to rejection, in that case; also the simulated transcript is indistinguishable from the actual execution of the complete protocol.
+	%Claim: for any $\ppt$ algorithms, the distribution of $\Gamma$ and $\Gamma'$ is a negligible distance apart.
 	To prove the above claim consider the following hybrid: 
 	
 	$\Gamma_0 = \{\tau'_1, m_1 ,r_1, \ldots, \tau'_{\round}, m_{\round}, r_{\round} \}$
@@ -131,18 +165,19 @@ where $\wit_T$ is the input of the provers in $T$, $\st^{i-1}_T$ consists of the
 	$\Gamma_0 \approx \Gamma': $ If not then there is a $\ppt$ distinguisher $\calD$ for $\Gamma_0$ and $\Gamma'$. There is an easy to construct a $\ppt$ distinguisher, which can distinguish whether a transcript is an actual prover verifier interaction or generated by the simulator $\Sim_{ZK}$, using $\calD$, which breaks the zero-knowledge property of the protocol. Hence, $\Gamma_0 \approx \Gamma'$.
 	
 	Therefore, $\Gamma \approx \Gamma'$.
+	
+	That implies $\innp{\Pi}{\verifier}$ has zero-knowledge under $t$-collusion property.
+	
+	\textbf{case 2:} Let $\innp{\Pi}{\verifier}$ has $t$-ZKUC property.
+	
+	Then it is evident that $\innp{\Pi}{\verifier}$ has $ZK$; it is just a particular case of $t-ZKUC$, when $t=0$.
+	
+	It is easy to build a simulator $\Sim_P$ from the ZKUC simulator $\Sim$: $\Sim_P$ executes all the steps of $\Sim$ similarly, but for verifier's query, $\Sim_P$ picks $r$ uniformly at random and proceeds.
+	%Now we will prove that $\innp{\Pi}{\verifier}$ has $t$-privacy among provers property. 
+	This completes the proof.
+%If not, let there is a set $T\subseteq [\Num]$ of size $\leq t$ for which during the interaction among the provers, adversary corrupting provers in $T$ learns a function $h(\wit)$ which can not be computed by the advesary i.e. $h(\wit)$ cannot computed using $\stmt, \wit_T, m, z$. Therefore $\verifier^*$ is learning $h(w)$, which he is not supposed to learn. That imples $\innp{\Pi}{\verifier}$ does not have ZKUC property, contradiction.
 
-That implies $\innp{\Pi}{\verifier}$ has zero-knowledge under $t$-collusion property.
-
-\textbf{case 2:} Let $\innp{\Pi}{\verifier}$ has $t$-ZKUC property.
-
-Then it is evident that $\innp{\Pi}{\verifier}$ has $ZK$; it is just a particular case of $t-ZKUC$, when $t=0$.
-
-Now we will prove that $\innp{\Pi}{\verifier}$ has $t$-privacy among provers property. 
-
-If not, let there is a set $T\subseteq [\Num]$ of size $leq t$ for which during the interaction among the provers, adversary corrupting provers in $T$ learns a function $h(\wit)$ which can not be computed by the advesary i.e. $h(\wit)$ cannot computed using $\stmt, \wit_T, m, z$. Therefore $\verifier^*$ is learning $h(w)$, which he is not supposed to learn. That imples $\innp{\Pi}{\verifier}$ does not have ZKUC property, contradiction.
-
-Therefore $\innp{\Pi}{\verifier}$ has $t$-privacy among provers and zero-knowledge property.
+%Therefore $\innp{\Pi}{\verifier}$ has $t$-privacy among provers and zero-knowledge property.
 \end{proof}
 
 
@@ -159,7 +194,7 @@ In addition to the efficiency measures used for single-prover protocols, $\DPZK$
 \item Proof size
 \end{enumerate}
 
-\subsubsection{Circuit share complexity}
+\subsection{Circuit share complexity}
 Consider a relation where the witness is \textit{partitioned} among the provers in the $\DPZK$ setting. We define a new notion of efficiency for a $\DPZK$ protocol which would become a prominent efficiency measure for a class of real-world applications.
 Let \textit{shared circuit} denote the part of the circuit representing the relation whose wire values are functions of inputs from more than one prover. 
 We introduce the notion of \textit{circuit share complexity} to denote the size of this shared circuit.
