@@ -192,23 +192,45 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 	
 	Therefore, $U_1[i,j] = U_2[i,j]$ $\forall i\in S_1, j\in S_2$. Choose a bivariate polynomial $Q(x,y)$ such that $deg_x(Q)<\ell $ and $deg_y(Q)<m$ and $Q(\eta_{i_s}, \alpha_{j_t}) = U_1[i_s,j_t] = U_2[i_s,j_t] \forall (i, j)\in S_1\times S_2$. 
 	
-	Defne $U = Q(\eta_i,\alpha_j)$ $\forall i\in[h], j\in[n]$, Then $U \in \L_1\otimes L_2$ and $U^\ast[i,j] = U[i,j]$ $\forall (i,j) \in S_1 \times S_2$.
+	Defne $U = Q(\eta_i,\alpha_j)$ $\forall i\in[h], j\in[n]$, Then $U \in L_1\otimes L_2$ and $U^\ast[i,j] = U[i,j]$ $\forall (i,j) \in S_1 \times S_2$.
 	
 	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
 	This proves the above claim.	
 \end{proof}
  
 
-\subsection{Coding Theoretic Results for Soundness}
+\subsection{Coding Theoretic Results for our Constructions}
+In this section we prove the coding theoretic result (Proposition \ref{lem:3dcompression}), which underlies
+the construction of our new ``MPC-friendly'' zero knowledge protocol. The result
+extends the approach in \cite{ligero}  of interleaving the witness and checking proximity (to well
+formed encoding) by
+compressing along a dimension using a random linear combination. 
+While in \cite{ligero}, the witness was interleaved as a matrix,
+we interleave the witness as a three dimensional matrix to obtain smaller
+argument size. The following result is the key to testing proximity of a three
+dimensional matrix to a well formed encoding.
+\begin{proposition}[3D Compression]\label{lem:3dcompression}
+Let $\HH$ be a finite field and $\FF\subseteq \HH$ be a subfield of $\HH$. Let $L$ be an $[n,k,d$ code over $\FF$, and $\mc{C} :=
+\ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
+$p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
+\mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
+$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$. Then for any
+$m\times n$ matrix $u_0$, we have 
+\[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
+\frac{d}{|\FF|}\]  
+for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
+\end{proposition}
 
-These results in this section play a key role in protocols for checking that the witness has been correctly encoded with small query complexity. Some variants of results presented in this section appear as lemmas and conjectures in \cite[Section 4]{ligero}.
-
-Throughout this section, let $L$ be a linear $[n,k,d]$ code over field a finite $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
+We need several observations to prove the above, which we present next.
+Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
 \begin{equation}\label{eq:affspace}
 \aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
 \end{equation}
 Note that in the above, the scalars in the linear combination come from $\FF$.
 
+The following result was proved in \cite{ligero} for the setting $\HH=\FF$.
+For completeness, we present an adaptation of the proof to the setting where
+$\FF$ is a subfield of $\HH$.
 \begin{lemma}\label{lem:farpoint}
 Let $L$ and $\mc{C}$ be codes as defined, and let $e$ be a positive integer such that $e+2\leq |\FF|$. Then for any $u_0\in \HH^n$ and any $U^\ast\in \HH^{m\times n}$ such that $d(U^\ast,\mc{C})>e$, there exists $v\in \aff{u_0}{U^\ast}$ such that $d(v,L)>e$.
 \end{lemma} 
@@ -229,6 +251,10 @@ Thus $d(x+\alpha_k,v)>d(x,v)$, contradicting the choice of $x$. This proves the
 lemma.   
 \end{proof}
 
+Next we prove a result about lines with respect to linear codes. The result was
+proved in \cite{ligero} for the case $\HH=\FF$ and $e<d/4$. The authors in
+\cite{ligero} conjectured the result for $e<d/3$. Here we prove the result for
+$e<d/3$ when $\FF$ can be an arbitrary subfield of $\HH$.
 
 \begin{lemma}[Affine Line]\label{lem:affineline}
 Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$ we have:
@@ -237,8 +263,88 @@ Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\H
 \item $d(x,L)> e$ for at most $d$ points in $\ell_{u,v}$.
 \end{enumerate}
 \end{lemma}
-We defer the proof of the above lemma to Appendix.
-The next result underlies our key proximity protocols. Intuitively the result states that if a matrix is far away from the code $\mc{C}$, a random linear combination of its rows is far away from a codeword in $L$, and thus the proximity of the matrix to $\mc{C}$ may be tested by testing the proximity of a random linear combination of its rows to $L$.
+\begin{proof}
+%\nnote{Candidate for Appendix: Putting it here just to have all content for the moment}
+The above is equivalent to
+proving that if there exist $d+1$ distinct points $X =
+\{x_1,\ldots,x_{d+1}\}\subseteq \ell_{u,v}$ such
+that $d(x_i,L)\leq e$ for all $i\in [d+1]$, then $d(x,L)\leq e$ for all $x\in
+\ell_{u,v}$. Assume that there exists such a set $X$ of $d+1$ points. Let $\ell_i$ denote the point in $L$ closest to $x_i$ for $i\in
+[d+1]$. Set $\eta_i=x_i-l_i$ for all $i$ and let
+$\bm{\eta}=\{\eta_1,\ldots,\eta_{d+1}\}$. By assumption we have
+$\wt{\eta_i}\leq e$ for all $i\in [d+1]$. Since $\ell_{u,v}$ is contained in affine
+span of any two distinct points on it, we have tuples
+$\{(\alpha_i,\beta_i)\}_{i\in [d+1]}d$ such that $\alpha_i + \beta_i=1$ and $x_i=\alpha_ix_1 +
+\beta_ix_2$ for $i\in [d+1]$. Note that $(\alpha_1,\beta_1)=(1,0)$ and
+$(\alpha_2,\beta_2)=(0,1)$. Observe that $\alpha_i$'s and $\beta_i$'s must be
+distinct for all $i\in [d+1]$. We call $X$ as {\em degenerate} if there exist
+$i\neq j$ satisfying $\alpha_j=\gamma\alpha_i$ and $\beta_j=\gamma\beta_j$ for
+some $\gamma\in \FF\backslash {0}$. We consider two cases:
+
+\noindent{\em $X$ is degenerate}: Degeneracy implies there exist $i\neq j$ such that $x_i=\gamma x_j$ for
+some $\gamma\in \FF\backslash\{0\}$. In this case we have $0 =
+\frac{1}{1-\gamma}x_i -\frac{\gamma}{1-\gamma}x_j\in \ell_{u,v}$. This implies
+$\ell_{u,v}=\{\alpha x_i: \alpha\in \FF\}$
+and hence $d(x,L)=d(x_i,L)\leq e$ for all $x\in \ell_{u,v}$. Thus the statement
+of the Lemma holds in this case.\smallskip 
+
+\noindent{\em X is not degenerate}: We first prove
+that $\ell_i=\alpha_i\ell_1+\beta_i\ell_2$ and
+$\eta_i=\alpha_i\eta_1+\beta_i\eta_2$ for
+all $i\in [d+1]$. We have
+\begin{align*}
+\ell_i+\eta_i = x_i &= \alpha_ix_1 + \beta_ix_2 \\
+    &= \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
+    &= (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
+\end{align*}
+Rearranging we have,
+\begin{equation*}
+\ell_i - (\alpha_i\ell_1 + \beta_i\ell_2) = \alpha_i\eta_1 +
+\beta_i\eta_2 - \eta_i
+\end{equation*}
+In the above equation we see that LHS is a vector in $L$. Further
+$\wt{\alpha_i\eta_1 + \beta_i\eta_2 - \eta_i}\leq
+\wt{\eta_1}+\wt{\eta_2}+\wt{\eta_i}\leq 3e < d$. Thus the LHS must be equal to
+$0$ and hence $\ell_i = \alpha_i\ell_1 + \beta_i\ell_2$ and
+$\eta_i=\alpha_i\eta_1+\beta_i\eta_2$. Observe that any $x^\ast\in \ell_{u,v}$ can
+be written as $x^\ast=\alpha^\ast x_1+\beta^\ast x_2$. Thus
+$d(x^\ast,L)=d(\alpha^\ast x_1+\beta^\ast x_2,L)\leq \wt{\alpha^\ast
+\eta_1+\beta^\ast \eta_2}\leq |E|$ where $E$ denotes the set
+$\Delta(\eta_1,0)\cup \Delta(\eta_2,0)$. Our final effort will be to show that
+$|E|\leq e$.
+
+\noindent{\it Claim}: $|E|\leq e$ where $E = \Delta(\eta_1,0)\cup
+\Delta(\eta_2,0)$. We consider the partition of $E$ into sets
+$E_0=\Delta(\eta_1,0)\backslash \Delta(\eta_2,0)$,
+$E_1=\Delta(\eta_2,0)\backslash \Delta(\eta_1,0)$ and
+$E_{01}=\Delta(\eta_1,0)\cap \Delta(\eta_2,0)$. Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$
+where $m_{ij}=0$ if $j^{th}$ coordinate ($\eta_i^j$) of $\eta_i$ is zero, and $m_{ij}=1$
+otherwise. We will show that each row of $M$ has at most one $0$. Assume that
+there exists $i$ such that $m_{ip}=0$ and $m_{iq}=0$ for $p\neq q$. We consider
+three cases:
+\begin{itemize}
+\item If $i\in E_0$, the above condition implies $\alpha_p\eta_1^i =
+\alpha_q\eta_1^i=0$, or $\alpha_p=\alpha_q=0$ as $\eta_1^i\neq 0$ for $i\in E_0$.
+This contradicts the fact that $X$ is not degenerate.
+\item The case $i\in E_1$ is similar to above.
+\item If $i\in E_{01}$ we have
+$\alpha_p\eta_0^i+\beta_p\eta_1^i=\alpha_q\eta_0^i+\beta_q\eta_1^i=0$ which
+implies $\alpha_p/\beta_p=\alpha_q/\beta_q=-\eta_1^i/\eta_0^i$, or
+$\alpha_p/\alpha_q = \beta_p/\beta_q$ which contradicts the fact that $X$ is
+not degenerate. Note that all denominators can be argued to be non-zero for $i\in E_{01}$. 
+\end{itemize}
+
+From the above, we conclude that each row has at least $d$ entries as $1$.
+Counting by columns, we have that each column has at most $e$ entries as $1$
+(since $\wt{\eta_i}\leq e$ for all $i\in [d]$. Comparing the lower and upper
+bounds on the number of $1$ entries in the matrix we have $td \leq e(d+1)$
+which implies $t \leq e + e/d < e + 1$. Thus $t\leq e$, as we wanted to show.
+This completes the proof.
+
+\end{proof}
+
+The following result underlies proximity protocols in our work and in
+\cite{ligero}. Intuitively the result states that if a matrix is far away from the code $\mc{C}$, a random linear combination of its rows is far away from a codeword in $L$, and thus the proximity of the matrix to $\mc{C}$ may be tested by testing the proximity of a random linear combination of its rows to $L$.
 
 \begin{lemma}[Affine Subspace]\label{lem:affinesubspace}
 Let the codes $L$ and $\mc{C}$ be as defined and $e<d/3$ be an integer. Let $U\in \HH^{m\times n}$ be a matrix such that $d(U,\mc{C})>e$. Then for any $u_0\in \HH^n$, $\prob{d(u_0+r^TU,L)\leq e}\leq d/|\FF|$ for uniformly sampled $r\sample \FF^m$.
@@ -247,27 +353,8 @@ Let the codes $L$ and $\mc{C}$ be as defined and $e<d/3$ be an integer. Let $U\i
 From Lemma \ref{lem:farpoint}, there exists $u\in \aff{u_0}{U}$ such that $d(u,L)>e$. Now we can write $\aff{u_0}{U}$ as union of affine lines passing through $u$. Applying lemma \ref{lem:affineline} to each line, we see that at most $d$ points $x$ on each affine line satisfy $d(x,L)\leq e$. Thus, a randomly sampled point $x$ in $\aff{u_0}{U}$, equivalently obtained as $u_0+r^TU$ for a randomly sampled vector $r\in \FF^m$ satisfies $d(x,L)$ with probability at most $d/|\FF|$.
 \end{proof}
 
-\noindent{\bf Three dimensional interleaving}: Consider a $p\times m\times n$ three dimensional
-matrix $U[\cdot,\cdot,\cdot]$. We refer to $U[i,\cdot,\cdot]$ as $i^{th}$ {\em
-slice}
-of $U$, while we refer to $U[\cdot,\cdot,k]$ as the $k^{th}$ {\em plane} of $U$. Let $\mc{C}^p$ denote the set of $p\times m\times n$ matrices $U$ such that
-each slice of $U$ is a codeword in $\mc{C}$. Let $\Delta_1$ denote the distance
-metric on the set of $p\times m\times n$ matrices denoting the number of planes
-where they differ, i.e, $\Delta_1(U,U')=|\{k\in [n]:
-U[\cdot,\cdot,k]=U'[\cdot,\cdot,k]\}|$. \pnote{It should be $\neq$, right?} As before, define $d(U^\ast,\mc{C}^p)$ to be
-the minimum value $\Delta_1(U^\ast,U)$ for $U\in \mc{C}^p$. The next result
-states that if a three dimensional matrix $U$ is far away from the code
-$\mc{C}^p$, a random linear combination of slices of $U$ is far away from $C$.
-
-\begin{lemma}[3D Compression]\label{lem:3dcompression}
-Let the codes $L,\mc{C}$ and $\mc{C}^p$ be as defined. Let $U^\ast$ be a
-$p\times m\times n$ matrix such that $d(U^\ast,\mc{C}^p)>e$. Then for any
-$m\times n$ matrix $u_0$, we have 
-\[ \prob{d\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
-\frac{d}{|\FF|}\]  
-for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
-\end{lemma}
-\begin{proof}
+We are now in a position to prove Proposition \ref{lem:3dcompression}.
+\begin{proof}[Proof of Proposition \ref{lem:3dcompression}]
 Let $\HH$ denote the field $\FF^m$. Then $u_0$ can be viewed as a point in
 $\HH^n$. Similarly $U$ can be viewed as $p\times n$ matrix over $\HH$.
 We consider $\mc{C}$ as $[n,k,d]$ code over $\HH$ and $\mc{C}^p$ as the
@@ -275,7 +362,6 @@ interleaved code of $\mc{C}$ over the field $\HH$. Then by applying Lemma \ref{l
 with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and
 $\mc{C}$, we have the desired bound.
 \end{proof}
-
 
 \subsection{Inner-product Arguments}
 We define an interactive protocol that allows proving inner-product relation over committed values, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme. We start with a definition of such a commitment scheme. 
