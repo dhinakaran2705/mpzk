@@ -1,25 +1,19 @@
-%\documentclass[conference]{IEEEtran}
-\documentclass[runningheads]{llncs}
-%\documentclass[sigconf]{acmart}
+\documentclass[manuscript]{acmart}
 \input{packages.tex}
 \input{style.tex}
 %\input{symbols.tex}
-\newcommand{\name}{\textsf{ours}} % Give a good name
+\newcommand{\name}{\textsf{name}} % Give a good name
 \newcommand{\dpname}{\textsf{DPZK}-\name{}}
 
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{1}
 
 \title{How to prove a statement jointly?  Distributed-prover Zero-Knowledge Protocols}
-%\author{\IEEEauthorblockN{Protik}}
 
 \begin{document}
+\input{abstract.tex}
+
 \maketitle
 \tableofcontents 
-
-\input{abstract.tex}
-%Let $x$ be the witness which encoded to $U$ where $m$ is the no. of rows, $n$ is the no. of columns in a slice (one vertical matrix), and there are $p$ many slices.\\
-%Initially consider $m=n$\\
-
 
 \input{introduction.tex}
 
@@ -27,25 +21,16 @@
 
 \input{DPZK.tex}
 
-
-
 \input{DPZKShortProof.tex}
 
 \input{DPZKQuickVerify.tex}
 
 \input{instantiations.tex}
+
 \input{DPZKfromLit.tex}
 
 \input{implementation.tex}
 
-%\input{Zero-Knowledge.tex}
-
-%\textbf{Protik's construction write-up from below}
-%\input{construction.tex}
-%
-%\input{Zero-Knowledge.tex}
-%
-%\input{AmortizedVerifiersComplexity.tex}
 
 .\dnote{
 2) Spartan: |C| to log C \\
@@ -53,6 +38,6 @@
 5) Expand Spartan \\
 7) Shared circuit complexity}
 
-	\bibliographystyle{plain}
+	\bibliographystyle{ACM-Reference-Format}
 	\bibliography{main}
 \end{document}

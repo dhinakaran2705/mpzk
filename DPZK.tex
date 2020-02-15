@@ -102,7 +102,7 @@ A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\s
 \item $\setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system. The trapdoor input as well as the public parameter can possibly be empty.
 \item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of an $\Num$-input function $\pi_i(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$.   Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$, randomness $r_j$, the public parameters $\sigma$ and updated later as the protocol proceeds.  Computing $\pi_i$ requires interaction amongst the provers. The output of $\verifier$ is either an $\tt accept$ (1) or a $\tt{reject}$ (0).% Also, let $\tr$ be the transcript of the protocol.
 \end{itemize}
-Intuitively, a $\DPZK$ protocol for a language $L$ will satisfy the following properties:  correctness:  when the provers and the verifier are good, and  the provers holds a valid witness, the proof should pass; soundness:  the corrupt provers, cannot make the verifier accept without holding a valid witness together; zero-knowledge: a corrupt verifier does not learn any of the   and privacy of the provers. Below, we formally prove security of such protocols based on real/ideal world paradigm. 
+Intuitively, a $\DPZK$ protocol for a language $L$ will satisfy the following properties:  correctness:  when the provers and the verifier are good, and  the provers holds a valid witness, the proof should pass; soundness:  the corrupt provers, cannot make the verifier accept without holding a valid witness together; zero-knowledge: a corrupt verifier does not learn any information, except for the assertion about the statement;  witness-hiding: the witness of the honest provers remain hidden from a collusion of a corrupt verifier and a subset of provers. Below, we formally prove security of such protocols based on real/ideal world paradigm. 
 
 \subsection{Real/Ideal world definition for DPZK}
 
@@ -114,7 +114,7 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 \begin{figure}[H]
 	\centering
 	\begin{framed}
-		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)
+		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)\\~
 		The functionality is parameterized with an NP relation $R$ of an NP language $L$.
 		\begin{itemize}
 		\item[--] Upon receiving input $x_i = (\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$ and $\stmt$ from $\verifier$, do the following: if $x_i$ is an empty string or falls outside the range of the domain of $\prover_i$'s input,  reset $x_i = \abort$. 
@@ -127,7 +127,7 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1  ,\ldots,x_{\Num},x_\verifier)$ for the parties and auxiliary input $z$ for $\Sim$.  
 
 
-\paragraph{The real execution.} The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  $t$ of the parties.  Similarly,  let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
+\paragraph{The real execution.} The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  a set of parties in $I$.  Let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
 
 
 
