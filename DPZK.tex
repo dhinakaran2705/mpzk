@@ -132,11 +132,12 @@ Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\
 In summary.  The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  a set of parties in $I$.  Let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ (same as the ideal world) for the parties and auxiliary input $z$ for $\adv$. 
 
 
-\paragraph{Security via Indistinguishability of Real and Ideal world}
+\paragraph{Security via Indistinguishability of Real and Ideal world.} The definition is given below
 \begin{definition}
 	Let $\Func_\dpzk$ be a $\Num+1$-party  functionality and let $\pi_\dfzk$ be a $\Num+1$-party protocol involving $\Partyset$ for DPZK. We say that  $\pi_\dpzk$ {$\it$ securely realizes} $\Func_\dpzk$~if for every $\ppt$ probabilistic  real-world adversary $\Adv$, there exists an $\ppt$  expected polynomial-time ideal-world adversary $\Sim$, such that for every $I \subset \Partyset$, every $\vec{x} \in (\{0,1\}^*)^n$ where $\abs{x_1} = \ldots= \abs{x_n}$, and every $z \in \bit^*$, it holds that:
 	
 	$$\Big\{\Ideal_{\Func, \Sim(z),I}(\vec{x}) \Big\} \equiv \Big\{ \Real_{\Pi, \Adv(z),I}(\vec{x}) \Big\}. $$
+When $I = \{\prover_1,\ldots,\prover_\Num\}$, satisfying the above is referred as ZK proof of knowledge. 	
 \end{definition}
 %.\pnote{Change from IT to computational}
 %For computational security, the adversaries are defined to be $\ppt$, the adversaries are parametrised with a security parameter $\secparam$ and the perfect indistinguishability is replaced with computational indistinguishability. 
@@ -144,6 +145,7 @@ In summary.  The ``real" world execution involves the $\ppt$\ parties  in $\Part
 %In order to construct some of our protocols, we will use secure two-party protocols as subprotocols. The standard way of doing this is to work in a ``\emph{hybrid model}'' where both the parties interact with each other (as in the real model) in the outer protocol and use ideal functionality calls (as in the ideal model) for the subprotocols. Specifically, when constructing a protocol $\Pi$ that uses a subprotocol for securely computing some functionality $\Func$,  the parties run $\Pi$ and use ``ideal calls'' to $\Func$ (instead of running the subprotocols implementing $\Func$). %Upon receiving the inputs from the parties, $\F$ will return all parties their output. Then, after receiving these outputs back from $\F$, the protocol $\Pi$ continues.
 %The execution of $\Pi$ that invokes $\Func$ every time it requires to execute the subprotocol implementing $\Func$ is called   the {\em $\Func$-hybrid execution of $\Pi$} and is denoted as $\Pi^\Func$. The hybrid ensemble $\Hyb_{\Pi^\Func,\Adv,\Env}(1^\secparam,z)$ describes $\Env$'s output after interacting with $\Adv$ and the parties $P_0$, $P_1$ running protocol $\Pi^\Func$. By UC definition, the hybrid ensemble should be indistinguishable from the real ensemble with respect to protocol $\Pi$ where the calls to $\Func$ are instantiated with a realization of $\Func$.
 %-----------------------------------------------------------------------------------------------
+Since in DPZK, the roles of the parties in $\Partyset$ are not symmetric, we distinguish the corruption cases and the name the security property that is implied by the above indistinguishability for that corruption case. 
 
 
 In contrast to the definition in section ~\ref{sec:security model}, all the parties except for the verifier, in the execution of the protocol they may deviate arbitrarily, but the verifier is not allowed to deviate from the protocol. The reason behind considering a preposterously looking adversarial model is that we want to design a zkSNARK which is efficient, secure, publicly verifiable and distributed proof generation property. We know from \cite{}, any interactive honest (public coin) verifier can be transformed into Non-interactive zero-knowledge using \textit{Fiat–Shamir heuristic}. Here the verifier can be semi-honest, i.e., verifier will follow the protocol steps and sends all the challenges uniformly at random.
