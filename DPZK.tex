@@ -12,7 +12,7 @@ Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. In our setting, we le
 A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\setup, \Pi, \verifier)$. 
 \begin{itemize}
 \item $\setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system.
-\item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of $\pi_i(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$. Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$, randomness $r_j$, the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $\verifier$ is either an \tt{accept} (1) or a \tt{reject} (0). Also, let $\tr$ be the transcript of the protocol.
+\item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of $\pi_i(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$. Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$, randomness $r_j$, the public parameters $\sigma$ and updated later as the protocol proceeds. The output of $\verifier$ is either an $\tt accept$ (1) or a $\tt{reject}$ (0). Also, let $\tr$ be the transcript of the protocol.
 \end{itemize}
 A $\DPZK$ protocol for a language $L$ satisfies the following properties: 
 correctness, soundness, zero-knowledge and privacy among provers.
@@ -79,7 +79,7 @@ The argument $(\Setup, \Pi, \verifier)$ is a special honest verifier zero-knowle
 The notion of zero-knowledge, as we discussed earlier, considers the knowledge gained by a verifier on seeing the proof. However, when there are multiple provers, this does not capture the setting where the verifier colludes with a subset of provers trying to learn information about the witness shares of the remaining provers. We define the notion of zero-knowledge under $t$-collusions ($t$-$\ZKUC$) to capture this.
 
 \begin{definition}
-An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t$-$\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T\subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
+An argument $\innp{\Pi}{\verifier}$ with $\Num$ provers has the property of computational zero-knowledge under $t$-collusions ($t$-$\ZKUC$), if for every $\ppt$ interactive machine $\verifier^*$ and any subset of colluding provers $T \subseteq [\Num]$ of size $\leq t$, there exists a $\ppt$ algorithm $\Sim$ such that the following holds for any instance $\stmt \in L$ with witness $\wit$ and for any $\rho$: 
 \[
  \{ \innp { \prover_{\overline{T}}( \st^{i-1}_{\overline{T}} ) } { \prover_T ( \st^{i-1}_T ) } ( \stmt  , m_i): i\in [\round] \} \cup \innp{\Pi(\stmt, \wit)}{\verifier^*(\stmt, \rho, \wit_T)}  \stackrel{c}{\approx}  \Sim (\stmt, \rho)
 \]
@@ -92,7 +92,7 @@ $\st^{i-1}_T$ consists of the states of the corrupt parties of $i$th round and $
 %------------------------------------------------------------------------------------------------
 % Functionality based definition:
 \section{The Definition for Distributed-prover Zero-knowledge Protocol}\label{sec:security model}
-This discussion will formally define a zero-knowledge protocol which supports multiple proves and distributed proof generation. Consider a language $L \in \npol$ and the corresponding relation $R$ such that
+This discussion will formally define a zero-knowledge protocol which supports multiple provers and distributed proof generation. Consider a language $L \in \npol$ and the corresponding relation $R$ such that
 \[
 \stmt \in L \Leftrightarrow R(\stmt, \wit)=1 \text{ for some witness } \wit
 \]
@@ -100,13 +100,13 @@ Let $\prover_1, \ldots, \prover_{\Num}$ be $\Num$ provers. %In our setting, we l
 A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\setup, \Pi, \verifier)$. 
 \begin{itemize}
 \item $\setup$ takes as input the security parameter $1^\secp$ and optionally a trapdoor $\tau$ and outputs the public parameters $\sigma$ of the system. The trapdoor input as well as the public parameter can possibly be empty.
-\item The interactive proof system is an $\round$-round protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every round $i \in [\round]$, we have the output $m_i$ of an $\Num$-input function $\pi_i(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$.   Here, $\st^i_j$ is the state of the prover $\prover_j$ at round $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$, randomness $r_j$, the public parameters $\sigma$ and updated later as the protocol proceeds.  Computing $\pi_i$ requires interaction amongst the provers. The output of $\verifier$ is either an \tt{accept} (1) or a \tt{reject} (0).% Also, let $\tr$ be the transcript of the protocol.
+\item The interactive proof system is an $\round$-step protocol $\langle \Pi = \{\pi_i\}_{i \in [\round]}, \verifier \rangle$ where in every step $i \in [\round]$, we have the output $m_i$ of an $\Num$-input function $\pi_i(\st^i_1, \ldots, \st^i_{\Num})$ provided to $\verifier$.   Here, $\st^i_j$ is the state of the prover $\prover_j$ at step $i$. $\st^1_j$ is set to $\prover_j$'s share of the witness $\wit_j$, randomness $r_j$, the public parameters $\sigma$ and updated later as the protocol proceeds.  Computing $\pi_i$ requires interaction amongst the provers. The output of $\verifier$ is either an {\tt accept} (1) or a {\tt reject} (0).% Also, let $\tr$ be the transcript of the protocol.
 \end{itemize}
-Intuitively, a $\DPZK$ protocol for a language $L$ will satisfy the following properties:  correctness:  when the provers and the verifier are good, and  the provers holds a valid witness, the proof should pass; soundness:  the corrupt provers, cannot make the verifier accept without holding a valid witness together; zero-knowledge: a corrupt verifier does not learn any information, except for the assertion about the statement;  witness-hiding: the witness of the honest provers remain hidden from a collusion of a corrupt verifier and a subset of provers. Below, we formally prove security of such protocols based on real/ideal world paradigm. 
+Intuitively, a $\DPZK$ protocol for a language $L$ will satisfy the following properties: (a)  correctness:  when the provers and the verifier are good, and  the provers hold a valid witness, the verifier should accept; (b) soundness:  the corrupt provers cannot make the verifier accept without holding a valid (joint) witness; (c) zero-knowledge: a corrupt verifier does not learn any information, except  the assertion of the statement; (d)  witness-hiding: the witness of the honest provers remain hidden from a collusion of a corrupt verifier and a subset of provers. Below, we formally prove security of such protocols based on real/ideal world paradigm. 
 
 \subsection{Real/Ideal world definition for DPZK}
 
-We prove the security of our protocols based on the standard real/ideal world paradigm.  Essentially, the security of a protocol is analyzed by comparing what an adversary can do in the real execution of the protocol to what it can do in an ideal execution,  that is considered secure by definition (in the presence of an incorruptible trusted party). In an ideal execution, each party sends its input to the trusted party over a perfectly secure channel, the trusted party computes the function based on these inputs and sends to each party its respective output.  Informally, a protocol
+We prove the security of our protocols based on the standard real/ideal world paradigm.  Essentially, the security of a protocol is analyzed by comparing what an adversary can do in the real execution of the protocol to what it can do in an ideal execution,  that is considered secure by definition (in the presence of an incorruptible trusted party). In an ideal execution, each party sends its input to the trusted party over a secure channel, the trusted party computes the function based on these inputs and sends to each party its respective output.  Informally, a protocol
 is secure if whatever an adversary can do in the real protocol (where no trusted party exists) can be done in the above described ideal computation. We refer to \cite{Canetti00,Goldreich2001,Lindell17,CohenL14} for further details regarding the security model.  
 
 
@@ -115,10 +115,10 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 	\centering
 	\begin{framed}
 		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)\\~
-		The functionality is parameterized with an NP relation $R$ of an NP language $L$.
+		The functionality is parametrized with an NP relation $R$ of an NP language $L$.
 		\begin{itemize}
 		\item[--] Upon receiving input $x_i = (\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$ and $\stmt$ from $\verifier$, do the following: if $x_i$ is an empty string or falls outside the range of the domain of $\prover_i$'s input,  reset $x_i = \abort$. 
-			\item[--] If any of the $x_i$ is $\abort$ send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots, \oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
+			\item[--] If any of the $x_i$ is $\abort$, send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots, \oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
 		\end{itemize}
 	\end{framed}
 	\caption{Ideal Functionality $\Func_{\DPZK}$}
@@ -127,41 +127,28 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1  ,\ldots,x_{\Num},x_\verifier)$ for the parties and auxiliary input $z$ for $\Sim$.  
 
 
-\paragraph{The real execution.} The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  a set of parties in $I$.  Let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
+\paragraph{The real execution.} In the real model, the parties run $\pi_\DPZK$ protocol.  We consider a synchronous network with private point-to-point channels, and an authenticated broadcast channel. This means that the computation proceeds in rounds, and in each round parties can send private messages to other parties and can broadcast a message to all other parties. We stress that the adversary cannot read or modify messages sent over the point-to-point channels, and that the broadcast channel is authenticated, meaning that all parties know who sent the message and the adversary cannot tamper with it in any way. Nevertheless, the adversary is assumed to be rushing, meaning that in every given round it can see the messages sent by the honest parties before it determines the messages sent by the corrupted parties. As per $\pi_\DPZK$, the parties first produce the output of $\setup$. In $r$th step, the parties run a distributed protocol to compute $\pi_i$ with respective states and sends the output $m_i$ of the computation to $\verifier$.  The protocol ends after $\round$ steps.
+
+In summary,  the ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  a set of parties in $I$.  Let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ (defined in the same way as the ideal world) for the parties and auxiliary input $z$ for $\adv$. 
 
 
-
-
+\paragraph{Security via Indistinguishability of Real and Ideal world.} The definition is given below
 \begin{definition}
-	Let $\Func$ be a functionality and let $\Pi$ be a $n$-party protocol involving $\Partyset$. We say that  $\Pi$ {\it perfectly-securely realizes} $\Func$~if for every probabilistic  real world adversary $\Adv$, there exists a ideal world adversary $\Sim$ of comparable complexity, such that for every $I \subset \Partyset$ of cardinality at most $t$, every $\vec{x} \in (\{0,1\}^*)^n$ where $\abs{x_1} = \ldots= \abs{x_n}$, and every $z \in \bit^*$, it holds that:
+Let $\Func_{\DPZK}$ be a $\Num+1$-party  functionality and let $\Pi_{\DPZK}$ be a $\Num+1$-party protocol involving $\Partyset$ for DPZK. We say that  $\Pi_\DPZK$ {\em securely realizes} $\Func_{\DPZK}$~if for every $\ppt$ probabilistic  real-world adversary $\Adv$, there exists an $\ppt$  expected polynomial-time ideal-world adversary $\Sim$, such that for every $I \subset \Partyset$, every $\vec{x} \in (\{0,1\}^*)^n$ where $\abs{x_1} = \ldots= \abs{x_n}$, and every $z \in \bit^*$, it holds that:
 	
-	$$\Big\{\Ideal_{\Func, \Sim(z),I}(\vec{x}) \Big\} \equiv \Big\{ \Real_{\Pi, \Adv(z),I}(\vec{x}) \Big\}. $$
+	$$\Big\{\Ideal_{\Func_{\DPZK}, \Sim(z),I}(\vec{x}) \Big\} \equiv \Big\{ \Real_{\Pi_\DPZK, \Adv(z),I}(\vec{x}) \Big\}. $$
+When $I$ is  $\{\prover_1,\ldots,\prover_\Num\}$, $\{\verifier\}$, a proper $t$-size subset of $\{\prover_1,\ldots,\prover_\Num\}$, a proper $t$-size subset of $\{\prover_1,\ldots,\prover_\Num\}$ plus   $\verifier$, the above indistinguishability  is referred as Soundness with Extraction (SoE), Zero-Knowledge (ZK), witness-hiding (WH), witness-hiding with collusion (WHwC).   	
 \end{definition}
-%.\pnote{Change from IT to computational}
-For computational security, the adversaries are defined to be $\ppt$, the adversaries are parametrised with a security parameter $\secparam$ and the perfect indistinguishability is replaced with computational indistinguishability. 
-%\paragraph{\bf The $\Func$-hybrid model.}
-%In order to construct some of our protocols, we will use secure two-party protocols as subprotocols. The standard way of doing this is to work in a ``\emph{hybrid model}'' where both the parties interact with each other (as in the real model) in the outer protocol and use ideal functionality calls (as in the ideal model) for the subprotocols. Specifically, when constructing a protocol $\Pi$ that uses a subprotocol for securely computing some functionality $\Func$,  the parties run $\Pi$ and use ``ideal calls'' to $\Func$ (instead of running the subprotocols implementing $\Func$). %Upon receiving the inputs from the parties, $\F$ will return all parties their output. Then, after receiving these outputs back from $\F$, the protocol $\Pi$ continues.
-%The execution of $\Pi$ that invokes $\Func$ every time it requires to execute the subprotocol implementing $\Func$ is called   the {\em $\Func$-hybrid execution of $\Pi$} and is denoted as $\Pi^\Func$. The hybrid ensemble $\Hyb_{\Pi^\Func,\Adv,\Env}(1^\secparam,z)$ describes $\Env$'s output after interacting with $\Adv$ and the parties $P_0$, $P_1$ running protocol $\Pi^\Func$. By UC definition, the hybrid ensemble should be indistinguishable from the real ensemble with respect to protocol $\Pi$ where the calls to $\Func$ are instantiated with a realization of $\Func$.
-%-----------------------------------------------------------------------------------------------
-\subsection{Distributed-prover Zero-knowledge Protocols}
-%-In this section we will describe the notion of distributed proof generation for zero-knowledge and the adversarial model.
 
-\noindent We will model this distributed proof generations for zero-knowledge in the same way described in above section ~\ref{sec:security model}. Here $\Partyset$ consists of $\Num$ provers $\{\prover_1, \ldots, \prover_{\Num}\}$ and a verifier $\verifier$. For some NP language $L$ and instance $\stmt$ of $L$, parties in $\Partyset$ involves in a protocol $\innp{\Pi}{\verifier}$ so that all the provers in $\Partyset$ convince the verifier that there is a witness $\wit$ such that the deterministic verification algorithm $R$ for $L$ outputs $R(\stmt,\wit) = 1$, and claim of the prover is that $\prover_i$ has $\wit_i$, for all $i\in[\Num]$ such that $\wit = (\wit_1, \ldots, \wit_{[\Num]})$. Therefore the funcitonality is as follows: 
-\begin{figure}[H]
-	\centering
-	\begin{framed}
-		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)
-		\begin{itemize}
-			\item[--] The functionality is parameterized with an NP relation $R$ of an NP language $L$.
-			\item[--] Upon receiving input $(\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$, check that $R(\stmt, (\wit_1, \ldots, \wit_{[\Num]})) = 1$. If so send 1 to the verifier $\verifier$, else send 0. 
-		\end{itemize}
-	\end{framed}
-	\caption{Ideal Functionality}
-\end{figure} \label{func:DPZK}
-In contrast to the definition in section ~\ref{sec:security model}, all the parties except for the verifier, in the execution of the protocol they may deviate arbitrarily, but the verifier is not allowed to deviate from the protocol. The reason behind considering a preposterously looking adversarial model is that we want to design a zkSNARK which is efficient, secure, publicly verifiable and distributed proof generation property. We know from \cite{}, any interactive honest (public coin) verifier can be transformed into Non-interactive zero-knowledge using \textit{Fiat–Shamir heuristic}. Here the verifier can be semi-honest, i.e., verifier will follow the protocol steps and sends all the challenges uniformly at random.
+While we give a very strong definition as above, motivated by several practical aspects, we relax the adversarial power and will focus on a subset of the above properties for our constructions. We elaborate below on this.
+
+\subsection{Our setting}
+non-interactive, semi-honest verifier. WH =  WHwC
+%In contrast to the definition in section ~\ref{sec:security model}, all the parties except for the verifier, in the execution of the protocol they may deviate arbitrarily, but the verifier is not allowed to deviate from the protocol. The reason behind considering a preposterously looking adversarial model is that we want to design a zkSNARK which is efficient, secure, publicly verifiable and distributed proof generation property. We know from \cite{}, any interactive honest (public coin) verifier can be transformed into Non-interactive zero-knowledge using \textit{Fiat–Shamir heuristic}. Here the verifier can be semi-honest, i.e., verifier will follow the protocol steps and sends all the challenges uniformly at random.
 %-Start with corruption model and give a brief reasoning.
 %.\pnote{Describe honest verifier}
 
+\begin{comment}
 If all the parties in $\Partyset$ are honest, then the protocol should return 1, this property is called \textbf{\textit{completeness}}.
 
 In this setting, we have two types of corruption models, and that depends on which parties are corrupt:
@@ -179,3 +166,4 @@ In this setting, we have two types of corruption models, and that depends on whi
 	\end{definition}
 
 Note that if $I$ consists of the only verifier, then the view of the verifier should not reveal any information about neither the witness nor the inputs of the provers. This notion is called \textbf{\textit{zero knowledge}}, which is subsumed by the notion $t$-ZKUC.
+\end{comment}
