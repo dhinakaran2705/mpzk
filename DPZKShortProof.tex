@@ -21,20 +21,22 @@ the benefits of this single prover protocol are pronounced in the DPZK version.
     
 \subsection{Arguments for Arithmetic Circuits}
 Our protocol natively supports showing the satisfiability of the $\bbF$-arithmetic circuit for a finite field $\bbF$ which
-is an $\npol$-complete language. For ease of presentation, we produce an argument for the statement ``$\exists \wit, \text{ s.t } \C(\wit)=1$'' for an $\bbF$-arithmetic circuit $\C$. This can be easily modified to yield arguments for the more typical $\npol$ language $\calL_C = \{\stmt :\exists \wit \text{ s.t. } \C(\stmt,\wit)=1\}$, which we will briefly discuss later. The satisfiability of an arithmetic circuit $\C$ reduces to proving existence of vectors $x,y,z,\extwit$, where $\extwit$ is the extended witness generated from $\C(\stmt,\wit)$ such that:
+is an %$\npol$
+NP-complete language. For ease of presentation, we produce an argument for the statement ``$\exists \wit, \text{ s.t } \C(\wit)=1$'' for an $\bbF$-arithmetic circuit $\C$. This can be easily modified to yield arguments for the more typical %$\npol$ 
+NP language $\calL_C = \{\stmt :\exists \wit \text{ s.t. } \C(\stmt,\wit)=1\}$, which we will briefly discuss later. The satisfiability of an arithmetic circuit $\C$ reduces to proving existence of vectors $x,y,z,\extwit$, where $\extwit$ is the extended witness generated from $\C(\stmt,\wit)$ such that:
 $z = x \circ y$,
 $x = A \extwit$,
 $y = B \extwit$,
 $z = C \extwit$ and
 $P_{add} \extwit = 0$ for public matrices $A,B,C$ and $P_{add}$ (depending on $\C$). Thus, broadly in the IPCP setting we have the following protocol:
 \begin{enumerate}
-\item {\bf Oracle Setup}: The prover sets up witness oracle for $x,y,z,\wit$ and provides query access to the verifier. 
+\item {\bf Oracle Setup}: The prover sets up witness oracle for $x,y,z,\extwit$ and provides query access to the verifier. 
 \item {\bf Linear Checks}: The verifier runs a subprotocol with the prover to verify the linear constraints $x=A \extwit$, $y=B \extwit$, $z=C \extwit$, $P_{add} \extwit = 0$.
 \item {\bf Quadratic Check}: The verifier runs a subprotocol with the prover to verify $z=x\circ y$.
 \end{enumerate}
 
 
-We will now describe \name2D{}. In brief, \name2D{} will make use of homomorphic commitments over the RS-encoded witness oracles.
+We will now describe \name2D{}. In brief, \name2D{} will make use of homomorphic commitments over the RS-encoded witness encoding.
 %We will commit to the vector $\{\hat{f}^x_i(\eta)\}_{i \in [m]}$ using the homomorphic vector commitments. The vectors corresponding to each $\eta$ will be committed separately. Inner product arguments will then be used to remove the linear dependence of the proof size on the parameter $m$. 
 And, instead of ``opening'' vectors from these oracles to the verifier, the prover in \name2D{} will provide an inner product argument on the vectors.
 Using the inner-product arguments of \cite{InnerProductDLS, bulletproofs}, \name2D{} achieves the proof size of $O(\circsize^{1/c})$ for any $c \geq 2$ with $O(\circsize^{1-1/c})$ public key operations and $O(\circsize)$ overall complexity for the verifier. 
@@ -54,7 +56,7 @@ $x=(x_1|\cdots|x_m)$ where $x_i\in \bbF^{\ell}$ for all $i\in [m]$. The vector $
 %----------------------------------------------------------------------------------------------------
 %\Encoding
 %-----------------------------------
-Let $\extwit \in \bbF^{|\C|}$ be the witness vector. Let $m$ and $\ell$ be integers such that $m\ell\geq \circsize$. we choose ordered domains $G=\{\zeta_1,\ldots,\zeta_\ell\}$ and $H=\{\eta_1,\ldots,\eta_n\}$, We will call $G$ as {\em interpolation} domain and $H$ as {\em evaluation} domain. Then write the vectors $\extwit$ as $\extwit = (\extwit_{1},\ldots,\extwit_{m})$ where each $\extwit_{i}\in \bbF^\ell$ for $i \in [m]$. Construct $Q_i(\cdot)$, a polynomial of degree $<k$, by interpolating the vector $\extwit_{i}$ on $G$ and $Q_{i}$ denotes the corresponding evaluation of $Q_{i}$ on $H$. We define the RS-encoded witness $\ewit\in \bbF^{m\times n}$ as $\ewit[i,j]=Q_{i}(\eta_j)$ for $ i\in [m]$ and $j\in [n]$. We now construct a commitment oracle $\comoracle$ from $\ewit$.
+Let $\extwit \in \bbF^{|\C|}$ be the witness vector. Let $m$ and $\ell$ be integers such that $m\ell\geq \circsize$. we choose ordered domains $G=\{\zeta_1,\ldots,\zeta_\ell\}$ and $H=\{\eta_1,\ldots,\eta_n\}$, We will call $G$ as {\em interpolation} domain and $H$ as {\em evaluation} domain. Then write the vectors $\extwit$ as $\extwit = (\extwit_{1},\ldots,\extwit_{m})$ where each $\extwit_{i}\in \bbF^\ell$ for $i \in [m]$. Construct $Q_i(\cdot)$, a polynomial of degree $<k$, by interpolating the vector $\extwit_{i}$ on $G$ and $Q_{i}(\cdot)$ denotes the corresponding evaluation of $Q_{i}$ on $H$. We define the RS-encoded witness $\ewit\in \bbF^{m\times n}$ as $\ewit[i,j]=Q_{i}(\eta_j)$ for $ i\in [m]$ and $j\in [n]$. We now construct a commitment oracle $\comoracle$ from $\ewit$.
 %---------------------------------------------------------------------------------------------------
 % Oracle from commitment
 %-----------------------------------
@@ -78,14 +80,14 @@ Throughout, we assume $\bbF$ is a prime field. Let $\com$ denote the Pedersen ve
 %Linear check
 %---------------------------
 \subsection{Linear Check with Commitment Oracle}\label{subsec:lincheck2D}
-The linear check $A\wit=b$ can be reduced to checking $\innp{r^TA}{x}=r^Tb$, where the verifier samples a random $r\sample \bbF^{ml}$ and sends it to the prover. As in \cite{ligero}, the prover and verifer first compute $R=r^TA$, then write $R$ as $(R_{1}|\cdots|R_{m})$ where each $R_i\in \bbF^\ell$. Both the prover and the verifier also compute degree $<\ell$ polynomials $R_{i}$ interpolating the vector $R_{i}$ on $G$. The required check in terms of polynomials can be expressed as:
+The linear check $A\wit=b$ can be reduced to checking $\innp{r^TA}{\wit}=r^Tb$, where the verifier samples a random $r\sample \bbF^{m\ell}$ and sends it to the prover. As in \cite{ligero}, the prover and verifer first compute $R=r^TA$, then write $R$ as $(R_{1}|\cdots|R_{m})$ where each $R_i\in \bbF^\ell$. Both the prover and the verifier also compute degree $<\ell$ polynomials $R_{i}$ interpolating the vector $R_{i}$ on $G$. The required check in terms of polynomials can be expressed as:
 \begin{equation}\label{eq:lincheck2D}
 \sum_{\zeta\in G}\sum_{j\in [m]}
 R_{i}(\zeta) \cdot Q_{i}(\zeta) = r^Tb.
 \end{equation}
-The prover computes the polynomial $p(\cdot)=\sum_{i\in[m]}R_i(\cdot) \cdot Q_i(\cdot)$. This polynomial $p(\cdot)$ of degree $< k+\ell-1$ is sent to the verifier who checks $\sum_{\zeta\in G}p(\zeta)=0$. The verifier needs to check if the polynomial $p$ is correctly computed from the witness oracle $\comoracle$ to guard against dishonest provers. Following \cite{ligero}, it is enough for the verifier to query the polynomial evaluations at a constant number of locations, say $\eta_{j_1},\ldots,\eta_{j_u}$ and then check that $p(\cdot)$ is consistent at the queried locations. We observe that the verifier only uses these queried values to prove some inner-product relations with other (publicly-known) vectors. Hence, our idea is to make the prover use inner-product arguments to prove the consistency of $p(\cdot)$ to the verifier.
+The prover computes the polynomial $p(\cdot)=\sum_{i\in[m]}R_i(\cdot) \cdot Q_i(\cdot)$. This polynomial $p(\cdot)$ of degree $< k+\ell-1$ is sent to the verifier who checks $\sum_{\zeta\in G}p(\zeta)=r^Tb$. The verifier needs to check if the polynomial $p(\cdot)$ is correctly computed from the witness oracle $\comoracle$ to guard against dishonest provers. Following \cite{ligero}, it is enough for the verifier to query the polynomial evaluations at a constant number of locations, say $\eta_{j_1},\ldots,\eta_{j_u}$ and then check that $p(\cdot)$ is consistent at the queried locations. We observe that the verifier only uses these queried values to prove some inner-product relations with other (publicly-known) vectors. Hence, our idea is to make the prover use inner-product arguments to prove the consistency of $p(\cdot)$ to the verifier.
 
-We will now formally describe the linear check for our protocol \name2D{}. It will check that a purported commitment oracle $\comoracle$ encodes witness $\wit$ satisfying the constraint $A\wit=b$ for a public matrix $A$. As before, we assume $\wit \in \bbF^{\circsize}$ and $A\in \bbF^{\circsize\times \circsize}$ and
+We will now formally describe the linear check for our protocol \name2D{}. It will check that a purported commitment oracle $\comoracle$ encodes witness $\wit$ satisfying the constraint $A\wit=b$ for a public matrix $A$ and $b$ is a public vector. As before, we assume $\wit \in \bbF^{\circsize}$ and $A\in \bbF^{\circsize\times \circsize}$ and
 $\circsize = m \ell$ for some positive integers $m$ and $\ell$. We further assume that the prover has RS-encoded oracle $\ewit$ which opens to the commitment $\comoracle$ and is $e$-close to the interleaved code $L^{m}$. The prover and the verifier interact as follows: 
 
 %$\prover$ sets $\cm_x$ as the oracle.
@@ -94,13 +96,15 @@ $\circsize = m \ell$ for some positive integers $m$ and $\ell$. We further assum
 	\begin{framed}
 		\begin{itemize}
 			\item {$\linearcheckTwoD (\FF, \GG, L[n,k,d], m, t, A \in \FF^{m\ell \times m\ell}, b\in \FF^{m\ell}, \bm{g}, [\pi]; \wit)$}:
+			
 			\item {\bf Relation}: $\exists \wit, \ewit$ s.t. $\ewit = \open(\pi), \ewit = \enc(\wit)$ and $A\wit = b$. 
+			
 			\item {\bf Oracle Setup}: The prover $\prover$ computes $\ewit = \enc(\wit)$ and $\comoracle = \com(\ewit)$ as in Sections ~\ref{subsec:encode2D} and ~\ref{subsec: commit2D}. The prover sets $\pi := \comoracle$ as the oracle.
 		\end{itemize}
 		\begin{enumerate}[{\rm 1.}]
 			\item $\verifier \rightarrow \prover: $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
 			
-			\item Both $\prover$ and $\verifier$ compute $R=r^TA$, which is a vector of size $ml$. Read $R$ in a matrix form where first $l$ elements of $R$ form the first row, next $l$ elements form the second row, similarly $R$ will have $m$ rows. Then they construct polynomials $R_i(\cdot)$ of degree $<l$ such that $R_i(\zeta_j)=R_{ij}$ $\forall i\in [m], j\in [l]$. 
+			\item Both $\prover$ and $\verifier$ compute $R=r^TA$, which is a vector of size $m\ell$. Read $R$ in a matrix form where first $l$ elements of $R$ form the first row, next $l$ elements form the second row, similarly $R$ will have $m$ rows. Then they construct polynomials $R_i(\cdot)$ of degree $<l$ such that $R_i(\zeta_j)=R_{ij}$ $\forall i\in [m], j\in [\ell]$. 
 			
 			\item $\prover \rightarrow \verifier: $  $\prover$ computes a polynomial $p(\cdot)=\sum_{i\in[m]} ( R_i(\cdot)\cdot \hat{f}^x_i(\cdot))$ and sends $p(\cdot)$ to $\verifier$.
 			
