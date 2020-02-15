@@ -17,43 +17,6 @@ A DPZK protocol consists of three probabilistic polynomial time algorithms: $(\s
 A $\DPZK$ protocol for a language $L$ satisfies the following properties: 
 correctness, soundness, zero-knowledge and privacy among provers.
 
-\begin{comment}
-\begin{figure}[h!]
-	\centering
-	\begin{framed}
-		\begin{itemize}
-			\item {Functionality $\IF{\DPZK}$}
-			%\item {\bf Relation}: $\exists \wit, \ewit$ s.t. $\ewit = \open(\pi), \ewit = \enc(\wit)$ and $A\wit = b$. 
-			%\item {\bf Oracle Setup}: The prover $\prover$ computes $\ewit = \enc(\wit)$ and $\comoracle = \com(\ewit)$ as in Sections ~\ref{subsec:encode2D} and ~\ref{subsec: commit2D}. The prover sets $\pi := \comoracle$ as the oracle.
-		\end{itemize}
-		\begin{enumerate}[{\rm 1.}]
-			\item $\verifier \rightarrow \prover: $ $\verifier$ picks a random $r\in \bbF^{ml}$ and sends that $r$ to $\prover$.
-			
-			\item Both $\prover$ and $\verifier$ compute $R=r^TA$, which is a vector of size $ml$. Read $R$ in a matrix form where first $l$ elements of $R$ form the first row, next $l$ elements form the second row, similarly $R$ will have $m$ rows. Then they construct polynomials $R_i(\cdot)$ of degree $<l$ such that $R_i(\zeta_j)=R_{ij}$ $\forall i\in [m], j\in [l]$. 
-			
-			\item $\prover \rightarrow \verifier: $  $\prover$ computes a polynomial $p(\cdot)=\sum_{i\in[m]} ( R_i(\cdot)\cdot \hat{f}^x_i(\cdot))$ and sends $p(\cdot)$ to $\verifier$.
-			
-			\item $\verifier \rightarrow \prover: $ $\verifier$ samples $t$ distinct  indices $j_1,\ldots,j_t$ from the set $[n]$ independently at random and sends the indices to $\prover$.
-			
-			\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{j_u : u\in [t]\}$.
-			
-			\item Oracle Answers: The oracle replies with $\pi[j_u], u\in [t]$.
-			
-			\item $\prover \leftrightarrow \verifier: $ $\prover$ and $\verifier$ run a inner product subprotocol for each $u\in[t]$:
-			\begin{itemize}
-				\item $\innerproduct(\GG,\bm{g}, R_{j_u}, \pi[j_u], p(\eta_{j_u}); \ewit[\cdot,j_u])$ $\forall u\in [t]$,
-				
-				Where $R_{j_u} = (R_1( \eta_{j_u}) , \ldots , R_m( \eta_{j_u}))$ and $\ewit[\cdot,j_u]$ denotes the $m$-length vector $(\ewit[1,j_u], \ldots, \ewit[m,j_u])$ and $\pi[j_u] = \com(\ewit[\cdot, j_u])$. $\verifier$ proceeds if the arguments succeed for all $u \in [t]$.
-			\end{itemize} 
-			
-			\item $\verifier$ also checks that $\sum_{j\in[l]} p(\zeta_j)=0$.
-			
-			\item $\verifier$ accepts if all the above checks are succeed.	  
-		\end{enumerate}
-	\end{framed}
-	\caption{Linear Check for $\name$2D}
-\end{figure}
-\end{comment}
 
 \begin{comment}
 \begin{myboxfig}{Ideal Functionality for Distributed ZK}{funcsabort}
@@ -133,7 +96,24 @@ We prove the security of our protocols based on the standard real/ideal world pa
 is secure if whatever an adversary can do in the real protocol (where no trusted party exists) can be done in the above described ideal computation. We refer to \cite{Canetti00,Goldreich2001,Lindell17,CohenL14} for further details regarding the security model.  
 
 
-The ``ideal" world execution involves parties in $\Partyset$, an ideal adversary $\Sim$ who may corrupt at most $t$  parties, and a  functionality $\Func$.  The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  $t$ of the parties.  Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1,\ldots,x_n)$ for the parties and auxiliary input $z$ for $\Sim$. Similarly,  let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
+\paragraph{The ideal Execution.} The ``ideal" world execution of DPZK  involves parties in $\Partyset$ that includes $\Num$ provers $\{\prover_1, \ldots, \prover_{\Num}\}$ and a verifier $\verifier$,  an ideal adversary $\Sim$ who may corrupt various subset of parties in $\Partyset$, and a  functionality $\Func_{\DPZK}$.  The functionality is parametrized with an  NP language $L$ and  the corresponding relation/verification function $R$. Each prover $\prover_i$ sends $(\stmt,\wit_i)$ to $\Func_{\DPZK}$, where $\stmt$ is the statement and $\wit_i$ is the $i$th part of the witness. The verifier $\verifier$ sends $x$.  $\Func_{\DPZK}$ computes $\wit = \wit_1 \oplus \wit_2,\ldots,\oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly, and sends $R(\stmt,\wit)$ to $\verifier$ and $\bot$ to every $\prover_i$. $\Func_{\DPZK}$  is described below. 
+\begin{figure}[H]
+	\centering
+	\begin{framed}
+		\textbf{Functionality} (The Distributed Prover Zero Knowledge Functionality $\Func_{\DPZK}$)
+		The functionality is parameterized with an NP relation $R$ of an NP language $L$.
+		\begin{itemize}
+		\item[--] Upon receiving input $x_i = (\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$ and $\stmt$ from $\verifier$, do the following: if $x_i$ is an empty string or falls outside the range of the domain of $\prover_i$'s input,  reset $x_i = \abort$. 
+			\item[--] If any of the $x_i$ is $\abort$ send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots,\oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
+		\end{itemize}
+	\end{framed}
+	\caption{Ideal Functionality $\Func_{\DPZK}$}
+\end{figure} \label{func:DPZK}
+
+Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1 =(\stmt,\wit_1) ,\ldots,x_{\Num}=(\stmt,\wit_\Num),x_\verifier =\stmt)$ for the parties and auxiliary input $z$ for $\Sim$.  
+
+
+\paragraph{The Real world.} The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  $t$ of the parties.  Similarly,  let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
 
 
 
