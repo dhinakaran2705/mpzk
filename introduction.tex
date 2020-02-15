@@ -5,7 +5,7 @@ In a zero-knowledge proof protocol, a verifier tries to verify that an instance 
 In this work, we study the general setting of \textit{distributed prover zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive i.e., collaborating but mutually distrusting entities each possessing their own secret data want to prove to a verifier that their secret data together satisfies a predicate of common interest. This is done without revealing any information about their sensitive data to each other or to the verifier, more than what each of them know about it beforehand. Some real-world applications follow:
 \begin{itemize}
 \item A simple but pertinent scenario is of a \textit{joint loan application} by an association of companies from a particular industry. The loan issuer has a set of financial requirements that it wants the association to satisfy, but there is no single trusted entity to act as the prover whom all the companies are willing to provide their sensitive business information with.
-\item In cryptocurrency settings \cite{bitcoin, ethereum, zcash}, this would enable a \textit{multi-wallet transaction} or a \textit{proof of joint stake}, which in turn enables secure collaboration applications by design on a blockchain network. % use it for joint auction-
+\item In cryptocurrency settings \cite{bitcoin, ethereum, zerocash}, this would enable a \textit{multi-wallet transaction} or a \textit{proof of joint stake}, which in turn enables secure collaboration applications by design on a blockchain network. % use it for joint auction-
 \item In trade logistics business networks \cite{scbn, e2open, tradelens}, a major reason for businesses to enter these networks is to benefit from cross-industry statistics. Publishing these statistics in a publicly verifiable manner without having a single trusted entity is another embodiment of this setting.
 \end{itemize}
 
@@ -108,6 +108,10 @@ A bulk of the contribution of our work is an MPC-friendly single-prover protocol
 
 \subsection{Technical overview of \name{}}
 
+starting point - Ligero - good with prover mult complexity
+
+aggregation w/ zk - homomorphic oracles
+zkComm - 3D
 
 %\subsection*{Distributed proof generation}
 %--- Informal notion of Distributed Provers Zero Knowledge Protocol $\innp{\Pi}{\verifier}$--- 
