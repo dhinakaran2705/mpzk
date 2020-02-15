@@ -104,13 +104,13 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 		The functionality is parameterized with an NP relation $R$ of an NP language $L$.
 		\begin{itemize}
 		\item[--] Upon receiving input $x_i = (\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$ and $\stmt$ from $\verifier$, do the following: if $x_i$ is an empty string or falls outside the range of the domain of $\prover_i$'s input,  reset $x_i = \abort$. 
-			\item[--] If any of the $x_i$ is $\abort$ send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots,\oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
+			\item[--] If any of the $x_i$ is $\abort$ send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots, \oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
 		\end{itemize}
 	\end{framed}
 	\caption{Ideal Functionality $\Func_{\DPZK}$}
 \end{figure} \label{func:DPZK}
 
-Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1 =(\stmt,\wit_1) ,\ldots,x_{\Num}=(\stmt,\wit_\Num),x_\verifier =\stmt)$ for the parties and auxiliary input $z$ for $\Sim$.  
+Let the corrupt set be denoted as $I$. We let $\Ideal_{\Func_\DPZK, \Sim(z),I}(\vec{x})$ denote the random variable consisting of the output pair of the honest parties and the ideal-world adversary $\Sim$ controlling the corrupt parties in $I$ upon inputs $\vec{x} = (x_1  ,\ldots,x_{\Num},x_\verifier)$ for the parties and auxiliary input $z$ for $\Sim$.  
 
 
 \paragraph{The Real world.} The ``real" world execution involves the $\ppt$\ parties  in $\Partyset$,  and a real world adversary $\Adv$ who may corrupt  $t$ of the parties.  Similarly,  let $\Real_{\Pi, \Adv(z),I}(\vec(x))$ denote the random variable consisting of the output pair of the honest parties and the adversary $\Adv$ controlling the corrupt parties in $I$ in the real execution, upon inputs $\vec{x}$ for the parties and auxiliary input $z$ for $\adv$. 
