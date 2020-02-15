@@ -295,28 +295,13 @@ In addition to the efficiency measures used for single-prover protocols, $\DPZK$
 \item Verifier complexity
 \item Proof size
 \end{enumerate}
-
-\subsection{Circuit share complexity}
-Consider a relation where the witness is \textit{partitioned} among the provers in the $\DPZK$ setting. We define a new notion of efficiency for a $\DPZK$ protocol which would become a prominent efficiency measure for a class of real-world applications.
-Let \textit{shared circuit} denote the part of the circuit representing the relation whose wire values are functions of inputs from more than one prover. 
-We introduce the notion of \textit{circuit share complexity} to denote the size of this shared circuit.
-Consider the class of applications where hashes (or any other commitment) of data from different parties are stored on a blockchain and a zero-knowledge proof has to be generated on an aggregation of all the data. This could be: 
-\begin{enumerate}
-\item Finance network: different bank account holders proving to a loan provider that the sum of their account balances is greater than the required threshold.
-\item Trade logistic network: different logistic providers proving to a customer or regulator that the average delay of shipment along a particular route is less than a specified time.
-\end{enumerate}
-In all the applications in this class, each party participating in the aggregation first proves the \textit{relevance} of his/her data before they all run a protocol to prove the aggregated value on their data together. The proof of relevance involves proving that the data corresponds to a commitment in the blockchain network by proving the knowledge of the opening of a commitment in the blockchain. 
-For instance, when using verifying a hash commitment within a proof system which works with circuit representation of the relation, the proofs of relevance i.e. the hash verifications of the individual data take up most of the gates in the circuit. But each such verification rely only on data from a single party. The aggregation does involve data from multiple parties but this step requires a relatively smaller number of gates. Hence, the circuit share complexity is very small for such applications, compared to the total size of the circuit. A DPZK protocol with its complexities proportional to the circuit share complexity instead of the total circuit complexity can attain major savings for such applications.
-In general, the compatibility of the commitment with function representation of the proof system plays a part in the above discussion. We will discuss the relevant work on this compatibility in more detail in Section \ref{sec:relatedwork}.
-
-Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the \textit{total} size of the circuit. 
  
 \subsubsection{Discussion}
 Discussion on the definition.
 
-Discussion on the sharing the witness among the parties instead of partitioning the witness.
+Some points:
 \begin{itemize}
-\item DPZK definitions are cleaner this way than having partitions?
+\item DPZK definitions are cleaner with sharing of inputs than having partitions?
 \item The circuit size does not have to take into account the number of provers.
 \end{itemize}
 
