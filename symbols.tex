@@ -37,8 +37,8 @@
 %Mathematical Objects
 %--------------------------------------------------------------
 
-\newcommand{\bitset}{\{0,1\}}
-\newcommand{\Prob}{\ensuremath{\mathsf{Pr}}}
+%\newcommand{\bitset}{\{0,1\}}
+%\newcommand{\Prob}{\ensuremath{\mathsf{Pr}}}
 %\newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
 %--------------------------------------------------------------
@@ -59,7 +59,7 @@
 %--------------------------------------------------------------
 
 %\newcommand{\Adv}{\ensuremath{\mathcal{A}}\xspace}
-\newcommand{\Sim}{\ensuremath{\mathcal{S}}}
+%\newcommand{\Sim}{\ensuremath{\mathcal{S}}}
 
 %--------------------------------------------------------------
 %MPC Variables
@@ -483,6 +483,35 @@
 \newenvironment{simulatorbox}[1]
 {\begin{titlebox}{Simulator \normalfont #1}{commonbox}{normal}}
 	{\end{titlebox}}
+
+
+
+\newenvironment{boxfig}[2]{% {#1}{#2} = {Caption}{label}
+     \begin{figure}[htb!]
+     \newcommand{\FigCaption}{#1}
+     \newcommand{\FigLabel}{#2}
+       \vspace{-.15cm}
+     \begin{center}
+       \begin{small}
+         \begin{tabular}{@{}|@{~~}l@{~~}|@{}}
+           \hline
+           %\rule[-1ex]{0pt}{1ex}\begin{minipage}[!htb]{\textwidth}   
+            \rule[-1.5ex]{0pt}{1ex}\begin{minipage}[b]{\linewidth}
+             \vspace{1ex}
+             \smallskip
+             }{%
+           \end{minipage}\\
+           \hline
+         \end{tabular}
+       \end{small}
+        \vspace{-0.3cm}
+       \caption{\FigCaption}
+       \figlab{\FigLabel}
+     \end{center}
+     \vspace{-.5cm}
+   \end{figure}
+}
+
 
 
 \begin{protocolbox}{$\algorithm{MyProtocol}$}

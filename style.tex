@@ -269,4 +269,45 @@
 \newcommand{\dnote}[1]{\authnote{VD}{#1}}
 \newcommand{\pnote}[1]{\authnote{PKP}{#1}}
 \newcommand{\nnote}[1]{\authnote{NS}{#1}}
+\newcommand{\pdnote}[1]{\authnote{PD}{#1}}
+
 \newcommand{\commentA}[1]{\textcolor{cyan}{{\sf (Arpita's Note:} {\sl{#1}} {\sf EON)}}}
+
+	\newcommand{\Func}{\mathcal{F}}
+%	\newcommand{\Env}{\mathcal{Z}}
+	\newcommand{\Ideal}{\ensuremath{\textsc{ideal}}}
+	%\newcommand{\Real}{\ensuremath{\textsc{real}}}
+	\newcommand{\Hyb}{\ensuremath{{\textsc{hyb}}}}
+%	\newcommand{\NN}{\mathbb{N}}
+	\newcommand{\FSA}{\ensuremath{\mathcal{F}_{\mathsf{sa}}}}
+	\newcommand{\FDPZK}{\ensuremath{\mathcal{F}_{\mathsf{dpzk}}}}
+%	\newcommand{\FF}{\ensuremath{\mathcal{F}_{\mathsf{fair}}}}
+	\newcommand{\FG}{\ensuremath{\mathcal{F}_{\mathsf{god}}}}
+	\newcommand{\FA}{\ensuremath{\mathcal{F}_{\mathsf{ua}}}}
+	\newcommand{\Partyset}{\mathcal{P}}
+	\newcommand{\bit}{\{0,1\}}
+\newenvironment{boxfig}[2]{% {#1}{#2} = {Caption}{label}
+     \begin{figure}[htb!]
+     \newcommand{\FigCaption}{#1}
+     \newcommand{\FigLabel}{#2}
+       \vspace{-.15cm}
+     \begin{center}
+       \begin{small}
+         \begin{tabular}{@{}|@{~~}l@{~~}|@{}}
+           \hline
+           %\rule[-1ex]{0pt}{1ex}\begin{minipage}[!htb]{\textwidth}   
+            \rule[-1.5ex]{0pt}{1ex}\begin{minipage}[b]{\linewidth}
+             \vspace{1ex}
+             \smallskip
+             }{%
+           \end{minipage}\\
+           \hline
+         \end{tabular}
+       \end{small}
+        \vspace{-0.3cm}
+       \caption{\FigCaption}
+       \figlab{\FigLabel}
+     \end{center}
+     \vspace{-.5cm}
+   \end{figure}
+}
