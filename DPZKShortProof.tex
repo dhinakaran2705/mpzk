@@ -1,54 +1,44 @@
 %\section{Setting up \name{}} 
-\section{MPC Friendly Zero Knowledge Arguments using Homomorphic Oracles}
-There have been recent constructions of efficient zero knowledge arguments which
-augment PCP based proofs with interaction. These include the {\em Interactive
-Oracle Proof} based constructions in \cite{ligero,aurora}. To achieve sublinear
-argument size, the IOP framework provides verifier with only an oracle access to
-the prover's messages. The abstraction of oracle is realized in Random Oracle
-Model (ROM) using collision resistant hash functions (CRH). Under existing framework,
-it is not clear how to realize oracle access to a prover message, which is
-distributed across several provers. We address this by introducing {\em
-homomorphic oracles}. In this setting, we provide oracle access to a
-homomorphic commitment over the encoded witness. Such an oracle access can be
-realized by an aggregating party $\Ag$, which aggregates commitments from the
-provers, and uses CRH to realize the oracle. 
+\section{MPC Friendly Zero Knowledge Argument from Interactive PCP}
+In this section, we describe a sublinear interactive zero knowledge argument as
+an Interactive PCP (IPCP). The IPCP we describe admits an efficient MPC to
+convert it to a publicly verifiable, non-interactive argument of knowledge,
+using the ``BCS'' transformation in \cite{iop}. To serve as a
+baseline for comparison, we also describe naive extensions of existing protocols
+such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan} to the
+distributed prover setting. 
 
-We illustrate the usage of homomorphic oracle to construct a distributed prover
-variant of the zero knowledge argument in \cite{ligero}, called
-$\mathsf{Ligero}$. The $\mathsf{Ligero}$ protocol is a special case of IOP,
-where only the first prover message (encoding of witness) is an oracle, while
-the remaining messages can be read by the verifier in entirety. We give a brief
-overview of the construction in \cite{Ligero}, and then describe our variant.
-
-\noindent{$\mathsf{Ligero}$} provides sublinear zero knowledge argument for existence of
-$\wit\in \FF^N$ such that $A\wit\circ B\wit=C\wit$ for some $M\times N$ public
-matrices $A,B$ and $C$. To accomplish this, the construction in \cite{ligero}
-describes following key steps:
-\begin{enumerate}[{\rm 1.}]
-\item encoding of the witness $\wit$ as $\ewit$ using error correcting codes.
-The verifier is allowed oracle access to the encoded witness. The encoding
-satisfies {\em bounded independence}, i.e, a verifier making bounded number of
-oracle queries does not learn anything about the witness.
-\item An interactive protocol for the linear relation $A\wit=b$ for public $A$
-and $b$. The protocol involves the verifier interacting with the prover, and
-making oracle queries. 
-\item An interactive protocol for the quadratic relation $\wit_x\circ
-\wit_y=\wit_z$ given oracle access to the encodings of $\wit_x,\wit_y$ and
-$\wit_z$. Again, the verifier interacts with the prover and makes oracle
-queries. 
-\item An interactive protocol to check if the oracle is well formed.
-\end{enumerate}
-The above protocols involve prover sending certain polynomials as messages, and
-verifier checking identities over the polynomials. We first describe how to
-accomplish above steps using homomorphic oracle by using inner product arguments
-over committed vectors. Specifically, we use the commitment scheme and inner
-product argument from \cite{Bulletproofs}. This yeilds a zero knowledge
-argument, which we call $\name$. Using the properties of inner product argument,
-we obtain a wider range of tradeoff between argument size and prover's and
-verifier's complexity at the expense of introducing expensive cryptographic
-operations. The following lemma summarizes the complexity measures achieved by
-our construction.
-\begin{lemma}
-Properties of the 2D construction.
-\end{lemma}
-
+Our protocol proves membership in the $\npol$ complete
+language specified by {\em rank one constraint system} (R1CS). An R1CS over a
+field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
+associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
+$A\wit\circ B\wit=C\wit$. We follow the borad outline of the interactive PCP
+construction in \cite{ligero} which includes: (i) encoding the witness via suitalbe
+error correcting code, (ii) checking linear relations on the witness, with
+sublinear access to the witness encoding, (iii) checking quadratic relations on
+the witness with sublinear access to witness encoding and (iv) a proximity
+protocol to check that witness is correctly encoded. However, one runs into 
+challenges in converting the IPCP to a non-interactive
+argument when the witness is distributed across several provers. The naive
+approach of provers sharing their encoded witnesses with an aggregator, which
+constructs the oracle breaches privacy among the provers, as these encodings
+only support {\em bounded independence}, i.e, they maintain privacy only when a
+bounded part of the witness is revealed. We overcome this, and several other
+technical challenges in our construction. The core techniques behind our
+construction are summarized below:
+\begin{itemize}
+\item We use homomorphic commitment over witness encoding and provide oracle
+access to the commitment. This facilitates oracle realization through
+aggregation.
+\item We design protocols for checking linear constraints, quadratic constraints
+and proximity to correct encoding with oracle access to the commitment.
+\item We come up with new witness encoding scheme, to facilitate smaller
+argument size, and reduce communication between the provers during proof
+generation.
+\end{itemize}
+While our use of homomorphic commitments introduces expensive cryptographic
+operations, we keep their usage strictly sublinear. In particular, for an
+argument size of $O(N^{1/c})$, verification and aggregation incur $O(N^{1-2/c})$
+exponentiations, while the prover incurs $O(N/\log N)$ exponentiations. We also
+compare the concrete performance of our standalone SNARK with state of the art in Section
+\ref{sec:snarkcomparison}.

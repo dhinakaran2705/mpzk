@@ -18,7 +18,7 @@ Analogously,
 $X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $m\times p$ and $m\times n$
 matrices respectively. For three dimensional
 matrix $X$, we will refer to submatrices $X[i,\cdot,\cdot]$ as {\em slices} of
-$X$, and submatrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
+$X$, and submatrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. \commentA{don't need a name for the other dimension?}
 
 Throughout the paper we use several distance metrics on vectors and matrices,
 which we now introduce. For two vectors $x,y$ of length $n$, we define
@@ -44,8 +44,8 @@ brackets ($[\,]$) to denote ``oracle'' access to the parameter (i.e, it can only
 be partially queried by the verifier). As an illustration
 $\proximityThreeD(\FF,\GG,L_1,L_2,[\pi];\ewit)$ denotes a protocol, where the
 verifier only has oracle access to $\pi$. Finally, in the distributed setting,
-some of the private inputs may be secret shared across multiple provers. We notate it
-by enclosing those private inputs in $[[\,]]$. For example, in the protocol
+some of the private inputs may be secret shared  across multiple provers \commentA{be specific about the form of secret sharing}. We notate it
+by enclosing those private inputs in $[[\,]]$ \commentA{better to use $\langle \rangle$ notation}. For example, in the protocol
 $\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};[[\bar{U}]])$, each prover
 $\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
 

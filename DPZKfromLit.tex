@@ -224,9 +224,12 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 	\end{tabular}
 \end{center}
 \end{comment}
-\begin{center}\label{tab:SPZK}
+\begin{table} 
+	\centering
+%\begin{center}
 	\resizebox{.98\textwidth}{!}{
 	%\footnotesize
+	\begin{threeparttable}
 	\begin{tabular}{|c|c|c|c|c|}
 		\toprule
 		\centering 
@@ -239,20 +242,21 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		\hline 
 		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
 		\hline
-		Verifier'c Complexity& $O(N^{1-1/c})E^\ast$ & $O(N)E$ &$O(N^{1-1/c})E + O(N)M$ & $O(N^{1-2/c})E + O(N)M$\\
+		Verifier'c Complexity& $O(N^{1-1/c})E$\tnote{$\ast$} & $O(N)E$ &$O(N^{1-1/c})E + O(N)M$ & $O(N^{1-2/c})E + O(N)M$\\
 		\hline
-		Prover communication& MPC($N_s^2,1$) + $\Num N^{\ast\ast}$& MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
+		Prover communication& MPC($N_s^2,1$) + $\Num N$\tnote{$\ast\ast$} & MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
 		\hline 
 		Number of MPC & $\log(N)$& 1 & 1 & 1 \\
 		\bottomrule
-	\end{tabular}
+		\end{tabular} 
+	\begin{tablenotes}
+		\item[--] Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.
+		\item[$\ast$] Spartan \cite{spartan} achieves the above-mentioned verifier's complexity in the amortization, whereas without amortization is the verifier's complexity is $O(N)$ many exponentiations.
+		\item[$\ast\ast$] It is not clear that \cite{spartan} can even be converted into $\DPZK$ with all privacy conditions, in the ~\ref{subsec:spartan}, we discussed that Spartan \cite{spartan} it is not provably secure as provers may leak privacy to the aggregator.
+	\end{tablenotes}
+	\end{threeparttable}
 }
-%\caption{Comparison table}
-\end{center}
+\caption{Comparison table}\label{tab:SPZK}
+%\tnote  
+\end{table}
 
-Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. 
-$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for a single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.
-
-$\ast$ Spartan \cite{spartan} achieves the above mentioned verifier's comlexity in the amortization, whereas without amortization is the verifier's complexity is $O(N)$ many exponentiations.
-
-$\ast\ast$ It is not clear that \cite{spartan} can even be converted into $\DPZK$ with all privacy conditions, in the ~\ref{subsec:spartan}, we discussed that Spartan \cite{spartan} it is not provably secure as provers may leak privacy to the aggregator.
