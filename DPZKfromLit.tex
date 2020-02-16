@@ -225,16 +225,26 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \end{center}
 \end{comment}
 \begin{center}\label{tab:SPZK}
-	\begin{tabular}{|c|c|c|c|c| } 
+	\small
+	\footnotesize
+	\begin{tabular}{|c|c|c|c|c||}
 		\hline
+		\centering 
 		%Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
 		Parameters & Spartan & Bulletproofs & \name2D & \name3D\\
 		\hline
-		Argument Size & & & &  a\\
 		\hline
-		Rounds(ZK) & & & & \\
+		Argument size & $n^{1/c}$ & $\log n)$& $n^{1/c}$  & $n^{1/c}$\\
+		\hline
+		Rounds(ZK) & $\log (n)$ & $\log (n)$ & $\log (n)$ & $\log (n)$\\
 		\hline 
-		Prover's complexity & & & & \\
+		Prover's complexity & $O(n)E$ + $O(n\log(n))M$ & $O(n)E$ & $O(\frac{n}{\log(n)})E + O(n\log(n))M$ & $O(\frac{n}{\log(n)})E + O(n\log(n))M$ \\
+		\hline
+		Verifier'c Complexity& $O(n^{1-1/c})E^\ast$ & $O(n)E$ &$O(n^{1-1/c})E + O(n)M$ & $O(n^{1-2/c})E + O(n)M$\\
+		\hline
+		Prover communication& MPC($n^2,1$) + $\Num ?$& MPC($n,1$) + $\Num n$& MPC($n,1$) + $\Num n^{1-1/c}$& MPC($n,1$) + $\Num n^{1-1/c}$\\
+		\hline 
+		\# of MPC & $\log(n)$& 1 & 1 & 1 \\
 		\hline
 		% &computation & communi- cation & MPC rounds& & & \\ 
 		%\hline
@@ -250,8 +260,10 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		%\hline
 		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
 		%\hline
+		%\caption{Comparison table}
 	\end{tabular}
 \end{center}
-Here $n$ is the size of the circuit and $c$ is a positive integer of our choice. $N$ in the number provers in the $\DPZK$ setting. 
-In bulletproofs: $q$ is the linear constraint: $q\leq 2n$ and $m$ such that $W_V \in \bbZ_p^{Q×m}$  such that $W_V$ is of rank $m$.
+
+Here $n$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ in the number provers in the $\DPZK$ setting. 
+%In bulletproofs: $q$ is the linear constraint: $q\leq 2n$ and $m$ such that $W_V \in \bbZ_p^{Q×m}$  such that $W_V$ is of rank $m$.
 $M$ is to indicate the amount of computation required for a single multiplication on field elements, and $E$ is to indicate the amount of computation required for a single exponentiation on group elements, in which $\mathsf{Dlog}$ is assumed to be hard.
