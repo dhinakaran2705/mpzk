@@ -209,9 +209,9 @@ correspond to some $U$ such that $U\in L_1\oplus L_2$. To prevent the prover
 from sending arbitrary commitments, the verifier checks the consistency of the
 commitments with the oracle $\pi$ by querying $t$ columns of the oracle
 using a query $Q\subseteq [n]$. For each $k\in Q$, the verifier checks
-$\tilde{c}_k = \sum_{i\in [p]}r_i\pi[i,k]$. The soundness relies on the fact
+$\tilde{c}_k = \sum_{a\in [\ell]}\mc{T}[a,k]\tilde{c}_a=\sum_{i\in [p]}r_i\pi[i,k]$. The soundness relies on the fact
 that if the oracle $\pi$ opens to encoding $\ewit$ which is far from a well
-formed encoding, by Lemma \ref{lem:compression3d}, with high probability
+formed encoding, by Proposition \ref{lem:3dcompression}, with high probability
 $\tilde{U}\not\in L_1\oplus L_2$. Thus, an adverserial prover is forced to cheat
 by sending several ``inconsistent'' commitments, in which case it fails the
 consistency check with overwhelming probability. The complete protocol appears
@@ -269,26 +269,25 @@ For every bounded prover $P^\ast$ and every oracle $\pi\in \FF^{p\times n}$ and
 proximity parameter $e<d_1/3$,
 there exists a polynomial time extractor $\extr$ with rewinding access to
 transcript oracle $\mc{O}=\langle P^\ast(\cdot),\verifier^{\pi}(\cdot)\rangle$
-such that:
+such that $\extr$ either breaks the commitment binding, or outputs a valid witness with
+overwhelming probability whenever $P^\ast$ succeeds, i.e, 
 {\small
 \begin{align*}
 \condprob{
 \begin{array}{l}
 \ewit=\open(\pi) \wedge \\
 \ewit\in \mc{W}_2\wedge \\
-d_1(\ewit,\mc{W}_1)\leq e
+d(\ewit,\mc{W}_1)\leq e
 \end{array}
 }{
 \begin{array}{l}
 \sigma\sample \gen(\secparam)\\
 \ewit\sample \extr^{\mc{O}}(\sigma)
 \end{array}
-}\geq \condprob{\langle
-P^\ast(\sigma),\verifier^\pi(\sigma)\rangle=1}{\sigma\sample
-\gen(\secparam)}-s_{3d}(\secpar)
+}\geq \epsilon(P^\ast)-\kappa_{3d}(\secpar)
 \end{align*}
 }
-for some negligible function $s_{3d}$. Note that in the above, $\extr$ can
+where, as before $\epsilon(P^\ast)$ denotes $P^\ast$'s success probability and $\kappa_{3d}$ is a negligible function. Note that in the above, $\extr$ can
 rewind and proceed with fresh queries to the oracle $\pi$. 	
 \end{lemma}
 
@@ -300,13 +299,10 @@ $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, we obtain $\ewit\sample 
 \enc(\wit)$ and $\comoracle\sample \comm(\ewit)$. We present the full protocol in
 Figure \ref{fig:linearcheck}. Below we summarize the key ideas in the protocol.
-\smallskip
 
-\noindent {\em Probabilistic Reduction}: To check $A\wit = b$, the verifier samples
-random $r\sample \FF^M$ and asks the prover to prove $r^TA\wit = r^Tb$ instead.
-\smallskip
-
-\noindent {\em Reduction to Polynomial Identity}: Both prover and verifier view the
+\noindent {\em Reduction to Polynomial Identity}: To check $A\wit=b$, the verifier 
+samples random $r\sample \FF^M$ and asks the prover to prove $r^TA\wit=r^Tb$.
+ Both prover and verifier view the
 vector $r^TA\in \FF^N$ as a $p\times m\times \ell$ matrix $R$ and interpolate
 polynomials $R^i(x,y)$ for $i\in [p]$ with $deg_x(R^i)<m$ and $deg_y(R^i)<s$
 satisfying $R^i(\alpha_j,\zeta_k)=R[i,j,k]$. Let $Q^i$, $i\in [p]$ denote the
@@ -326,7 +322,8 @@ the points $(\eta_1,\ldots,\eta_{2\ell})$. The check $\sum_{k\in
 Let $p_j$ denote the polynomial $\sum_{i\in
 [p]}R^i(\alpha_j,\cdot).Q^i(\alpha_j,\cdot)$ for $j\in [h]$. Note that
 $p=\sum_{j\in [m]}p_j$. We see that there exists a $2\ell\times s$ matrix
-$\Phi$ such that $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$. We now describe
+$\Phi$ such that $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$. 
+We now describe
 how to compute $p(\overline{\bm{\eta}})$ from ``tamper resistant'' structures
 such as codewords. Define $h\times n$ matrix $P$ by $P[j,k]=p_j(\eta_k)$. Note
 that the matrix $P$ is in the product code of codes $\rsc{\eta}{s+\ell}$ and
@@ -334,60 +331,60 @@ $\rsc{\alpha}{2m}$. Let $\overline{P}$ denote the matrix consisting of the first
 $2\ell$ columns of $P$ and let $c_1,\ldots,c_{2\ell}$ be the commitments of the
 columns of $\overline{P}$. Now it can be seen that:
 \begin{align}
-p(\overline{\bm{\eta}}) = \begin{bmatrix} p(\eta_1) \\ \vdots \\
-p(\eta_{2\ell}) \end{bmatrix} = 
-	{\begin{bmatrix}
-	p_1(\eta_1) & \hdots & p_1(\eta_{2\ell}) \\
-	\vdots & \ddots & \vdots \\
-	p_m(\eta_1) & \hdots & p_m(\eta_{2\ell}) \\
-	\vdots & \ddots & \vdots \\
-	p_h(\eta_1) & \hdots & p_h(\eta_{2\ell})
-	\end{bmatrix}}^T
-	\begin{bmatrix}
-	1^m \\
-	0^{h-m}
-	\end{bmatrix}=\overline{P}^T\begin{bmatrix} 1^m \\ 0^{h-m}\end{bmatrix}
+p(\overline{\bm{\eta}}) = 
+\begin{bmatrix} p(\eta_1) \hdots p(\eta_{2\ell}) \end{bmatrix}^T = 
+%	{\begin{bmatrix}
+%	p_1(\eta_1) & \hdots & p_1(\eta_{2\ell}) \\
+%	\vdots & \ddots & \vdots \\
+%	p_m(\eta_1) & \hdots & p_m(\eta_{2\ell}) \\
+%	\vdots & \ddots & \vdots \\
+%	p_h(\eta_1) & \hdots & p_h(\eta_{2\ell})
+%	\end{bmatrix}}^T
+	\overline{P}^T\begin{bmatrix}
+	1^m\ 0^{h-m}
+	\end{bmatrix}^T
 \end{align}
 From the above we have, 
 \begin{align}\label{eq:necessarycondlin}
 \innp{1^s}{p(\overline{\bm{\zeta}})} = \left\langle 1^s, \Phi\overline{P}^T\begin{bmatrix}
-1^m \\ 0^{h-m} \end{bmatrix}\right\rangle = {\begin{bmatrix} 1^m \\ 0^{h-m}
+1^m \  0^{h-m} \end{bmatrix}^T\right\rangle = {\begin{bmatrix} 1^m \ 0^{h-m}
 \end{bmatrix}}^T\overline{P}\Phi^T[1^s]
 \end{align}
 Let $\varphi=(\varphi_1,\ldots,\varphi_{2\ell})$ denote the vector
 $\Phi^T[1^s]$. Then, check $\sum_{k\in [s]}p(\zeta_k)=r^Tb$ reduces to
 proving the inner product $\langle (1^m,0^{h-m}),\overline{P}\varphi\rangle=r^Tb$. Given
 commitments $c_1,\ldots,c_{2\ell}$ we can compute commitment to the vector
-$\overline{P}\varphi$ and then run the
-protocol
-$\innerproduct(\GG,\bm{g},x, \mathsf{cm},v;z)$ with $x=(1^m, 0^{h-m})$,
-$z=\overline{U}\varphi$, $v=r^Tb$ and $\mathsf{cm}=\sum_{k\in [\ell]}\varphi_kc_k$.
-The
-advantage of the above is that $P$ has ``tamper resistant'' structure of being a
-product codeword (which we can check given commitments $c_1,\ldots,c_{2\ell}$),
-and we can establish if it is correctly derived from encoded witness $\ewit$ by
-checking consistency at a few locations. In the actual protocol, the prover will randomize
-the final vector $\overline{P}\varphi$ as $\varphi_0P_0 + \overline{P}\varphi$ for a random codeword $P_0\in L_2$ satisfying $\sum_{j\in [m]} P_0[j]=0$. The randomization will allow us to ensure the privacy of individual provers in distributed setting against the aggregator. \smallskip
+$\overline{P}\varphi$ and use the inner product protocol argument.
+In the actual protocol, the prover will randomize
+the final vector $\overline{P}\varphi$ as $P_0 + \overline{P}\varphi$ using a random codeword
+ $P_0\in L_2$ satisfying $\sum_{j\in [m]} P_0[j]=0$. In the distributed setting, this 
+randomization allows the provers to reveal the witness used for the inner product protocol to the aggregator, allowing the aggregator to complete the protocol with the verifier, without 
+further interaction with the provers.\smallskip
 
 \noindent{\em Checking Consistency with Oracle}: Note that a correctly computed
 $P$ in the previous step satisfies $P[j,k]=\sum_{i\in
-[p]}R^i(\alpha_j,\eta_k).\ewit[i,j,k]$. The verifier samples $t$ pairs $(j_u,k_u)$ for $u\in
+[p]}R^i(\alpha_j,\eta_k).\ewit[i,j,k]$. Ofcourse, an adverserial prover can provide commitments
+an arbitrary matrix $P$. However, since the matrix $P$ can be tested for membership in 
+the product codeword, a cheating adversary is forced to commit to a matrix that differs 
+substantially from an honestly computed $P$, due to the distance property of the codes. 
+Such an adversary will fail with overwhelming probability in establishing the consistency of 
+the matrix $P$ with the oracle as we now describe: To check consistency, the verifier 
+samples $t$ pairs $(j_u,k_u)$ for $u\in
 [t]$ uniformly from $[h]\times [n]$ and asks the prover to provide vectors
-$\ewit[\cdot,j_u,k_u]$ and $\pi[\cdot,k_u]$ for all $u\in [t]$. The prover and
+$X_u=\ewit[\cdot,j_u,k_u]$ and $\pi[\cdot,k_u]$ for all $u\in [t]$. The prover and
 verifier then run inner product protocols to check:
 \begin{enumerate}[{\rm (i)}]
-\item $P[j_u,k_u]=\langle P[\cdot,k_u], e_{j_u}\rangle=\sum_{i\in
-[p]}R^i(\alpha_{j_u},\eta_{k_u}).\ewit[i,j_u,k_u]$ for $u\in [t]$.
-\item Check that $\ewit[i,j_u,k_u]$ is consistent with oracle $\pi$ by verifying
-$\innp{\ewit[i,\cdot,k_u]}{e_{j_u}}=\ewit[i,j_u,k_u]$. Note that the commitment
-$\pi[i,k_u]$ for $\ewit[i,\cdot,k_u]$ is obtained as part of oracle answer. Moreover, we can aggregate inner product checks for entire column $\ewit[\cdot,j_u,k_u]$
-into one inner product check.
+\item $\langle P[\cdot,k_u], e_{j_u}\rangle=\sum_{i\in
+[p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ for $u\in [t]$. Note that for in the honest case, $X_u[i]=\ewit[i,j_u,k_u]$, and the identity holds.
+\item For all $u\in [t]$, check  that $X_u$ is consistent with oracle $\pi$ by verifying
+$\innp{\ewit[i,\cdot,k_u]}{e_{j_u}}=X_u[i]$  Note that the commitment
+$\pi[i,k_u]$ for $\ewit[i,\cdot,k_u]$ is obtained as part of oracle answer. Moreover, we can aggregate inner product checks for vector $X_u$ into one inner product check.
 \end{enumerate}
 The complete linear check protocol is described in Figure \ref{fig:linearcheck}. 
 In Figure \ref{fig:linearcheck}, the protocol $\agginnerproduct$ denotes the protocol 
 for veryfying inner products of several commited vectors with a common vector. 
-The completeness of the linear check protocol can be easily verified. We provide the proof for its
-soundness.
+The completeness of the linear check protocol can be easily verified. We sketch the proof for its
+soundness, leaving the detailed proof to the Appendix.
 
 \begin{figure}[h!]
 \centering
@@ -490,7 +487,9 @@ sends it to the prover.
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{p\times n}$,
 $A\in \FF^{M\times N}, b\in \FF^M$, there exists an expected polynomial time
 extractor $\extr$ with rewinding access to transcript oracle $\mc{O}=\langle
-P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that:
+P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that $\extr$ either breaks the 
+commitment binding or outputs a witness with overwhelming probability whenever 
+$P^\ast$ succeeds, i.e,
 {\small
 \begin{align*}
 \condprob{\begin{array}{c}
@@ -502,98 +501,15 @@ P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that:
 \sigma\sample \gen(\secparam) \\
 \ewit\sample \extr^{\mc{O}}(\bm{x},\sigma)
 \end{array}}\geq
-\condprob{\innp{P^\ast(\bm{x},\sigma)}{\verifier^\pi(\bm{x},\sigma)}=1}
-{\sigma\sample\gen(\secparam)}-\kappa_{\rm lc}(\secpar)
+\epsilon(P^\ast)-\kappa_{lc}(\secpar)
 \end{align*}
 }
-for negligible function $\kappa_{\rm lc}$. In tha above $\bm{x} := (A,b,M,N)$.
+where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
-\begin{proof}
-We describe an extractor $\extr$ which outputs $\ewit$ such that $\open(\pi)=\ewit$ and $A\wit = b$ 
-for $\wit=\dec(\ewit)$. The extractor $\extr$ uses the extractor $\extr_{3d}$ for
-the protocol $\proximityThreeD$ to extract the witness $\ewit$ which opens to
-the oracle $\pi$. Note that, with probability at least ($1-\kappa_{3d}(\secpar)$),
-the extracted witness $\ewit$ satisfies $d_1(\ewit,\mc{W}_1)<e$ and $\ewit\in
-\mc{W}_2$. It follows that for each slice $\ewit^i:=\ewit[i,\cdot,\cdot]$ for $i\in [p]$,
-we have $\ewit^i\in \mc{C}_2$ and $d_1(\ewit^i,\mc{C}_1)<e$. Let $E\subseteq
-[n]$ denote the indices of the {\em planes} where $\ewit$ differs from its closest
-neighbor in $\mc{W}_1$. Since $e<d_1/2$, $E$ also denotes the set of columns
-where slices $\ewit^i$ differ from their closest neighbors in $\mc{C}_1$. We
-decode each slice seperately. Applying Lemma \ref{lem:bicdecoding} for each
-slice, we have codewords $W^i\in L_1\oplus L_2$ for each $i\in [p]$ such that
-$W^i[\cdot,k]=\ewit^i[\cdot,k]$ for all $k\not\in E$. Let $Q^i$, $i\in [p]$ be
-the unique polynomials with $deg_x(Q^i)<m$ and $deg_y(Q^i)<\ell$ such that
-$Q^i(\alpha_j,\eta_k)=W^i[j,k]$ for $(j,k)\in [h]\times [n]$. We define the
-witness $\wit$ by $\wit[i,j,k] := Q^i(\alpha_j,\zeta_k)$ for $i\in [p],j\in
-[m],k\in [s]$. Note that $\wit=\dec(\ewit)$. In case, the subprotocol extractor
-$\extr_{3d}$ outputs $\ewit$ such that $d_1(\ewit,\mc{W}_1)>e$, the extractor
-$\extr$ fails with output $\wit := \bot$. Let $\ewit_{\rm hon}$ denote the
-encoding of $\wit$ given by $\ewit_{\rm hon}[i,j,k]=Q^i(\alpha_j,\eta_k)$ for
-$i\in [p],j\in [h], k\in [n]$. Observe that we have $d_1(\ewit,\ewit_{\rm
-hon})<e$. Let $\mc{S}$ denote the event that the
-first transcript succeeds. As before, the key step to ensure soundness is to
-upper bound the probability $\prob{\mc{S}\cap (A\wit\neq b)}\leq
-\condprob{\mc{S}}{A\wit\neq b}\leq \condprob{\mc{S}}{r^TA\neq r^Tb}+1/|\FF|$
-where $r\sample \FF^N$ denotes the message sent by $\verifier$ in Step 1. Let
-$P_{\rm hon}$ denote the matrix $P$ which is correctly computed from $\ewit_{\rm
-hon}$ in
-Step 3. Let $c_1,\ldots,c_{\ell}$ be the commitments sent (possibly,
-adverserial) by the prover to the verifier in Step 4. Let $\overline{P}_{\rm adv}$ be the
-witness extracted using the extractor $\extr_{2d}$ for the subprotocol in Step
-10. Let $P_{\rm adv}$ denote the matrix $\overline{P}_{\rm adv}T$. Then with overwhelming
-probability ($1-\kappa_{2d}(\secpar)$), $P_{\rm adv}\in \dashL_1\oplus \dashL_2$. Observe
-that if $P_{\rm hon}=P_{\rm adv}$, then $r^TA\neq r^Tb$ implies that
-$\overline{P}=\overline{P}_{\rm adv}$ does not satisfy Equation
-\eqref{eq:necessarycondlin} and thus the subprotocol in Step 11 succeeds with
-probability at most $\kappa_{ip}(\secpar)$, or $\extr$ succeeds in finding
-distinct openings to the commitment in subprotocol in Step 11. Assume then that $P_{\rm hon}\neq
-P_{\rm adv}$. Again, from subprotocol in Step 14, we conclude that $X_u =
-\ewit[\cdot,j_u,k_u]$, except with probability $\kappa_{agg}(\secpar)$, or
-$\extr$ outputs two openings to one of the commitments $\pi[j_u,k_u]$ for $u\in
-[t]$. Similarly, assuming $\extr$ does not break binding of the commitment
-scheme, the witnesses extracted for inner product protocols in Step 13, are the
-columns $P_{\rm adv}[\cdot,k_u]$ for $u\in [t]$. Thus, with overwhelming probability, the inner product check in Step 13 is
-equivalent to checking the following for all $u\in [t]$:
-\begin{equation}\label{eq:check1}
-P_{\rm adv}[j_u,k_u]=\sum_{i\in
-[p]}R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]
-\end{equation}
-For $u\in [t]$, let $\mc{E}_u$ denote the event that the above equation holds
-for $u$. For $k_u\not\in E$, we have $\ewit[\cdot,\cdot,k_u]=\ewit_{\rm
-hon}[\cdot,\cdot,k_u]$ and thus the right hand side in \eqref{eq:check1} equates
-to $P_{\rm hon}[j_u,k_u]$. Now, $P_{\rm adv}$ and $P_{\rm hon}$ differ in at
-least $\dashD_1$ columns, where $\dashD_1$ denotes the minimum distance of the
-code $\dashL_1$. Let $E'$ denote the column indices where $P_{\rm adv}$ and
-$P_{\rm hon}$ differ. For $k_u\in E'\backslash E$, the check succeeds if the
-distinct codewords $P_{\rm adv}[\cdot,k_u]$ and $P_{\rm hon}[\cdot,k_u]$ agree
-at position $j_u$. Since $(j_u,k_u)$ are sampled uniformly and independently
-(also independent of extracted witness $\wit$), we have:
-{\small
-\begin{align}\label{eq:probeq6}
-\prob{\mc{E}_u} &\leq \frac{n-\dashD_1+e}{n} +
-\frac{\dashD_1-e}{n}.\frac{h-\dashD_2}{h}
-\nonumber \\
-	&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}.\frac{2m}{h} \nonumber \\
-	& = \frac{2m}{h} +
-\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
-\end{align}
-}
-For initial transcript to accept, all the $t$ checks should succeed, and thus we
-have:
-{\small
-\begin{align}\label{eq:probeq7}
-\prob{\mc{S}\cap (A\wit\neq b)}&\leq
-\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
-+ \kappa_{3d}(\secpar) + \mc{B}(\secpar) +
-\frac{O(|C|)}{|\FF|} \nonumber \\
-&\leq \left(1-\frac{e}{n}\right)^t +
-\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
-+ \frac{O(|C|)}{|\FF|} + \mc{B}(\secpar)
-\end{align}
-}
-Thus the statement of the lemma holds for $\kappa_{lc}(\secpar) := (1-e/n)^t +
-(2m/h + (1-2m/h)(2\ell/n + e/n))^t+O(|C|)/|\FF|+\mc{B}(\secpar)$.
+\begin{proof}[Proof-Sketch]
+
 \end{proof}
+
 
 \subsection{Quadratic Check Protocol}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
