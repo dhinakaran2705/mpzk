@@ -91,10 +91,10 @@ polynomial operations modulo $h(x)$, i.e, on $\HH$ we define $a(x)+b(x) =
 \end{itemize}
 We can identify the elements of field $\HH$ naturally with the set $\FF^m$ via
 the bijection $f:\FF^m\leftrightarrow \HH$ given by
-$f(a_0,\ldots,a_{m-1})=\sum_{i=0}a_ix^i$. For any $a,b\in \FF^m$ and $\alpha\in
+$f(a_0,\ldots,a_{m-1})=\sum_{i=0}a_ix^i$ \commentA{seems to map $\FF^m$ to $\FF$ and NOT what you stated }. For any $a,b\in \FF^m$ and $\alpha\in
 \FF$, it is seen that $f(a+b)=f(a)+f(b)$ and $f(\alpha a)=\alpha f(a)$. We can
 extend $f$ to the bijection $\tilde{f}$ between the set $\mc{M}_{m,n}$ of $m\times n$
-matrices over $\FF$ and $\HH^n$ by defining:
+matrices over $\FF$ and $\HH^n$ by defining \commentA{same  issue here}:
 \begin{equation}\label{lem:bijection}
 \tilde{f}(A) = \big(f(A[\cdot,1]),\ldots,f(A[\cdot,n])\big)
 \end{equation}
@@ -188,7 +188,7 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 	
 	$U_2\in \mc{C}_2 \implies \exists$ polynomials $q_1(\cdot), \ldots, q_n(\cdot)$ of degree $< m$
 	
-	Such that $p_i(\eta_j) = U_1[i,j] \& q_i(\alpha_j) = U_2[j,i]$
+	Such that $p_i(\eta_j) = U_1[i,j] $ and $ q_i(\alpha_j) = U_2[j,i]$
 	
 	Therefore, $U_1[i,j] = U_2[i,j]$ $\forall i\in S_1, j\in S_2$. Choose a bivariate polynomial $Q(x,y)$ such that $deg_x(Q)<\ell $ and $deg_y(Q)<m$ and $Q(\eta_{i_s}, \alpha_{j_t}) = U_1[i_s,j_t] = U_2[i_s,j_t] \forall (i, j)\in S_1\times S_2$. 
 	
@@ -202,15 +202,14 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \subsection{Coding Theoretic Results for our Constructions}
 In this section we prove the coding theoretic result (Proposition \ref{lem:3dcompression}), which underlies
 the construction of our new ``MPC-friendly'' zero knowledge protocol. The result
-extends the approach in \cite{ligero}  of interleaving the witness and checking proximity (to well
-formed encoding) by
+extends the approach in \cite{ligero}  of interleaving the witness and checking proximity (to well-formed encoding) by
 compressing along a dimension using a random linear combination. 
 While in \cite{ligero}, the witness was interleaved as a matrix,
 we interleave the witness as a three dimensional matrix to obtain smaller
 argument size. The following result is the key to testing proximity of a three
 dimensional matrix to a well formed encoding.
 \begin{proposition}[3D Compression]\label{lem:3dcompression}
-Let $\HH$ be a finite field and $\FF\subseteq \HH$ be a subfield of $\HH$. Let $L$ be an $[n,k,d$ code over $\FF$, and $\mc{C} :=
+Let $\HH$ be a finite field and $\FF\subseteq \HH$ be a subfield of $\HH$. Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
 $p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
 \mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a

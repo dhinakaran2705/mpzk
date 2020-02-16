@@ -39,23 +39,23 @@ The multilinear extension $\tilde{Z}(\cdot)$ can be obtained by an inner product
 .\dnote{TODO: circuit share complexity for the Bulletproofs protocol for arbitrary arithmetic circuits}
 Consider the setting of the distributed prover, i.e., that witness is distributed among the provers, say $\Num$ provers together hold the witness. Here we will discuss the distributed prover version of the bulletproofs for R1CS circuits. We will start by describing the distributed prover version of zero-knowledge inner produc; then, we will use the protocol to design a protocol for R1CS.
 
-We will start with reducing a R1CS circuit into multiple inner product. Then we will use the zero knowledge inner product to construct the proof of R1CS circuit. Consider that the circuit has $n$ multiplcation gates. Corresponding to the $j^{th}$ wire let $x_j, y_j$ and $z_j$ are the left input, right input and output wires respectively. Then the vectors $\bm{x}, \bm{y}, \bm{z}\in \bbF^n$ can be obtained from the extended witness $\extwit$, by multiplying public matrices $A, B, C$ which is depended only on the circuit. Therefore we have 
-\begin{align}
-A \extwit = \bm{x} \\
-B \extwit = \bm{y} \\
-C \extwit = \bm{z} 
-\end{align}
+We will start with reducing a R1CS circuit into multiple inner product. Then we will use the zero knowledge inner product to construct the proof of R1CS circuit. Consider that the circuit has $n$ multiplcation gates. Corresponding to the $j^{th}$ wire let $x_j, y_j$ and $z_j$ are the left input, right input and output wires respectively. Then the vectors $\bm{x}, \bm{y}, \bm{z}\in \bbF^n$ can be obtained from the extended witness $\extwit$, by multiplying public matrices $A, B, C$ which is depended only on the circuit. Therefore we have \\
+%\begin{align}
+$A \extwit = \bm{x} \text{ }\&
+B \extwit = \bm{y} \text{ }\&
+C \extwit = \bm{z} \text{ }$
+%\end{align}
 and $\bm{x}, \bm{y}, \bm{z}$ will satisfy the following eqution:
 \begin{equation}
 	\bm{x} o \bm{y} =\bm{z}
 \end{equation}
-For any $\bm{r}\in \bbF^n$, from equation (1), (2), (3) and (4), the following conditions are true:
-\begin{align*}
-\langle \bm{r}^T \cdot A, \extwit \rangle = \langle \bm{r}, \bm{x} \rangle = v_1 \\
-\langle \bm{r}^T \cdot B, \extwit \rangle = \langle \bm{y}, \bm{r} \rangle = v_2 \\
-\langle \bm{r}^T \cdot C, \extwit \rangle = \langle \bm{r}, \bm{z} \rangle = v_3 \\
-\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4 
-\end{align*} 
+For any $\bm{r}\in \bbF^n$, from equation (1), (2), (3) and (4), the following conditions are true:\\
+%\begin{align*}
+$\langle \bm{r}^T \cdot A, \extwit \rangle = \langle \bm{r}, \bm{x} \rangle = v_1$ \&
+$\langle \bm{r}^T \cdot B, \extwit \rangle = \langle \bm{y}, \bm{r} \rangle = v_2$ \&
+$\langle \bm{r}^T \cdot C, \extwit \rangle = \langle \bm{r}, \bm{z} \rangle = v_3$ \&
+$\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4 $ \\
+%\end{align*} 
 We have zero knowledge inner product argument protocol for the following instance:
 \begin{equation} 
 \{(P,V,\bm{g},\bm{h},g,h);(\bm{a},\bm{b},\sigma,\delta): P=h^{\sigma}\bm{g}^{\bm{a}}\bm{h}^{\bm{b}}, V=h^{\delta}g^{\langle \bm{a},\bm{b}\rangle}\} 
@@ -68,12 +68,14 @@ So if we apply the above protocol on these 8 inner products that gives a proof o
 \subsubsection{Multiprover version of zero knowledge inner product argument}
 Now we will discuss the multiprover version of the zero knowledge inner product proof: where there will an aggregator $\Ag$(need not be trusted) who will iinteract with the verifier.\\
 Consider $\prover_1,\ldots, \prover_{\Num}$ are provers for the inner product statement i.e. $\{(P,V,\bm{g},\bm{h},g,h)\}$ and the corresponding witness is $(\bm{a},\bm{b}, \sigma, \delta)$, where $P= h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$, $V=h^{\delta}g^{v}$. Let party $\prover_i$ has $(\bm{a}_i,\bm{b}_i,\sigma_i,\delta_i)$ such that
-\begin{align}
-	\sum\limits_{i=1}^{N}\bm{a}_i=\bm{a},\text{ }
-	\sum\limits_{i=1}^{N}\bm{b}_i=\bm{b},\text{ }
-	\sum\limits_{i=1}^{N}\sigma_i=\sigma,\text{ }
-	\sum\limits_{i=1}^{N}\delta_i=\delta \text{ }
-\end{align}
+%\begin{align}
+\begin{center}
+	$\sum\limits_{i=1}^{N}\bm{a}_i=\bm{a}$,\text{ }
+	$\sum\limits_{i=1}^{N}\bm{b}_i=\bm{b}$,\text{ }
+	$\sum\limits_{i=1}^{N}\sigma_i=\sigma$,\text{ }
+	$\sum\limits_{i=1}^{N}\delta_i=\delta$ \text{ }
+\end{center}
+%\end{align}
 \begin{enumerate}
 	\item In this step each party chooses their blinding vectors and commits to that vector. $\prover_i$ samples $\bm{s}^i_L, \bm{s}^i_R \sample \bbZ_p^n$ and $\rho_i\sample \bbZ_p$, then computes $S^i=h^{\rho_i}\bm{g}^{\bm{s}^i_L}\bm{h}^{\bm{s}^i_R}$ and sends $S^i$ to $\Ag$.
 	\item In this step $\Ag$ computes the commitment of the blinding vector, which is sum of all the provers blinding vector. $\Ag$ computes $S = \prod_{i=1}^{\Num}S^i = h^{\sum_{i=1}^{\Num}\rho_i}\bm{g}^{\sum_{i=1}^{\Num}\bm{s}_L^i}\bm{h}^{\sum_{i=1}^{\Num}\bm{s}^i_R} = h^{\rho}\bm{g}^{\bm{s}_L}\bm{h}^{\bm{s}_R}$, where $\rho = \sum_{i=1}^{\Num}\rho_i$, $\bm{s}_L =\sum_{i=1}^{\Num} \bm{s}^i_L,  \bm{s}_R=\sum_{i=1}^{\Num}\bm{s}^i_R$, and $\Ag$ sends $S$ to the verifier $\verifier$.
@@ -111,11 +113,13 @@ We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \l
 Following \cite{BCC+16}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
 $$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$$
 for $1\leq q \leq Q$, with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
-Consider\\ $W_L = [\bm{w}_{L,1}, \ldots, \bm{w}_{L,Q}]^T$,\\ 
-$W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, \\
-$W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,\\
-and $\bm{c} = [c_1, \ldots, c_q]^T$\\
-\pnote{what is $W_v$ and $\bm{v}$ is not clear.}
+Consider
+
+$W_L = [\bm{w}_{L,1}, \ldots, \bm{w}_{L,Q}]^T$,\vspace{10pt} 
+$W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, \vspace{10pt} 
+$W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,\vspace{10pt} 
+and $\bm{c} = [c_1, \ldots, c_q]^T$
+%\pnote{what is $W_v$ and $\bm{v}$ is not clear.}
 
 Here we are following the same notations which are used in \cite{bulletproofs}.
 For arithmetic circuit satisfiability zero knowledge proof, \cite{bulletproofs} proves the following statement:
@@ -146,8 +150,8 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 	\item $\Ag$ forwards $y,z$ to all the provers.
 	
 	\item All the provers and the verifier computes :\\
-	$\bm{y}^n = (1, y, y^2, \ldots, y^{n-1}) \in \ZZ^n_p$\\
-	$\bm{z}^{Q+1}_{[1:]} = (z, z^2, \ldots, z^Q) \in \ZZ^Q_p$\\
+	$\bm{y}^n = (1, y, y^2, \ldots, y^{n-1}) \in \ZZ^n_p$, 
+	$\bm{z}^{Q+1}_{[1:]} = (z, z^2, \ldots, z^Q) \in \ZZ^Q_p$, 
 	$\delta(y,z) = \innp{\bm{y}^{-n}\circ (\bm{z}^{Q+1}_{[1:]}\cdot W_R)}{\bm{z}^{Q+1}_{[1:]}\cdot W_L}$\\
 	
 	\item $\prover_i$ computes:
@@ -174,20 +178,15 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 	
 	\item $\prover_i$ computes:
 	\begin{itemize}
-		\item $\bm{l}_i = l_i(x) \in \ZZ^n_p$
-		\item $\bm{r}_i = r_i(x) \in \ZZ^n_p$
-		\item $\tau_x^j = \sum\limits_{j=1, j\neq 2}^{6} \tau_j^i\cdot x^i \in \ZZ_p$
-		\item $\mu_i = \alpha_i\cdot x +\beta_i \cdot x^2 +\rho_i\cdot x^3 \in \ZZ_p$
+		\item $\bm{l}_i = l_i(x) \in \ZZ^n_p$ \& $\bm{r}_i = r_i(x) \in \ZZ^n_p$
+		\item $\tau_x^j = \sum\limits_{j=1, j\neq 2}^{6} \tau_j^i\cdot x^i \in \ZZ_p$ \& $\mu_i = \alpha_i\cdot x +\beta_i \cdot x^2 +\rho_i\cdot x^3 \in \ZZ_p$
 	\end{itemize}  
 	sends these values to $\Ag$.
 	
 	\item $\Ag$ combines and gets 
 	\begin{itemize} 
-		\item $\bm{l} = \sum_{i\in[\Num]} \bm{l}_i$
-		\item $\bm{r} = \sum_{i\in[\Num]} \bm{r}_i$
-		\item $\hat{t} = \innp{\bm{l}}{\bm{r}}$
-		\item $\tau_x = \sum_{i\in [\Num]} \tau_x^i + x^2\cdot \innp{\bm{z}_{[1:]}^{Q+1}}{W_V\cdot \gamma} \in \ZZ_p$
-		\item $\mu = \sum_{i\in [\Num]} \mu_i$
+		\item $\bm{l} = \sum_{i\in[\Num]} \bm{l}_i$, $\bm{r} = \sum_{i\in[\Num]} \bm{r}_i$, \& $\hat{t} = \innp{\bm{l}}{\bm{r}}$
+		\item $\tau_x = \sum_{i\in [\Num]} \tau_x^i + x^2\cdot \innp{\bm{z}_{[1:]}^{Q+1}}{W_V\cdot \gamma} \in \ZZ_p$ \& $\mu = \sum_{i\in [\Num]} \mu_i$
 	\end{itemize}
 	
 	\item $\Ag$ sends $\tau_x, \mu, \hat{t}$ to $\verifier$. 
@@ -224,10 +223,10 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 	\end{tabular}
 \end{center}
 \end{comment}
-\begin{table} 
+\begin{table}[h!] 
 	\centering
 %\begin{center}
-	\resizebox{.98\textwidth}{!}{
+	\resizebox{.95\textwidth}{!}{
 	%\footnotesize
 	\begin{threeparttable}
 	\begin{tabular}{|c|c|c|c|c|}
@@ -237,15 +236,15 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		Parameters & Spartan & Bulletproofs & \name2D & \name3D\\
 		\midrule
 		Argument size & $N^{1/c}$ & $\log (N)$& $N^{1/c}$  & $N^{1/c}$\\
-		\hline
+		\midrule
 		Rounds(ZK) & $\log (N)$ & $\log (N)$ & $\log (N)$ & $\log (N)$\\
-		\hline 
+		\midrule
 		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
-		\hline
+		\midrule
 		Verifier'c Complexity& $O(N^{1-1/c})E$\tnote{$\ast$} & $O(N)E$ &$O(N^{1-1/c})E + O(N)M$ & $O(N^{1-2/c})E + O(N)M$\\
-		\hline
+		\midrule
 		Prover communication& MPC($N_s^2,1$) + $\Num N$\tnote{$\ast\ast$} & MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
-		\hline 
+		\midrule
 		Number of MPC & $\log(N)$& 1 & 1 & 1 \\
 		\bottomrule
 		\end{tabular} 
