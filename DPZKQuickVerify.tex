@@ -209,9 +209,9 @@ correspond to some $U$ such that $U\in L_1\oplus L_2$. To prevent the prover
 from sending arbitrary commitments, the verifier checks the consistency of the
 commitments with the oracle $\pi$ by querying $t$ columns of the oracle
 using a query $Q\subseteq [n]$. For each $k\in Q$, the verifier checks
-$\tilde{c}_k = \sum_{i\in [p]}r_i\pi[i,k]$. The soundness relies on the fact
+$\tilde{c}_k = \sum_{a\in [\ell]}\mc{T}[a,k]\tilde{c}_a=\sum_{i\in [p]}r_i\pi[i,k]$. The soundness relies on the fact
 that if the oracle $\pi$ opens to encoding $\ewit$ which is far from a well
-formed encoding, by Lemma \ref{lem:compression3d}, with high probability
+formed encoding, by Proposition \ref{lem:3dcompression}, with high probability
 $\tilde{U}\not\in L_1\oplus L_2$. Thus, an adverserial prover is forced to cheat
 by sending several ``inconsistent'' commitments, in which case it fails the
 consistency check with overwhelming probability. The complete protocol appears
@@ -269,26 +269,25 @@ For every bounded prover $P^\ast$ and every oracle $\pi\in \FF^{p\times n}$ and
 proximity parameter $e<d_1/3$,
 there exists a polynomial time extractor $\extr$ with rewinding access to
 transcript oracle $\mc{O}=\langle P^\ast(\cdot),\verifier^{\pi}(\cdot)\rangle$
-such that:
+such that $\extr$ either breaks the commitment binding, or outputs a valid witness with
+overwhelming probability whenever $P^\ast$ succeeds, i.e, 
 {\small
 \begin{align*}
 \condprob{
 \begin{array}{l}
 \ewit=\open(\pi) \wedge \\
 \ewit\in \mc{W}_2\wedge \\
-d_1(\ewit,\mc{W}_1)\leq e
+d(\ewit,\mc{W}_1)\leq e
 \end{array}
 }{
 \begin{array}{l}
 \sigma\sample \gen(\secparam)\\
 \ewit\sample \extr^{\mc{O}}(\sigma)
 \end{array}
-}\geq \condprob{\langle
-P^\ast(\sigma),\verifier^\pi(\sigma)\rangle=1}{\sigma\sample
-\gen(\secparam)}-s_{3d}(\secpar)
+}\geq \epsilon(P^\ast)-\kappa_{3d}(\secpar)
 \end{align*}
 }
-for some negligible function $s_{3d}$. Note that in the above, $\extr$ can
+where, as before $\epsilon(P^\ast)$ denotes $P^\ast$'s success probability and $\kappa_{3d}$ is a negligible function. Note that in the above, $\extr$ can
 rewind and proceed with fresh queries to the oracle $\pi$. 	
 \end{lemma}
 
@@ -300,13 +299,10 @@ $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, we obtain $\ewit\sample 
 \enc(\wit)$ and $\comoracle\sample \comm(\ewit)$. We present the full protocol in
 Figure \ref{fig:linearcheck}. Below we summarize the key ideas in the protocol.
-\smallskip
 
-\noindent {\em Probabilistic Reduction}: To check $A\wit = b$, the verifier samples
-random $r\sample \FF^M$ and asks the prover to prove $r^TA\wit = r^Tb$ instead.
-\smallskip
-
-\noindent {\em Reduction to Polynomial Identity}: Both prover and verifier view the
+\noindent {\em Reduction to Polynomial Identity}: To check $A\wit=b$, the verifier 
+samples random $r\sample \FF^M$ and asks the prover to prove $r^TA\wit=r^Tb$.
+ Both prover and verifier view the
 vector $r^TA\in \FF^N$ as a $p\times m\times \ell$ matrix $R$ and interpolate
 polynomials $R^i(x,y)$ for $i\in [p]$ with $deg_x(R^i)<m$ and $deg_y(R^i)<s$
 satisfying $R^i(\alpha_j,\zeta_k)=R[i,j,k]$. Let $Q^i$, $i\in [p]$ denote the
@@ -317,7 +313,6 @@ $k$ run over indices in $[p],[m]$ and $[s]$ respectively. In principle, the
 prover can send the degree $\ell+s$ polynomial
 $p(\cdot):=\sum_{i=1}^p\sum_{j=1}^mR^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ and
 the verifier can check $\sum_{k\in [s]} p(\zeta_k)=r^Tb$. 
-\smallskip
 
 \noindent {\em Reduction to Inner Product}: Let $\overline{\bm{\zeta}}$ denote the vector $(\zeta_1,\ldots,\zeta_s)$ and let $p(\overline{\bm{\zeta}})$ denote the vector of
 evaluations of $p$ on points in $\overline{\bm{\zeta}}$. Similarly, let $\overline{\bm{\eta}}$ denote
@@ -326,7 +321,8 @@ the points $(\eta_1,\ldots,\eta_{2\ell})$. The check $\sum_{k\in
 Let $p_j$ denote the polynomial $\sum_{i\in
 [p]}R^i(\alpha_j,\cdot).Q^i(\alpha_j,\cdot)$ for $j\in [h]$. Note that
 $p=\sum_{j\in [m]}p_j$. We see that there exists a $2\ell\times s$ matrix
-$\Phi$ such that $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$. We now describe
+$\Phi$ such that $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$. 
+We now describe
 how to compute $p(\overline{\bm{\eta}})$ from ``tamper resistant'' structures
 such as codewords. Define $h\times n$ matrix $P$ by $P[j,k]=p_j(\eta_k)$. Note
 that the matrix $P$ is in the product code of codes $\rsc{\eta}{s+\ell}$ and
@@ -334,163 +330,68 @@ $\rsc{\alpha}{2m}$. Let $\overline{P}$ denote the matrix consisting of the first
 $2\ell$ columns of $P$ and let $c_1,\ldots,c_{2\ell}$ be the commitments of the
 columns of $\overline{P}$. Now it can be seen that:
 \begin{align}
-p(\overline{\bm{\eta}}) = \begin{bmatrix} p(\eta_1) \\ \vdots \\
-p(\eta_{2\ell}) \end{bmatrix} = 
-	{\begin{bmatrix}
-	p_1(\eta_1) & \hdots & p_1(\eta_{2\ell}) \\
-	\vdots & \ddots & \vdots \\
-	p_m(\eta_1) & \hdots & p_m(\eta_{2\ell}) \\
-	\vdots & \ddots & \vdots \\
-	p_h(\eta_1) & \hdots & p_h(\eta_{2\ell})
-	\end{bmatrix}}^T
-	\begin{bmatrix}
-	1^m \\
-	0^{h-m}
-	\end{bmatrix}=\overline{P}^T\begin{bmatrix} 1^m \\ 0^{h-m}\end{bmatrix}
+p(\overline{\bm{\eta}}) = 
+\begin{bmatrix} p(\eta_1) \hdots p(\eta_{2\ell}) \end{bmatrix}^T = 
+%	{\begin{bmatrix}
+%	p_1(\eta_1) & \hdots & p_1(\eta_{2\ell}) \\
+%	\vdots & \ddots & \vdots \\
+%	p_m(\eta_1) & \hdots & p_m(\eta_{2\ell}) \\
+%	\vdots & \ddots & \vdots \\
+%	p_h(\eta_1) & \hdots & p_h(\eta_{2\ell})
+%	\end{bmatrix}}^T
+	\overline{P}^T\begin{bmatrix}
+	1^m\ 0^{h-m}
+	\end{bmatrix}^T
 \end{align}
 From the above we have, 
 \begin{align}\label{eq:necessarycondlin}
 \innp{1^s}{p(\overline{\bm{\zeta}})} = \left\langle 1^s, \Phi\overline{P}^T\begin{bmatrix}
-1^m \\ 0^{h-m} \end{bmatrix}\right\rangle = {\begin{bmatrix} 1^m \\ 0^{h-m}
+1^m \  0^{h-m} \end{bmatrix}^T\right\rangle = {\begin{bmatrix} 1^m \ 0^{h-m}
 \end{bmatrix}}^T\overline{P}\Phi^T[1^s]
 \end{align}
 Let $\varphi=(\varphi_1,\ldots,\varphi_{2\ell})$ denote the vector
 $\Phi^T[1^s]$. Then, check $\sum_{k\in [s]}p(\zeta_k)=r^Tb$ reduces to
 proving the inner product $\langle (1^m,0^{h-m}),\overline{P}\varphi\rangle=r^Tb$. Given
 commitments $c_1,\ldots,c_{2\ell}$ we can compute commitment to the vector
-$\overline{P}\varphi$ and then run the
-protocol
-$\innerproduct(\GG,\bm{g},x, \mathsf{cm},v;z)$ with $x=(1^m, 0^{h-m})$,
-$z=\overline{U}\varphi$, $v=r^Tb$ and $\mathsf{cm}=\sum_{k\in [\ell]}\varphi_kc_k$.
-The
-advantage of the above is that $P$ has ``tamper resistant'' structure of being a
-product codeword (which we can check given commitments $c_1,\ldots,c_{2\ell}$),
-and we can establish if it is correctly derived from encoded witness $\ewit$ by
-checking consistency at a few locations. In the actual protocol, the prover will randomize
-the final vector $\overline{P}\varphi$ as $\varphi_0P_0 + \overline{P}\varphi$ for a random codeword $P_0\in L_2$ satisfying $\sum_{j\in [m]} P_0[j]=0$. The randomization will allow us to ensure the privacy of individual provers in distributed setting against the aggregator. \smallskip
+$\overline{P}\varphi$ and use the inner product protocol argument.
+In the actual protocol, the prover will randomize
+the final vector $\overline{P}\varphi$ as $\beta P_0 + \overline{P}\varphi$ using a random codeword
+ $P_0\in L_2$ satisfying $\sum_{j\in [m]} P_0[j]=0$. In the distributed setting, this 
+randomization allows the provers to reveal the witness used for the inner product protocol to the aggregator, allowing the aggregator to complete the protocol with the verifier, without 
+further interaction with the provers.
 
 \noindent{\em Checking Consistency with Oracle}: Note that a correctly computed
 $P$ in the previous step satisfies $P[j,k]=\sum_{i\in
-[p]}R^i(\alpha_j,\eta_k).\ewit[i,j,k]$. The verifier samples $t$ pairs $(j_u,k_u)$ for $u\in
+[p]}R^i(\alpha_j,\eta_k).\ewit[i,j,k]$. Ofcourse, an adverserial prover can provide commitments
+an arbitrary matrix $P$. However, since the matrix $P$ can be tested for membership in 
+the product codeword, a cheating adversary is forced to commit to a matrix that differs 
+substantially from an honestly computed $P$, due to the distance property of the codes. 
+Such an adversary will fail with overwhelming probability in establishing the consistency of 
+the matrix $P$ with the oracle as we now describe: To check consistency, the verifier 
+samples $t$ pairs $(j_u,k_u)$ for $u\in
 [t]$ uniformly from $[h]\times [n]$ and asks the prover to provide vectors
-$\ewit[\cdot,j_u,k_u]$ and $\pi[\cdot,k_u]$ for all $u\in [t]$. The prover and
+$X_u=\ewit[\cdot,j_u,k_u]$ and $\pi[\cdot,k_u]$ for all $u\in [t]$. The prover and
 verifier then run inner product protocols to check:
 \begin{enumerate}[{\rm (i)}]
-\item $P[j_u,k_u]=\langle P[\cdot,k_u], e_{j_u}\rangle=\sum_{i\in
-[p]}R^i(\alpha_{j_u},\eta_{k_u}).\ewit[i,j_u,k_u]$ for $u\in [t]$.
-\item Check that $\ewit[i,j_u,k_u]$ is consistent with oracle $\pi$ by verifying
-$\innp{\ewit[i,\cdot,k_u]}{e_{j_u}}=\ewit[i,j_u,k_u]$. Note that the commitment
-$\pi[i,k_u]$ for $\ewit[i,\cdot,k_u]$ is obtained as part of oracle answer. Moreover, we can aggregate inner product checks for entire column $\ewit[\cdot,j_u,k_u]$
-into one inner product check.
+\item $\langle P[\cdot,k_u], e_{j_u}\rangle=\sum_{i\in
+[p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ for $u\in [t]$. Note that for in the honest case, $X_u[i]=\ewit[i,j_u,k_u]$, and the identity holds.
+\item For all $u\in [t]$, check  that $X_u$ is consistent with oracle $\pi$ by verifying
+$\innp{\ewit[i,\cdot,k_u]}{e_{j_u}}=X_u[i]$  Note that the commitment
+$\pi[i,k_u]$ for $\ewit[i,\cdot,k_u]$ is obtained as part of oracle answer. Moreover, we can aggregate inner product checks for vector $X_u$ into one inner product check.
 \end{enumerate}
 The complete linear check protocol is described in Figure \ref{fig:linearcheck}. 
 In Figure \ref{fig:linearcheck}, the protocol $\agginnerproduct$ denotes the protocol 
 for veryfying inner products of several commited vectors with a common vector. 
-The completeness of the linear check protocol can be easily verified. We provide the proof for its
-soundness.
-
-\begin{figure}[h!]
-\centering
-\begin{framed}
-\begin{itemize}
-\item {$\linearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in \FF^M,[\pi];\ewit)$}:
-\item {\bf Relation}: $\exists \ewit$ s.t. $\ewit=\open(\pi)$ and $A\wit = b$
-for $\wit=\dec(\ewit)$.
-\item {\bf Oracle Setup}: The prover $\prover$ computes
-$\comoracle = \comm(\ewit)$ as in Section \ref{sec:construct_oracle}. 
-The prover sets $\pi := \comoracle$ as the oracle.
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: $\verifier$ samples $r\sample \FF^N$ and
-sends it to $\prover$.
-\item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
-compute polynomials $R^i$, $i\in [p]$ such that
-$R^i(\alpha_j,\zeta_k)=r[i,j,k]$. 
-\pnote{Polynomial $R^i(\cdot, \cdot)$ should not be constructed from $r$, it should be from $r^TA$}
-\item $\prover$ computes:
-	\begin{enumerate}
-	\item Polynomials $p_j(\cdot) := \sum_{i\in
-[p]}R^i(\alpha_j,\cdot).Q^i(\alpha,\cdot)$ for $j\in [h]$.
-	\item An $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
-	\item Commitments $c_k=\comm(P[\cdot,k],\omega_k)$ for $k\in [s+\ell]$
-where $\omega_k\sample \FF$.
-	\item Sample a codeword $P_0\in \dashL_2$ s.t $\sum_{j\in [m]}P_0[j]=0$.
-Compute $c_0=\comm(P_0,\omega_0)$ for $\omega_0\sample \FF$.
-	\end{enumerate}
-\item $\prover\rightarrow\verifier$: The prover sends $c_0,c_1,\ldots,c_{s+\ell}$ to
-the verifier.
-\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample [h]\times
-[n]$ for $u\in [t]$. It also samples $\beta\sample\FF$. The verifier sends
-$Q=\{(j_u,k_u):u\in [t]\}$ and $\beta$ to $\prover$.
-\item $\prover\rightarrow\verifier$: The prover sends vectors
-$X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$ to $\verifier$.
-\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u:u\in
-[t]\}$. 
-\item Oracle Answers: The oracle replies with columns $\pi[\cdot,k_u]$, $u\in
-[t]$.
-\item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
-compute $\varphi := \Phi^T[1^s]$ and $\mathsf{cm} := \beta c_0 + \sum_{k\in
-[s+\ell]}\varphi_kc_k$.
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b_{\rm 2d} = \proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\overline{P})$
-where $\bm{c}=(c_1,\ldots,c_{s+\ell})$ and $\overline{P}$ is the submatrix of $P$
-consisting of the first $s+\ell$ columns. Here $\dashL_1=\rsc{\eta}{s+\ell}$ and
-$\dashL_2=\rsc{\alpha}{2m}$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b = \innerproduct(\GG,\bm{g},x,\mathsf{cm},v;z)$
-with $x=(1^m,0^{h-m})$, $v=r^Tb$ and $z=\beta P_0+\overline{P}\varphi$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
-\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
-\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
-[t]$:
-	\begin{itemize}
-	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
-$x=e_{j_u}$, $v=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
-$u\in [t]$:
-	\begin{itemize}
-	\item
-$a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_u])$
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol: 
-	\begin{itemize}
-	\item $b_{\rm prox} = \proximityThreeD(\FF,\GG,L_1,L_2,[\pi];U)$
-	\end{itemize}
-\item The verifier accepts if all the subprotocols accept.
-\end{enumerate}
-\end{itemize}
-
-\begin{itemize}
-\item $\agginnerproduct(\FF,\GG,\bm{g},x,\bm{c}\in \GG^n,\bm{v}\in \FF^n;W\in
-\FF^{m\times n})$:
-\item {\bf Relation}: $\forall i\in [n]$: $W[i,\cdot]=\open(\bm{c}[i])$,
-$\innp{x}{W[i,\cdot]}=v[i]$. 
-\begin{enumerate}
-\item $\verifier\rightarrow\prover$: Verifier samples $\delta\in \FF^n$ and
-sends it to the prover.
-\item $\prover\leftrightarrow\verifier$ compute: $\mathsf{cm}=\sum_{i\in
-[n]}\delta_i\bm{c}[i]$, $V=\sum_{i\in [n]}\delta_i\bm{v}[i]$
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b=\innerproduct(\FF,\GG,\bm{g},\delta,\mathsf{cm},V;\bm{v}^TW)$
-	\end{itemize}
-\item $\verifier$ accepts if $b=1$.
-\end{enumerate}
-\end{itemize}
-\end{framed}
-\caption{Linear Check Protocol}
-\label{fig:linearcheck}
-\end{figure}
+The completeness of the linear check protocol can be easily verified. We sketch the proof for its
+soundness, leaving the detailed proof to the Appendix.
 
 \begin{lemma}[Soundness]\label{lem:linercheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{p\times n}$,
 $A\in \FF^{M\times N}, b\in \FF^M$, there exists an expected polynomial time
 extractor $\extr$ with rewinding access to transcript oracle $\mc{O}=\langle
-P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that:
+P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that $\extr$ either breaks the 
+commitment binding or outputs a witness with overwhelming probability whenever 
+$P^\ast$ succeeds, i.e,
 {\small
 \begin{align*}
 \condprob{\begin{array}{c}
@@ -502,98 +403,38 @@ P^\ast(\cdot),\verifier^\pi(\cdot)\rangle$ such that:
 \sigma\sample \gen(\secparam) \\
 \ewit\sample \extr^{\mc{O}}(\bm{x},\sigma)
 \end{array}}\geq
-\condprob{\innp{P^\ast(\bm{x},\sigma)}{\verifier^\pi(\bm{x},\sigma)}=1}
-{\sigma\sample\gen(\secparam)}-\kappa_{\rm lc}(\secpar)
+\epsilon(P^\ast)-\kappa_{lc}(\secpar)
 \end{align*}
 }
-for negligible function $\kappa_{\rm lc}$. In tha above $\bm{x} := (A,b,M,N)$.
+where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
-\begin{proof}
-We describe an extractor $\extr$ which outputs $\ewit$ such that $\open(\pi)=\ewit$ and $A\wit = b$ 
-for $\wit=\dec(\ewit)$. The extractor $\extr$ uses the extractor $\extr_{3d}$ for
-the protocol $\proximityThreeD$ to extract the witness $\ewit$ which opens to
-the oracle $\pi$. Note that, with probability at least ($1-\kappa_{3d}(\secpar)$),
-the extracted witness $\ewit$ satisfies $d_1(\ewit,\mc{W}_1)<e$ and $\ewit\in
-\mc{W}_2$. It follows that for each slice $\ewit^i:=\ewit[i,\cdot,\cdot]$ for $i\in [p]$,
-we have $\ewit^i\in \mc{C}_2$ and $d_1(\ewit^i,\mc{C}_1)<e$. Let $E\subseteq
-[n]$ denote the indices of the {\em planes} where $\ewit$ differs from its closest
-neighbor in $\mc{W}_1$. Since $e<d_1/2$, $E$ also denotes the set of columns
-where slices $\ewit^i$ differ from their closest neighbors in $\mc{C}_1$. We
-decode each slice seperately. Applying Lemma \ref{lem:bicdecoding} for each
-slice, we have codewords $W^i\in L_1\oplus L_2$ for each $i\in [p]$ such that
-$W^i[\cdot,k]=\ewit^i[\cdot,k]$ for all $k\not\in E$. Let $Q^i$, $i\in [p]$ be
-the unique polynomials with $deg_x(Q^i)<m$ and $deg_y(Q^i)<\ell$ such that
-$Q^i(\alpha_j,\eta_k)=W^i[j,k]$ for $(j,k)\in [h]\times [n]$. We define the
-witness $\wit$ by $\wit[i,j,k] := Q^i(\alpha_j,\zeta_k)$ for $i\in [p],j\in
-[m],k\in [s]$. Note that $\wit=\dec(\ewit)$. In case, the subprotocol extractor
-$\extr_{3d}$ outputs $\ewit$ such that $d_1(\ewit,\mc{W}_1)>e$, the extractor
-$\extr$ fails with output $\wit := \bot$. Let $\ewit_{\rm hon}$ denote the
-encoding of $\wit$ given by $\ewit_{\rm hon}[i,j,k]=Q^i(\alpha_j,\eta_k)$ for
-$i\in [p],j\in [h], k\in [n]$. Observe that we have $d_1(\ewit,\ewit_{\rm
-hon})<e$. Let $\mc{S}$ denote the event that the
-first transcript succeeds. As before, the key step to ensure soundness is to
-upper bound the probability $\prob{\mc{S}\cap (A\wit\neq b)}\leq
-\condprob{\mc{S}}{A\wit\neq b}\leq \condprob{\mc{S}}{r^TA\neq r^Tb}+1/|\FF|$
-where $r\sample \FF^N$ denotes the message sent by $\verifier$ in Step 1. Let
-$P_{\rm hon}$ denote the matrix $P$ which is correctly computed from $\ewit_{\rm
-hon}$ in
-Step 3. Let $c_1,\ldots,c_{\ell}$ be the commitments sent (possibly,
-adverserial) by the prover to the verifier in Step 4. Let $\overline{P}_{\rm adv}$ be the
-witness extracted using the extractor $\extr_{2d}$ for the subprotocol in Step
-10. Let $P_{\rm adv}$ denote the matrix $\overline{P}_{\rm adv}T$. Then with overwhelming
-probability ($1-\kappa_{2d}(\secpar)$), $P_{\rm adv}\in \dashL_1\oplus \dashL_2$. Observe
-that if $P_{\rm hon}=P_{\rm adv}$, then $r^TA\neq r^Tb$ implies that
-$\overline{P}=\overline{P}_{\rm adv}$ does not satisfy Equation
-\eqref{eq:necessarycondlin} and thus the subprotocol in Step 11 succeeds with
-probability at most $\kappa_{ip}(\secpar)$, or $\extr$ succeeds in finding
-distinct openings to the commitment in subprotocol in Step 11. Assume then that $P_{\rm hon}\neq
-P_{\rm adv}$. Again, from subprotocol in Step 14, we conclude that $X_u =
-\ewit[\cdot,j_u,k_u]$, except with probability $\kappa_{agg}(\secpar)$, or
-$\extr$ outputs two openings to one of the commitments $\pi[j_u,k_u]$ for $u\in
-[t]$. Similarly, assuming $\extr$ does not break binding of the commitment
-scheme, the witnesses extracted for inner product protocols in Step 13, are the
-columns $P_{\rm adv}[\cdot,k_u]$ for $u\in [t]$. Thus, with overwhelming probability, the inner product check in Step 13 is
-equivalent to checking the following for all $u\in [t]$:
-\begin{equation}\label{eq:check1}
-P_{\rm adv}[j_u,k_u]=\sum_{i\in
-[p]}R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]
-\end{equation}
-For $u\in [t]$, let $\mc{E}_u$ denote the event that the above equation holds
-for $u$. For $k_u\not\in E$, we have $\ewit[\cdot,\cdot,k_u]=\ewit_{\rm
-hon}[\cdot,\cdot,k_u]$ and thus the right hand side in \eqref{eq:check1} equates
-to $P_{\rm hon}[j_u,k_u]$. Now, $P_{\rm adv}$ and $P_{\rm hon}$ differ in at
-least $\dashD_1$ columns, where $\dashD_1$ denotes the minimum distance of the
-code $\dashL_1$. Let $E'$ denote the column indices where $P_{\rm adv}$ and
-$P_{\rm hon}$ differ. For $k_u\in E'\backslash E$, the check succeeds if the
-distinct codewords $P_{\rm adv}[\cdot,k_u]$ and $P_{\rm hon}[\cdot,k_u]$ agree
-at position $j_u$. Since $(j_u,k_u)$ are sampled uniformly and independently
-(also independent of extracted witness $\wit$), we have:
-{\small
-\begin{align}\label{eq:probeq6}
-\prob{\mc{E}_u} &\leq \frac{n-\dashD_1+e}{n} +
-\frac{\dashD_1-e}{n}.\frac{h-\dashD_2}{h}
-\nonumber \\
-	&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}.\frac{2m}{h} \nonumber \\
-	& = \frac{2m}{h} +
-\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
-\end{align}
-}
-For initial transcript to accept, all the $t$ checks should succeed, and thus we
-have:
-{\small
-\begin{align}\label{eq:probeq7}
-\prob{\mc{S}\cap (A\wit\neq b)}&\leq
-\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
-+ \kappa_{3d}(\secpar) + \mc{B}(\secpar) +
-\frac{O(|C|)}{|\FF|} \nonumber \\
-&\leq \left(1-\frac{e}{n}\right)^t +
-\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
-+ \frac{O(|C|)}{|\FF|} + \mc{B}(\secpar)
-\end{align}
-}
-Thus the statement of the lemma holds for $\kappa_{lc}(\secpar) := (1-e/n)^t +
-(2m/h + (1-2m/h)(2\ell/n + e/n))^t+O(|C|)/|\FF|+\mc{B}(\secpar)$.
+\begin{proof}[Proof-Sketch]
+Suppose the oracle $\pi$ commits to $\ewit$ such that $\wit=\dec(\ewit)$ does
+not satisfy $A\wit=b$.  In a formal proof, $\ewit$ would be the ``extracted''
+witness which opens to the oracle $\pi$. The proximity check ensures that for
+$e<d_1/3$, $d(\ewit,\mc{W}_1)<e$ and $\ewit\in \mc{W}_2)$ with probability $\approx 1-(1-e/n)^t$.
+Let $\ewit_{\rm hon}$ an encoding of $\wit$ such that $d_1(\ewit,\ewit_{\rm
+hon})<e$ (see the detailed proof in the Appendix for existence of such an
+encoding). Let $P_{\rm hon}$ denote honestly computed $P$ matrix from
+$\ewit_{\rm hon}$. If the adverserial prover commits to a matrix $P_{\rm adv}$
+such that $P_{\rm adv}=P_{\rm hon}$, it fails the inner product check, as
+$r^TAw\neq r^Tb$. If it commits to $P_{\rm adv}\neq P_{\rm hon}$, it fails the
+consistency checks with overwhelming probability. To see this consider the
+adversarial provers' success probability for the query point $(j_u,k_u)$. Let
+$E\subseteq [n]$ denote the indices of planes where $\ewit$ and $\ewit_{\rm
+hon}$ differ. The prover opens the vector $X_u=\ewit[\cdot,j_u,k_u]$ (unless it breaks the
+soundness of inner product protocol, or binding of the commitment scheme). For
+$k_u\not\in E$, we see that to succeed in the consistency check we must have: 
+\[ P_{\rm adv}[j_u,k_u]=\sum_{i=1}^p
+R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]=P_{\rm hon}[j_u,k_u] \]
+Let $E'$ be the column indices where $P_{\rm adv}$ and $P_{\rm hon}$ differ.
+Then the above check succeeds if (i) $k_u\not\in E'\backslash E$, or (ii) $j_u$
+is the common root of distinct $m$ degree polynomials corresponding to columns
+$P_{\rm adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary
+fails with constant probability, and hence it's success probability is
+negligible over $t=O(\secpar)$ checks.
 \end{proof}
+
 
 \subsection{Quadratic Check Protocol}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
@@ -608,7 +449,7 @@ $p\times n$ matrices $\comoracle_x,\comoracle_y$ and $\comoracle_z$. As before,
 for a query $Q\subseteq [n]$, the oracle answers with columns $\pi[\cdot,k]$ for
 $k\in Q$. The columns returned by the oracle can be parsed into constituent columns 
 $\comoracle_x[\cdot,k]$, $\comoracle_y[\cdot,k]$ and $\comoracle_z[\cdot,k]$
-canonically. We again discuss the key ingredients of the protocol.\smallskip
+canonically. We again discuss the key ingredients of the protocol.
 
 \noindent{\em Probabilistic Reduction}: Let $Q^i_x,Q^i_y$ and $Q^i_z, i\in [p]$ be the
 polynomials interpolating the $i^{th}$ slices of $\wit_x$, $\wit_y$ and $\wit_z$
@@ -620,9 +461,9 @@ $\bm{0}^{m\times s}$ on the above set for randomly sampled $r\in \FF^p$. Once ag
 ask the prover to ``commit'' to $F$ using a tamper resistant structure, like a codeword,
 which enables the verifier to check the aforementioned condition, as well as to
 ensure that the commitment is consistent with oracle replies and prior
-messages.\smallskip
+messages.
 
-\noindent{\em Reduction to Inner Products}: The prover computes the matrix
+\noindent{\em Reduction to Inner Products}: The prover computes 
 $h\times n$ matrix $P$ given by $P[j,k]=F(\alpha_j,\eta_k)$. It commits to $P$
 using commitments $(c_1,\ldots,c_{2\ell})$ to the first $2\ell$ columns of $P$.
 Note that each row of $P$ commits to univariate component polynomials
@@ -635,9 +476,9 @@ Again, the verifier checks $p(\overline{\bm{\zeta}})=\bm{0}^s$ via the inner pro
 check $\innp{\tau}{p(\overline{\bm{\zeta}})}=0$ for a random $\tau\in \FF^s$. As in the
 linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we
 get the following inner product check
-$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. Again,
-the commitment to the vector $\overline{P}\varphi$ can be homomorphically computed
-from $c_1,\ldots,c_{2\ell}$. \smallskip
+$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
+The commitment to the vector $\overline{P}\varphi$ can be homomorphically computed
+from $c_1,\ldots,c_{2\ell}$.
 
 \noindent{\em Checking consistency with Oracle}: As in the linear check, the
 verifier uniformly and independently samples $(j_u,k_u)\in [h]\times [n]$ for
@@ -657,93 +498,13 @@ made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
 We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
-\begin{figure}[h!]
-\centering
-\begin{framed}
-\begin{itemize}
-\item $\quadcheck(\FF,\GG,L_1,L_2,[\pi];\wit_x,\wit_y,\wit_z)$:
-\item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
-s.t. $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)$, $\wit_{a}=\dec(\ewit_a)$ for $a\in
-\{x,y,z\}$ and $\wit_x\circ \wit_y = \wit_z$.
-\item {\bf Oracle Setup}: The prover $\prover$ computes $\comoracle_a=\comm(\ewit_a)$ 
-for $a\in \{x,y,z\}$. It sets $\pi :=
-[\comoracle_x||\comoracle_y||\comoracle_z]$ where the notation denotes vertical
-stacking of the matrices. 
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: Verifier samples $r\sample\FF^p$ and sends
-it to $\prover$.
-\item $\prover$ computes:
-	\begin{itemize}
-	\item polynomials $p_j(\cdot):=\sum_{i\in
-[p]}r_i\big(Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot)\big)$
-for $j\in [h]$.
-	\item $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
-	\item commitments $c_1,\ldots,c_{2\ell}$ to the first $2\ell$ columns of
-$P$.
-	\end{itemize}
-\item $\prover\rightarrow\verifier$: The prover sends $c_1,\ldots,c_{2\ell}$ to
-the verifier.
-\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample
-[h]\times [n]$ for $u\in [t]$. The verifier also samples $\tau\sample
-\FF^{\ell}$. It sends $Q=\{(j_u,k_u):u\in [t]\}$ and $\tau$ to $\prover$.
-\item $\prover\rightarrow\verifier$: The prover sends vectors
-$X_u=\ewit_x[\cdot,j_u,k_u],Y_u=\ewit_y[\cdot,j_u,k_u],Z_u=\ewit_z[\cdot,j_u,k_u]$
-to the verifier, for all $u\in [t]$.
-\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u: u\in
-[t]\}$.
-\item Oracle Response: The oracle responds with columns $\pi[\cdot,k_u]$ for
-$u\in [t]$.
-\item $\prover\leftrightarrow\verifier$: Both $\prover$ and $\verifier$ compute
-$\varphi := \Phi^T\tau$ and $\mathsf{cm}:= \sum_{k\in [2\ell]}\phi_kc_k$.
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b_{\rm
-2d}=\proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\overline{P})$ where
-$\bm{c}=(c_1,\ldots,c_{2\ell})$ and $\overline{P}$ is the submatrix of $P$ consisting
-of the first $2\ell$ columns. Here $\dashL_1=\rsc{\eta}{2\ell}$ and
-$\dashL_2=\rsc{\alpha}{2m}$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol:
-	\begin{itemize}
-	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$
-with $x=(\gamma,0^{h-m})$, $v=0$ and $z=\overline{P}\varphi$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
-\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
-\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
-[t]$:
-	\begin{itemize}
-	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
-$x=e_{j_u}$, $v=\sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i] - Z_u[i])$.
-	\end{itemize}
-\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
-$u\in [t]$:
-	\begin{itemize}
-	\item
-$a_{1u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_x[\cdot,k_u],X_u;\ewit_x[\cdot,\cdot,k_u])$
-	\item
-$a_{2u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_y[\cdot,k_u],Y_u;\ewit_y[\cdot,\cdot,k_u])$
-	\item
-$a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\cdot,k_u])$
-	\end{itemize}
-\item $\prover$ and $\verifier$ run the subprotocol: 
-	\begin{itemize}
-	\item $b_{\rm prox} =
-\proximityThreeD(\FF,L_1,L_2,e,[\pi];[\ewit_x||\ewit_y||\ewit_z])$
-	\end{itemize}
-\item The verifier accepts if all the subprotocols accept.
-\end{enumerate}
-\end{itemize}
-\end{framed}
-\caption{Quadratic Check Protocol}
-\label{fig:quadcheck}
-\end{figure}
 
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{3p\times n}$,
 there exists an expected polynomial time extractor $\extr$ with rewinding access
 to the transcript oracle $\mc{O}=\innp{P^\ast(\cdot)}{\verifier^{\pi}(\cdot)}$
-such that:
+such that either $\extr$ breaks the commitment binding, or it outputs a witness
+with overwhelming probability whenever $P^\ast$ succeeds, i.e,
 {\small
 \begin{align*}
 \condprob{
@@ -761,9 +522,7 @@ such that:
 \end{align*}
 }
 for some negligible function $\kappa_{qd}$. In the above, $\epsilon(P^\ast)$
-denotes the success probability of the prover $P^\ast$ given by
-$\condprob{\innp{P^\ast(\sigma)}{\verifier^\pi(\sigma)}=1}{\sigma\sample
-\gen(\secparam)}$.
+denotes the success probability of the prover $P^\ast$ as before.
 \end{lemma}
 \begin{proof}
 The proof is similar to the proof of the linear check protocol. Using similar
@@ -779,17 +538,15 @@ arguments, one can show that the above Lemma holds with:
 
 \subsection{Zero Knowledge}
 We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier zero knowledge by
-designing simulators for them. We will infact simulate ``extended'' view of the
-verifier. This will help us in proving the privacy of our protocol in
-distributed setting (in particular, the protocol specific messages received by
-the aggregator do not {\em leak}). As part of the extended view, we will include
-the witnesses consisting of the committed vector and commitment randomness for
-all $\innerproduct$ subprotocols. It is clear then, that the simulation can be
+designing simulators for them. We infact simulate ``extended'' view of the
+verifier which includes
+the witnesses for inner product protocols consisting of the committed vector 
+and commitment randomnessIt is clear then, that the simulation can be
 completed by running the inner product argument on these simulated witness
-vectors. We describe the view of the verifier in the linear check protocols with
+vectors. We describe the view of the verifier in the linear check protocol with
 the aforementioned extensions. We decompose the view as:
-\begin{itemize}
-\item {\bf Verifier Randomness}: Vector $r\in \FF^N$ in Step 1,
+
+\noindent {\bf Verifier Randomness}: Vector $r\in \FF^N$ in Step 1,
 $\{j_u,k_u\}_{u\in [t]}$, $\beta\in \FF_\ast$ in Step 5, $\tau,\delta$ as
 part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the
 random vector for compressing in subprotocol $\proximityThreeD$ in Step 15,
@@ -800,7 +557,7 @@ as we assume that the same query positions sampled in Step 5 are used there.
 Summarizing, the verifier randomness consists of $r,\{j_u,k_u\}_{u\in
 [t]},\beta,\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\item {\bf Commitments}: Commitment $c_0$ to the random codeword sampled in Step
+\noindent {\bf Commitments}: Commitment $c_0$ to the random codeword sampled in Step
 3(d), commitments $c_1,\ldots,c_{s+\ell}$ to the first $s+\ell$ columns of the
 matrix $P$, commitment $d_0$ for random vector $u_0$ used in $\proximityTwoD$
 subprotocol in Step 10, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ as
@@ -812,7 +569,7 @@ the view consists of commitments:
 \[ c_0,c_1,\ldots,c_{s+\ell},d_0,\tilde{c}_1,\ldots,\tilde{c}_{\ell},\tilde{d}_0,\{\pi[\cdot,k_u]\}_{u\in
 [t]}\]
 
-\item {\bf Commitment Randomness}: We include randomness used to compute certain
+\noindent {\bf Commitment Randomness}: We include randomness used to compute certain
 commitments as part of the extended view. We include $\nu=\nu_0+\sum_{a\in
 [s+\ell]}\mu_a\omega_a$ for the vector $z$ in the subprotocol
 $\proximityTwoD$ in Step 10 (here $\mu=\mc{T}\tau$),
@@ -825,7 +582,7 @@ $\proximityTwoD$ protocol called as part of $\proximityThreeD$ protocol in Step
 15. Summarizing, the view includes $\nu,\omega,\{\chi_u\}_{u\in
 [t]},\{O[\cdot,k_u]\}_{u\in [t]},\tilde{\nu}$.
 
-\item {\bf Witness related vectors}: We describe various vectors derived from
+\noindent {\bf Witness related vectors}: We describe various vectors derived from
 witness encoding provided to the verifier. Vectors $X_u=\ewit[\cdot,j_u,k_u]$
 for $u\in [t]$ in Step 6, the vector $z=u_0 + \overline{P}\mu$ ($\mu=\mc{T}\tau$) as
 part of view of the subprotocol $\proximityTwoD$ in Step 10, the vector
@@ -838,7 +595,9 @@ protocol $\proximityTwoD$ from within $\proximityThreeD$ in Step 15. We drop
 $\{X_u\}_{u\in [t]}$ and $\{P[\cdot,k_u]\}_{u\in [t]}$ from the view as these
 can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the
 view consist of: $z,z',\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]},\tilde{z}$.
-\end{itemize}
+
+Next we describe a simulator that outputs a view indistinguishable from the
+above view.
 
 \noindent{\bf Simulator}: The simulator outputs $r$, $\{j_u,k_u\}_{u\in [t]}$,
 $\beta$, $\tau,\delta$, $\rho$, $\tilde{\tau},\tilde{\delta}$ by uniformly and
@@ -851,63 +610,21 @@ Next, the simulator outputs $\omega,\nu,\tilde{\nu}$
 and $\chi_1,\ldots,\chi_t$, $\{O[\cdot,k_u]\}_{u\in [t]}$ choosing them randomly and
 independently from $\FF$. Finally, the simulator outputs
 $c_0,d_0,\ldots,c_{s+\ell}$ and $\tilde{d}_0,\tilde{c}_1,\ldots,\tilde{c}_\ell$ choosing 
-them uniformly from $\GG$ subject to:
-\begin{align}\label{eq:commiteq}
-d_0 + \sum_{a=1}^{s+\ell}\mu_ac_a &= \comm(z,\nu) \nonumber \\
-c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
-\sum_{a=1}^{s+\ell}T[a,k_u]c_a &= \comm(P[\cdot,k_u],\chi_u) \quad \forall u\in
-[t] \nonumber \\ 
-\sum_{a=1}^{\ell}\mc{T}[a,k_u]\tilde{c}_a &= \comm\big(\sum_{i\in
-[p]}\rho_i U[i,\cdot,k_u],\sum_{i\in [p]}\rho_i O[i,k_u]\big) \forall u\in [t]
-\nonumber \\
-\beta\tilde{d}_0 + \sum_{a=1}^{\ell}\tilde{\mu}_a\tilde{c}_a &=
-\comm(\tilde{z},\tilde{\nu})
-\end{align}
+them uniformly from $\GG$ subject the following constraints:
+$d_0 + \sum_{a=1}^{s+\ell}\mu_ac_a = \comm(z,\nu)$,
+$c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a = \comm(z',\omega)$,
+$\sum_{a=1}^{s+\ell}T[a,k_u]c_a = \comm(P[\cdot,k_u],\chi_u)$ for $u\in [t]$,
+$\sum_{a=1}^{\ell}\mc{T}[a,k_u]\tilde{c}_a = \comm\big(\sum_{i\in
+[p]}\tilde{U}[\cdot,k_u],\tilde{O}[\cdot, k_u]\big)$ for $u\in [t]$,
+$\beta\tilde{d}_0 + \sum_{a=1}^{\ell}\tilde{\mu}_a\tilde{c}_a =
+\comm(\tilde{z},\tilde{\nu})$. 
 
 \begin{lemma}\label{lem:simlincheck}
-There exists an efficient simulator whose output is perfectly indistinguishable
+The output of the above simulator is perfectly indistinguishable
 from the extended view of the verifier in honest execution of the protocol
 $\linearcheck$ for $t\leq \bi$.
 \end{lemma}
-\begin{proof}
-We consider the simulator as discussed. Let $\bm{r}=(r,\{j_u,k_u\}_{u\in
-[t]},\beta,\tau,\delta,\rho,\tilde{\tau},\tilde{\delta})$ denote the vector
-consisting of verifier's randomness, which is chosen exactly in the honest
-protocol execution. Distributions $p(z|\bm{r})$ and $p(\tilde{z}|\bm{r})$ are
-uniform distributions on $L_2$ due to the blinding vector $u_0\in L_2$ chosen by
-the prover in the $\proximityTwoD$ protocol. Similarly, due to blinding vector
-$P_0\in \dashL_2$ chosen in Step 3(d), the distribution
-$p(z'|\bm{r})$ is also uniform on the vectors $z'$ in $\dashL_2$ satisfying
-$\sum_{j\in [m]}z'[j]=0$. Since $t\leq \bi$, from Lemma
-\ref{lem:boundedindependence}, we conclude that the planes
-$\ewit[\cdot,\cdot,k_u]$ are distributed uniformly independent of $\bm{r}$. In
-the real execution of the protocol, the prover chooses
-$\omega_0,\omega_1,\ldots,\omega_{s+\ell}$ and $\nu_0$ independently at random
-and computes:
-\begin{align}\label{eq:simeq}
-\chi_u &= \sum_{a\in [s+\ell]}T[a,k_u]\omega_a \forall u\in [t] \nonumber \\
-\omega &= \omega_0 + \sum_{a\in [s+\ell]}\mu_a\omega_a \nonumber \\
-\nu &= \nu_0 + \sum_{a\in [s+\ell]}\phi_a\omega_a
-\end{align}    
-Since any $t$ columns of $T$ are linearly independent, we see that the matrix of
-coefficients in \eqref{eq:simeq} has full row rank, and thus the vector
-$(\chi_1,\ldots,\chi_t,\omega,\nu)$ is disrtributed uniformly in $\FF^{t+2}$.
-Similarly, $\{O[\cdot,k_u]\}_{u\in [t]}$ also consists of uniformly sampled
-entries in $\FF$ as in the real protocol. We now consider computation of
-$\tilde{\nu}$ in the honest protocol execution. We have:
-\begin{align}\label{eq:simeq2}
-\tilde{\nu} &= \tilde{\nu}_0 + \sum_{a\in [\ell]}\tilde{\mu}_a\tilde{\omega}_a
- \text{ where } \nonumber \\
-\tilde{\omega}_a &= \sum_{i\in [p]}\rho_iO[i,a] \quad \forall a\in [\ell]
-\end{align} 
-Since $\tilde{\nu}_0$ is choesn randomly by the prover, the distribution of
-$\tilde{\nu}$ is uniform, independent of other variables in the view. Finally,
-the commitments in the view satisfy relations in Equation \ref{eq:commiteq} in
-the real protocol, and are picked uniformly subject to those constraints by the
-simulator. Thus the view output by the simulator perfectly simulates the
-extended view of the verifier as defined. 
-\end{proof}
-
+We defer the proof of the correctness of the simulation to Appendix.
 We omit the simulation for the quadratic check protocol, as it is very similar
 to the linear check. One key difference we highlight is that we do not need to
 randomize the vector $\overline{P}\varphi$, the witness in the inner product check in
