@@ -226,26 +226,26 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \begin{table}[h!] 
 	\centering
 %\begin{center}
-	\resizebox{.95\textwidth}{!}{
+	\resizebox{\textwidth}{!}{
 	%\footnotesize
 	\begin{threeparttable}
-	\begin{tabular}{|c|c|c|c|c|}
+	\begin{tabular}{|c|c|c|c|}
 		\toprule
 		\centering 
 		%Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
-		Parameters & Spartan & Bulletproofs & \name2D & \name3D\\
+		Parameters & Spartan & Bulletproofs & \name3D\\
 		\midrule
-		Argument size & $N^{1/c}$ & $\log (N)$& $N^{1/c}$  & $N^{1/c}$\\
+		Argument size & $N^{1/c}$ & $\log (N)$ & $N^{1/c}$\\
 		\midrule
-		Rounds(ZK) & $\log (N)$ & $\log (N)$ & $\log (N)$ & $\log (N)$\\
+		Rounds(ZK) & $\log (N)$ & $\log (N)$  & $\log (N)$\\
 		\midrule
-		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
+		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
 		\midrule
-		Verifier'c Complexity& $O(N^{1-1/c})E$\tnote{$\ast$} & $O(N)E$ &$O(N^{1-1/c})E + O(N)M$ & $O(N^{1-2/c})E + O(N)M$\\
+		Verifier'c Complexity& $O(N^{1-1/c})E$\tnote{$\ast$} & $O(N)E$ & $O(N^{1-2/c})E + O(N)M$\\
 		\midrule
-		Prover communication& MPC($N_s^2,1$) + $\Num N$\tnote{$\ast\ast$} & MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
+		Prover communication& MPC($N_s^2,1$) + $\Num N$\tnote{$\ast\ast$} & MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
 		\midrule
-		Number of MPC & $\log(N)$& 1 & 1 & 1 \\
+		Number of MPC & $\log(N)$& 1 & 1 \\
 		\bottomrule
 		\end{tabular} 
 	\begin{tablenotes}
