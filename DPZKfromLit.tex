@@ -14,10 +14,10 @@ The literature on single prover zero-knowledge proofs with transparent setup has
 Among these works, only Bulletproofs \cite{bulletproofs} discuss distributed proof generation. Even in \cite{bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
 
-\subsection{DPZK-Aurora}
+%\subsection{DPZK-Aurora}
 
 
-\subsection{DPZK-Spartan}
+\subsection{DPZK-Spartan}\label{subsec:spartan}
 Spartan \cite{spartan} is a zkSNARK protocol supporting arbitrary circuits with a transparent setup, $O(|\C|^{1/c})$ proof size for $c \geq 2$, an amortized sublinear verifier complexity. Spartan has three high level steps:
 \begin{enumerate}
 \item Construct a low-degree multivariate polynomial $\tilde{G}$ such that circuit satisfiability can be checked by performing a sum-check protocol \cite{sumcheck} over this polynomial.
@@ -35,7 +35,7 @@ The multilinear extension $\tilde{Z}(\cdot)$ can be obtained by an inner product
 %We discuss this because this serves as the background to our protocol.
 %%Discuss the version with proof size depending on and growing with the number of provers. 
 
-\subsection{DPZK-Bulletproofs}
+\subsection{DPZK-Bulletproofs}\label{subsec:bulletproofs}
 .\dnote{TODO: circuit share complexity for the Bulletproofs protocol for arbitrary arithmetic circuits}
 Consider the setting of the distributed prover, i.e., that witness is distributed among the provers, say $\Num$ provers together hold the witness. Here we will discuss the distributed prover version of the bulletproofs for R1CS circuits. We will start by describing the distributed prover version of zero-knowledge inner produc; then, we will use the protocol to design a protocol for R1CS.
 
@@ -225,45 +225,34 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \end{center}
 \end{comment}
 \begin{center}\label{tab:SPZK}
-	\small
-	\footnotesize
-	\begin{tabular}{|c|c|c|c|c||}
-		\hline
+	\resizebox{.98\textwidth}{!}{
+	%\footnotesize
+	\begin{tabular}{|c|c|c|c|c|}
+		\toprule
 		\centering 
 		%Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
 		Parameters & Spartan & Bulletproofs & \name2D & \name3D\\
+		\midrule
+		Argument size & $N^{1/c}$ & $\log (N)$& $N^{1/c}$  & $N^{1/c}$\\
 		\hline
-		\hline
-		Argument size & $n^{1/c}$ & $\log n)$& $n^{1/c}$  & $n^{1/c}$\\
-		\hline
-		Rounds(ZK) & $\log (n)$ & $\log (n)$ & $\log (n)$ & $\log (n)$\\
+		Rounds(ZK) & $\log (N)$ & $\log (N)$ & $\log (N)$ & $\log (N)$\\
 		\hline 
-		Prover's complexity & $O(n)E$ + $O(n\log(n))M$ & $O(n)E$ & $O(\frac{n}{\log(n)})E + O(n\log(n))M$ & $O(\frac{n}{\log(n)})E + O(n\log(n))M$ \\
+		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
 		\hline
-		Verifier'c Complexity& $O(n^{1-1/c})E^\ast$ & $O(n)E$ &$O(n^{1-1/c})E + O(n)M$ & $O(n^{1-2/c})E + O(n)M$\\
+		Verifier'c Complexity& $O(N^{1-1/c})E^\ast$ & $O(N)E$ &$O(N^{1-1/c})E + O(N)M$ & $O(N^{1-2/c})E + O(N)M$\\
 		\hline
-		Prover communication& MPC($n^2,1$) + $\Num ?$& MPC($n,1$) + $\Num n$& MPC($n,1$) + $\Num n^{1-1/c}$& MPC($n,1$) + $\Num n^{1-1/c}$\\
+		Prover communication& MPC($N_s^2,1$) + $\Num N^{\ast\ast}$& MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
 		\hline 
-		\# of MPC & $\log(n)$& 1 & 1 & 1 \\
-		\hline
-		% &computation & communi- cation & MPC rounds& & & \\ 
-		%\hline
-		%Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
-		%\hline
-		%Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ %$q(n+m)M)$ & $O(\log n)$ & $O(\log n)$  \\
-		%\hline
-		%Spartan & & & & & &\\
-		%\hline
-		%Aurora & & & & & &\\
-		%\hline
-		%\name2D & $O(n \log n)M$  $+nE)$ & $O(2N-1)$ & 1 &$O((nM +$ $ n^{1-1/c}E))$ & $O(n^{1/c})$ & $O(\log n)$ \\
-		%\hline
-		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
-		%\hline
-		%\caption{Comparison table}
+		Number of MPC & $\log(N)$& 1 & 1 & 1 \\
+		\bottomrule
 	\end{tabular}
+}
+%\caption{Comparison table}
 \end{center}
 
-Here $n$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ in the number provers in the $\DPZK$ setting. 
-%In bulletproofs: $q$ is the linear constraint: $q\leq 2n$ and $m$ such that $W_V \in \bbZ_p^{Q×m}$  such that $W_V$ is of rank $m$.
-$M$ is to indicate the amount of computation required for a single multiplication on field elements, and $E$ is to indicate the amount of computation required for a single exponentiation on group elements, in which $\mathsf{Dlog}$ is assumed to be hard.
+Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. 
+$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for a single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.
+
+$\ast$ Spartan \cite{spartan} achieves the above mentioned verifier's comlexity in the amortization, whereas without amortization is the verifier's complexity is $O(N)$ many exponentiations.
+
+$\ast\ast$ It is not clear that \cite{spartan} can even be converted into $\DPZK$ with all privacy conditions, in the ~\ref{subsec:spartan}, we discussed that Spartan \cite{spartan} it is not provably secure as provers may leak privacy to the aggregator.

@@ -405,6 +405,7 @@ sends it to $\prover$.
 \item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
 compute polynomials $R^i$, $i\in [p]$ such that
 $R^i(\alpha_j,\zeta_k)=r[i,j,k]$. 
+\pnote{Polynomial $R^i(\cdot, \cdot)$ should not be constructed from $r$, it should be from $r^TA$}
 \item $\prover$ computes:
 	\begin{enumerate}
 	\item Polynomials $p_j(\cdot) := \sum_{i\in
