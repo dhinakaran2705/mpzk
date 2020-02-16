@@ -1,0 +1,452 @@
+\appendix
+\section{Proofs}
+\begin{proof}
+The extractor $\extr$ starts by emulating the verifier in the protocol
+$\proximityTwoD$. At the step 5, it uses the extractor $\extr_{ip}$ for the
+inner product protocol to extract the witness $z$ for the $\innerproduct$
+subprotocol. If the initial transcript rejects, $\extr$ fails with output
+$\bot$. Otherwise, it rewinds transcript to step 2, till it finds $\ell+1$
+additional accepting transcripts. Let $\tau^i,\delta^i$ denote the random
+vectors in step 2, in the $i^{th}$ accepting transcript (we let $i=0$ denote the
+initial transcript). Similarly, let $x^i$, $\mathsf{cm}^i$ denote the values of
+vectors $x$ and $\mathsf{cm}$ in the $i^{th}$ accepting transcript, while $(z^i,o^i)$
+denotes the witness extracted by the inner product extractor $\extr_{ip}$
+corresponding to $x^i$ and $\mathsf{cm}^i$. If the inner product extractor
+$\extr_{ip}$ fails with $z^i=\bot$ for any $i\in [\ell+1]$, the extractor $\extr$
+fails with output $\bot$. From the inner product extractions we have the
+following:
+\begin{align*}
+\begin{array}{rlll}
+\comm(z^1,o^1)=& c_0 + \mu^1_1c_1+ & \hdots & +\mu^1_{\ell}c_{\ell} \\
+\vdots & \vdots & \ddots & \vdots \\
+\comm(z^{\ell+1},o^{\ell+1})=& c_0 + \mu^{\ell+1}_1c_1+ & \hdots & +\mu^{\ell+1}_{\ell}c_{\ell} 
+\end{array}
+\end{align*}
+Let $\Lambda$ denote the $(\ell+1)\times (\ell+1)$ matrix $[1^{\ell+1}|\mathbf{M}]$ with $\mathbf{M}[i,j]=\mu^i_j$. For convenience of notation, we will consider row and column indices of $(\ell+1)\times (\ell+1)$ matrices in this proof to be over the set $\{0,\ldots,\ell\}$. 
+Since $\mc{T}$ is a rank $\ell$ matrix, we see that $\Lambda$ is an invertible
+matrix for random choices of vectors $\tau^i$, except with probability
+$1/|\FF|$. Let $\Omega$ be the $(\ell+1)\times (\ell+1)$ matrix such that
+$\Omega\Lambda=I_{\ell+1}$. Define $U_k = \sum_{i=0}^{\ell}\Omega[k,i]z^i$ and $\omega_k=\sum_{i=0}^{\ell}\Omega[k,i]o^i$. 
+$k\in [\ell]$. Then for $k\geq 1$ we have,
+\begin{align*}
+\comm(U_k,\omega_k) &= \sum_{i=0}^{\ell}\Omega[k,i]\comm(z^i,o^i)  \\
+	&= \sum_{i=0}^{\ell}\Omega[k,i]\sum_{j=0}^{\ell}\Lambda[i,j]c_j \\
+	&= \sum_{j=0}^{\ell}\big(\sum_{i=0}^{\ell}\Omega[k,i]\Lambda[i,j]\big)c_j
+\\
+	&= c_k \text{ (using $\Omega\Lambda=I_{\ell+1})$ }
+\end{align*}
+Thus $\overline{U}=(U_1,\ldots,U_{\ell})$ and $\bm{\omega}=(\omega_1,\ldots,\omega_{\ell})$ satisfies $(\overline{U},\bm{\omega})=\open(\bm{c})$. Now we
+consider the probability that $\overline{U}\mc{T}\in \mc{C}_2$. Let $A$ denote the event
+that the first transcript accepts. Let $B\subseteq A$ be the event that
+$(\overline{U}\neq\bot)\cap (\overline{U}\mc{T}\in \mc{C}_2)$. We have,
+\begin{align*}
+\prob{B} &= \prob{A} - \prob{A\cap \neg B} \\
+	&\geq \prob{A} - \prob{A\cap (\overline{U}=\bot)} - \prob{A\cap
+(\overline{U}\mc{T}\not\in \mc{C}_2)} \\
+	&= \prob{A} - \prob{A\cap (\overline{U}=\bot)} - \prob{A\cap
+(\mc{T}^T\overline{U}^T\mc{H}_2\neq 0)} \\
+	&\geq \prob{A} - \prob{A\cap (\overline{U}=\bot)} -
+\condprob{\tau^T\mc{T}^T\overline{U}^T\mc{H}_2\delta=
+0}{\mc{T}^T\overline{U}^T\mc{H}_2\neq 0} \\
+	&\geq \prob{\langle P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle=1}
+- \big(\ell.\kappa_{ip}(\secpar)+1/|\FF|\big) - 2/|\FF|
+\end{align*} 
+In the above, we bound the probability $\condprob{\tau^T\mc{T}^T\overline{U}^T\mc{H}_2\delta=
+0}{\mc{T}^T\overline{U}^T\mc{H}_2\neq 0}$ by $2/|\FF|$ as $\tau$ and $\delta$ are
+distributed uniformly and independently of the extracted witness $\overline{U}$. The
+probability $\prob{A\cap (\overline{U}=\bot)}$ is bound in terms of the probability
+of inner product extractor returning an invalid witness or $\Lambda$ being
+singular which is at most $\ell.\kappa_{ip}(\secpar)+1/|\FF|$. The
+statement of the lemma now holds by setting
+$\kappa_{2d}(\secpar):=\ell.\kappa_{ip}(\secpar) + 3/|\FF|$.
+\end{proof}
+
+%%% proximity 3d proof
+\begin{proof}
+As before the extractor $\extr$ emulates the verifier in the protocol
+$\proximityThreeD$. In case the first transcript is accepting, the extractor
+rewinds the prover sufficiently many times to obtain a tree of accepting transcripts with $p$ distinct
+choices of the randomness $r$ in step (1) and $\theta := tn$ different values of $Q$
+on step (5). Let $r^{1},\ldots,r^{p}$ denote the values of $r$ in step (1)
+and let $\tilde{\mathbf{c}}^{1},\ldots,\tilde{\mathbf{c}}^{p}$ denote the corresponding
+commitment vectors in step (3). Similarly, let $Q^{uv}$ denote the $v^{th}$
+choice of $Q$ corresponding to $u^{th}$ value of $r$ for $u\in [p]$ and $v\in
+[\theta]$. We do not consider the initial transcript as part of the tree of
+transcripts. We notice that we have $\cup_{v\in [\theta]}Q^{uv}=[n]$ for all
+$u\in [p]$, except with probability at most $pn(1-1/n)^{nt}\leq pne^{-t}$. At
+step (4), $\extr$ uses extractor $\extr_{2d}$ for the protocol $\proximityTwoD$
+to extract $h\times \ell$ matrix $W^{u}$ for $u\in [p]$. The extractor $\extr$ fails with output $\bot$
+if $\extr_{2d}$ fails in any of its invocations. By the property of $\extr_{2d}$
+we have that $\open(\tilde{\bm{c}}^u)=W^u$ and $W^u\in L_1\oplus L_2$ for all
+$u\in [p]$. We construct the witness $\ewit$ by solving for each $h$-length
+vector $\ewit[i,\cdot,k]$ for $i\in [p], k\in [n]$ according to
+\eqref{eq:extraction3d}. Let $T_1,\ldots,T_n$ denote the columns of matrix
+$\mc{T}$. 
+\begin{align}\label{eq:extraction3d}
+\text{For each $k\in [n]$ we have:}  \nonumber \\
+\begin{array}{cccc}
+r^1_1\ewit[1,\cdot,k]+ &\hdots & +r^1_p\ewit[p,\cdot,k] &= W^1T_k \\
+\vdots & \ddots & \vdots & \vdots \\
+r^p_1\ewit[1,\cdot,k]+ &\hdots & +r^p_p\ewit[p,\cdot,k] &= W^pT_k 
+\end{array}
+\end{align}
+Let $\Lambda$ denote the $p\times p$ matrix with $\Lambda[i,j]=r^i_j$. We may
+assume that $\Lambda$ is invertible, except with probability $1/|\FF|$. Let
+$\Omega$ be such that $\Omega\Lambda = I_p$. It can be seen that the system of
+equations \eqref{eq:extraction3d} is satisfied by setting $\ewit[i,\cdot,k]=\sum_{j\in
+[p]}\Omega[i,j]W^jT_k$ for $i\in [p],k\in [n]$. First we prove that
+$\comm(\ewit[i,\cdot,k])=\pi[i,k]$ for all $i$ and $k$. Indeed,
+\begin{align*}
+\comm(\ewit[i,\cdot,k]) & =\sum_{j\in [p]}\Omega[i,j]\comm(W^jT_k) \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in [\ell]}\mc{T}[a,k]\comm(W^j[.,a]) \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in
+[\ell]}\mc{T}[a,k]\tilde{\bm{c}}^j_a \\
+	& = \sum_{j\in [p]}\Omega[i,j]\sum_{a\in [p]}r^j_a\pi[a,k] \text{ (using check
+(7)) } \\
+	& = \sum_{a\in [p]} \big(\sum_{j\in [p]}\Omega[i,j]\Lambda[j,a]\big)\pi[a,k]
+\\
+	& = \pi[i,k]
+\end{align*}
+
+Note that the columns
+$\ewit[i,\cdot,k]$ are linear combinations of the columns of extracted matrices
+$W^u, u\in [p]$ which are codewords in the code $L_2$. Thus, each column
+$\ewit[i,\cdot,k]$ in the extracted witness $\ewit$ is a codeword in $L_2$. Thus
+ $\ewit\in \mc{W}_2$. Next, we bound the probability that
+$d_1(\ewit,\mc{W}_1)\leq e$. To do so, we define the
+following events of interest:
+\begin{itemize}
+\item $A$: denotes the event that the first transcript is accepting. By
+definition, $\prob{A}$ is the accepting probability $\prob{\langle
+P^\ast(\sigma),\verifier(\sigma)\rangle=1}$.
+\item $B$: denotes the sub-event of $A$ when the extracted opening $\ewit$ to the
+commitment oracle $\pi$ is valid, i.e $d_1(\ewit,\mc{W}_1)\leq e$. 
+\item $F$: denotes the event that $\extr$ fails with output $\bot$. This
+happens when one of the invocations subprotocol extractor $\extr_{2d}$ fails, or
+unlikely events that the matrix $\Lambda$ is singular, or that $\theta=tn$
+repetitions of the random query locations $Q$ fail to cover the set of indices
+$[n]$. As discussed in the proof, we can bound $\prob{F}$ by
+$p\kappa_{2d}(\secpar) + pne^{-t} + 1/|\FF|$. 
+\end{itemize}
+Using an analysis similar to the one in the proof of Lemma
+\ref{lem:proximity2d_sound}, we have:
+\begin{equation}\label{eq:probeq1}
+\prob{B}\geq \prob{A} - \prob{F} - \condprob{A}{d_1(\ewit,\mc{W}_1)>e}   
+\end{equation}
+Let $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ denote the vector sent
+by the prover in step (3). We consider the $n$-length vector $C_{adv}$
+defined by $C_{adv}[k]=\sum_{i\in [\ell]}\mc{T}[i,k]\tilde{c}_i$ for $k\in [n]$. Let
+$C_{hon}$ denote the honestly computed vector defined by $C_{hon}[k]=\sum_{i\in
+[p]}r_i\pi[i,k]$. Note that for honest oracle $\pi\in\mc{W}$ and honest prover
+we would have $C_{adv}=C_{hon}$. Let $\varepsilon := \Delta(C_{adv},C_{hon})$ denote the
+hamming distance between the two vectors. Now we can write
+$\condprob{A}{d_1(\ewit,\mc{W}_1)>e}$ as:
+\begin{align}\label{eq:probeq3}
+\condprob{A}{d_1(\ewit,\mc{W}_1)>e} &\leq \condprob{A}{d_1(\ewit,\mc{W}_1)>e,
+\varepsilon \leq e}\nonumber \\ 
+&\quad +\condprob{A}{d_1(\ewit,\mc{W}_1)>e, \varepsilon > e}
+\end{align}
+The above follows from the identity $\condprob{A}{X}\leq
+\condprob{A}{X_1}+\condprob{A}{X_2}$ for $X=X_1\uplus X_2$. Next we note
+that for $\varepsilon > e$, the check in step 7, succeeds with probability at most
+$(n-e)^t/n^t=(1-e/n)^t$. Thus $\condprob{A}{d_1(\ewit,\mc{W}_1)>e,\varepsilon > e}\leq
+(1-e/n)^t$. Next we bound $\condprob{A}{d_1(\ewit,\mc{W}_1)>e,\varepsilon\leq e}$.
+With probability at least $1-\kappa_{2d}(\secpar)$, the extractor $\extr_{2d}$
+produces a witness $\overline{U}$ such that $\overline{U}\mc{T}\in L_1\oplus L_2$, and
+$\overline{U}=\open(\tilde{\bm{c}})$.  Let
+$U_{adv} = \overline{U}\mc{T}$ denote the codeword in $L_1\oplus L_2$. We note that
+$U_{adv}=\open(C_{adv})$. Define $U_{hon}=\sum_{i\in [p]}r_i\ewit[i,.,.]$. Note
+that $U_{hon}=\open(C_{hon})$ by homomorphism of the commitment scheme. Since
+$\varepsilon=d(C_{adv},C_{hon})\leq e$, we must have:
+\begin{enumerate}[{\rm (i)}]
+\item $\Delta_1(U_{adv},U_{hon})\leq e$ or,
+\item There exists an index $j\in [n]$ such that $C_{adv}[j]=C_{hon}[j]$, but
+their corresponding openings $U_{adv}[j]$ and $U_{hon}[j]$ are different. This
+constitutes breakage to the binding property of the commitment scheme $\comm$. 
+\end{enumerate}
+Assuming $\Delta_1(U_{adv},U_{hon})\leq e$, we have $d_1(U_{hon},\mc{C}_1)\leq
+e$. From the above, we can now write:
+\begin{equation}\label{eq:probeq4}
+\condprob{A}{d_1(\ewit,\mc{W}_1)>e,\varepsilon\leq e}\leq
+\condprob{d_1(U_{hon},\mc{C}_1)\leq e}{d_1(\ewit,\mc{W}_1)>e} + \mc{B}(\secpar)
+\end{equation}
+Since $U_{hon}=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$, from Lemma
+\ref{lem:3dcompression}, we have $\condprob{d_1(U_{hon},\mc{C}_1)\leq
+e}{d_1(\ewit,\mc{W}_1)>e}<d_1/|\FF|$ where $d_1$ is the minimum distance of the
+code $L_1$. Thus, Equation \eqref{eq:probeq3} gives us
+\begin{equation}\label{eq:probeq5}
+\condprob{A}{d_1(\ewit,\mc{W}_1)>e}\leq \left(1-\frac{e}{n}\right)^t,
+\frac{d_1}{|\FF|}+\kappa_{2d}(\secpar) + \mc{B}(\secpar)
+\end{equation}
+From Equations \eqref{eq:probeq1} and \eqref{eq:probeq5} we see that the
+statement of the Lemma holds for 
+\[\kappa_{3d}(\secpar) := (p+1)\kappa_{2d}(\secpar) + pne^{-t} +
+\left(1-\frac{e}{n}\right)^t + \frac{d_1+1}{|\FF|} + \mc{B}(\secpar) \]
+\end{proof}
+
+
+\begin{proof}
+We describe an extractor $\extr$ which outputs $\ewit$ such that $\open(\pi)=\ewit$ and $A\wit = b$ 
+for $\wit=\dec(\ewit)$. The extractor $\extr$ uses the extractor $\extr_{3d}$ for
+the protocol $\proximityThreeD$ to extract the witness $\ewit$ which opens to
+the oracle $\pi$. Note that, with probability at least ($1-\kappa_{3d}(\secpar)$),
+the extracted witness $\ewit$ satisfies $d_1(\ewit,\mc{W}_1)<e$ and $\ewit\in
+\mc{W}_2$. It follows that for each slice $\ewit^i:=\ewit[i,\cdot,\cdot]$ for $i\in [p]$,
+we have $\ewit^i\in \mc{C}_2$ and $d_1(\ewit^i,\mc{C}_1)<e$. Let $E\subseteq
+[n]$ denote the indices of the {\em planes} where $\ewit$ differs from its closest
+neighbor in $\mc{W}_1$. Since $e<d_1/2$, $E$ also denotes the set of columns
+where slices $\ewit^i$ differ from their closest neighbors in $\mc{C}_1$. We
+decode each slice seperately. Applying Lemma \ref{lem:bicdecoding} for each
+slice, we have codewords $W^i\in L_1\oplus L_2$ for each $i\in [p]$ such that
+$W^i[\cdot,k]=\ewit^i[\cdot,k]$ for all $k\not\in E$. Let $Q^i$, $i\in [p]$ be
+the unique polynomials with $deg_x(Q^i)<m$ and $deg_y(Q^i)<\ell$ such that
+$Q^i(\alpha_j,\eta_k)=W^i[j,k]$ for $(j,k)\in [h]\times [n]$. We define the
+witness $\wit$ by $\wit[i,j,k] := Q^i(\alpha_j,\zeta_k)$ for $i\in [p],j\in
+[m],k\in [s]$. Note that $\wit=\dec(\ewit)$. In case, the subprotocol extractor
+$\extr_{3d}$ outputs $\ewit$ such that $d_1(\ewit,\mc{W}_1)>e$, the extractor
+$\extr$ fails with output $\wit := \bot$. Let $\ewit_{\rm hon}$ denote the
+encoding of $\wit$ given by $\ewit_{\rm hon}[i,j,k]=Q^i(\alpha_j,\eta_k)$ for
+$i\in [p],j\in [h], k\in [n]$. Observe that we have $d_1(\ewit,\ewit_{\rm
+hon})<e$. Let $\mc{S}$ denote the event that the
+first transcript succeeds. As before, the key step to ensure soundness is to
+upper bound the probability $\prob{\mc{S}\cap (A\wit\neq b)}\leq
+\condprob{\mc{S}}{A\wit\neq b}\leq \condprob{\mc{S}}{r^TA\neq r^Tb}+1/|\FF|$
+where $r\sample \FF^N$ denotes the message sent by $\verifier$ in Step 1. Let
+$P_{\rm hon}$ denote the matrix $P$ which is correctly computed from $\ewit_{\rm
+hon}$ in
+Step 3. Let $c_1,\ldots,c_{\ell}$ be the commitments sent (possibly,
+adverserial) by the prover to the verifier in Step 4. Let $\overline{P}_{\rm adv}$ be the
+witness extracted using the extractor $\extr_{2d}$ for the subprotocol in Step
+10. Let $P_{\rm adv}$ denote the matrix $\overline{P}_{\rm adv}T$. Then with overwhelming
+probability ($1-\kappa_{2d}(\secpar)$), $P_{\rm adv}\in \dashL_1\oplus \dashL_2$. Observe
+that if $P_{\rm hon}=P_{\rm adv}$, then $r^TA\neq r^Tb$ implies that
+$\overline{P}=\overline{P}_{\rm adv}$ does not satisfy Equation
+\eqref{eq:necessarycondlin} and thus the subprotocol in Step 11 succeeds with
+probability at most $\kappa_{ip}(\secpar)$, or $\extr$ succeeds in finding
+distinct openings to the commitment in subprotocol in Step 11. Assume then that $P_{\rm hon}\neq
+P_{\rm adv}$. Again, from subprotocol in Step 14, we conclude that $X_u =
+\ewit[\cdot,j_u,k_u]$, except with probability $\kappa_{agg}(\secpar)$, or
+$\extr$ outputs two openings to one of the commitments $\pi[j_u,k_u]$ for $u\in
+[t]$. Similarly, assuming $\extr$ does not break binding of the commitment
+scheme, the witnesses extracted for inner product protocols in Step 13, are the
+columns $P_{\rm adv}[\cdot,k_u]$ for $u\in [t]$. Thus, with overwhelming probability, the inner product check in Step 13 is
+equivalent to checking the following for all $u\in [t]$:
+\begin{equation}\label{eq:check1}
+P_{\rm adv}[j_u,k_u]=\sum_{i\in
+[p]}R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]
+\end{equation}
+For $u\in [t]$, let $\mc{E}_u$ denote the event that the above equation holds
+for $u$. For $k_u\not\in E$, we have $\ewit[\cdot,\cdot,k_u]=\ewit_{\rm
+hon}[\cdot,\cdot,k_u]$ and thus the right hand side in \eqref{eq:check1} equates
+to $P_{\rm hon}[j_u,k_u]$. Now, $P_{\rm adv}$ and $P_{\rm hon}$ differ in at
+least $\dashD_1$ columns, where $\dashD_1$ denotes the minimum distance of the
+code $\dashL_1$. Let $E'$ denote the column indices where $P_{\rm adv}$ and
+$P_{\rm hon}$ differ. For $k_u\in E'\backslash E$, the check succeeds if the
+distinct codewords $P_{\rm adv}[\cdot,k_u]$ and $P_{\rm hon}[\cdot,k_u]$ agree
+at position $j_u$. Since $(j_u,k_u)$ are sampled uniformly and independently
+(also independent of extracted witness $\wit$), we have:
+{\small
+\begin{align}\label{eq:probeq6}
+\prob{\mc{E}_u} &\leq \frac{n-\dashD_1+e}{n} +
+\frac{\dashD_1-e}{n}.\frac{h-\dashD_2}{h}
+\nonumber \\
+	&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}.\frac{2m}{h} \nonumber \\
+	& = \frac{2m}{h} +
+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
+\end{align}
+}
+For initial transcript to accept, all the $t$ checks should succeed, and thus we
+have:
+{\small
+\begin{align}\label{eq:probeq7}
+\prob{\mc{S}\cap (A\wit\neq b)}&\leq
+\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
++ \kappa_{3d}(\secpar) + \mc{B}(\secpar) +
+\frac{O(|C|)}{|\FF|} \nonumber \\
+&\leq \left(1-\frac{e}{n}\right)^t +
+\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
++ \frac{O(|C|)}{|\FF|} + \mc{B}(\secpar)
+\end{align}
+}
+Thus the statement of the lemma holds for $\kappa_{lc}(\secpar) := (1-e/n)^t +
+(2m/h + (1-2m/h)(2\ell/n + e/n))^t+O(|C|)/|\FF|+\mc{B}(\secpar)$.
+\end{proof}
+
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item {$\linearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in \FF^M,[\pi];\ewit)$}:
+\item {\bf Relation}: $\exists \ewit$ s.t. $\ewit=\open(\pi)$ and $A\wit = b$
+for $\wit=\dec(\ewit)$.
+\item {\bf Oracle Setup}: The prover $\prover$ computes
+$\comoracle = \comm(\ewit)$ as in Section \ref{sec:construct_oracle}. 
+The prover sets $\pi := \comoracle$ as the oracle.
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: $\verifier$ samples $r\sample \FF^N$ and
+sends it to $\prover$.
+\item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
+compute polynomials $R^i$, $i\in [p]$ such that
+$R^i(\alpha_j,\zeta_k)=r[i,j,k]$. 
+\pnote{Polynomial $R^i(\cdot, \cdot)$ should not be constructed from $r$, it should be from $r^TA$}
+\item $\prover$ computes:
+	\begin{enumerate}
+	\item Polynomials $p_j(\cdot) := \sum_{i\in
+[p]}R^i(\alpha_j,\cdot).Q^i(\alpha,\cdot)$ for $j\in [h]$.
+	\item An $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
+	\item Commitments $c_k=\comm(P[\cdot,k],\omega_k)$ for $k\in [s+\ell]$
+where $\omega_k\sample \FF$.
+	\item Sample a codeword $P_0\in \dashL_2$ s.t $\sum_{j\in [m]}P_0[j]=0$.
+Compute $c_0=\comm(P_0,\omega_0)$ for $\omega_0\sample \FF$.
+	\end{enumerate}
+\item $\prover\rightarrow\verifier$: The prover sends $c_0,c_1,\ldots,c_{s+\ell}$ to
+the verifier.
+\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample [h]\times
+[n]$ for $u\in [t]$. It also samples $\beta\sample\FF$. The verifier sends
+$Q=\{(j_u,k_u):u\in [t]\}$ and $\beta$ to $\prover$.
+\item $\prover\rightarrow\verifier$: The prover sends vectors
+$X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$ to $\verifier$.
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u:u\in
+[t]\}$. 
+\item Oracle Answers: The oracle replies with columns $\pi[\cdot,k_u]$, $u\in
+[t]$.
+\item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
+compute $\varphi := \Phi^T[1^s]$ and $\mathsf{cm} := \beta c_0 + \sum_{k\in
+[s+\ell]}\varphi_kc_k$.
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm 2d} = \proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\overline{P})$
+where $\bm{c}=(c_1,\ldots,c_{s+\ell})$ and $\overline{P}$ is the submatrix of $P$
+consisting of the first $s+\ell$ columns. Here $\dashL_1=\rsc{\eta}{s+\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b = \innerproduct(\GG,\bm{g},x,\mathsf{cm},v;z)$
+with $x=(1^m,0^{h-m})$, $v=r^Tb$ and $z=\beta P_0+\overline{P}\varphi$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
+\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} = \proximityThreeD(\FF,\GG,L_1,L_2,[\pi];U)$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item $\agginnerproduct(\FF,\GG,\bm{g},x,\bm{c}\in \GG^n,\bm{v}\in \FF^n;W\in
+\FF^{m\times n})$:
+\item {\bf Relation}: $\forall i\in [n]$: $W[i,\cdot]=\open(\bm{c}[i])$,
+$\innp{x}{W[i,\cdot]}=v[i]$. 
+\begin{enumerate}
+\item $\verifier\rightarrow\prover$: Verifier samples $\delta\in \FF^n$ and
+sends it to the prover.
+\item $\prover\leftrightarrow\verifier$ compute: $\mathsf{cm}=\sum_{i\in
+[n]}\delta_i\bm{c}[i]$, $V=\sum_{i\in [n]}\delta_i\bm{v}[i]$
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b=\innerproduct(\FF,\GG,\bm{g},\delta,\mathsf{cm},V;\bm{v}^TW)$
+	\end{itemize}
+\item $\verifier$ accepts if $b=1$.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Linear Check Protocol}
+\label{fig:linearcheck}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item $\quadcheck(\FF,\GG,L_1,L_2,[\pi];\wit_x,\wit_y,\wit_z)$:
+\item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
+s.t. $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)$, $\wit_{a}=\dec(\ewit_a)$ for $a\in
+\{x,y,z\}$ and $\wit_x\circ \wit_y = \wit_z$.
+\item {\bf Oracle Setup}: The prover $\prover$ computes $\comoracle_a=\comm(\ewit_a)$ 
+for $a\in \{x,y,z\}$. It sets $\pi :=
+[\comoracle_x||\comoracle_y||\comoracle_z]$ where the notation denotes vertical
+stacking of the matrices. 
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: Verifier samples $r\sample\FF^p$ and sends
+it to $\prover$.
+\item $\prover$ computes:
+	\begin{itemize}
+	\item polynomials $p_j(\cdot):=\sum_{i\in
+[p]}r_i\big(Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot)\big)$
+for $j\in [h]$.
+	\item $h\times n$ matrix $P$ such that $P[j,k]=p_j(\eta_k)$.
+	\item commitments $c_1,\ldots,c_{2\ell}$ to the first $2\ell$ columns of
+$P$.
+	\end{itemize}
+\item $\prover\rightarrow\verifier$: The prover sends $c_1,\ldots,c_{2\ell}$ to
+the verifier.
+\item $\verifier\rightarrow\prover$: $\verifier$ samples $(j_u,k_u)\sample
+[h]\times [n]$ for $u\in [t]$. The verifier also samples $\tau\sample
+\FF^{\ell}$. It sends $Q=\{(j_u,k_u):u\in [t]\}$ and $\tau$ to $\prover$.
+\item $\prover\rightarrow\verifier$: The prover sends vectors
+$X_u=\ewit_x[\cdot,j_u,k_u],Y_u=\ewit_y[\cdot,j_u,k_u],Z_u=\ewit_z[\cdot,j_u,k_u]$
+to the verifier, for all $u\in [t]$.
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u: u\in
+[t]\}$.
+\item Oracle Response: The oracle responds with columns $\pi[\cdot,k_u]$ for
+$u\in [t]$.
+\item $\prover\leftrightarrow\verifier$: Both $\prover$ and $\verifier$ compute
+$\varphi := \Phi^T\tau$ and $\mathsf{cm}:= \sum_{k\in [2\ell]}\phi_kc_k$.
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm
+2d}=\proximityTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};\overline{P})$ where
+$\bm{c}=(c_1,\ldots,c_{2\ell})$ and $\overline{P}$ is the submatrix of $P$ consisting
+of the first $2\ell$ columns. Here $\dashL_1=\rsc{\eta}{2\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z)$
+with $x=(\gamma,0^{h-m})$, $v=0$ and $z=\overline{P}\varphi$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
+\item $\prover$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item $s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u])$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i] - Z_u[i])$.
+	\end{itemize}
+\item $\prover$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_{1u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_x[\cdot,k_u],X_u;\ewit_x[\cdot,\cdot,k_u])$
+	\item
+$a_{2u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_y[\cdot,k_u],Y_u;\ewit_y[\cdot,\cdot,k_u])$
+	\item
+$a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} =
+\proximityThreeD(\FF,L_1,L_2,e,[\pi];[\ewit_x||\ewit_y||\ewit_z])$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Quadratic Check Protocol}
+\label{fig:quadcheck}
+\end{figure}
