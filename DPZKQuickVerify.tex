@@ -104,14 +104,14 @@ product code $L_1\otimes L_2$.\smallskip
 \noindent{\em Membership in Product Code:}
 Assume that $U$ is an $h\times n$ matrix, purported to be a codeword in
 $L_1\otimes L_2$. Let $\overline{U}$ denote the $h\times \ell$ matrix consisting of
-the first $\ell$ columns of $U$. We note that for $U\in L_1\oplus L_2$, we must
-have $U=\overline{U}\mc{T}$ for some $l\times n$ matrix $\mc{T}$ of rank $\ell$. Thus, the membership protocol involves the prover sending the column
+the first $\ell$ columns of $U$. We note that for $U\in L_1\otimes L_2$, we must
+have $U=\overline{U}\mc{T}$ for some $\ell \times n$ matrix $\mc{T}$ of rank $\ell$. Thus, the membership protocol involves the prover sending the column
 commitments $\bm{c}=(c_1,\ldots,c_\ell)$ and prove that they correspond to a matrix
 $\overline{U}$ such that $\overline{U}\mc{T}\in \mc{C}_2$ (because $\overline{U}\mc{T}\in
 \mc{C}_1$ for all $\overline{U}$). Let $\bm{\omega}=(\omega_1,\ldots,\omega_\ell)$ denote 
 the randomness used to compute the commitments. We first discuss the protocol
 informally. Proving $\overline{U}\mc{T}\in \mc{C}_2$ is equivalent to proving
-$(\overline{U}\mc{T})^T\mc{H}_2=\bm{0}$. The verifier can probabilistically
+$(\overline{U}\mc{T})^T\mc{H}_2=\bm{0}$, where $\bm{0}$ is of size ${n \times h-m}$. The verifier can probabilistically
 check this by sending random $\tau\sample \FF^n$ and $\delta\sample \FF^{h-m}$
 and have the prover prove, $\tau^T(\overline{U}\mc{T})^T\mc{H}_2\delta=0$ which
 can be written as $\innp{x}{z}=0$ for $x=\mc{H}_2\delta$ and
