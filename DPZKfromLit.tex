@@ -1,6 +1,6 @@
 \section{Construction of DPZK}
 A simple way to construct a DPZK protocol is to start with a single-prover protocol and run MPC among the provers to generate each message to be sent to the verifier. The randomness in turn provided by the verifier can be broadcasted to the provers.
-Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{p_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $p_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
+Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{\pi_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $p_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
 
 %We will formalize this simple DPZK transformation based on the Polynomial IOP framework \cite{polynomialiop,ahp} proposed recently. This framework captures most of the protocols from the literature on practical zero-knowledge proofs [CHECK precision of this sentence]. Writing down this formalism simplifies our future sections on the construction of DPZK based on the single prover protocols.
 
@@ -200,52 +200,66 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 \subsection{Summary of existing protocols}
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
-\begin{comment}
-\begin{center}\label{tab:SPZK}
-	\begin{tabular}{|>{\centering}p{1.8cm}|p{2cm}|p{1.8cm}|>{\centering}p{1.3cm}|p{1.8cm}|p{1.2cm}|p{1.2cm}| } 
-		\hline
-		Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
-		\hline
-		&computation & communi- cation & MPC rounds& & & \\ 
-		\hline
-		Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
-		\hline
-		Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ $q(n+m)M)$ & $O(\log n)$ & $O(\log n)$  \\
-		\hline
-		Spartan & & & & & &\\
-		\hline
-		Aurora & & & & & &\\
-		\hline
-		\name2D & $O(n \log n)M$  $+nE)$ & $O(2N-1)$ & 1 &$O((nM +$ $ n^{1-1/c}E))$ & $O(n^{1/c})$ & $O(\log n)$ \\
-		\hline
-		\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
-		\hline
-	\end{tabular}
-\end{center}
-\end{comment}
-\begin{table}[h!] 
+
+\begin{table}[htb!] 
 	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{threeparttable}
+	\begin{tabular}{|c|c|c|c|c|c|c| } 
+		\toprule
+		Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & Number of MPC & $\prcomm$ \\
+		\hline
+		Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
+		\hline
+		\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & MPC($N_s,1$) & $\Num N^{1-1/c}$ \\
+		\hline
+		%&computation & communi- cation & MPC rounds& & & \\ 
+		%\hline
+		%Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
+		%\hline
+		%Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ $q(n+m)M)$ & $O(\log n)$ & $O(\log n)$  \\
+		%\hline
+		%Spartan & & & & & &\\
+		%\hline
+		%Aurora & & & & & &\\
+		%\hline
+		%\name2D & $O(n \log n)M$  $+nE)$ & $O(2N-1)$ & 1 &$O((nM +$ $ n^{1-1/c}E))$ & $O(n^{1/c})$ & $O(\log n)$ \\
+		%\hline
+		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
+		%\hline
+	\end{tabular}
+
+\begin{tablenotes}
+	\item[--] Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.
+\end{tablenotes}
+\end{threeparttable}
+}
+\caption{Comparison table}\label{tab:SPZK}
+
+\end{table}
+
+\begin{comment} 
 %\begin{center}
 	\resizebox{\textwidth}{!}{
 	%\footnotesize
 	\begin{threeparttable}
-	\begin{tabular}{|c|c|c|c|}
+	\begin{tabular}{|c|c|c|}
 		\toprule
 		\centering 
 		%Protocols & \multicolumn{3}{c|}{Prover's complexity} & Verifier's complexity & Proof size & rounds \\
-		Parameters & Spartan & Bulletproofs & \name3D\\
+		Parameters & Bulletproofs & \name3D\\
 		\midrule
-		Argument size & $N^{1/c}$ & $\log (N)$ & $N^{1/c}$\\
+		Argument size & $\log (N)$ & $N^{1/c}$\\
 		\midrule
-		Rounds(ZK) & $\log (N)$ & $\log (N)$  & $\log (N)$\\
+		Rounds(ZK) & $\log (N)$  & $\log (N)$\\
 		\midrule
-		Prover's complexity & $O(N)E$ + $O(N\log(N))M$ & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
+		Prover's complexity & $O(N)E$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ \\
 		\midrule
-		Verifier'c Complexity& $O(N^{1-1/c})E$\tnote{$\ast$} & $O(N)E$ & $O(N^{1-2/c})E + O(N)M$\\
+		Verifier'c Complexity&  $O(N)E$ & $O(N^{1-2/c})E + O(N)M$\\
 		\midrule
-		Prover communication& MPC($N_s^2,1$) + $\Num N$\tnote{$\ast\ast$} & MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
+		Prover communication& MPC($N_s,1$) + $\Num N$& MPC($N_s,1$) + $\Num N^{1-1/c}$\\
 		\midrule
-		Number of MPC & $\log(N)$& 1 & 1 \\
+		Number of MPC & 1 & 1 \\
 		\bottomrule
 		\end{tabular} 
 	\begin{tablenotes}
@@ -258,4 +272,4 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \caption{Comparison table}\label{tab:SPZK}
 %\tnote  
 \end{table}
-
+\end{comment}

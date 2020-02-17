@@ -1,8 +1,8 @@
 %\section{Setting up \name{}} 
 \section{MPC Friendly Zero Knowledge Argument from Interactive PCP}
-In this section, we describe a sublinear interactive zero knowledge argument as
+In this section, we describe a sub-linear interactive zero knowledge argument as
 an Interactive PCP (IPCP). The IPCP we describe admits an efficient MPC to
-convert it to a publicly verifiable, non-interactive argument of knowledge,
+convert it to a publicly-verifiable, non-interactive argument of knowledge,
 using the ``BCS'' transformation in \cite{IOP2016}. To serve as a
 baseline for comparison, we also describe naive extensions of existing protocols
 such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan} to the
@@ -12,11 +12,11 @@ Our protocol proves membership in the $\npol$ complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
-$A\wit\circ B\wit=C\wit$. We follow the borad outline of the interactive PCP
-construction in \cite{ligero} which includes: (i) encoding the witness via suitalbe
+$A\wit\circ B\wit=C\wit$. We follow the broad outline of the interactive PCP
+construction in \cite{ligero} which includes: (i) encoding the witness via suitable
 error correcting code, (ii) checking linear relations on the witness, with
-sublinear access to the witness encoding, (iii) checking quadratic relations on
-the witness with sublinear access to witness encoding and (iv) a proximity
+sub-linear access to the witness encoding, (iii) checking quadratic relations on
+the witness with sub-linear access to witness encoding and (iv) a proximity
 protocol to check that witness is correctly encoded. However, one runs into 
 challenges in converting the IPCP to a non-interactive
 argument when the witness is distributed across several provers. The naive
@@ -37,7 +37,7 @@ argument size, and reduce communication between the provers during proof
 generation.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
-operations, we keep their usage strictly sublinear. In particular, for an
+operations, we keep their usage strictly sub-linear. In particular, for an
 argument size of $O(N^{1/c})$, verification and aggregation incur $O(N^{1-2/c})$
 exponentiations, while the prover incurs $O(N/\log N)$ exponentiations. We also
 compare the concrete performance of our standalone SNARK with state of the art in Section

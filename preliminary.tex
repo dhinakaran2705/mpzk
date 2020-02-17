@@ -11,14 +11,14 @@ denote $i^{th}$ entry of a vector $x$. We naturally extend the notation $[]$ to
 index matrices and three dimensional matrices. For an $m\times n$ matrix over
 $\FF$, we use $A[i,j]$ to denote $(i,j)^{th}$ entry of $A$. We use $A[i,\cdot]$
 to denote the $i^{th}$ row of $A$ and $A[\cdot,j]$ to denote $j^{th}$ column of
-$A$. Similarly, for an $m\times n\times p$ matrix $X$, we use $X[i,j,k]$ to
+$A$. Similarly, for an $p\times m\times n$  matrix $X$, we use $X[i,j,k]$ to
 denote the $(i,j,k)^{th}$ entry of $X$. The notation $X[i,\cdot,\cdot]$ denotes
-the $n\times p$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$. 
+the $m\times n$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$. 
 Analogously,
-$X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $m\times p$ and $m\times n$
+$X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $n\times p$ and $p\times m$
 matrices respectively. For three dimensional
-matrix $X$, we will refer to submatrices $X[i,\cdot,\cdot]$ as {\em slices} of
-$X$, and submatrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. \commentA{don't need a name for the other dimension?}
+matrix $X$, we will refer to sub-matrices $X[i,\cdot,\cdot]$ as {\em slices} of
+$X$, sub-matrices $X[\cdot,j,\cdot]$ as {\em slabs}  of $X$ and sub-matrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
 
 Throughout the paper we use several distance metrics on vectors and matrices,
 which we now introduce. For two vectors $x,y$ of length $n$, we define
@@ -26,8 +26,8 @@ $\Delta(x,y)=|\{i\in [n]: x_i\neq y_i\}|$. For two $m\times n$ matrices $A,B$ we
 define $\Delta_1(A,B)=|\{j\in [n]: A[\cdot,j]\neq B[\cdot,j]\}|$ and
 $\Delta_2(A,B)=|\{i\in [m]: A[i,\cdot]\neq B[i,\cdot]\}|$. For $p\times m\times
 n$ matrices $X$ and $Y$, we define $\Delta_1(X,Y)=\{k\in
-[n]:X[\cdot,\cdot,k]\neq Y[\cdot,\cdot,k]\}$. Similarly we define $\Delta_2(X,Y)
-= |\{j\in [m]: X[\cdot,j,\cdot]\neq Y[\cdot,j,\cdot]\}|$. Let $u$ be a vector
+[n]:X[\cdot,\cdot,k]\neq Y[\cdot,\cdot,k]\}$ (no of planes that are different between the two matrices). Similarly we define $\Delta_2(X,Y)
+= |\{j\in [m]: X[\cdot,j,\cdot]\neq Y[\cdot,j,\cdot]\}|$  (no of slabs that are different between the two matrices). Let $u$ be a vector
 and $S$ be a set of vectors. We use $d(u,S) := \min\{\Delta(u,v):v\in S\}$ to
 denote distance between $u$ and $S$. Similarly for a matrix (two or three
 dimenional) $U$ and a set of matrices $\mc{M}$, we define $d_i(U,\mc{M}) :=
@@ -103,12 +103,12 @@ corresponds to the distance function of the code $\cic{L}{n_1}$.
 An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors
 $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less
 than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use
-$\rsc{\eta}{k}$ to denote the Reed Solomon code with
-$\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$.
+$\rsc{\eta}{n,k}$ \commentA{I changed the notation, it is hard to remember $n$ otherwise} to denote the Reed Solomon code with
+$\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$. 
 \end{definition}
 
 \begin{lemma}\label{lem:bicdecoding}
-Let $L_1 := \rsc{\eta}{\ell}$ and $L_2 := \rsc{\alpha}{m}$ be $[n,\ell]$ and
+Let $L_1 := \rsc{\eta}{n,\ell}$ and $L_2 := \rsc{\alpha}{h,m}$ be $[n,\ell]$ and
 $[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and
 $\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. Suppose
 a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast,\mc{C}_1)<e_1$ and
