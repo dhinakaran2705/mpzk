@@ -2,19 +2,18 @@
 \input{packages.tex}
 \input{style.tex}
 %\input{symbols.tex}
-\newcommand{\name}{\textsf{SP-graphene}} %A lightweight robust material: In our case a lightweight protocol which withstand malicious provers % Give a good name
+\newcommand{\name}{\textsf{SP-Graphene}} %A lightweight robust material: In our case a lightweight protocol which withstand malicious provers % Give a good name
 %\newcommand{\dpname}{\textsf{DPZK}-\name{}}
-\newcolumntype{\dpname}{\text{graphene}}
-
+\newcolumntype{\dpname}{\text{Graphene}}
 \setcounter{tocdepth}{1}
 
-\title{Graphene: Sub-linear Distributed-prover Zero-Knowledge Protocols}
+\title{How to prove a statement jointly?  Distributed-prover Zero-Knowledge Protocols}
 
 \begin{document}
 \input{abstract.tex}
 
 \maketitle
-\tableofcontents 
+%\tableofcontents 
 
 \input{introduction.tex}
 
@@ -33,11 +32,6 @@
 \input{implementation.tex}
 
 
-.\dnote{
-2) Spartan: |C| to log C \\
-4) There should never be "RS oracle".. It should be "RS-encoded witness" and "commitment oracle"\\
-5) Expand Spartan \\
-7) Shared circuit complexity}
 
 	\bibliographystyle{ACM-Reference-Format}
 	\bibliography{main}
