@@ -175,7 +175,7 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
 
 \begin{definition}[Inner-product Argument]\label{defn:innerproductarg}
-We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following: \commentA{what do  you mean by adversary picking an instance uniformly at random? what does $\sample$ mean? adversary may have arbitrary stategy}
+We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
 \begin{align*}
@@ -187,7 +187,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 }=1
 \end{align*}
 
-\item{\bf Soundness}: For all deterministic \commentA{why deterministic? any reason to be so?}polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
+\item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
 \begin{align*}
 \condprob{\stmt\not\in \calL_\sigma \wedge \langle
 \prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1}{
@@ -197,19 +197,16 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \end{array}
 } = \negl(\lambda)
 \end{align*}
-\commentA{no zero-knowledge  property needed for the above definition?}
 \end{enumerate}
 
 \end{definition}
 
 We mention some concrete instantiations of  commitment schemes and corresponding inner-product arguments that we use in our protocol.
 
-\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a Pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. Time complexity of the verifier $\viplog$ is given by $t(\viplog)=O(n).\bbZ_p + O(n).\bbG$.\smallskip
+\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a Pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
 
 
-\noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS} or \cite{Groth09b}. The construction in \cite{InnerProductDLS} gives a $5$-move \commentA{move=round? better to stick to one term; i prefer round} protocol with total communication complexity $O(\sqrt{n})$. The construction in \cite{Groth09b} gives a 7-move protocol with $O(\sqrt{n})$ communication complexity. In both the constructions $t(\vipsq) = O(n).\bbZ_p +O(\sqrt{n}).\bbG$ \commentA{something wrong in the expression.  you mean size of the group/field? same for the earlier argument. secondly, why would anyone be using the latter which has more round complexity? Just say that the second paper proposes a construction same argument size and verifier complexity, yet with 2 more number of rounds}.
-
-.\commentA{change 'move' to 'round' in all the above text.}
+\noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
  
 %--------------------------------Protik's prelims--------------------------------
 %\subsection{Codes}

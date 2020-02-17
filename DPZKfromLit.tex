@@ -110,7 +110,7 @@ We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \l
 \dnote{To Protik: Rewrite the section below}.
 
 \subsection{DPZK of Bulletproof for R1CS from their direct construction:}
-Following \cite{BCC+16}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
+Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
 $$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$$
 for $1\leq q \leq Q$, with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
 Consider

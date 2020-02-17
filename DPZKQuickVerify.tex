@@ -1,5 +1,5 @@
 %\newcommand{\enc}{\mathsf{Enc}}
-\subsection{Witness Encoding}\label{sec:witencoding}
+\subsection{Witness Encoding and Decoding}\label{sec:witencoding}
 We start by describing a randomized encoding of the prover witness $\wit\in \FF^N$. Let $p,m$ and
 $s$ be integers such that $N=pms$. We canonically view the
 witness $\wit$ 
@@ -62,6 +62,9 @@ variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is
 distributed uniformly on $\mc{U}(p,h,b)$.
 \end{lemma}
 We defer the proof of the above Lemma to the Appendix.
+
+\commentA{added this for decoding func..didn't get time to make the notation correct.}The decoding $\dec$ is defined as $\wit = Dec(\ewit^*)$. It is meant to capture the "inverse" of the Encoding ($\enc$). A three dimensional matrix $\ewit^*$ can be decoded slice by slice. For two dimensional slice $\ewit[i,\cdot,\cdot]$,   if it is not a proper product codeword i.e. $\ewit[i,\cdot,\cdot] \not \in L_1 \otimes L_2 $, but satisfies $d_1(\ewit[i,\cdot,\cdot], C_1) < e_1$ and $d_2(\ewit[i,\cdot,\cdot],C_2) < e_2$, where $e_1$ and $e_2$ are less than $d_1/2$ and $d_2/2$ respectively, then the codeword $U$, such that $U[j,k] = \ewit[i,j,k]$ guaranteed by Lemma 2.5 is unique, and we define that as $\dec(\ewit[i,\cdot,\cdot])$.  Repeating for all slices, we can define $\dec()$ for a three dimensional matrix which is near both $W_1$ and $W_2$. \commentA{the set of mismatched entries must be the same for all slices}
+
 
 \subsection{Oracle Construction}\label{sec:construct_oracle} 
 Unlike prior IOP constructions such as \cite{ligero, aurora}, we additionally
