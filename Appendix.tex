@@ -604,6 +604,16 @@ the commitments in the view satisfy relations in Equation \ref{eq:commiteq} in
 the real protocol, and are picked uniformly subject to those constraints by the
 simulator. Thus the view output by the simulator perfectly simulates the
 extended view of the verifier as defined. 
+\begin{align}\label{eq:commiteq}
+d_0 + \sum_{a=1}^{s+\ell}\mu_ac_a &= \comm(z,\nu) \nonumber \\
+c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
+\sum_{a=1}^{s+\ell}T[a,k_u]c_a &= \comm(P[\cdot,k_u],\chi_u) \text{ for } u\in [t] \nonumber \\
+\sum_{a=1}^{\ell}\mc{T}[a,k_u]\tilde{c}_a &= \comm\big(\sum_{i\in
+[p]}\tilde{U}[\cdot,k_u],\tilde{O}[\cdot, k_u]\big) \text{ for } u\in [t] \nonumber \\
+\beta\tilde{d}_0 + \sum_{a=1}^{\ell}\tilde{\mu}_a\tilde{c}_a &=
+\comm(\tilde{z},\tilde{\nu})
+\end{align} 
+
 \end{proof}
 
 
