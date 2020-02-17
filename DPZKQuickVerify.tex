@@ -9,7 +9,7 @@ parameter $\bi$, integers $\ell := s+\bi$, $h>2m$, $n>2\ell$, and sequences
 $\bm{\zeta},\bm{\eta},\bm{\alpha}$ of distinct points in $\FF$ with cardinality 
 $\ell,n,h$ respectively. We write $\bm{\zeta}=(\zeta_1,\ldots,\zeta_\ell)$,
 $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $\bm{\alpha}=(\alpha_1,\ldots,\alpha_h)$. 
-Next We define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
+Next we define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
 k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [h],
 k\in [n]\}$. Finally, we encode $\wit$ as follows:
 \begin{enumerate}[{\rm (i)}]
@@ -27,7 +27,7 @@ Then $\ewit$ is a randomized encoding of $\wit$.
 \end{enumerate}
 We denote the above computation as $\ewit\sample \enc(\wit)$, where $\enc(\wit)$
 denotes the random variable denoting the encodings of $\wit$. It is easily seen
-that $\ewit\in \rsc{\eta}{\ell}\oplus \rsc{\alpha}{m}$. We remark that the above
+that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above
 encoding can be computed using $O(N\log N)$ field operations (see Appendix for
 details).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
@@ -69,15 +69,15 @@ obtain a homomorphic commitment on the encoded witness $\enc(\wit)$ and provide
 oracle access to the commitment. Concretely, we use a
 homomorphic vector commitment scheme $\comm$ with message space $\FF^h$,
 commitment space $\GG$ and randomness space $\FF$. We compute commitments
-$c_{ik}=\comm(\ewit[i,.,k],\delta_{ik})$ where $\delta_{ik}$ denotes the
+$c_{ik}=\comm(\ewit[i,\cdot,k],\delta_{ik})$ where $\delta_{ik}$ denotes the
 commitment randomness. Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
-query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[.,k]$ for
+query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$.
 
 \subsection{Codes and Matrices}\label{sec:codesandmatrices}
-Throughout, let $L_1$ and $L_2$ denote the codes $\rsc{\eta}{\ell}$ and
-$\rsc{\alpha}{m}$ respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and $\mc{C}_2 :=
+Throughout, let $L_1$ and $L_2$ denote the codes $\rsc{\eta}{n,\ell}$ and
+$\rsc{\alpha}{h,m}$ respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and $\mc{C}_2 :=
 \cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. We denote the
 parity check matrices for $L_1$ and $L_2$ by $\mc{H}_1$ and $\mc{H}_2$. We also
 notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
@@ -86,10 +86,10 @@ assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
 as discussed in Section \ref{sec:prelims}. 
 
 \subsection{Proximity Protocol}\label{sec:proximityprotocols}
-In this section we introduce {\em well formed} encodings and
+In this section we introduce {\em well-formed} encodings and
 describe a proximity protocol to check that an encoding is well formed.
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
-consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\oplus L_2$ for all $i\in [p]$. 
+consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\otimes L_2$ for all $i\in [p]$. 
 Let $\mc{W}_1$ denote the set of matrices
 $U$ in $\mc{M}_{p,h,n}$ such that the $n$-length vector $U[i,j,\cdot]$ is a
 codeword in $L_1$ for all $i,j$. Similarly let $\mc{W}_2$ denote the set of
@@ -99,7 +99,7 @@ $d(U^\ast,\mc{W}_i)=\min\{\Delta_i(U^\ast,U):U\in \mc{W}_i\}$ for $i=1,2$.
 Our goal is to construct an IPCP for proximity that allows a prover to convince a verifier that
 the oracle $\comoracle$ opens to a three dimensional matrix $\ewit\in \mc{W}$.
 We first need a protocol to check the membership of an $h\times n$ matrix in the
-product code $L_1\oplus L_2$.\smallskip
+product code $L_1\otimes L_2$.\smallskip
 
 \noindent{\em Membership in Product Code:}
 Assume that $U$ is an $h\times n$ matrix, purported to be a codeword in

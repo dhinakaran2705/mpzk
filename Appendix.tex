@@ -284,14 +284,14 @@ emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
 
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
-Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-move public coin interactive
+Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-round public coin interactive
 protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
 witness with probability $1-\negl(\secpar)$ from an $(n_1,\ldots,n_\mu)$-tree
 of accepting transcripts. Assuming that $\prod_{i=1}^\mu n_i$ is bounded by a
 polynomial in security parameter $\secpar$, the protocol
 $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
-.\commentA{change 'move' to 'round' in all the above text.}
+\commentA{change 'move' to 'round' in all the above text.}
 
 \section{Proofs}
 \begin{proof}
@@ -622,8 +622,8 @@ The prover sets $\pi := \comoracle$ as the oracle.
 sends it to $\prover$.
 \item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
 compute polynomials $R^i$, $i\in [p]$ such that
-$R^i(\alpha_j,\zeta_k)=r[i,j,k]$. 
-\pnote{Polynomial $R^i(\cdot, \cdot)$ should not be constructed from $r$, it should be from $r^TA$}
+$R^i(\alpha_j,\zeta_k)=R[i,j,k]$, where $R=r^TA$. 
+%\pnote{Polynomial $R^i(\cdot, \cdot)$ should not be constructed from $r$, it should be from $r^TA$}
 \item $\prover$ computes:
 	\begin{enumerate}
 	\item Polynomials $p_j(\cdot) := \sum_{i\in
