@@ -531,7 +531,7 @@ arguments, one can show that the above Lemma holds with:
 \begin{equation*}
 \kappa_{qd}(\secpar) := \left(1-\frac{e}{n}\right)^t +
 \left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
-+ \frac{O(|C|)}{|\FF|} + \mc{B}(\secparam)
++ \frac{O(|C|)}{|\FF|}
 \end{equation*}
 }
 \end{proof}
@@ -541,7 +541,7 @@ We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier zer
 designing simulators for them. We infact simulate ``extended'' view of the
 verifier which includes
 the witnesses for inner product protocols consisting of the committed vector 
-and commitment randomnessIt is clear then, that the simulation can be
+and commitment randomness. It is clear then, that the simulation can be
 completed by running the inner product argument on these simulated witness
 vectors. We describe the view of the verifier in the linear check protocol with
 the aforementioned extensions. We decompose the view as:
@@ -550,7 +550,7 @@ the aforementioned extensions. We decompose the view as:
 $\{j_u,k_u\}_{u\in [t]}$, $\beta\in \FF_\ast$ in Step 5, $\tau,\delta$ as
 part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the
 random vector for compressing in subprotocol $\proximityThreeD$ in Step 15,
-$\tau',\delta'$ for the second invocation of $\proximityTwoD$ from within
+$\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within
 $\proximityThreeD$. We
 do not include the query positions as part of the subprotocol $\proximityThreeD$
 as we assume that the same query positions sampled in Step 5 are used there.
@@ -561,13 +561,12 @@ Summarizing, the verifier randomness consists of $r,\{j_u,k_u\}_{u\in
 3(d), commitments $c_1,\ldots,c_{s+\ell}$ to the first $s+\ell$ columns of the
 matrix $P$, commitment $d_0$ for random vector $u_0$ used in $\proximityTwoD$
 subprotocol in Step 10, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ as
-part of $\proximityThreeD$ protocol in Step 15, and commitment $\tilde{d'}_0$ to
+part of $\proximityThreeD$ protocol in Step 15, and commitment $\tilde{d}_0$ to
 the random codeword in the invocation of $\proximityTwoD$ from within
 $\proximityThreeD$ in step 15. Additionally, the view contains commitments
 $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing,
-the view consists of commitments:
-\[ c_0,c_1,\ldots,c_{s+\ell},d_0,\tilde{c}_1,\ldots,\tilde{c}_{\ell},\tilde{d}_0,\{\pi[\cdot,k_u]\}_{u\in
-[t]}\]
+the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell},d_0$, 
+$\tilde{c}_1,\ldots,\tilde{c}_{\ell},\tilde{d}_0,\{\pi[\cdot,k_u]\}_{u\in [t]}$
 
 \noindent {\bf Commitment Randomness}: We include randomness used to compute certain
 commitments as part of the extended view. We include $\nu=\nu_0+\sum_{a\in
@@ -642,19 +641,18 @@ of the protocol $\quadcheck$ for $t\leq \bi$.
 \subsection{Extension to DPZK}
 We now describe variants of the protocols discussed previously when the witness
 is shared among several provers. We assume that there are $K$ provers
-$P_1,\ldots,P_K$. For $\xi\in [K ]$, let $[[\wit]]_\xi$ denote the prover
-$P_{\xi}'s$ share of the witness $\wit$. We assume that the sharing is additive,
-i.e, $\sum_{\xi\in [K]}\wit_\xi=\wit$. When denoting witnesses to certain
+$P_1,\ldots,P_K$. For $\xi\in [K]$, let $\shr{\wit}$ denote the prover
+$\distprover$'s share of the witness $\wit$. We assume that the sharing is additive,
+i.e, $\sum_{\xi\in [K]}\shr{\wit}=\wit$. When denoting witnesses to certain
 protocols, we use the $[[\cdot]]$ to denote that the witness is additively
 shared among the provers, i.e, notation $[[x]]$ in the witness list of the
-protocol denotes that the provers have shares $[[x]]_\xi$ of $x$. We assume that
+protocol denotes that the provers have shares $\shr{x}$ of $x$. We assume that
 there is a designated party $\Ag$ which aggregates the messages received from
 provers $P_1,\ldots,P_K$ and constructs the message to be sent to the verifier
 $\verifier$. The verifier's  messages are assumed to be available to every
 prover through a broadcast channel. Finally, we mention that aggregator's role
 is conceptual, and may be played by one of the provers. We proceed to describe
-distributed versions of the key subprotocols.\smallskip
-\nnote{Probably move it to some common section}
+distributed versions of the key subprotocols.
 
 \noindent{\bf Distributed Membership Test}: We describe the variant of the
 protocol $\proximityTwoD$ for the case when the matrix $\overline{U}$ is shared
