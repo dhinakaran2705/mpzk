@@ -1,4 +1,298 @@
 \appendix
+\section{Interleaved Codes: Alternative interpretation} \label{app:AltILC}
+For concreteness, let $\FF$ be the finite field $\FF_q$, consisting of $q$
+elements. Let $\HH$ denote the finite field consisting of $q^m$ elements. From
+standard algebra, the field $\HH$ is specified by an irreducible polynomial $h(x)\in \FF[x]$ of
+degree $m$ as follows:
+\begin{itemize}
+\item The elements of $\HH$ are polynomials $a(x)$ over $\FF$ of degree at most
+$m-1$.
+\item The field operations $(+,\cdot)$ on $\HH$ are defined as corresponding
+polynomial operations modulo $h(x)$, i.e, on $\HH$ we define $a(x)+b(x) =
+(a(x)+b(x)) \text{ mod } h(x)$ and $a(x)\cdot b(x) = (a(x)\cdot b(x)) \text{ mod
+} h(x)$. 
+\end{itemize}
+We can identify the elements of field $\HH$ naturally with the set $\FF^m$ via
+the bijection $f:\FF^m\leftrightarrow \HH$ given by
+$f(a_0,\ldots,a_{m-1})=\sum_{i=0}a_ix^i$. For any $a,b\in \FF^m$ and $\alpha\in
+\FF$, it is seen that $f(a+b)=f(a)+f(b)$ and $f(\alpha a)=\alpha f(a)$. We can
+extend $f$ to the bijection $\tilde{f}$ between the set $\mc{M}_{m,n}$ of $m\times n$
+matrices over $\FF$ and $\HH^n$ by defining:
+\begin{equation}\label{lem:bijection}
+\tilde{f}(A) = \big(f(A[\cdot,1]),\ldots,f(A[\cdot,n])\big)
+\end{equation}
+We have the following:
+\begin{lemma}[Correspondence Lemma]\label{lem:correspondence}
+Let $L$ be an $[n,k,d]$ code over the field $\FF=\FF_q$, and let $\mc{C} :=
+\ric{L}{m}$ be the row interleaved code of $L$. Then $\tilde{f}(\mc{C})$ is an
+$[n,k,d]$ code over the field $\HH$, where $\HH=\FF_{q^m}\cong \FF^m$. Moreover,
+the generator matrix $\mc{G}$ of $L$ is also the generator matrix of
+$\tilde{f}(\mc{C})$. We note that in the latter case $\mc{G}$ is viewed as a
+matrix over the field $\HH$.
+\end{lemma}
+\begin{proof}
+Let $\tilde{\mc{C}}$ denote the linear code over $\HH$ given by $\tilde{\mc{C}} :=
+\{\mc{G}x: x\in \HH^k\}$. Clearly, $\tilde{\mc{C}}$ is a linear code over $\HH$.
+Further it can be seen that $\tilde{\mc{C}}$ is an $[n,k,\ast]$ linear code because
+$\mathsf{rank}_{\FF}(\calG)=\mathsf{rank}_{\HH}(\calG)$. This is because $\calG$
+contains entries from the subfield $\FF$, and so the determinant of a submatrix of $\calG$
+vanishes over $\HH$ if and only if it vanishes over the subfield $\FF$. Now,
+consider $A\in \mc{C}$. Then there exists $m\times k$ matrix $P$ such that for all $j\in [n]$, 
+we have $A[\cdot,j]=\sum_{i\in [m]}\calG[i,j]P[\cdot,i]$. Therefore, for all
+$j\in [m]$,  we have
+\begin{align*}
+f(A[\cdot,j]) &= f\big(\sum_{i=1}^m \calG[i,j]P[\cdot,i]\big) \\
+	&= \sum_{i=1}^k \calG[i,j]f(P[\cdot,i]) \\
+	&= \sum_{i=1}^k \calG[i,j]p_i(x) \text{ where } p_i(x)=f(P[\cdot,i]).
+\end{align*}
+From the above, it can be seen that:
+\[ \tilde{f}(A)=(f(A[\cdot,1]),\ldots,f(A[\cdot,n]))=\calG
+[p_1(x),\ldots,p_k(x)]^T \]
+ where we view $\tilde{f}(A)$ as a column vector. Thus
+$\tilde{f}(\mc{C})\subseteq \tilde{\mc{C}}$. Similarly, one can show that
+$\tilde{\mc{C}}\subseteq \tilde{f}(\mc{C})$ and thus conclude
+$\tilde{f}(\mc{C})=\tilde{\mc{C}}$. Using similar arguments we can also show
+that the code $\tilde{f}(\mc{C})=\tilde{\mc{C}}$ also has the same parity check
+matrix as the code $L$, and hence has the same minimum distance $d$. We skip the
+proof as it is standard. 
+\end{proof}
+
+
+\section{Proof of Proposition \ref{lem:3dcompression} on 3D compression} \label{app:ProofofLem3dcompression}
+We need several observations to prove the proposition, which we present next.
+Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
+\begin{equation}\label{eq:affspace}
+\aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
+\end{equation}
+Note that in the above, the scalars in the linear combination come from $\FF$.
+
+The following result was proved in \cite{ligero} for the setting $\HH=\FF$.
+For completeness, we present an adaptation of the proof to the setting where
+$\FF$ is a subfield of $\HH$.
+\begin{lemma}\label{lem:farpoint}
+Let $L$ and $\mc{C}$ be codes as defined, and let $e$ be a positive integer such that $e+2\leq |\FF|$. Then for any $u_0\in \HH^n$ and any $U^\ast\in \HH^{m\times n}$ such that $d(U^\ast,\mc{C})>e$, there exists $v\in \aff{u_0}{U^\ast}$ such that $d(v,L)>e$.
+\end{lemma} 
+\begin{proof}
+For sake of contradiction, assume that $d(u,L)\leq e$ for all $u\in
+\aff{u_0}{U^\ast}$. Let $x$ be the point in $\aff{u_0}{U^\ast}$ such that
+$d(x,L)$ is maximum. By assumption $d(x,L)\leq e$. Let $v\in L$ be such that
+$\Delta(x,v)=d(x,L)$. Let $E\subseteq [n]$ be the set of positions where $x$ and
+$v$ differ. Since $d(U^\ast,\mc{C})>e$, there exists row $R$ of $U^\ast$ and there is some 
+position $j\in [n]\backslash E$ 
+such that $R_j\neq 0$. Let
+$\alpha_1,\ldots,\alpha_{e+1}$ be distinct non zero elements in $\FF$. Let $E_k$
+for $k=1,\ldots,e+1$ denote the set of positions where $x+\alpha_kR$ and $v$
+differ. Fix a position $i\in E$. Then there exists at most one $k\in [e+1]$ such
+that $i\not\in E_k$. By pegion hole principle, there exists $k\in [e+1]$ such
+that $E\subseteq E_k$. We also observe that since $\alpha_k\neq 0$, $j\in E_k$.
+Thus $d(x+\alpha_k,v)>d(x,v)$, contradicting the choice of $x$. This proves the
+lemma.   
+\end{proof}
+
+Next we prove a result about lines with respect to linear codes. The result was
+proved in \cite{ligero} for the case $\HH=\FF$ and $e<d/4$. The authors in
+\cite{ligero} conjectured the result for $e<d/3$. Here we prove the result for
+$e<d/3$ when $\FF$ can be an arbitrary subfield of $\HH$.
+
+\begin{lemma}[Affine Line]\label{lem:affineline}
+Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$ we have:
+\begin{enumerate}[{\rm (i)}]
+\item $d(x,L)\leq e$ for all $x\in \ell_{u,v}$, or
+\item $d(x,L)> e$ for at most $d$ points in $\ell_{u,v}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+%\nnote{Candidate for Appendix: Putting it here just to have all content for the moment}
+The above is equivalent to
+proving that if there exist $d+1$ distinct points $X =
+\{x_1,\ldots,x_{d+1}\}\subseteq \ell_{u,v}$ such
+that $d(x_i,L)\leq e$ for all $i\in [d+1]$, then $d(x,L)\leq e$ for all $x\in
+\ell_{u,v}$. Assume that there exists such a set $X$ of $d+1$ points. Let $\ell_i$ denote the point in $L$ closest to $x_i$ for $i\in
+[d+1]$. Set $\eta_i=x_i-l_i$ for all $i$ and let
+$\bm{\eta}=\{\eta_1,\ldots,\eta_{d+1}\}$. By assumption we have
+$\wt{\eta_i}\leq e$ for all $i\in [d+1]$. Since $\ell_{u,v}$ is contained in affine
+span of any two distinct points on it, we have tuples
+$\{(\alpha_i,\beta_i)\}_{i\in [d+1]}d$ such that $\alpha_i + \beta_i=1$ and $x_i=\alpha_ix_1 +
+\beta_ix_2$ for $i\in [d+1]$. Note that $(\alpha_1,\beta_1)=(1,0)$ and
+$(\alpha_2,\beta_2)=(0,1)$. Observe that $\alpha_i$'s and $\beta_i$'s must be
+distinct for all $i\in [d+1]$. We call $X$ as {\em degenerate} if there exist
+$i\neq j$ satisfying $\alpha_j=\gamma\alpha_i$ and $\beta_j=\gamma\beta_j$ for
+some $\gamma\in \FF\backslash {0}$. We consider two cases:
+
+\noindent{\em $X$ is degenerate}: Degeneracy implies there exist $i\neq j$ such that $x_i=\gamma x_j$ for
+some $\gamma\in \FF\backslash\{0\}$. In this case we have $0 =
+\frac{1}{1-\gamma}x_i -\frac{\gamma}{1-\gamma}x_j\in \ell_{u,v}$. This implies
+$\ell_{u,v}=\{\alpha x_i: \alpha\in \FF\}$
+and hence $d(x,L)=d(x_i,L)\leq e$ for all $x\in \ell_{u,v}$. Thus the statement
+of the Lemma holds in this case.\smallskip 
+
+\noindent{\em X is not degenerate}: We first prove
+that $\ell_i=\alpha_i\ell_1+\beta_i\ell_2$ and
+$\eta_i=\alpha_i\eta_1+\beta_i\eta_2$ for
+all $i\in [d+1]$. We have
+\begin{align*}
+\ell_i+\eta_i = x_i &= \alpha_ix_1 + \beta_ix_2 \\
+    &= \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
+    &= (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
+\end{align*}
+Rearranging we have,
+\begin{equation*}
+\ell_i - (\alpha_i\ell_1 + \beta_i\ell_2) = \alpha_i\eta_1 +
+\beta_i\eta_2 - \eta_i
+\end{equation*}
+In the above equation we see that LHS is a vector in $L$. Further
+$\wt{\alpha_i\eta_1 + \beta_i\eta_2 - \eta_i}\leq
+\wt{\eta_1}+\wt{\eta_2}+\wt{\eta_i}\leq 3e < d$. Thus the LHS must be equal to
+$0$ and hence $\ell_i = \alpha_i\ell_1 + \beta_i\ell_2$ and
+$\eta_i=\alpha_i\eta_1+\beta_i\eta_2$. Observe that any $x^\ast\in \ell_{u,v}$ can
+be written as $x^\ast=\alpha^\ast x_1+\beta^\ast x_2$. Thus
+$d(x^\ast,L)=d(\alpha^\ast x_1+\beta^\ast x_2,L)\leq \wt{\alpha^\ast
+\eta_1+\beta^\ast \eta_2}\leq |E|$ where $E$ denotes the set
+$\Delta(\eta_1,0)\cup \Delta(\eta_2,0)$. Our final effort will be to show that
+$|E|\leq e$.
+
+\noindent{\it Claim}: $|E|\leq e$ where $E = \Delta(\eta_1,0)\cup
+\Delta(\eta_2,0)$. We consider the partition of $E$ into sets
+$E_0=\Delta(\eta_1,0)\backslash \Delta(\eta_2,0)$,
+$E_1=\Delta(\eta_2,0)\backslash \Delta(\eta_1,0)$ and
+$E_{01}=\Delta(\eta_1,0)\cap \Delta(\eta_2,0)$. Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$
+where $m_{ij}=0$ if $j^{th}$ coordinate ($\eta_i^j$) of $\eta_i$ is zero, and $m_{ij}=1$
+otherwise. We will show that each row of $M$ has at most one $0$. Assume that
+there exists $i$ such that $m_{ip}=0$ and $m_{iq}=0$ for $p\neq q$. We consider
+three cases:
+\begin{itemize}
+\item If $i\in E_0$, the above condition implies $\alpha_p\eta_1^i =
+\alpha_q\eta_1^i=0$, or $\alpha_p=\alpha_q=0$ as $\eta_1^i\neq 0$ for $i\in E_0$.
+This contradicts the fact that $X$ is not degenerate.
+\item The case $i\in E_1$ is similar to above.
+\item If $i\in E_{01}$ we have
+$\alpha_p\eta_0^i+\beta_p\eta_1^i=\alpha_q\eta_0^i+\beta_q\eta_1^i=0$ which
+implies $\alpha_p/\beta_p=\alpha_q/\beta_q=-\eta_1^i/\eta_0^i$, or
+$\alpha_p/\alpha_q = \beta_p/\beta_q$ which contradicts the fact that $X$ is
+not degenerate. Note that all denominators can be argued to be non-zero for $i\in E_{01}$. 
+\end{itemize}
+
+From the above, we conclude that each row has at least $d$ entries as $1$.
+Counting by columns, we have that each column has at most $e$ entries as $1$
+(since $\wt{\eta_i}\leq e$ for all $i\in [d]$. Comparing the lower and upper
+bounds on the number of $1$ entries in the matrix we have $td \leq e(d+1)$
+which implies $t \leq e + e/d < e + 1$. Thus $t\leq e$, as we wanted to show.
+This completes the proof.
+
+\end{proof}
+
+The following result underlies proximity protocols in our work and in
+\cite{ligero}. Intuitively the result states that if a matrix is far away from the code $\mc{C}$, a random linear combination of its rows is far away from a codeword in $L$, and thus the proximity of the matrix to $\mc{C}$ may be tested by testing the proximity of a random linear combination of its rows to $L$.
+
+\begin{lemma}[Affine Subspace]\label{lem:affinesubspace}
+Let the codes $L$ and $\mc{C}$ be as defined and $e<d/3$ be an integer. Let $U\in \HH^{m\times n}$ be a matrix such that $d(U,\mc{C})>e$. Then for any $u_0\in \HH^n$, $\prob{d(u_0+r^TU,L)\leq e}\leq d/|\FF|$ for uniformly sampled $r\sample \FF^m$.
+\end{lemma}
+\begin{proof}
+From Lemma \ref{lem:farpoint}, there exists $u\in \aff{u_0}{U}$ such that $d(u,L)>e$. Now we can write $\aff{u_0}{U}$ as union of affine lines passing through $u$. Applying lemma \ref{lem:affineline} to each line, we see that at most $d$ points $x$ on each affine line satisfy $d(x,L)\leq e$. Thus, a randomly sampled point $x$ in $\aff{u_0}{U}$, equivalently obtained as $u_0+r^TU$ for a randomly sampled vector $r\in \FF^m$ satisfies $d(x,L)$ with probability at most $d/|\FF|$.
+\end{proof}
+
+We are now in a position to prove Proposition \ref{lem:3dcompression}.
+\begin{proof}[Proof of Proposition \ref{lem:3dcompression}]
+Let $\HH$ denote the field $\FF^m$. Then $u_0$ can be viewed as a point in
+$\HH^n$. Similarly $U$ can be viewed as $p\times n$ matrix over $\HH$.
+We consider $\mc{C}$ as $[n,k,d]$ code over $\HH$ and $\mc{C}^p$ as the
+interleaved code of $\mc{C}$ over the field $\HH$. Then by applying Lemma \ref{lem:affinesubspace}
+with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and
+$\mc{C}$, we have the desired bound.
+\end{proof}
+
+\section{Other cryptographic preliminaries}
+\subsection{Commitment scheme} \label{app:DefCommitment}
+\begin{definition}\label{defn:commscheme}
+ A pair of $\ppt$ algorithms $(\gen,\com)$ constitute a non-interactive commitment scheme if $\sigma\sample \gen(\secparam)$ consists of description of sets $\calM_\sigma$ (message space), $\calR_\sigma$ (randomness space), $\calC_\sigma$ (commitment space) and an efficiently computable function $\com_\sigma: \calM_\sigma\times \calR_\sigma\rightarrow \calC_\sigma$ which is {\em hiding} and {\em binding} as defined later.
+\end{definition}
+
+For $x\in \calM_p$ \commentA{p or $\sigma?$}, we generate a {\em commitment} of $x$ as $\com_\sigma(x,r)$ where $r\sample \calR_p$ \commentA{p or $\sigma?$; there are occurrences of $p$ below} is drawn uniformly at random. For ease of notaion, we simply use $\com$ instead of $\com_\sigma$ and use $\com(x)$ to denote the random variable corresponding to commitment of $x$. 
+
+\begin{definition}[Hiding Commitment]\label{defn:hidingcomm}
+A commitment scheme $(\gen,\com)$ is called perfectly {\em hiding}  if for all $\ppt$ \commentA{for perfect hiding, the adversary is no longer $\ppt$} adversaries $\adv$, the following probability is negligibly close to $1/2$ \commentA{for perfect, it is not negligible close to 1/2, it is 1/2; also not that if you want define this as statistical, the statistical sec parameter needs to be distinguished from computational parameter $\lambda$ }:
+\begin{align*}
+\condprob{b=b'}{
+\begin{array}{l}
+\sigma\sample \gen(\secparam); \\
+(x_0,x_1)\in \calM^2_p\sample \adv(\sigma); \\
+b\sample \bitset; c\sample \com(x_b);\\
+b'\sample \adv(\secparam,\sigma,c)
+\end{array}
+}
+\end{align*}
+\end{definition}
+
+\begin{definition}[Binding Commitment]\label{defn:bindingcomm}
+A commitment scheme $(\gen,\com)$ is called {\em binding} if for all $\ppt$ adversaries $\adv$, 
+\begin{align*}
+\condprob{\com_p(x_0,r_0)=\com_p(x_1,r_1)\wedge x_0\neq x_1}{
+\begin{array}{l}
+\sigma\sample \gen(\secparam) \\
+x_0,x_1,r_0,r_1 \sample \adv(\secparam,\sigma)
+\end{array}
+} < \negl(\lambda)
+\end{align*}
+
+\end{definition}
+
+\subsection{Forking Lemma and Knowledge Soundness}
+We use the Forking Lemma from \cite{InnerProductDLS,bulletproofs} to describe 
+expected polynomial time knowledge extractors for our protocols. Let
+$(\prover,\verifier)$ be a public coin $(2\mu+1)$-move interactive protocol with
+challenges $x_1,\ldots,x_\mu$ in sequence. Let $n_i\geq 1$ for $1\leq i\leq
+\mu$. We call a collection of $n=\prod_{i=1}^\mu n_i$ accepting transcripts to be
+$(n_1,\ldots,n_\mu)$-tree of accepting transcripts, if the challenges are
+organized in the tree format that we describe now: \commentA{the following didn't make sense. what does a path from root to a leaf node signify? one sequence of challenges for an accepting execution? at any rate this portion needs a clean write-up} The root of the tree is
+labelled with the statement being proved. Each node of depth $i<\mu$ has exactly
+$n_i$ children, each labelled with a distinct value of the $i^{th}$ challenge
+$x_i$. We call a $\ppt$ algorithm $\chi$ to be a {\em witness extraction
+algorithm} if $\chi$ can extract a witness $w$ to the statement, given an
+appropriate tree of accepting transcripts. This can be seen as a generalization
+of the notion of special soundness for Sigma protocols with $n=2$ and $\mu=1$.
+
+\begin{definition}[Argument of Knowledge]\label{def:argofknowledge}
+Let $(\setup,\prover,\verifier)$ be an public coin interactive protocol. We say that
+$(\setup,\prover,\verifier)$ is an {\em argument of knowledge} for the language
+$\mc{L}$ if for every $\ppt$
+prover $P^\ast$, there exists an expected polynomial time extractor $\extr$ such that for all $x$:
+%\begin{comment}
+\small
+\begin{align}
+\condprob{(x,w)\in \mc{L}}{
+\begin{array}{c}
+\sigma\sample\setup(\secparam) \\
+w\sample \extr^{\mc{O}}(x,\sigma)
+\end{array}
+}
+\geq \condprob{\langle
+P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
+\negl(\lambda)
+\end{align}
+%\end{comment}
+%\begin{align}
+%&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
+%\geq & \prob{\innp{P^*(x,\sigma)}{\verifier(x, \sigma)} = 1|\sigma\sample \setup(\secparam)} - \kappa(\lambda)
+%\end{align}
+for some negligible function $\negl$. In the above $\mc{O}$ denotes the transcript oracle  $\langle P^\ast(x,\sigma)$ ,$\verifier(x,\sigma)\rangle$which can be rewound to any previous state, and resumed with fresh randomness for the
+verifier $\verifier$.
+\end{definition}
+
+Our argument of knowledge proofs rely on the following result from \cite{bulletproofs}.
+While the result is originally stated and proved for showing witness-extended
+emulation, we restate it for the case of argument of knowledge. The proof in
+\cite{InnerProductDLS} also applies to this restricted case.
+
+\begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
+Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-move public coin interactive
+protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
+witness with probability $1-\negl(\secpar)$ from an $(n_1,\ldots,n_\mu)$-tree
+of accepting transcripts. Assuming that $\prod_{i=1}^\mu n_i$ is bounded by a
+polynomial in security parameter $\secpar$, the protocol
+$(\setup,\prover,\verifier)$ is an argument of knowledge.
+\end{lemma}
+.\commentA{change 'move' to 'round' in all the above text.}
+
 \section{Proofs}
 \begin{proof}
 The extractor $\extr$ starts by emulating the verifier in the protocol
