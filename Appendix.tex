@@ -410,6 +410,7 @@ sends it to the prover.
 \label{fig:linearcheck}
 \end{figure}
 
+
 \begin{figure}[h!]
 \centering
 \begin{framed}
@@ -490,4 +491,224 @@ $a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\
 \end{framed}
 \caption{Quadratic Check Protocol}
 \label{fig:quadcheck}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item {$\distlinearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in
+\FF^M,[\pi];\shr{\ewit},\shr{0^h})$}
+\item {\bf Relation}: $\exists \ewit$ s.t. $\ewit=\open(\pi)$ and $A\wit = b$
+for $\wit=\dec(\ewit)$.
+\item {\bf Oracle Setup}: 
+	\begin{itemize}
+	\item $\distprover\rightarrow\Ag$: The prover $\distprover$ computes
+$\shr{\comoracle} = \comm(\shr{\ewit})$ as in Section
+\ref{sec:construct_oracle}. It sends $\shr{\comoracle}$ to $\Ag$. 
+	\item {\color{red} $\Ag$ computes: $\comoracle := \combine(\shr{\comoracle})$ and
+sets $\pi := \comoracle$}.
+	\end{itemize}
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\distprover$: $\verifier$ samples $r\sample \FF^N$ and
+sends it to $\distprover$.
+\item $\distprover\leftrightarrow\verifier$: Provers ($\distprover$) and $\verifier$
+compute polynomials $R^i$, $i\in [p]$ such that
+$R^i(\alpha_j,\zeta_k)=R[i,j,k]$ where $R=r^TA$. 
+\item $\distprover$ computes:
+	\begin{enumerate}
+	\item Polynomials $\shr{p_j}(\cdot) := \sum_{i\in
+[p]}R^i(\alpha_j,\cdot).\shr{Q^i}(\alpha,\cdot)$ for $j\in [h]$. Here the
+polynomial $\shr{Q^i}$ interpolates the witness share
+$\shr{\wit}[i,\cdot,\cdot]$ on $G$.
+	\item An $h\times n$ matrix $\shr{P}$ such that $\shr{P}[j,k]=\shr{p_j}(\eta_k)$.
+	\item Commitments $\shr{c_k}=\comm(\shr{P}[\cdot,k],\shr{\omega}_k)$ for $k\in [s+\ell]$
+where $\shr{\omega}_k\sample \FF$.
+	\item Sample a codeword $\shr{P_0}\in \dashL_2$ s.t $\sum_{j\in
+[m]}\shr{P_0}[j]=0$.
+Compute $\shr{c_0}=\comm(\shr{P_0},\shr{\omega_0})$ for $\shr{\omega_0}\sample \FF$.
+	\end{enumerate}
+\item $\distprover\rightarrow\Ag$: Provers send
+$\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell}}$ and $\shr{Z}$ to $\Ag$.
+
+% Aggregation step
+\item {\color{red} $\Ag$ computes: $(c_0,c_1,\ldots,c_{s+\ell}) :=
+\combine(\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell}})$ and $Z :=
+\combine(\shr{Z})$}.
+
+\item $\verifier\rightarrow\distprover$: $\verifier$ samples $(j_u,k_u)\sample [h]\times
+[n]$ for $u\in [t]$. It also samples $\beta\sample\FF$. The verifier sends
+$Q=\{(j_u,k_u):u\in [t]\}$ and $\beta$ to provers $\distprover$.
+\item $\distprover$ computes:
+	\begin{itemize}
+	\item $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u]$ for $u\in [t]$.
+	\item $\shr{Y_u}=\shr{P}[\cdot,k_u]$ for $u\in [t]$.
+	\item $\shr{Z}=\beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^h}$ for $\varphi=\Phi^T[1^s]$.
+	\item $\shr{\omega}=\beta\shr{\omega_0} +
+\sum_{a=1}^{s+\ell}\varphi_a\shr{\omega_a}$.
+	\item $\shr{\omega_{k_u}}=\sum_{a\in [s+\ell]}T[a,k_u]\shr{\omega_a}$
+for $u\in [t]$.
+	\end{itemize}
+\item $\distprover\rightarrow\Ag$: Prover $\distprover$ sends $\shr{X_u}$,
+$\shr{Y_u}$, $\shr{\omega_{k_u}}$ for $u\in [t]$, $\shr{Z}$ and $\shr{\omega}$ to $\Ag$.
+
+
+% Aggregation step
+\item {\color{red} $\Ag$ computes: $X_u=\combine(\shr{X_u})$,
+$P[\cdot,k_u]=\combine(\shr{Y_u})$ for $u\in [t]$. It computes
+$Z=\combine(\shr{Z})$ and $\omega=\combine(\shr{\omega})$ and 
+$\omega_{k_u}=\combine(\shr{\omega_{k_u}})$ for $u\in [t]$}.
+  
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u:u\in
+[t]\}$. 
+\item Oracle Answers: The oracle replies with columns $\pi[\cdot,k_u]$, $u\in
+[t]$.
+\item $\Ag\leftrightarrow\verifier$: Both $\Ag$ and $\verifier$
+compute $\varphi := \Phi^T[1^s]$ and $\mathsf{cm} := \beta c_0 + \sum_{k\in
+[s+\ell]}\varphi_kc_k$.
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm 2d} =
+\distproxTwoD(\FF,\GG,s+\ell,\dashL_1,\dashL_2,\bm{c};[[\overline{P}]],[[\bm{\omega}]])$
+where $\bm{c}=(c_1,\ldots,c_{s+\ell})$ and $\overline{P}$ is the submatrix of $P$
+consisting of the first $s+\ell$ columns. Here $\dashL_1=\rsc{\eta}{s+\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b = \innerproduct(\GG,\bm{g},x,\mathsf{cm},v;z,\omega)$
+with $x=(1^m,0^{h-m})$, $v=r^Tb$ and $z=Z$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
+\item $\Ag$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item
+$s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u],\omega_{k_u})$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\prover$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} =
+\distproxThreeD(\FF,\GG,L_1,L_2,[\pi];[[\ewit]])$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Distributed Linear Check Protocol}
+\label{fig:distlincheck}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+\begin{framed}
+\begin{itemize}
+\item $\distquadcheck(\FF,\GG,L_1,L_2,[\pi];[[\wit_x]],[[\wit_y]],[[\wit_z]])$:
+\item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
+s.t. $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)$, $\wit_{a}=\dec(\ewit_a)$ for $a\in
+\{x,y,z\}$ and $\wit_x\circ \wit_y = \wit_z$.
+\item {\bf Oracle Setup}: 
+\begin{itemize}
+\item $\distprover\rightarrow\Ag$: $\distprover$ computes $\shr{\comoracle_a}=\comm(\shr{\ewit_a})$ 
+for $a\in \{x,y,z\}$. It sends $\shr{\comoracle_a}$, $a\in \{x,y,z\}$ to $\Ag$.
+\item $\Ag$ computes: $\comoracle_a=\combine(\shr{\comoracle_a})$ for $a\in
+\{x,y,z\}$ and sets $\pi := [\comoracle_x||\comoracle_y||\comoracle_z]$.
+\end{itemize}
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\distprover$: Verifier samples $r\sample\FF^p$ and sends
+it to $\distprover$.
+\item Provers $\distprover$ run the MPC: $\shr{\ewit_x.\ewit_y}\leftarrow
+\mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$ to obtain shares of the hadamard
+product of the encodings.
+\item $\prover$ computes:
+	\begin{itemize}
+	\item $h\times n$ matrix $\shr{P}$ such that 
+	$\shr{P}[j,k]=\sum_{i\in
+[p]}r_i(\shr{\ewit_x[i,j,k]\ewit_y[i,j,k]}-\shr{\ewit_z[i,j,k]})$.
+	\item commitments $\shr{c_k}=\comm(\shr{P}[\cdot,k],\shr{\omega_k})$ for
+$k\in [2\ell]$ where $\shr{\omega_k}$ are sampled randomly for all $k\in
+[2\ell]$.
+	\end{itemize}
+\item $\distprover\rightarrow\Ag$: The prover $\distprover$ sends
+$\shr{c_1},\ldots,\shr{c_{2\ell}}$ to $\Ag$.
+\item $\Ag\rightarrow \verifier$: $\Ag$ computes $\bm{c}=(c_1,\ldots,c_{2\ell})$ where
+$c_k=\combine(\shr{c_k})$ for $k\in [2\ell]$. It sends $\bm{c}$ to $\verifier$.
+
+\item $\verifier\rightarrow\distprover$: $\verifier$ samples $(j_u,k_u)\sample
+[h]\times [n]$ for $u\in [t]$. The verifier also samples $\tau\sample
+\FF^{\ell}$. It sends $Q=\{(j_u,k_u):u\in [t]\}$ and $\tau$ to $\distprover$.
+\item $\distprover$ computes:
+	\begin{itemize}
+	\item $\shr{X_u}=\shr{\ewit_x}[\cdot,j_u,k_u]$, $u\in [t]$.
+	\item $\shr{Y_u}=\shr{\ewit_y}[\cdot,j_u,k_u]$, $u\in [t]$.
+	\item $\shr{Z_u}=\shr{\ewit_z}[\cdot,j_u,k_u]$, $u\in [t]$.
+	\item $\shr{\omega}=\sum_{a\in 2\ell}\varphi_a\shr{\omega_a}$.
+	\item $\shr{\omega_{k_u}}=\sum_{a\in 2\ell}T[a,k_u]\shr{\omega_a}$,
+$u\in [t]$.
+	\end{itemize}
+\item $\distprover\rightarrow\Ag$: The prover $\distprover$ sends
+$\shr{X_u},\shr{Y_u},\shr{Z_u}$, $\shr{\omega_{k_u}}$ for $u\in [t]$ and
+$\shr{\omega}$ to $\Ag$.
+\item $\Ag$ computes: $\Ag$ obtains $X_u,Y_u,Z_u,\omega_{k_u}$ for $u\in [t]$
+from the respective shares. It also obtains $\omega$ from its shares. 
+\item Oracle Queries: $\verifier$ queries the oracle $\pi$ with $\{k_u: u\in
+[t]\}$.
+\item Oracle Response: The oracle responds with columns $\pi[\cdot,k_u]$ for
+$u\in [t]$.
+\item $\Ag\leftrightarrow\verifier$: Both $\Ag$ and $\verifier$ compute
+$\varphi := \Phi^T\tau$ and $\mathsf{cm}:= \sum_{k\in [2\ell]}\phi_kc_k$.
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b_{\rm
+2d}=\distproxTwoD(\FF,\GG,\dashL_1,\dashL_2,\bm{c};[[\overline{P}]],[[\bm{\omega}]])$ where
+$\bm{c}=(c_1,\ldots,c_{2\ell})$ and $\overline{P}$ is the submatrix of $P$ consisting
+of the first $2\ell$ columns. Here $\dashL_1=\rsc{\eta}{2\ell}$ and
+$\dashL_2=\rsc{\alpha}{2m}$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run the subprotocol:
+	\begin{itemize}
+	\item $b=\innerproduct(\FF,\GG,\bm{g},x,\mathsf{cm},v;z,\omega)$
+with $x=(\gamma,0^{h-m})$, $v=0$ and $z=\overline{P}\varphi$. Note that $z$ is
+the unique codeword in $\dashL_2$ with $\sum_{j\in [m]}z[j]=0$ so $\Ag$ knows
+this without receiving shares from the provers.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ compute: For all $u\in [t]$ $c_{k_u} =
+\sum_{a\in 2\ell}T[a,k_u]c_a$, where $T$ is the matrix such that $P=\overline{P}T$.
+\item $\Ag$ and $\verifier$ run inner product subprotocols for each $u\in
+[t]$:
+	\begin{itemize}
+	\item
+$s_u=\innerproduct(\GG,\bm{g},x,c_{k_u},v;P[\cdot,k_u],\omega_{k_u})$ with
+$x=e_{j_u}$, $v=\sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i] - Z_u[i])$.
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run aggregate inner product protocols for each
+$u\in [t]$:
+	\begin{itemize}
+	\item
+$a_{1u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_x[\cdot,k_u],X_u;\ewit_x[\cdot,\cdot,k_u])$
+	\item
+$a_{2u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_y[\cdot,k_u],Y_u;\ewit_y[\cdot,\cdot,k_u])$
+	\item
+$a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\cdot,k_u])$
+	\end{itemize}
+\item $\Ag$ and $\verifier$ run the subprotocol: 
+	\begin{itemize}
+	\item $b_{\rm prox} =
+\distproxThreeD(\FF,L_1,L_2,e,[\pi];[\shr{\ewit_x||\ewit_y||\ewit_z}])$
+	\end{itemize}
+\item The verifier accepts if all the subprotocols accept.
+\end{enumerate}
+\end{itemize}
+\end{framed}
+\caption{Quadratic Check Protocol}
+\label{fig:distquadcheck}
 \end{figure}
