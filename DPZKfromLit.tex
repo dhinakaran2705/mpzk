@@ -121,9 +121,9 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \begin{table}[h!] 
 	\centering
 	\resizebox{\textwidth}{!}{
-	\begin{threeparttable}
-	\begin{tabular}{|c|c|c|c|c|c|c| } 
-		\toprule
+	%\begin{threeparttable}
+	\begin{tabular}{|c|c|c|c|c|c|c|} 
+		\hline
 		Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & Number of MPC & $\prcomm$ \\
 		\hline
 		D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
@@ -145,7 +145,7 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
 		%\hline
 	\end{tabular}
-\end{threeparttable}
+%\end{threeparttable}
 }
 \caption{Comparison table}\label{tab:SPZK}
 
