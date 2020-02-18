@@ -256,10 +256,10 @@
 \def\P{\textit{P}} %Prover
 \def\V{\textit{V}} %Verifier
 \def\vecx{$\textbf{\x}$}
-
+\def\ctsize{N}
 
 %----------Comments-----------
-\newcommand{\mycomment}[1] {\textcolor{blue}  {{\sl{#1}}}}
+\newcommand{\pnote}[1] {\textcolor{red}  {[{\sl{#1}}]}}
 
 % Author notes
 \def\ShowAuthNotes{1}
@@ -271,7 +271,7 @@
 \fi
 
 \newcommand{\dnote}[1]{\authnote{VD}{#1}}
-\newcommand{\pnote}[1]{\authnote{PKP}{#1}}
+%\newcommand{\pnote}[1]{\authnote{PKP}{#1}}
 \newcommand{\nnote}[1]{\authnote{NS}{#1}}
 \newcommand{\pdnote}[1]{\authnote{PD}{#1}}
 
