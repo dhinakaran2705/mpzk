@@ -33,6 +33,8 @@ denote distance between $u$ and $S$. Similarly for a matrix (two or three
 dimenional) $U$ and a set of matrices $\mc{M}$, we define $d_i(U,\mc{M}) :=
 \min\{\Delta_i(U,M): M\in \mc{M}\}$ for $i=1,2$.
 
+We use $\sample$ to denote drawing from a distribution uniformly at random.  \commentA{added this; please replace  $\sample$ with $\gets$ in all the appropriate contexts. I am doing it on my way; but I do not think I can make a pass on the whole paper; so do in your respective sections}
+
 \subsection{Notation for Protocols}
 We describe some of the notation that we use to describe our protocols. We
 notate our interactive protocols with a name and a list of parameters. The
@@ -45,8 +47,8 @@ be partially queried by the verifier). As an illustration
 $\proximityThreeD(\FF,\GG,L_1,L_2,[\pi];\ewit)$ denotes a protocol, where the
 verifier only has oracle access to $\pi$. Finally, in the distributed setting,
 some of the private inputs may be additively secret shared  across multiple provers. We notate it
-by enclosing those private inputs in $[[\,]]$ \commentA{better to use $\langle \rangle$ notation}. For example, in the protocol
-$\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};[[\bar{U}]])$, each prover
+by enclosing those private inputs in $\langle\,\rangle$. For example, in the protocol
+$\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};\langle \bar{U} \rangle)$, each prover
 $\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
 
 \subsection{Linear Codes}
@@ -117,28 +119,8 @@ Then, there exists $U\in L_1\otimes L_2$ and sets
 $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \end{lemma}
+The proof is given in Appendix~\ref{prooflemmaRScode}.
 
-\begin{proof}
-	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
-	Therefore $U^\ast$ differs from $U_1$ in $\beta_1$ many columns, i.e. in the remaining $n-\beta_1$ columns $U^\ast$ and $U_1$ are identical.
-	So, there are columns $S_1 = \{j_{s} : s\in [n - \beta_1] \}$ for which $U^\ast[i,j] = U_1[i,j]$ $\forall j\in S$.
-	Let $U_2 \in \mc{C}_2$  such that $\dham_2(U^\ast, U_2) \leq \dham(U^\ast, U) \forall U\in \mc{C}_2$ and let $\dham_1(U^\ast, U_2) = \beta_2$ with $\beta_2<e_2$
-	Therefore $U^\ast$ differs from $U_2$ in $\beta_2$ many rows, i.e. in the remaining $n-\beta_1$ rows $U^\ast$ and $U_2$ are identical.
-	So, there are rows $S_2 = \{i_{t} : t\in [h - \beta_2] \}$ for which $U^\ast[i,j] = U_2[i,j]$ $\forall i\in T$.
-	
-	$U_1\in \mc{C}_1 \implies \exists$ polynomials $p_1(\cdot), \ldots, p_h(\cdot)$ of degree $< \ell$
-	
-	$U_2\in \mc{C}_2 \implies \exists$ polynomials $q_1(\cdot), \ldots, q_n(\cdot)$ of degree $< m$
-	
-	Such that $p_i(\eta_j) = U_1[i,j] $ and $ q_i(\alpha_j) = U_2[j,i]$
-	
-	Therefore, $U_1[i,j] = U_2[i,j]$ $\forall i\in S_1, j\in S_2$. Choose a bivariate polynomial $Q(x,y)$ such that $deg_x(Q)<\ell $ and $deg_y(Q)<m$ and $Q(\eta_{i_s}, \alpha_{j_t}) = U_1[i_s,j_t] = U_2[i_s,j_t] \forall (i, j)\in S_1\times S_2$. 
-	
-	Defne $U = Q(\eta_i,\alpha_j)$ $\forall i\in[h], j\in[n]$, Then $U \in L_1\otimes L_2$ and $U^\ast[i,j] = U[i,j]$ $\forall (i,j) \in S_1 \times S_2$.
-	
-	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
-	This proves the above claim.	
-\end{proof}
  
 
 \subsection{Coding Theoretic Results for our Constructions}
@@ -166,9 +148,9 @@ The proof of this proposition will be presented in Appendix \ref{app:ProofofLem3
 \subsection{Inner-product Arguments}
 We define an interactive protocol that allows proving inner-product relation over committed values, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme defined in Appendix \ref{app:DefCommitment}. %We start with a definition of such a commitment scheme. 
 
-We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{.}{.}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
+We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
 \begin{equation*}
-\calL_\sigma = \{(c_1,c_2,v):\exists x_1,x_2,r_1,r_2 \text{ s.t. }
+\calL_\sigma = \{(c_1,c_2,v):\exists \; x_1,x_2,r_1,r_2 \text{ s.t. }
 c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\} 
 \end{equation*}
 
@@ -181,8 +163,8 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \begin{align*}
 \condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
 \begin{array}{l}
-\sigma\sample \gen(\secparam);\\
-(\stmt,\wit)\sample \adv(\secparam,\sigma)
+\sigma\gets \gen(\secparam);\\
+(\stmt,\wit)\gets \adv(\secparam,\sigma)
 \end{array}
 }=1
 \end{align*}
@@ -192,8 +174,8 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \condprob{\stmt\not\in \calL_\sigma \wedge \langle
 \prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1}{
 \begin{array}{l}
-\sigma\sample \gen(\secparam);\\
-(\stmt,s)\sample \adv(\secparam,\sigma)
+\sigma\gets \gen(\secparam);\\
+(\stmt,s)\gets \adv(\secparam,\sigma)
 \end{array}
 } = \negl(\lambda)
 \end{align*}
@@ -201,12 +183,9 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 
 \end{definition}
 
-We mention some concrete instantiations of  commitment schemes and corresponding inner-product arguments that we use in our protocol.
-
-\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a Pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
+We mention some concrete instantiations of  commitment schemes and corresponding inner-product arguments in Appendix~\ref{inner-product-instan}. 
 
 
-\noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
  
 %--------------------------------Protik's prelims--------------------------------
 %\subsection{Codes}
