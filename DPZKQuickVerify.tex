@@ -1,4 +1,8 @@
 %\newcommand{\enc}{\mathsf{Enc}}
+
+
+
+
 \subsection{Witness Encoding and Decoding}\label{sec:witencoding}
 We start by describing a randomized encoding of the prover witness $\wit\in \FF^N$. Let $p,m$ and
 $s$ be integers such that $N=pms$. We canonically view the
@@ -11,7 +15,8 @@ $\ell,n,h$ respectively. We write $\bm{\zeta}=(\zeta_1,\ldots,\zeta_\ell)$,
 $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $\bm{\alpha}=(\alpha_1,\ldots,\alpha_h)$. 
 Next we define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
 k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [h],
-k\in [n]\}$. Finally, we encode $\wit$ as follows:
+k\in [n]\}$. Finally, we encode $\wit$ as follows and denote the below randomized computation as $\ewit\gets \enc(\wit)$.
+ We may denote $\enc(\wit)$ as the random variable denoting the encodings of $\wit$:
 \begin{enumerate}[{\rm (i)}]
 \item First we embed $\wit$ into a $p\times m\times \ell$ matrix $\hat{\wit}$
 where $\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$, while the entries
@@ -25,11 +30,10 @@ $\ewit[i,\cdot,\cdot]$ consists of evaluations of $Q^i$ on $H$, i.e,
 $\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$.
 Then $\ewit$ is a randomized encoding of $\wit$.
 \end{enumerate}
-We denote the above computation as $\ewit\sample \enc(\wit)$, where $\enc(\wit)$
-denotes the random variable denoting the encodings of $\wit$. It is easily seen
+ It is easily seen
 that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above
 encoding can be computed using $O(N\log N)$ field operations (see Appendix for
-details).
+details \commentA{missing section no.}).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
 %\noindent{\em Efficiently computing the encoding}: Although the previous
 %description of the encoding involves the bivariate polynomials, 
@@ -56,14 +60,16 @@ The encoding $\enc$ satisfies the following {\em bounded independence} property:
 \begin{lemma}[Bounded Independence]\label{lem:boundedindependence}
 Let $B\subseteq [n]$ be a set of size $\bi$. Let $\mc{U}(p,h,b)$ denote the
 set of $p\times h\times b$ matrices $\matx$ such
-that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{m}$ for all $i\in
+that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{h,m}$ for all $i\in
 [p],k\in [\bi]$. Then for any $p\times m\times s$ matrix $\wit$, the random
 variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is
 distributed uniformly on $\mc{U}(p,h,b)$.
 \end{lemma}
-We defer the proof of the above Lemma to the Appendix.
+We defer the proof of the above Lemma to the Appendix. \commentA{appendix number is missing}
 
-\commentA{added this for decoding func..didn't get time to make the notation correct.}The decoding $\dec$ is defined as $\wit = Dec(\ewit^*)$. It is meant to capture the "inverse" of the Encoding ($\enc$). A three dimensional matrix $\ewit^*$ can be decoded slice by slice. For two dimensional slice $\ewit[i,\cdot,\cdot]$,   if it is not a proper product codeword i.e. $\ewit[i,\cdot,\cdot] \not \in L_1 \otimes L_2 $, but satisfies $d_1(\ewit[i,\cdot,\cdot], C_1) < e_1$ and $d_2(\ewit[i,\cdot,\cdot],C_2) < e_2$, where $e_1$ and $e_2$ are less than $d_1/2$ and $d_2/2$ respectively, then the codeword $U$, such that $U[j,k] = \ewit[i,j,k]$ guaranteed by Lemma 2.5 is unique, and we define that as $\dec(\ewit[i,\cdot,\cdot])$.  Repeating for all slices, we can define $\dec()$ for a three dimensional matrix which is near both $W_1$ and $W_2$. \commentA{the set of mismatched entries must be the same for all slices}
+The decoding $\dec$ is defined as $\wit \gets \dec(\ewit^*)$. It is meant to capture the "inverse" of $\enc$. A three dimensional matrix $\ewit^*$ can be decoded slice by slice. For two dimensional slice $\ewit[i,\cdot,\cdot]$,   if it is not a proper product codeword i.e. $\ewit[i,\cdot,\cdot] \not \in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m} $, but satisfies $d_1(\ewit[i,\cdot,\cdot], \ric{\rsc{\eta}{n,\ell}}{h}) < e_1$ and $d_2(\ewit[i,\cdot,\cdot], \cic{\rsc{\alpha}{h,m}}{n}) < e_2$, where $e_1$ and $e_2$  for $e_1\leq n-\ell$ and $e_2\leq h-m$.
+Then, there exists $U\in L_1\otimes L_2$ and sets $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such
+that $U[j,k] = \ewit^*[i,j,k]$ guaranteed by Lemma ~\ref{lem:bicdecoding} is unique for $(j,k)\in S_1\times S_2$. Repeating for all slices, we can define $\dec()$ for a three dimensional matrix which is near both $W_1$ and $W_2$. \commentA{I do not understand why this process should be polynomial-time???? also check it if it is proper}
 
 
 \subsection{Oracle Construction}\label{sec:construct_oracle} 
@@ -190,14 +196,14 @@ witness with overwhelming probability whenever $P^\ast$ succeeds, i.e,
 \end{array}
 }{
 \begin{array}{l}
-\sigma\sample \gen(\secparam) \\
-\overline{U}\sample \extr^{\mc{O}}(\bm{c},\sigma)
+\sigma\gets \gen(\secparam) \\
+\overline{U}\gets \extr^{\mc{O}}(\bm{c},\sigma)
 \end{array}}
 \geq \epsilon(P^\ast) - \kappa_{2d}(\lambda)
 \end{align*}
 }
 where $\epsilon(P^\ast)=\condprob{\langle
-P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle = 1}{\sigma\sample
+P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle = 1}{\sigma\gets
 \gen(\secparam)}$ and $\kappa_{2d}$ is negligible in $\lambda$.
 \end{lemma}
 
@@ -862,28 +868,29 @@ jointly have the correct witness.
 Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 \begin{lemma}\label{lem:privacy}
-	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$ denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from an actual execution of the protocol if there is a secure MPC for multiplication which withstand against the corrupt parties in $I$.(May be a broadcast required)
+	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$\pnote{fix notation} denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from the real execution of the protocol given there is a secure MPC for multiplication which withstand against the corrupt parties in $I$. \pnote{(Maybe a broadcast required)}
 \end{lemma}
 
 \begin{proof}
-	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality ~\ref{func:DPZK}. Provers in $I$ encodes and commits to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the commitment is extractable, so $\Sim$ extracts and gets shares of $\wit, x,y,z$ of the parties in $I$. 
-	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$, if it outputs 1, then $\Sim$ uses the same approach of  
-	%$\Sim$ picks random chanllenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
-	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$.
-	$\Sim$ gets $\shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}$ and $\shr{Z}$ in linear check and using extraction of commitment gets the committed values if there is some inconsistency then 
+	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the commitment is extractable, so $\Sim$ extracts and gets shares of $\wit, x,y,z$ of the parties in $I$. 
+	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ uses the same approach of  
+	%$\Sim$ picks random challenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
+	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$, using homomorphic property of the commitment scheme.
+	$\Sim$ gets $\shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}$ and $\shr{Z}$ for all $\xi\in I$ in the linear check, as all the provers are sending this values to $\Ag$, which is done using broadcast. Using extraction of commitment $\Sim$ gets the decommitted values. If there is some inconsistency in the values extracted from $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$ and these decommitted values then
 	%output $\abort$, else continue.
-	sets state as fail. otherwise pass.
-	For quadratic check, $\Sim$ calls the simulator, $\Sim_M$, of the secure multiplication protocol. $\Sim_M$ extracts the input of the MPC and $\Sim$ does the consistency check. If there is some inconsistency then 
+	sets $\mathsf{state}$ as fail, otherwise pass.
+	For quadratic check, $\Sim$ calls the simulator, $\Sim_M$, of the secure multiplication protocol and extracts the input of the MPC, and does the consistency check, as in the linear case. If there is some inconsistency then 
 	%output $\abort$, else continue.
-	sets state as fail. otherwise pass.
+	sets $\mathsf{state}$ as fail, otherwise, pass.
+	Similarly, $\mathsf{state}$ is set for the remaining part of the protocol.
+	(This part is informally stated here, details will be provided in the full version.)
+	Now for both the protocols if $\mathsf{state}$ remains pass till the provers send the final messages to $\Ag$, which are the witnesses of the inner product arguments, 
+	\pnote{Should we add the details such as what are the consistency checks? From the protocol that is quite evident.}
+	then $\Sim$ calls the functionality $\Func_{\DPZK}$ with the input $\wit, x,y,z$ of the parties in $I$. If it outputs 1, then $\Sim$ generates the final messages of the honest parties using the accepting transcript produced by the zero-knowledge simulator, else $\Sim$ picks any random message which is consistent with the transcript so far.
 	
-	Now for both the protocols if all the computations are consistent till the provers are send the final messages to $\Ag$, which are the witnesses of the inner product arguments.
+	If there is some inconsistency in some intermediate step, i.e., the $\mathsf{state}$ is fail, then $\Sim$ calls the functionality $\Func_{\DPZK}$ on some random value and proceeds accordingly with the simulation.
 	
-	Then $\Sim$ calls the functionality $\Func_{\DPZK}$ with the input $\wit, x,y,z$ of the parties in $I$. If it outputs 1, then generates the final messages of the honest parties using the accepting transcript produced by the zero-knowledge simulator. Else picks any random message which is consistent till with the transcript.
-	
-	If there is some inconsistency in some intermediate step, then $\Sim$ calls the functionality $\Func_{\DPZK}$ on some random value and proceeds similarly.
-	
-	This proves that the view of the corrupt provers can be simulated, Which ensures the privacy.
+	This proves that the view of the corrupt provers can be simulated, which ensures privacy of the honest provers.
 \end{proof}
 
 %\end{enumerate}

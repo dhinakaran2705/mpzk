@@ -1,22 +1,24 @@
 \section{Construction of DPZK}
 A simple way to construct a DPZK protocol is to start with a single-prover protocol and run MPC among the provers to generate each message to be sent to the verifier. The randomness in turn provided by the verifier can be broadcasted to the provers.
-Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{\pi_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $p_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
+Hence, starting with a $\round$-round interactive zero-knowledge proof system $\innp{P = \{\pi_i\}_{i\in[\round]}}{V = \{v_i\}_{i \in [\round]}}$, we can obtain a DPZK protocol by having the provers run MPC for each round $i \in [\round]$ to compute the output of $\pi_i$. The recent literature suggests proof systems which additionally commit to oracles at each round (IOP \cite{aurora}) or only at the beginning (IPCP \cite{ligero}). The verifier can additionally query the oracle on his positions of interest. The DPZK protocol based on a single-prover IOP protocol should also support homomorphism in these oracles for the proof size to be independent of the number of parties involved.
 
 %We will formalize this simple DPZK transformation based on the Polynomial IOP framework \cite{polynomialiop,ahp} proposed recently. This framework captures most of the protocols from the literature on practical zero-knowledge proofs [CHECK precision of this sentence]. Writing down this formalism simplifies our future sections on the construction of DPZK based on the single prover protocols.
 
 
 
 %<change from here>
-
+.\pnote{These parts should come in related work}
 We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
-The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup while obtaining reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}). Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
+The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup while obtaining reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}). %Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
 
-Among these works, only Bulletproofs \cite{bulletproofs} discuss distributed proof generation. Even in \cite{bulletproofs}, this discussion was limited to range proofs. In this section, we will discuss how we adapt these protocols to support distributed proof generation. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
+Among the state-of-art works, only Bulletproofs \cite{bulletproofs} discuss Aggregation of proofs. Even in \cite{bulletproofs}, this discussion was limited to range proofs, in which proof also grows with the number of parties and verifier always learns the number of provers. Also they require MPC for dot product in multiple rounds, in our construction, MPC is required only once. %In this section we will describe DPZK version of inner product argument which also has zero knowledge property and 
+In Appendix \ref{app:BulletproofsDPZK}, we will discuss how we adapt bulletproofs to support distributed proof generation for arbitrary arithmetic circuit with one round of secure multiplication.%, which they mentioned as still open in \cite{bulletproofs}. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
 
+Other works such as \cite{Aurora} requires quite heavy public key operations to obtain DPZK, since all messages of \cite{Aurora} are formed as an oracle and obtaining \cite{spartan} is difficult in the sense that privacy of the honest provers from the corrupted provers, in particular aggregator is difficult.
 %\subsection{DPZK-Aurora}
 
-
+\begin{comment}
 \subsection{DPZK-Spartan}\label{subsec:spartan}
 Spartan \cite{spartan} is a zkSNARK protocol supporting arbitrary circuits with a transparent setup, $O(|\C|^{1/c})$ proof size for $c \geq 2$, an amortized sublinear verifier complexity. Spartan has three high level steps:
 \begin{enumerate}
@@ -109,99 +111,14 @@ Therefore $\Ag$ is not learning anything new. Which implies privacy of the prove
 We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \langle \bm{r}, \bm{x} \rangle = v_1$ and $\langle \bm{r}^T \cdot C, \extwit \rangle = \langle \bm{r}, \bm{z} \rangle = v_3$ which can be represented as $\langle \bm{r}^T \cdot(\alpha.A+\gamma.C), \extwit \rangle = \langle \bm{r}, (\alpha.\bm{x}+\gamma.\bm{z}) \rangle = v_3$ where $\alpha, \gamma$ are randomly chosen by the verifier $\verifier$. In the commitment we are considering that if $\langle \bm{a},\bm{b}\rangle= c$ is in the statement of the inner product, then the commitment of $\bm{a}$ and $\bm{b}$ will be of the form $h^{\sigma} \bm{g}^{\bm{a}} \bm{h}^{\bm{b}}$. Note that in the commitment there should not be any known relation between the generators and for the equation $\langle \bm{r} o \bm{x}, \bm{y} \rangle = \langle \bm{r}, \bm{z} \rangle = v_4$ there should not be the known relation between the generator $\bm{g}$ which is used to commit to $\bm{x}$ with the generator which is used to commit to $\bm{y}$, for that reason the commitment for $\bm{y}$ is considered in left in $\langle \bm{y}, \bm{r} \rangle = v_2$. For that reason this inner product we could not batch with the prior inner products. In this case we need to give 6 inner product proofs instead of 8. 
 \dnote{To Protik: Rewrite the section below}.
 
-\subsection{DPZK of Bulletproof for R1CS from their direct construction:}
-Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
-$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$$
-for $1\leq q \leq Q$, with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
-Consider
-
-$W_L = [\bm{w}_{L,1}, \ldots, \bm{w}_{L,Q}]^T$,\vspace{10pt} 
-$W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, \vspace{10pt} 
-$W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,\vspace{10pt} 
-and $\bm{c} = [c_1, \ldots, c_q]^T$
-%\pnote{what is $W_v$ and $\bm{v}$ is not clear.}
-
-Here we are following the same notations which are used in \cite{bulletproofs}.
-For arithmetic circuit satisfiability zero knowledge proof, \cite{bulletproofs} proves the following statement:
-
-\noindent{\bf Statement:} $\{g,h\in\GG, \bm{g},\bm{h}\in \GG^n, \V\in \GG^m, W_L, W_R, W_O \in \ZZ^{Q\times n}_p, \bm{c}\in \ZZ^Q_p\}$
-
-\noindent{\bf Witness:} $\{\bm{a}_L, \bm{a}_R, \bm{a}_O \in \ZZ^n_p, \bm{v},\bm{\gamma}\in \ZZ^m_p \}$
-
-\noindent{\bf Relation:} $V_j = g^{v_j}h^{\gamma_j} \forall j\in[m] \wedge \bm{a}_L \circ \bm{a}_R = \bm{a}_O \wedge W_L\cdot \bm{a}_L + W_R\cdot \bm{a}_R + W_O\cdot \bm{a}_O = W_v\cdot \bm{v} +\bm{c}$
-
-\noindent In \cite[Protocol 3]{bulletproofs} is explained how to generate the proof for an arbitrary arithmetic circuit. Here we will describe how to convert the protocol given in \cite[Protocol 3]{bulletproofs}. Let $\Num$ parties are there such that $\prover_i$ has $\bm{a}_{L,i}, \bm{a}_{R,i}, \bm{a}_{O,i}$ and $\bm{v}_{i}, \bm{\gamma}_i$ as the shares of the witness such that 
-$\sum_{i\in[\Num]} \bm{a}_{L,i} = \bm{a}_L$,
-$\sum_{i\in[\Num]} \bm{a}_{R,i} = \bm{a}_R$,
-$\sum_{i\in[\Num]} \bm{a}_{O,i} = \bm{a}_O$,
-$\sum_{i\in[\Num]} \bm{v}_{i} = \bm{v}$,
-$\sum_{i\in[\Num]} \bm{\gamma}_{i} = \bm{\gamma}$. 
-
-Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
-
-\begin{enumerate}
-	\item $i$th prover randomly picks $\alpha_i, \beta_i, \rho_i \sample \ZZ_p$ and $\bm{s}_{L,i}, \bm{s}_{R,i} \sample \ZZ_p^n$ to blind there inputs, and computes $A_I^i = h^{\alpha_i}\bm{g}^{\bm{a}_{L,i}}\bm{h}^{\bm{a}_{R,i}}$, $A^i_O = h^{\beta_i}\bm{g}^{\bm{a}_O}$ and $S^i = h^{\rho}\bm{g}^{\bm{s}_{L,i}}\bm{h}^{\bm{s}_{R,i}}$
-	and sends $A^i_I, A^i_O, S^i$ to the aggregator $\Ag$, $\forall i\in [\Num]$.
-	
-	\item $\Ag$ computes $A_I = \prod_{i \in [\Num]} A_I^i$, $A_O = \prod_{i \in [\Num]} A_O^i$ and $S = \prod_{i \in [\Num]} S^i$ and sends to $\verifier$.
-	
-	\item $\verifier$ picks $y,z \sample \ZZ^*_p$ and sends to $\Ag$.
-	
-	\item $\Ag$ forwards $y,z$ to all the provers.
-	
-	\item All the provers and the verifier computes :\\
-	$\bm{y}^n = (1, y, y^2, \ldots, y^{n-1}) \in \ZZ^n_p$, 
-	$\bm{z}^{Q+1}_{[1:]} = (z, z^2, \ldots, z^Q) \in \ZZ^Q_p$, 
-	$\delta(y,z) = \innp{\bm{y}^{-n}\circ (\bm{z}^{Q+1}_{[1:]}\cdot W_R)}{\bm{z}^{Q+1}_{[1:]}\cdot W_L}$\\
-	
-	\item $\prover_i$ computes:
-	if 
-	\begin{align*}
-	i=1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3 + \bm{y}^{-n}\circ (\bm{z}_{[1:]}^{Q+1} \cdot W_R)\cdot X \\
-	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3 - \bm{y}^n + \bm{z}^{Q+1}_{[1:]} \cdot (W_L\cdot X + W_O)\\
-	i \neq 1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3\\
-	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3
-	\end{align*}
-	
-	\item MPC phase: Provers interact among with $\prover_i$'s input $l_i(X)$ and $r_i(X)$ to compute the polynomial $t(X) = \innp{\sum_{i \in [\Num]}l_i(X)}{\sum_{i \in [\Num]}r_i(X)}$ and $\prover_i$ gets the output $t_i(X)$ such that $\sum_{i\in[\Num]} t_i(X) = t(X)$.
-	and $t(X)= \sum_{j=1}^6 t_j\cdot X^j \in \ZZ_p[X]$ and $t^i(X)= \sum_{j=1}^6 t^i_j\cdot X^j \in \ZZ_p[X]$ $\forall i\in [\Num]$
-	\item $\prover_i$ comutes $\bm{w}_i = W_L\cdot \bm{a}_{L,i} + W_R\cdot \bm{a}_{R,i} + W_O\cdot \bm{a}_{O,i}$
-	
-	\item $\prover_i$ picks $\tau^i_j \sample \ZZ_p$ $\forall j\in\{1,3,4,5,6\}$\\
-	and computes $T_j^i = g^{t_j^i}h^{\tau_j^i}$ and sends $T_j^i$ to $\Ag$ for all $i\in [\Num]$ and $j\in \{1,3,4,5,6\}$.
-	
-	\item $\Ag$ computes $T_j = \prod_{i=1}^{\Num} T_j^i$ for $j \in \{1,3,4,5,6\}$ and sends these values to the verifier $\verifier$.
-	
-	\item $\verifier$ picks $x\sample \ZZ^ast_p$ and sends to $\Ag$.
-	
-	\item $\Ag$ forwards $x$ to all the provers.
-	
-	\item $\prover_i$ computes:
-	\begin{itemize}
-		\item $\bm{l}_i = l_i(x) \in \ZZ^n_p$ \& $\bm{r}_i = r_i(x) \in \ZZ^n_p$
-		\item $\tau_x^j = \sum\limits_{j=1, j\neq 2}^{6} \tau_j^i\cdot x^i \in \ZZ_p$ \& $\mu_i = \alpha_i\cdot x +\beta_i \cdot x^2 +\rho_i\cdot x^3 \in \ZZ_p$
-	\end{itemize}  
-	sends these values to $\Ag$.
-	
-	\item $\Ag$ combines and gets 
-	\begin{itemize} 
-		\item $\bm{l} = \sum_{i\in[\Num]} \bm{l}_i$, $\bm{r} = \sum_{i\in[\Num]} \bm{r}_i$, \& $\hat{t} = \innp{\bm{l}}{\bm{r}}$
-		\item $\tau_x = \sum_{i\in [\Num]} \tau_x^i + x^2\cdot \innp{\bm{z}_{[1:]}^{Q+1}}{W_V\cdot \gamma} \in \ZZ_p$ \& $\mu = \sum_{i\in [\Num]} \mu_i$
-	\end{itemize}
-	
-	\item $\Ag$ sends $\tau_x, \mu, \hat{t}$ to $\verifier$. 
-	
-	\item $\Ag \leftrightarrow \verifier$ run a subprotocol for the following inner product argument:
-	\begin{itemize}
-		\item $\innerproduct(\bm{g}, \bm{h'}, P\cdot h^{-\mu}, \hat{t}; \bm{l},\bm{r})$, where $\bm{h'}$ is such that $h'_i = h_i^{y^{-i+1}}$ $\forall i\in[n]$
-	\end{itemize} 
-\end{enumerate}
 
 \subsection{Summary of existing protocols}
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
+\end{comment}
+ In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available DPZK protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.\pnote{add the reference}
 
-\begin{table}[htb!] 
+\begin{table}[h!] 
 	\centering
 	\resizebox{\textwidth}{!}{
 	\begin{threeparttable}
@@ -209,7 +126,7 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		\toprule
 		Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & Number of MPC & $\prcomm$ \\
 		\hline
-		Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
+		D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
 		\hline
 		\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & MPC($N_s,1$) & $\Num N^{1-1/c}$ \\
 		\hline
@@ -228,10 +145,6 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
 		%\hline
 	\end{tabular}
-
-\begin{tablenotes}
-	\item[--] Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.
-\end{tablenotes}
 \end{threeparttable}
 }
 \caption{Comparison table}\label{tab:SPZK}
