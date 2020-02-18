@@ -60,6 +60,7 @@ The IOP-based protocols in the literature \cite{aurora, ligero} market their non
 
 Another subtle point here is that a single-prover ZK protocol provides the zero-knowledge property only for honest provers. The witness is not guaranteed to be hidden from the verifier if a prover deviates from the protocol. Hence, in a distributed prover setting it is non-trivial to prove or even define the zero-knowledge property if some of the provers deviate from the protocol or if they do not have the valid witness. We take these into account while defining the security notions of $\DPZK$ and when constructing our $\DPZK$ protocol.
 
+\commentA{again the technique section should talk about Graphene and tell about SP-graphene as a stepping stone to the main construction Graphene. Right now it seems SP-Graphene is out main construction and everything else revolves around it. I don't  see Graphene occurring anywhere in the abstract and introduction. protik mentioned that we have some contributions for DP-Bulletproof. We should tell that here.  }
 \subsection{\name{}: an MPC-friendly zero-knowledge protocol}
 We propose an MPC-friendly single-prover protocol \name{} with a transparent setup with $\prcomm$ linear in circuit size and a constant number of $\prrounds$.  
 %This linear $\prComm$ is due to linear number of cross-multiplications which can be done concurrently, and hence the MPC is only performed on an $N$ mult-gates circuit of depth 1. 

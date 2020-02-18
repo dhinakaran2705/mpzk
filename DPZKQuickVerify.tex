@@ -688,7 +688,7 @@ with the provers.
 complete distributed protocol in Figure \ref{fig:distlincheck}. Here we
 highlight key adaptations from the single prover variant. First we assume
 that the provers have a share of the vector $0^h$ (as part of obtaining
-shares of the extended witness). In response to verifier’s challenge $r\in
+shares of the extended witness).\pnote{How to get shares of zero in malicious secure way?} In response to verifier’s challenge $r\in
 \FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials
 $R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear
 operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally
@@ -856,12 +856,35 @@ share of $0^h$.
 \item Uniform distribution on the set codewords $P_0$ in $\dashL_2$ satisfying
 $\sum_{j\in [m]}P_0[j]=0$ if all the provers follow the protocol and
 jointly have the correct witness.
-\item Provers follow the protocol but with incorrect inputs: ??
+\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
 \end{itemize}
 
 Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
+\begin{lemma}\label{lem:privacy}
+	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$ denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from an actual execution of the protocol if there is a secure MPC for multiplication which withstand against the corrupt parties in $I$.(May be a broadcast required)
+\end{lemma}
 
+\begin{proof}
+	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality ~\ref{func:DPZK}. Provers in $I$ encodes and commits to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the commitment is extractable, so $\Sim$ extracts and gets shares of $\wit, x,y,z$ of the parties in $I$. 
+	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$, if it outputs 1, then $\Sim$ uses the same approach of  
+	%$\Sim$ picks random chanllenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
+	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$.
+	$\Sim$ gets $\shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}$ and $\shr{Z}$ in linear check and using extraction of commitment gets the committed values if there is some inconsistency then 
+	%output $\abort$, else continue.
+	sets state as fail. otherwise pass.
+	For quadratic check, $\Sim$ calls the simulator, $\Sim_M$, of the secure multiplication protocol. $\Sim_M$ extracts the input of the MPC and $\Sim$ does the consistency check. If there is some inconsistency then 
+	%output $\abort$, else continue.
+	sets state as fail. otherwise pass.
+	
+	Now for both the protocols if all the computations are consistent till the provers are send the final messages to $\Ag$, which are the witnesses of the inner product arguments.
+	
+	Then $\Sim$ calls the functionality $\Func_{\DPZK}$ with the input $\wit, x,y,z$ of the parties in $I$. If it outputs 1, then generates the final messages of the honest parties using the accepting transcript produced by the zero-knowledge simulator. Else picks any random message which is consistent till with the transcript.
+	
+	If there is some inconsistency in some intermediate step, then $\Sim$ calls the functionality $\Func_{\DPZK}$ on some random value and proceeds similarly.
+	
+	This proves that the view of the corrupt provers can be simulated, Which ensures the privacy.
+\end{proof}
 
 %\end{enumerate}
    
