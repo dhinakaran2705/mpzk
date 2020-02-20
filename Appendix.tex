@@ -652,6 +652,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \begin{framed}
 \begin{itemize}
 \item {$\linearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in \FF^M,[\pi];\ewit)$}:
+\pnote{Why $A$ is not a square matrix?}
 \item {\bf Relation}: $\exists \ewit$ s.t. $\ewit=\open(\pi)$ and $A\wit = b$
 for $\wit=\dec(\ewit)$.
 \item {\bf Oracle Setup}: The prover $\prover$ computes
@@ -660,6 +661,7 @@ The prover sets $\pi := \comoracle$ as the oracle.
 \begin{enumerate}[{\rm 1.}]
 \item $\verifier\rightarrow\prover$: $\verifier$ samples $r\sample \FF^N$ and
 sends it to $\prover$.
+\pnote{ dimension of $r$ is not correct}
 \item $\prover\longleftrightarrow\verifier$: Both $\prover$ and $\verifier$
 compute polynomials $R^i$, $i\in [p]$ such that
 $R^i(\alpha_j,\zeta_k)=R[i,j,k]$, where $R=r^TA$. 
