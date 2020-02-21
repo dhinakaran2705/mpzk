@@ -15,7 +15,7 @@ Among the state-of-art works, only Bulletproofs \cite{bulletproofs} discuss Aggr
 In Appendix \ref{app:BulletproofsDPZK}, we will discuss how we adapt bulletproofs to support distributed proof generation for arbitrary arithmetic circuit with one round of secure multiplication.%, which they mentioned as still open in \cite{bulletproofs}. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
 
-Other works such as \cite{Aurora} requires quite heavy public key operations to obtain DPZK, since all messages of \cite{Aurora} are formed as an oracle and obtaining \cite{spartan} is difficult in the sense that privacy of the honest provers from the corrupted provers, in particular aggregator is difficult.
+Other works such as \cite{Aurora} requires quite heavy public key operations to obtain $\DPZK$, since all messages of \cite{Aurora} are formed as an oracle and obtaining \cite{spartan} is difficult in the sense that privacy of the honest provers from the corrupted provers, in particular aggregator is difficult.
 %\subsection{DPZK-Aurora}
 
 \begin{comment}
@@ -116,7 +116,7 @@ We can combine the inner product $\langle \bm{r}^T \cdot A, \extwit \rangle = \l
 Argue why we need a better a single prover protocol amenable to multiple provers. 
 --- Augment Table \ref{tab:SPZK} with the columns needed for multiple provers and use it for the argument--- 
 \end{comment}
- In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available DPZK protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.\pnote{add the reference}
+ In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.\pnote{add the reference}
 
 \begin{table}[h!] 
 	\centering
