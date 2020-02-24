@@ -74,7 +74,7 @@ notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h
 the set of two dimensional $h\times n$ matrices as $\mc{M}_{h\times n}$. We
 assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
 as discussed in Section \ref{sec:prelims}. We now discuss the commitment scheme
-for matrices in $L_1\oplus L_2$. Note that a matrix $U\in L_1\oplus L_2$ is
+for matrices in $L_1\otimes L_2$. Note that a matrix $U\in L_1\otimes L_2$ is
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
@@ -95,7 +95,7 @@ Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
-$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\oplus L_2$. In contrast
+$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\otimes L_2$. In contrast
 to Section ~\ref{sec:codesandmatrices}, instead of
 committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
