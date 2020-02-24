@@ -14,10 +14,11 @@ field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
 $A\wit\circ B\wit=C\wit$. We follow the broad outline of the interactive PCP
 construction in \cite{ligero} which includes: (i) encoding the witness via suitable
-error correcting code, (ii) checking linear relations on the witness, with
-sub-linear access to the witness encoding, (iii) checking quadratic relations on
-the witness with sub-linear access to witness encoding and (iv) a proximity
-protocol to check that witness is correctly encoded. However, one runs into 
+error correcting code, (ii) checking linear relations on the witness, and 
+(iii) checking quadratic relations on
+the witness. Both the linear and quadratic checks require sublinear (oracle) access to the 
+witness encoding.
+However, one runs into 
 challenges in converting the IPCP to a non-interactive
 argument when the witness is distributed across several provers. The naive
 approach of provers sharing their encoded witnesses with an aggregator, which
@@ -31,7 +32,7 @@ construction are summarized below:
 access to the commitment. This facilitates oracle realization through
 aggregation.
 \item We design protocols for checking linear constraints, quadratic constraints
-and proximity to correct encoding with oracle access to the commitment.
+and with oracle access to the commitment.
 \item We come up with new witness encoding scheme, to facilitate smaller
 argument size, and reduce communication between the provers during proof
 generation.
