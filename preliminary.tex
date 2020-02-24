@@ -150,8 +150,12 @@ We define an interactive protocol that allows proving inner-product relation ove
 
 We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
 \begin{equation*}
-\calL_\sigma = \{(c_1,c_2,v):\exists \; x_1,x_2,r_1,r_2 \text{ s.t. }
+%\begin{aligned}[c]
+\begin{array}{l}
+\calL_\sigma = \{(c_1,c_2,v):\exists \; x_1,x_2,r_1,r_2 \text{ s.t. } \\
 c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\} 
+%\end{aligned}
+\end{array}
 \end{equation*}
 
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
@@ -160,25 +164,47 @@ The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pa
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
-\begin{align*}
-\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
-\begin{array}{l}
-\sigma\gets \gen(\secparam);\\
-(\stmt,\wit)\gets \adv(\secparam,\sigma)
-\end{array}
-}=1
-\end{align*}
 
-\item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
+%\begin{align*}
+%\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
+%\begin{array}{l}
+%\sigma\gets \gen(\secparam);\\
+%(\stmt,\wit)\gets \adv(\secparam,\sigma)
+%\end{array}
+%}=1
+%\end{align*}
+\footnotesize
 \begin{align*}
-\condprob{\stmt\not\in \calL_\sigma \wedge \langle
-\prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1}{
+\condprob{
+	\begin{array}{l}
+	(\stmt,\wit)\in \calR_\sigma \vee\\ \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1
+	\end{array}}{
+	\begin{array}{l}
+	\sigma\gets \gen(\secparam);\\
+	(\stmt,\wit)\gets \adv(\secparam,\sigma)
+	\end{array}
+}
+=1
+\end{align*}
+\normalsize
+\pnote{Why $\vee$? not $\wedge$ in the definition of completeness}
+\item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
+
+\footnotesize
+\begin{align*}
+\condprob{
+	\begin{array}{c}
+	\stmt\not\in \calL_\sigma \wedge \\
+	\langle
+\prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1
+\end{array}}{
 \begin{array}{l}
 \sigma\gets \gen(\secparam);\\
 (\stmt,s)\gets \adv(\secparam,\sigma)
 \end{array}
 } = \negl(\lambda)
 \end{align*}
+
 \end{enumerate}
 
 \end{definition}

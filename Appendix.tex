@@ -236,6 +236,7 @@ For $x\in \calM_\sigma$, we generate a {\em commitment} of $x$ as $\com_\sigma(x
 
 \begin{definition}[Hiding Commitment]\label{defn:hidingcomm}
 A commitment scheme $(\gen,\com)$ is called perfectly {\em hiding}  if for all adversaries $\adv$, the following probability is  $1/2$:
+{\small
 \begin{align*}
 \condprob{b=b'}{
 \begin{array}{l}
@@ -246,18 +247,26 @@ b'\gets \adv(\secparam,\sigma,c)
 \end{array}
 }
 \end{align*}
+}
 \end{definition}
 
 \begin{definition}[Binding Commitment]\label{defn:bindingcomm}
 A commitment scheme $(\gen,\com)$ is called {\em binding} if for all $\ppt$  $\adv$, 
+{\small
 \begin{align*}
-\condprob{\com_\sigma(x_0,r_0)=\com_\sigma(x_1,r_1)\wedge x_0\neq x_1}{
+\condprob{
+	\begin{array}{c}
+	\com_\sigma(x_0,r_0)=\com_\sigma(x_1,r_1)\\
+	\wedge x_0\neq x_1
+\end{array}}{
 \begin{array}{l}
 \sigma \gets \gen(\secparam) \\
 x_0,x_1,r_0,r_1 \gets \adv(\secparam,\sigma)
 \end{array}
-} < \negl(\lambda)
+}\\
+ < \negl(\lambda)
 \end{align*}
+}
 
 \end{definition}
 \subsection{Inter-product Arguments} \label{inner-product-instan}
@@ -288,17 +297,17 @@ $\mc{L}$ if for every $\ppt$
 prover $P^\ast$, there exists an expected polynomial time extractor $\extr$ such that for all $x$:
 %\begin{comment}
 \small
-\begin{align}
+\begin{align*}
 \condprob{(x,w)\in \mc{L}}{
 \begin{array}{c}
 \sigma\sample\setup(\secparam) \\
 w\sample \extr^{\mc{O}}(x,\sigma)
 \end{array}
-}
+}\\
 \geq \condprob{\langle
 P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
 \negl(\lambda)
-\end{align}
+\end{align*}
 %\end{comment}
 %\begin{align}
 %&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
@@ -364,13 +373,13 @@ consider the probability that $\overline{U}\mc{T}\in \mc{C}_2$. Let $A$ denote t
 that the first transcript accepts. Let $B\subseteq A$ be the event that
 $(\overline{U}\neq\bot)\cap (\overline{U}\mc{T}\in \mc{C}_2)$. We have,
 \begin{align*}
-\prob{B} &= \prob{A} - \prob{A\cap \neg B} \\
+&\prob{B}\\ &= \prob{A} - \prob{A\cap \neg B} \\
 	&\geq \prob{A} - \prob{A\cap (\overline{U}=\bot)} - \prob{A\cap
 (\overline{U}\mc{T}\not\in \mc{C}_2)} \\
 	&= \prob{A} - \prob{A\cap (\overline{U}=\bot)} - \prob{A\cap
 (\mc{T}^T\overline{U}^T\mc{H}_2\neq 0)} \\
-	&\geq \prob{A} - \prob{A\cap (\overline{U}=\bot)} -
-\condprob{\tau^T\mc{T}^T\overline{U}^T\mc{H}_2\delta=
+	&\geq \prob{A} - \prob{A\cap (\overline{U}=\bot)} -\\
+& \text{     }\condprob{\tau^T\mc{T}^T\overline{U}^T\mc{H}_2\delta=
 0}{\mc{T}^T\overline{U}^T\mc{H}_2\neq 0} \\
 	&\geq \prob{\langle P^\ast(\bm{c},\sigma),\verifier(\bm{c},\sigma)\rangle=1}
 - \big(\ell.\kappa_{ip}(\secpar)+1/|\FF|\big) - 2/|\FF|
@@ -490,10 +499,11 @@ constitutes breakage to the binding property of the commitment scheme $\comm$.
 \end{enumerate}
 Assuming $\Delta_1(U_{adv},U_{hon})\leq e$, we have $d_1(U_{hon},\mc{C}_1)\leq
 e$. From the above, we can now write:
-\begin{equation}\label{eq:probeq4}
-\condprob{A}{d_1(\ewit,\mc{W}_1)>e,\varepsilon\leq e}\leq
+\begin{align*}\label{eq:probeq4}
+&\condprob{A}{d_1(\ewit,\mc{W}_1)>e,\varepsilon\leq e}\\
+\leq&
 \condprob{d_1(U_{hon},\mc{C}_1)\leq e}{d_1(\ewit,\mc{W}_1)>e} + \mc{B}(\secpar)
-\end{equation}
+\end{align*}
 Since $U_{hon}=\sum_{i\in [p]}r_i\ewit[i,\cdot,\cdot]$, from Lemma
 \ref{lem:3dcompression}, we have $\condprob{d_1(U_{hon},\mc{C}_1)\leq
 e}{d_1(\ewit,\mc{W}_1)>e}<d_1/|\FF|$ where $d_1$ is the minimum distance of the
@@ -583,13 +593,15 @@ For initial transcript to accept, all the $t$ checks should succeed, and thus we
 have:
 {\small
 \begin{align}\label{eq:probeq7}
-\prob{\mc{S}\cap (A\wit\neq b)}&\leq
+&\prob{\mc{S}\cap (A\wit\neq b)}\\
+\leq&
 \left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
 + \kappa_{3d}(\secpar) + \mc{B}(\secpar) +
 \frac{O(|C|)}{|\FF|} \nonumber \\
-&\leq \left(1-\frac{e}{n}\right)^t +
+\leq& \left(1-\frac{e}{n}\right)^t +
 \left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)\right)^t
-+ \frac{O(|C|)}{|\FF|} + \mc{B}(\secpar)
+\\
+& \qquad \, \, \,+ \frac{O(|C|)}{|\FF|} + \mc{B}(\secpar)
 \end{align}
 }
 Thus the statement of the lemma holds for $\kappa_{lc}(\secpar) := (1-e/n)^t +
@@ -1103,8 +1115,9 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 	\item $\prover_i$ computes:
 	if 
 	\begin{align*}
-	i=1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3 + \bm{y}^{-n}\circ (\bm{z}_{[1:]}^{Q+1} \cdot W_R)\cdot X \\
-	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3 - \bm{y}^n + \bm{z}^{Q+1}_{[1:]} \cdot (W_L\cdot X + W_O)\\
+	i=1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3 \nonumber\\	&\qquad + \bm{y}^{-n}\circ (\bm{z}_{[1:]}^{Q+1} \cdot W_R)\cdot X \\
+	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3 \nonumber \\
+	&\qquad - \bm{y}^n + \bm{z}^{Q+1}_{[1:]} \cdot (W_L\cdot X + W_O)\\
 	i \neq 1 : &l_i(X) = \bm{a}_{L,i}\cdot X + \bm{a}_{O,i} \cdot X^2 + \bm{s}_{L,i} \cdot X^3\\
 	&r_i(X) = \bm{y}^n\circ \bm{a}_{R,i}\cdot X + \bm{y}^n \circ \bm{s}_{R,i}\cdot X^3
 	\end{align*}
