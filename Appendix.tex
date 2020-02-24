@@ -650,6 +650,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \begin{figure}[h!]
 \centering
 \begin{framed}
+\small
 \begin{itemize}
 \item {$\linearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in \FF^M,[\pi];\ewit)$}:
 \pnote{Why $A$ is not a square matrix?}
@@ -741,15 +742,17 @@ sends it to the prover.
 \item $\verifier$ accepts if $b=1$.
 \end{enumerate}
 \end{itemize}
+
 \end{framed}
 \caption{Linear Check Protocol}
-\label{fig:linearcheck}
+%\label{fig:linearcheck}
 \end{figure}
 
 
 \begin{figure}[h!]
 \centering
 \begin{framed}
+\small
 \begin{itemize}
 \item $\quadcheck(\FF,\GG,L_1,L_2,[\pi];\wit_x,\wit_y,\wit_z)$:
 \item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
@@ -832,6 +835,7 @@ $a_{3u}=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi_z[\cdot,k_u],Z_u;\ewit_z[\cdot,\
 \begin{figure}[h!]
 \centering
 \begin{framed}
+\footnotesize
 \begin{itemize}
 \item {$\distlinearcheck(\FF,\GG,L_1,L_2,A\in \FF^{M\times N},b\in
 \FF^M,[\pi];\shr{\ewit},\shr{0^h})$}
@@ -947,6 +951,7 @@ $a_u=\agginnerproduct(\GG,\bm{g},e_{j_u},\pi[\cdot,k_u],X_u;\ewit[\cdot,\cdot,k_
 \begin{figure}[h!]
 \centering
 \begin{framed}
+\small
 \begin{itemize}
 \item $\distquadcheck(\FF,\GG,L_1,L_2,[\pi];[[\wit_x]],[[\wit_y]],[[\wit_z]])$:
 \item {\bf Relation}: $\exists (\ewit_x,\ewit_y,\ewit_z)$
@@ -1119,6 +1124,7 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 	
 	\item $\prover_i$ computes:
 	\begin{itemize}
+	\small
 		\item $\bm{l}_i = l_i(x) \in \ZZ^n_p$ \& $\bm{r}_i = r_i(x) \in \ZZ^n_p$
 		\item $\tau_x^j = \sum\limits_{j=1, j\neq 2}^{6} \tau_j^i\cdot x^i \in \ZZ_p$ \& $\mu_i = \alpha_i\cdot x +\beta_i \cdot x^2 +\rho_i\cdot x^3 \in \ZZ_p$
 	\end{itemize}  

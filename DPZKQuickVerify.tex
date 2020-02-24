@@ -64,23 +64,32 @@ distributed uniformly on $\mc{U}(p,h,b)$.
 \end{lemma}
 We defer the proof of the above Lemma to the Appendix. \commentA{appendix number is missing}
 
-\subsection{Codes, Matrices and Commitments}\label{sec:codesandmatrices}
+\subsection{Codes and Matrices}\label{sec:codesandmatrices}
 We now fix the notation for some of the codes that will be
 frequently used throughout this section. We use $L_1$ and $L_2$ to denote codes
 $\rsc{\eta}{n,\ell}$ and $\rsc{\alpha}{h,m}$ respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ 
-and $\mc{C}_2 :=\cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. We denote the
-parity check matrices for $L_1$ and $L_2$ by $\mc{H}_1$ and $\mc{H}_2$. We also
-notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
+and $\mc{C}_2 :=\cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. In addition 
+we use codes $L_3 := \rsc{\eta}{n,s+\ell}$, $L_4 := \rsc{\eta}{n,2\ell}$ and 
+$L_5=\rsc{\alpha}{h,2m}$ to encode some intermediate computations in our protocols.
+Let $\Lambda_1$ denote the matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
+to the unique codeword $y$ in $L_1$ such that $y_i=x_i$ for $i\in [\ell]$. Thus $\Lambda_1$ is 
+an $n\times \ell$ matrix. Let $\Lambda_2,\Lambda_3,\Lambda_4$ and $\Lambda_5$ be similar matrices
+for the codes $L_2,L_3,L_4$ and $L_5$ respectively. We denote the
+parity check matrices for $L_i$  by $\mc{H}_i$ for $i\in \{1,\ldots,5\}$. 
+We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
 the set of two dimensional $h\times n$ matrices as $\mc{M}_{h\times n}$. We
 assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
-as discussed in Section \ref{sec:prelims}. We now discuss the commitment scheme
-for matrices in $L_1\otimes L_2$. Note that a matrix $U\in L_1\otimes L_2$ is
+
+\subsection{Commitments for Product Codewords}\label{sec:matrixcommitment}
+We now discuss the commitment scheme
+for matrices in $L_1\oplus L_2$. Similar scheme works for other product codes also. 
+Note that a matrix $U\in L_1\oplus L_2$ is
+
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
 where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$
 column of $\overline{U}$ for $k\in [\ell]$. 
-
 
 \subsection{Oracle Construction}\label{sec:construct_oracle} 
 Unlike prior IOP constructions such as \cite{ligero, aurora}, we additionally
@@ -95,8 +104,10 @@ Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
-$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\otimes L_2$. In contrast
-to Section ~\ref{sec:codesandmatrices}, instead of
+
+$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\oplus L_2$. In contrast
+to Section ~\ref{sec:matrixcommitment}, instead of
+
 committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
  as it only has oracle access to $\comoracle$. 
@@ -145,13 +156,13 @@ $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
 .\nnote{Provide reference to Reed Solomon Decoding}
 
 
-\subsection{Linear Check Protocol}
+\subsection{Linear Check Protocol}\label{sec:lincheck}
 In this section, we describe an IPCP that allows a prover to prove knowledge of
 witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
 for some $A\in \FF^{M\times N}$ and $b\in \FF^M$. As before we veiw $\wit$ as
 $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
-\ref{sec:witencoding} and \ref{sec:construct_oracle}, we obtain $\ewit\sample 
-\enc(\wit)$ and $\comoracle\sample \comm(\ewit)$. We present the full protocol in
+\ref{sec:witencoding} and \ref{sec:construct_oracle}, the prover obtains $\ewit\gets 
+\enc(\wit)$ and $\comoracle\gets \comm(\ewit)$. We present the full protocol in
 Figure \ref{fig:linearcheck}. First we describe the key ideas in the protocol
 for an honest prover. We then discuss how to achieve soundness against an
 adverserial prover.\smallskip
@@ -184,12 +195,7 @@ product of codes $\rsc{\eta}{n,s+\ell}$ and $\rsc{\alpha}{h,2m}$. We let the
 prover commit to the matrix $P$, by sending column commitments for the $2m\times
 (s+\ell)$ submatrix $\overline{P}$ of $P$ consisting of the first $2m$ rows and
 the first $s+\ell$ columns of $P$. Let $c_1,\ldots,c_{s+\ell}$ denote the
-commitments to columns of $\overline{P}$. Let $\Lambda_1$ denote $n\times
-(s+\ell)$ matrix that
-maps the first $s+\ell$ entries of a row of $P$ to entire corresponding row of $P$. Similarly let
-$\Lambda_2$ denote the $h\times 2m$ matrix which maps the first $2m$ entries of
-a column of $P$ to entire corresponding column of $P$. Note that the matrices exist as the
-operations are linear transformations.\smallskip
+commitments to columns of $\overline{P}$.\smallskip 
 
 \noindent {\em Consistency of $P$ and $p(\zetabar)$}:
 Let $\etabar$ denote the vector
@@ -203,7 +209,11 @@ commitment to $\overline{P}\varphi$ can be computed as
 $\mathsf{cm}=\sum_{k=1}^{s+\ell}\varphi_kc_k$. Using an inner product argument
 the prover can show that the commitment $\mathsf{cm}$ opens to vector $z$ such
 that $\innp{1^m}{z}=r^Tb$. Binding property of the commitment ensures that
-$z=\overline{P}\varphi$ with overwhelming probability.
+$z=\overline{P}\varphi$ with overwhelming probability. In the full protocol, 
+the prover initially commits to a random $P_0\in \FF^m$ subject to $\innp{1^m}{P_0}=0$ and 
+uses $\beta P_0 + \overline{P}\varphi$ as witness in the inner product protocol. Here 
+$\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This randomization
+precludes the need for the inner product argument to be zero knowledge.\smallskip 
 
 \noindent{\em Consistency of $\comoracle$ and $P$}: The verifier additionally
 needs to determine if $P$ is correctly computed from the encoding $\ewit$
@@ -212,8 +222,8 @@ consistency at randomly sampled positions $Q=\{(j_u,k_u): u\in [t]\}$ from
 $[h]\times [n]$. It queries the oracle for the columns $\pi[\cdot,k_u]$ for
 $u\in [t]$ and queries the prover for vectors $X_u=\ewit[\cdot,j_u,k_u]$ for
 $u\in [t]$. For $u\in [t]$, let $f_u$ denote the unit vector in $\FF^h$ with $1$ in the position
-$j_u$. The verifier checks the following inner products:
-\begin{enumerate}[{\rm (i)}]
+$j_u$. The prover and the verifier run inner product arguments to establish the following:
+\begin{enumerate}[{\rm 1.}]
 \item $\innp{f_u}{P[\cdot,k_u]}=\sum_{i\in [p]}R^i(j_u,k_u)X_u[i]$ for $u\in
 [t]$.  Note that for honestly computed $P$,
 $\innp{f_u}{P[\cdot,k_u]}=P[j_u,k_u]=\sum_{i\in
@@ -222,18 +232,18 @@ $\innp{f_u}{P[\cdot,k_u]}=P[j_u,k_u]=\sum_{i\in
 honestly computed $P$ and honest vectors $X_u=\ewit[\cdot,j_u,k_u]$. Now, the
 verifier can compute the commitment $\mathsf{cm}_u$ to the vector $Z_u$ consisting of
 the first $2m$ entries of the column $P[\cdot,k_u]$ using the
-matrix $\Lambda_1$ as $\mathsf{cm}_u=\sum_{a\in [s+\ell]}\Lambda_1[a,k_u]c_k$. Next,
-we observe that $\innp{f_u}{P[\cdot,k_u]}=\innp{f_u}{\Lambda_2
-Z_u}=\innp{f_u^T\Lambda_2}{Z_u}$. In
+matrix $\Lambda_3$ (see Section ~\ref{sec:codesandmatrices}) as $\mathsf{cm}_u=\sum_{a\in [s+\ell]}\Lambda_3[a,k_u]c_k$. Next,
+we observe that $\innp{f_u}{P[\cdot,k_u]}=\innp{f_u}{\Lambda_5
+Z_u}=\innp{f_u^T\Lambda_5}{Z_u}$. In
 the last formulation, the first vector is public and the commitment to the
 second vector is known ($\mathsf{cm}_u$) and hence the prover and the verifier can
 check the identity using the inner product argument.
 
 \item $\innp{f_u}{W_{iu}}=X_u[i]$ for all $u\in [t],i\in
 [p]$. Here $W_{iu}$ denotes the vector $\ewit[i,\cdot,k_u]$. Again, we write
-$W_{iu}=\Omega_2V_{iu}$ where $V_{iu}$ denotes the vector consisting of the
+$W_{iu}=\Lambda_2V_{iu}$ where $V_{iu}$ denotes the vector consisting of the
 first $m$ entries of $W_{iu}$. We rewrite the preceeding inner product as
-$\innp{f_u^T\Omega_2}{V_{iu}}=X_u[i]$, which can be executed as the commitment
+$\innp{f_u^T\Lambda_2}{V_{iu}}=X_u[i]$, which can be executed as the commitment
 $\pi[i,k_u]$ of $V_{iu}$ is present as part of the oracle response. In fact, the checks for each
 $u\in [t]$ can be aggregated, leading to one inner product check for each $u\in
 [t]$.
@@ -241,7 +251,7 @@ $u\in [t]$ can be aggregated, leading to one inner product check for each $u\in
 
 \noindent{\em Proximity Check for Oracle}: As we shall see, the soundness of the
 preceeding checks depends on the oracle $\pi$ being ``close'' to a well formed
-encoding. To check that, the verifier initially (before sending the query $Q$) sends a vector $\rho\sample
+encoding. To check that, the verifier initially (before sending messages $r,Q$) sends a vector $\rho\sample
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_1)$ to $\tilde{U}=\sum_{i\in
 [p]}r_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
@@ -249,11 +259,11 @@ $(\tilde{c}_1,\ldots,\tilde{c}_1)$ to $\tilde{U}=\sum_{i\in
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}$ is as defined earlier.\smallskip
 
-The complete linear check protocol is described in Figure \ref{fig:linearcheck}. 
-In Figure \ref{fig:linearcheck}, the protocol $\agginnerproduct$ denotes the protocol 
-for veryfying inner products of several commited vectors with a common vector. 
-The completeness of the linear check protocol can be easily verified. We sketch the proof for its
-soundness, leaving the detailed proof to the Appendix.
+The complete linear check protocol is described in Figure \ref{fig:linearcheck}.
+%the protocol $\agginnerproduct$ denotes the protocol 
+%for veryfying inner products of several commited vectors with a common vector. 
+%The completeness of the linear check protocol can be easily verified. We sketch the proof for its
+%soundness, leaving the detailed proof to the Appendix.
 
 \begin{lemma}[Soundness]\label{lem:linercheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{p\times n}$,
@@ -265,18 +275,19 @@ $P^\ast$ succeeds, i.e,
 {\small
 \begin{align*}
 \condprob{\begin{array}{c}
-\ewit=\open(\pi)\wedge A\wit=b \\
-\text{ where } \wit=\dec(\ewit)
+\ewit=\open(\pi)\wedge \\
+A\wit=b
 \end{array}
 }{
 \begin{array}{c}
 \sigma\sample \gen(\secparam) \\
-\ewit\sample \extr^{\mc{O}}(\bm{x},\sigma)
+\ewit\gets \extr^{\mc{O}}(\bm{x},\sigma) \\
+\wit\gets \dec(\ewit)
 \end{array}}\geq
 \epsilon(P^\ast)-\kappa_{lc}(\secpar)
 \end{align*}
 }
-where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
+where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
 \begin{proof}[Proof-Sketch]
 Suppose the oracle $\pi$ commits to $\ewit$ such that $\wit=\dec(\ewit)$ does
@@ -304,6 +315,45 @@ $P_{\rm adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary
 fails with constant probability, and hence it's success probability is
 negligible over $t=O(\secpar)$ checks.
 \end{proof}
+
+\begin{figure}[t!]
+%\centering
+\begin{framed}
+\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}:
+
+\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
+
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+\item $\verifier\rightarrow\prover$: $r\sample \FF^N$.
+\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+as in Section ~\ref{sec:lincheck}. 
+\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+Computes commitments $c_1,\ldots,c_{s+\ell}$ form $P$.
+\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell}$.
+\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+\item $\prover\rightarrow\verifier$: $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+\item $\prover$ and $\verifier$ run inner product arguments to check:
+\begin{enumerate}
+\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
+for $u\in [t]$ where $\mathsf{cm}_u=\sum_{a=1}^{s+\ell}\Lambda_3[a,k_u]c_a$, 
+$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
+\item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=\beta c_0+\sum_{a=1}^{s+\ell}\varphi_ac_a$ (check the condition $r^TAw=r^Tb$).
+\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$). 
+\end{enumerate}
+\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+\end{enumerate}
+\end{framed}
+\caption{Linear Check Protocol}
+\label{fig:linearcheck}
+\end{figure}
 
 
 \subsection{Quadratic Check Protocol}
