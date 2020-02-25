@@ -79,12 +79,12 @@ parity check matrices for $L_i$  by $\mc{H}_i$ for $i\in \{1,\ldots,5\}$.
 We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
 the set of two dimensional $h\times n$ matrices as $\mc{M}_{h\times n}$. We
 assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
-as discussed in Section \ref{sec:prelims}. 
 
 \subsection{Commitments for Product Codewords}\label{sec:matrixcommitment}
 We now discuss the commitment scheme
 for matrices in $L_1\oplus L_2$. Similar scheme works for other product codes also. 
 Note that a matrix $U\in L_1\oplus L_2$ is
+
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
@@ -104,8 +104,10 @@ Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
+
 $i^{th}$ slice of $\ewit$, which is a codeword in $L_1\oplus L_2$. In contrast
 to Section ~\ref{sec:matrixcommitment}, instead of
+
 committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
  as it only has oracle access to $\comoracle$. 
@@ -246,7 +248,7 @@ commitments to columns of $\overline{P}$.\smallskip
 Let $\etabar$ denote the vector
 $(\eta_1,\ldots,\eta_{s+\ell})$, and let $\Phi$ denote the $s\times (s+\ell)$
 matrix such that $p(\zetabar)=\Phi p(\etabar)$. Further, observe that
-$p(\etabar)=(\overline{P})^T[1^m]$, and thus
+$p(\etabar)=(\overline{P})^T[1^m]$ \pnote{dimension mismatch, it should be $\overline{P}^T[{1^m}||{0^m}]^T$}, and thus
 $p(\zetabar)=\Phi(\overline{P})^T[1^m]$. Now, we have
 $\innp{1^s}{p(\zetabar)}=p(\zetabar)^T[1^s]=[1^m]^T\overline{P}\Phi^T[1^s]=\innp{1^m}{\overline{P}\varphi}$
 where $\varphi=\Phi^T[1^s]$. Given commitments $c_1,\ldots,c_{s+\ell}$, the
@@ -277,7 +279,7 @@ $\innp{f_u}{P[\cdot,k_u]}=P[j_u,k_u]=\sum_{i\in
 honestly computed $P$ and honest vectors $X_u=\ewit[\cdot,j_u,k_u]$. Now, the
 verifier can compute the commitment $\mathsf{cm}_u$ to the vector $Z_u$ consisting of
 the first $2m$ entries of the column $P[\cdot,k_u]$ using the
-matrix $\Lambda_3$ (see Section ~\ref{sec:codesandmatrices}) as $\mathsf{cm}_u=\sum_{a\in [s+\ell]}\Lambda_3[a,k_u]c_k$. Next,
+matrix $\Lambda_3$ (see Section ~\ref{sec:codesandmatrices}) as $\mathsf{cm}_u=\sum_{a\in [s+\ell]}\Lambda_3[a,k_u]c_k$. \pnote{Check the equation. It should be $\cm_k = \sum_{a\in[s+\ell]} \Lambda_3^T[a,k] c_a$ } Next,
 we observe that $\innp{f_u}{P[\cdot,k_u]}=\innp{f_u}{\Lambda_5
 Z_u}=\innp{f_u^T\Lambda_5}{Z_u}$. In
 the last formulation, the first vector is public and the commitment to the
@@ -399,7 +401,7 @@ $t=O(\secpar)$ checks.
 \item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
 commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
 \item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
-\item $\verifier\rightarrow\prover$: $r\sample \FF^N$.
+\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
 \item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 as in Section ~\ref{sec:lincheck}. 
 \item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
@@ -490,6 +492,8 @@ We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
 
+\input{quadratic.tex}
+
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{3p\times n}$,
 there exists an expected polynomial time extractor $\extr$ with rewinding access
@@ -509,7 +513,8 @@ with overwhelming probability whenever $P^\ast$ succeeds, i.e,
 {[}\ewit_x||\ewit_y||\ewit_z{]}\sample \extr^{\mc{O}}(\sigma)\\
 \wit_a=\dec(\ewit_a), a\in \{x,y,z\}
 \end{array}
-}\geq \epsilon(P^\ast) - \kappa_{\rm qd}(\secpar)
+}\\
+\geq \epsilon(P^\ast) - \kappa_{\rm qd}(\secpar)
 \end{align*}
 }
 for some negligible function $\kappa_{qd}$. In the above, $\epsilon(P^\ast)$
@@ -630,6 +635,7 @@ of the protocol $\quadcheck$ for $t\leq \bi$.
 
 
 \subsection{Extension to DPZK}
+\pnote{To obtain the security against malicious provers, protocol needs require minor modification. If $i$th prover sends some commitment outcome, the with the commitment he needs to send a ZKAoK with the commitment that ensures the knowledge of the committed value to the prover. }
 We now describe variants of the protocols discussed previously when the witness
 is shared among several provers. We assume that there are $K$ provers
 $P_1,\ldots,P_K$. For $\xi\in [K]$, let $\shr{\wit}$ denote the prover

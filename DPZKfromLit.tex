@@ -118,42 +118,11 @@ Argue why we need a better a single prover protocol amenable to multiple provers
 \end{comment}
  In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting.$M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. MPC$(x,y)$ denotes the number of MPC, for $x$ input function with depth-$y$ circuit, required for a protocol and $N_s$ denotes the size of the shared circuit, discussed in ~\ref{}.\pnote{add the reference}
 
-\begin{table}[h!] 
-	\centering
-	\resizebox{\textwidth}{!}{
-	%\begin{threeparttable}
-	\begin{tabular}{|c|c|c|c|c|c|c|} 
-		\hline
-		Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & Number of MPC & $\prcomm$ \\
-		\hline
-		D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
-		\hline
-		\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & MPC($N_s,1$) & $\Num N^{1-1/c}$ \\
-		\hline
-		%&computation & communi- cation & MPC rounds& & & \\ 
-		%\hline
-		%Ligero & $O(n\log n)M$ & NA & NA &$O(n)M$ & $O(\sqrt{n})$ & 4\\
-		%\hline
-		%Bulletproofs & $O(nE+q(n+m)M)$ & $O(2N-1)$ & $O(\log n)$& $O(nE+$ $q(n+m)M)$ & $O(\log n)$ & $O(\log n)$  \\
-		%\hline
-		%Spartan & & & & & &\\
-		%\hline
-		%Aurora & & & & & &\\
-		%\hline
-		%\name2D & $O(n \log n)M$  $+nE)$ & $O(2N-1)$ & 1 &$O((nM +$ $ n^{1-1/c}E))$ & $O(n^{1/c})$ & $O(\log n)$ \\
-		%\hline
-		%\name3D & $O(nM+nE)$ & $O(2N-1)$& 1 & $O(nM+$ $n^{1-2/c}E)$ & $O(n^{1/c})$ & $O(\log n) $\\
-		%\hline
-	\end{tabular}
-%\end{threeparttable}
-}
-\caption{Comparison table}\label{tab:SPZK}
 
-\end{table}
 
 \begin{comment} 
 %\begin{center}
-	\resizebox{\textwidth}{!}{
+	\resizebox{0.15\textwidth}{!}{
 	%\footnotesize
 	\begin{threeparttable}
 	\begin{tabular}{|c|c|c|}
