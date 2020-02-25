@@ -153,6 +153,53 @@ $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
 \dec(\ewit)$.
 .\nnote{Provide reference to Reed Solomon Decoding}
 
+\subsection{Proximity Check Protocol}\label{sec:proximity}
+We first describe an IPCP that allows a prover to prove that an oracle $\pi$
+opens to $\ewit\in \mc{W}_1$. Note that we do not check $\ewit\in \mc{W}_2$, as
+ we implicitly commit to a matrix in $\mc{W}_2$.
+The high level idea is the following: The verifier sends
+a $\rho\sample \FF^p$ and asks the prover to send the commitments
+$\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_n)$ to the columns of the matrix 
+$\tilde{U}=\sum_{i=1}^p \rho_i\ewit[i,\cdot,\cdot]$. Thereafter the verifier
+checks:
+\begin{enumerate}[{\rm (a)}]
+\item $\innph{\mc{H}_1[\cdot,k]}{\tilde{\bm{c}}}=0_{\GG}$ for all $k\in
+[n-\ell]$ to ensure that the commitments correspond to a matrix in $\mc{C}_1$.
+The above check is done probabilistically by sampling $\delta\sample
+\FF^{n-\ell}$ and checking $\innph{\mc{H}_1\delta}{\tilde{\bm{c}}}=0_{\GG}$
+which involves a multi-exponentiation of size $n$.
+\item Verifier samples $t$ query points $Q=\{k_u: k_u\sample [n], u\in [t]\}$ and checks
+the consistency of $\tilde{\bm{c}}$ with the oracle $\pi$. It queries the oracle
+to obtain columns $\pi[\cdot,k_u]$ and checks
+$\innph{\rho}{\pi[\cdot,k_u]}=\tilde{c}_{k_u}$ for all $u\in [t]$.
+\end{enumerate}
+The complete protocol appears in Figure ~\ref{fig:proximitycheck}.
+
+\begin{figure}[h!]
+\begin{framed}
+\noindent{$\proximityThreeD(\mathsf{pp},[\pi];\ewit)$}:
+
+\noindent{\bf Relation}: $\ewit=\open(\pi)$ and $\ewit\in \mc{W}_1$.
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+\item $\prover\rightarrow\verifier$: $\prover$ computes
+$\tilde{U}=\sum_{i=1}^p\rho_i\ewit[i,\cdot,\cdot]$ and sends
+ commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_n)$ to the columns of
+$\tilde{U}$.
+\item $\verifier\rightarrow\pi$: $Q=\{k_u: k_u\sample [n], u\in [t]\}$.
+\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+\item $\verifier$ checks: $\innph{\mc{H}_1\delta}{\tilde{\bm{c}}}=0_\GG$ for
+random $\delta\sample \FF^{n-\ell}$ and
+$\innph{\rho}{\pi[\cdot,k_u]}=\tilde{c}_{k_u}$ for all $u\in [t]$.
+\item $\verifier$ accepts if all the checks succeed.
+\end{enumerate}
+\end{framed}
+\caption{Proximity Protocol}
+\label{fig:proximitycheck}
+\end{figure}
+
+
+
 
 \subsection{Linear Check Protocol}\label{sec:lincheck}
 In this section, we describe an IPCP that allows a prover to prove knowledge of
@@ -288,30 +335,56 @@ A\wit=b
 where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
 \begin{proof}[Proof-Sketch]
-Suppose the oracle $\pi$ commits to $\ewit$ such that $\wit=\dec(\ewit)$ does
-not satisfy $A\wit=b$.  In a formal proof, $\ewit$ would be the ``extracted''
-witness which opens to the oracle $\pi$. The proximity check ensures that for
-$e<d_1/3$, $d(\ewit,\mc{W}_1)<e$ and $\ewit\in \mc{W}_2)$ with probability $\approx 1-(1-e/n)^t$.
-Let $\ewit_{\rm hon}$ an encoding of $\wit$ such that $d_1(\ewit,\ewit_{\rm
-hon})<e$ (see the detailed proof in the Appendix for existence of such an
-encoding). Let $P_{\rm hon}$ denote honestly computed $P$ matrix from
-$\ewit_{\rm hon}$. If the adverserial prover commits to a matrix $P_{\rm adv}$
-such that $P_{\rm adv}=P_{\rm hon}$, it fails the inner product check, as
-$r^TAw\neq r^Tb$. If it commits to $P_{\rm adv}\neq P_{\rm hon}$, it fails the
-consistency checks with overwhelming probability. To see this consider the
-adversarial provers' success probability for the query point $(j_u,k_u)$. Let
-$E\subseteq [n]$ denote the indices of planes where $\ewit$ and $\ewit_{\rm
-hon}$ differ. The prover opens the vector $X_u=\ewit[\cdot,j_u,k_u]$ (unless it breaks the
-soundness of inner product protocol, or binding of the commitment scheme). For
-$k_u\not\in E$, we see that to succeed in the consistency check we must have: 
-\[ P_{\rm adv}[j_u,k_u]=\sum_{i=1}^p
-R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]=P_{\rm hon}[j_u,k_u] \]
-Let $E'$ be the column indices where $P_{\rm adv}$ and $P_{\rm hon}$ differ.
-Then the above check succeeds if (i) $k_u\not\in E'\backslash E$, or (ii) $j_u$
-is the common root of distinct $m$ degree polynomials corresponding to columns
-$P_{\rm adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary
-fails with constant probability, and hence it's success probability is
-negligible over $t=O(\secpar)$ checks.
+Suppose the oracle $\pi$ commits to $\ewit$. In a detailed proof, this $\ewit$ would be ``extracted'' by the appropriate extractor. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
+show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
+$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
+$\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
+ we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
+\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover in Step 3. Define 
+the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
+$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\tilde{c}_a$ for $k\in [n]$. Let
+$\hat{\bm{c}}=(\hat{c}_1,\ldots,\hat{c}_\ell)$ denote the honest commitments
+corresponding to $\tilde{U}$, i.e, $\hat{c}_k=\sum_{i=1}^p\rho_i\pi[i,k]$ for
+$k\in [\ell]$. Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ be such that
+$\hat{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\hat{c}_a$ for $k\in [n]$. Note that
+the commitment $\hat{C}_k$ opens to the column $\hat{U}[\cdot,k]$ of
+$\hat{U}=\tilde{U}\Lambda_1$ which is in $\mc{C}_1$. Thus,
+$d(\tilde{U},\hat{U})>e$. Let $E$ denote the column indices where the two
+matrices differ. 
+
+Now assume that $\tilde{\bm{c}}=\hat{\bm{c}}$, i.e, the prover sends honest
+commitments to the first $\ell$ columns of $\tilde{U}$, in which case
+$\tilde{\bm{C}}=\hat{\bm{C}}$. Then, in the check $\sum_{a=1}^\ell
+\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$, the left hand side opens to the
+column $\hat{U}[\cdot,k_u]$, while the right hand side opens to the column
+$\tilde{U}[\cdot,k_u]$. Thus, unless the prover has two distinct openings to the
+same commitment, the check fails whenever $k_u\in E$. Thus the probability of
+prover's success in this case is at most $(1-e/n)^t$.   
+
+In a formal proof, $\ewit$ would be the ``extracted'' witness which
+opens to the oracle $\pi$. The proximity check ensures that for $e<d_1/3$,
+$d(\ewit,\mc{W}_1)<e$ and $\ewit\in \mc{W}_2)$ with probability $\approx
+1-(1-e/n)^t$.  Let $\ewit_{\rm hon}$ an encoding of $\wit$ such that
+$d_1(\ewit,\ewit_{\rm hon})<e$ (see the detailed proof in the Appendix for
+existence of such an encoding). Let $P_{\rm hon}$ denote honestly computed $P$
+matrix from $\ewit_{\rm hon}$. If the adverserial prover commits to a matrix
+$P_{\rm adv}$ such that $P_{\rm adv}=P_{\rm hon}$, it fails the inner product
+check, as $r^TAw\neq r^Tb$. If it commits to $P_{\rm adv}\neq P_{\rm hon}$, it
+fails the consistency checks with overwhelming probability. To see this consider
+the adversarial provers' success probability for the query point $(j_u,k_u)$.
+Let $E\subseteq [n]$ denote the indices of planes where $\ewit$ and $\ewit_{\rm
+hon}$ differ. The prover opens the vector $X_u=\ewit[\cdot,j_u,k_u]$ (unless it
+breaks the soundness of inner product protocol, or binding of the commitment
+scheme). For $k_u\not\in E$, we see that to succeed in the consistency check we
+must have: \[ P_{\rm adv}[j_u,k_u]=\sum_{i=1}^p
+R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]=P_{\rm hon}[j_u,k_u] \] Let $E'$ be
+the column indices where $P_{\rm adv}$ and $P_{\rm hon}$ differ.  Then the above
+check succeeds if (i) $k_u\not\in E'\backslash E$, or (ii) $j_u$ is the common
+root of distinct $m$ degree polynomials corresponding to columns $P_{\rm
+adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary fails
+with constant probability, and hence it's success probability is negligible over
+$t=O(\secpar)$ checks.  
 \end{proof}
 
 \begin{figure}[t!]
