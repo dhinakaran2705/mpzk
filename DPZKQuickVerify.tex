@@ -563,20 +563,11 @@ of the protocol $\quadcheck$ for $t\leq \bi$.
 
 \subsection{Extension to DPZK}
 \pnote{To obtain the security against malicious provers, protocol needs require minor modification. If $i$th prover sends some commitment outcome, the with the commitment he needs to send a ZKAoK with the commitment that ensures the knowledge of the committed value to the prover. }
-We now describe variants of the protocols discussed previously when the witness
-is shared among several provers. We assume that there are $K$ provers
-$P_1,\ldots,P_K$. For $\xi\in [K]$, let $\shr{\wit}$ denote the prover
-$\distprover$'s share of the witness $\wit$. We assume that the sharing is additive,
-i.e, $\sum_{\xi\in [K]}\shr{\wit}=\wit$. When denoting witnesses to certain
-protocols, we use the $[[\cdot]]$ to denote that the witness is additively
-shared among the provers, i.e, notation $[[x]]$ in the witness list of the
-protocol denotes that the provers have shares $\shr{x}$ of $x$. We assume that
-there is a designated party $\Ag$ which aggregates the messages received from
-provers $P_1,\ldots,P_K$ and constructs the message to be sent to the verifier
-$\verifier$. The verifier's  messages are assumed to be available to every
-prover through a broadcast channel. Finally, we mention that aggregator's role
-is conceptual, and may be played by one of the provers. We proceed to describe
-distributed versions of the key subprotocols.
+We now describe variants of the protocols discussed previously when the witness is shared among several provers. We assume that there are $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$, let $\shr{\wit}$ denote the prover $\distprover$'s share of the witness $\wit$. We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} = \wit$. When denoting witnesses to certain protocols, we use the %$[[\cdot]]$
+$\langle {\cdot} \rangle$ to denote that the witness is additively
+shared among the provers, i.e, notation $\langle x \rangle$ in the witness list of the protocol denotes that the provers have shares $\shr{x}$ of $x$. We assume that there is a designated party $\Ag$ which aggregates the messages received from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be sent to the verifier $\verifier$. The verifier's  messages and messages to the aggregator $\Ag$ are assumed to be available to every prover through a broadcast channel. Finally, we mention that aggregator's role is conceptual, and may be played by one of the provers. We proceed to describe distributed versions of the key subprotocols.
+
+In the description of the protocol construction we will first discuss a protocol which is secure when the provers are semi-honest, then we will describe how to ensure the privacy of the honest provers when the corrupt provers are malicious. 
 
 \noindent{\bf Distributed Oracle Setup}: In distributed setting, each prover
 $\distprover$ encodes his share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
@@ -742,6 +733,7 @@ Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
 $\distlinearcheck$. 
 
+\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a zero-knowledge argument of knowledge which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
 \begin{lemma}\label{lem:distlincheckzk}
 For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 linear check protocol consisting of messages from the prover $\distprover$ with
