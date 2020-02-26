@@ -133,12 +133,12 @@ we interleave the witness as a three dimensional matrix to obtain smaller
 argument size. The following result is the key to testing proximity of a three
 dimensional matrix to a well formed encoding.
 \begin{proposition}[3D Compression]\label{lem:3dcompression}
-Let $\HH$ be a finite field and $\FF\subseteq \HH$ be a subfield of $\HH$. Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
+Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
 $p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
 \mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
 $p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$. Then for any
-$m\times n$ matrix $u_0$, we have 
+$m\times n$ matrix $u_0$ over $\FF$, we have 
 \[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
 \frac{d}{|\FF|}\]  
 for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
