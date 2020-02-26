@@ -344,7 +344,7 @@ $\negl(\secpar)$ for $t=O(\secpar)$.
 %\centering
 \begin{framed}
 \noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}:
-\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
 \noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
 
 \begin{enumerate}[{\rm 1.}]
@@ -379,6 +379,73 @@ where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$).
 \label{fig:linearcheck}
 \end{figure}
 
+%<<<<<<<HEAD
+\begin{comment}
+\subsection{Quadratic Check Protocol}
+We now describe the IPCP which allows a prover to prove knowledge of vectors
+$\wit_x$, $\wit_y$ and $\wit_z$ in $\FF^N$, satisfying $\wit_x\circ \wit_y =
+\wit_z$. Once again, the protocol requires the prover to construct encodings
+$\ewit_x=\enc(\wit_x)$, $\ewit_y=\enc(\wit_y)$ and $\ewit_z=\enc(\wit_z)$ as
+described in Section \ref{sec:witencoding}. Thereafter, the prover uses
+commitment scheme $\comm$ to commit to these encodings as $\comoracle_x =
+\comm(\ewit_x)$, $\comoracle_y = \comm(\ewit_y)$ and $\comoracle_z = \comm(\ewit_z)$. 
+The prover forms the oracle $\pi\in \GG^{3p\times n}$ by vertically stacking the
+$p\times n$ matrices $\comoracle_x,\comoracle_y$ and $\comoracle_z$. As before,
+for a query $Q\subseteq [n]$, the oracle answers with columns $\pi[\cdot,k]$ for
+$k\in Q$. The columns returned by the oracle can be parsed into constituent columns 
+$\comoracle_x[\cdot,k]$, $\comoracle_y[\cdot,k]$ and $\comoracle_z[\cdot,k]$
+canonically. We again discuss the key ingredients of the protocol.
+
+\noindent{\em Probabilistic Reduction}: Let $Q^i_x,Q^i_y$ and $Q^i_z, i\in [p]$ be the
+polynomials interpolating the $i^{th}$ slices of $\wit_x$, $\wit_y$ and $\wit_z$
+ as in Section \ref{sec:witencoding}. Then for vectors $\wit_x,\wit_y,\wit_z$ satisfying
+$\wit_x\circ \wit_y=\wit_z$, the polynomials $Q^i=Q^i_x\cdot Q^i_y - Q^z_i$ interpolate
+$\bm{0}^{m\times s}$ on the set $\{(\alpha_j,\zeta_k):j\in [m],k\in [s]\}$ for all $i\in [p]$. This can be probabilistically
+checked by checking that the polynomial $F := \sum_{i\in [p]}r_iQ^i$ interpolates
+$\bm{0}^{m\times s}$ on the above set for randomly sampled $r\in \FF^p$. Once again, we
+ask the prover to ``commit'' to $F$ using a tamper resistant structure, like a codeword,
+which enables the verifier to check the aforementioned condition, as well as to
+ensure that the commitment is consistent with oracle replies and prior
+messages.
+
+\noindent{\em Reduction to Inner Products}: The prover computes 
+$h\times n$ matrix $P$ given by $P[j,k]=F(\alpha_j,\eta_k)$. It commits to $P$
+using commitments $(c_1,\ldots,c_{2\ell})$ to the first $2\ell$ columns of $P$.
+Note that each row of $P$ commits to univariate component polynomials
+$F(\alpha_j,\cdot)$ of $F$ via their evaluations of $\bm{\eta}$. To check that
+$F$ interpolates $\bm{0}^{m\times s}$ on the points
+$\{(\alpha_j,\zeta_k)\}_{j\in [m],k\in [s]}$, the verifier checks that
+$p(\cdot) := \sum_{j\in [m]}\gamma_jF(\alpha_j,\cdot)$ interpolates $\bm{0}^s$ on
+$\overline{\bm{\zeta}}$ for randomly sampled $\gamma=(\gamma_1,\ldots,\gamma_m)\in \FF^m$.
+Again, the verifier checks $p(\overline{\bm{\zeta}})=\bm{0}^s$ via the inner product
+check $\innp{\tau}{p(\overline{\bm{\zeta}})}=0$ for a random $\tau\in \FF^s$. As in the
+linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we
+get the following inner product check
+$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
+The commitment to the vector $\overline{P}\varphi$ can be homomorphically computed
+from $c_1,\ldots,c_{2\ell}$.
+
+\noindent{\em Checking consistency with Oracle}: As in the linear check, the
+verifier uniformly and independently samples $(j_u,k_u)\in [h]\times [n]$ for
+$u\in [t]$, and queries the oracle $\pi$ for columns $\pi[\cdot,k_u]$. Let
+$\pi_x[\cdot,k_u]$, $\pi_y[\cdot,k_u]$ and $\pi_z[\cdot,k_u]$ denote the parse
+of $\pi[\cdot,k_u]$ into commitments corresponding to $\ewit_x,\ewit_y$ and
+$\ewit_z$ respectively. Further, the verifier asks prover for vectors
+$\ewit_x[\cdot,j_u,k_u]$, $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$
+for $u\in [t]$. The verifier then checks the following:
+\begin{enumerate}[{\rm (i)}]
+\item For all $u\in [t]$: $P[j_u,k_u]=\sum_{i\in
+[p]}r_i(\ewit_x[i,j_u,k_u]\cdot\ewit_y[i,j_u,k_u]-\ewit_z[i,j_u,k_u])$.
+\item Checks that vectors $\ewit_x[\cdot,j_u,k_u]$ are consistent with
+commitments $\pi_x[\cdot,k_u]$ as in linear check protocol. Similar checks are
+made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
+\end{enumerate}
+We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
+the protocol can again be verified by direct calculation. We state the soundness
+of the protocol below:
+\end{comment}
+%=======
+%>>>>>>> a570c22d49f6a2b6c53bd2506676e2790bfe3c01
 \input{quadratic.tex}
 
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
@@ -693,7 +760,7 @@ Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
 $\distlinearcheck$. 
 
-\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a zero-knowledge argument of knowledge which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
+\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
 \begin{lemma}\label{lem:distlincheckzk}
 For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 linear check protocol consisting of messages from the prover $\distprover$ with
@@ -739,7 +806,7 @@ Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{lemma}
 
 \begin{proof}
-	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the commitment is extractable, so $\Sim$ extracts and gets shares of $\wit, x,y,z$ of the parties in $I$. 
+	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the provers are giving ZKAoK in addition to the commitment, by the extractor of argument of knowledge, $\Sim$ extracts and gets shares of $\wit, \wit_x,\wit_y,\wit_z$ of the parties in $I$. 
 	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ uses the same approach of  
 	%$\Sim$ picks random challenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
 	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$, using homomorphic property of the commitment scheme.
