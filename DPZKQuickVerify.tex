@@ -155,7 +155,6 @@ $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
 \dec(\ewit)$.
 .\nnote{Provide reference to Reed Solomon Decoding}
 
-
 \subsection{Linear Check Protocol}\label{sec:lincheck}
 In this section, we describe an IPCP that allows a prover to prove knowledge of
 witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
@@ -290,30 +289,55 @@ A\wit=b
 where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
 \begin{proof}[Proof-Sketch]
-Suppose the oracle $\pi$ commits to $\ewit$ such that $\wit=\dec(\ewit)$ does
-not satisfy $A\wit=b$.  In a formal proof, $\ewit$ would be the ``extracted''
-witness which opens to the oracle $\pi$. The proximity check ensures that for
-$e<d_1/3$, $d(\ewit,\mc{W}_1)<e$ and $\ewit\in \mc{W}_2)$ with probability $\approx 1-(1-e/n)^t$.
-Let $\ewit_{\rm hon}$ an encoding of $\wit$ such that $d_1(\ewit,\ewit_{\rm
-hon})<e$ (see the detailed proof in the Appendix for existence of such an
-encoding). Let $P_{\rm hon}$ denote honestly computed $P$ matrix from
-$\ewit_{\rm hon}$. If the adverserial prover commits to a matrix $P_{\rm adv}$
-such that $P_{\rm adv}=P_{\rm hon}$, it fails the inner product check, as
-$r^TAw\neq r^Tb$. If it commits to $P_{\rm adv}\neq P_{\rm hon}$, it fails the
-consistency checks with overwhelming probability. To see this consider the
-adversarial provers' success probability for the query point $(j_u,k_u)$. Let
-$E\subseteq [n]$ denote the indices of planes where $\ewit$ and $\ewit_{\rm
-hon}$ differ. The prover opens the vector $X_u=\ewit[\cdot,j_u,k_u]$ (unless it breaks the
-soundness of inner product protocol, or binding of the commitment scheme). For
-$k_u\not\in E$, we see that to succeed in the consistency check we must have: 
-\[ P_{\rm adv}[j_u,k_u]=\sum_{i=1}^p
-R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]=P_{\rm hon}[j_u,k_u] \]
-Let $E'$ be the column indices where $P_{\rm adv}$ and $P_{\rm hon}$ differ.
-Then the above check succeeds if (i) $k_u\not\in E'\backslash E$, or (ii) $j_u$
-is the common root of distinct $m$ degree polynomials corresponding to columns
-$P_{\rm adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary
-fails with constant probability, and hence it's success probability is
-negligible over $t=O(\secpar)$ checks.
+Suppose the oracle $\pi$ commits to $\ewit$. In a detailed proof, this $\ewit$ would be ``extracted'' by the appropriate extractor. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
+show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
+$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
+$\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
+ we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
+\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover in Step 3. Define 
+the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
+$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\tilde{c}_a$ for $k\in [n]$.
+ Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ where
+$\hat{C}_k=\sum_{i=1}^p\rho_i\pi[i,k]$. Now if
+$\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
+proximity check with probability at most $(1-1/n)^t$. In the complete proof in
+Appendix, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
+while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
+Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
+$d(\ewit,\mc{W}_1)>e$.
+
+We consider the second case now, when $d(\ewit,\mc{W}_1)\leq e$. Let $\ewit^*$
+denote the unique element of $\mc{W}_1$ such that $\Delta_1(\ewit,\ewit^*)\leq e$.
+Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
+probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA\neq
+r^Tb$. Let $P^*$ denote the correctly computed $P$ matrix from $\ewit^*$ and let
+$\hat{P}$ denote the correctly computed $P$ matrix from $\ewit$. We note that
+$\Delta_1(\hat{P},P^*)\leq e$. If the 
+prover commits to $\tilde{P}=P^*$, it fails the inner product check in Step
+13(b) as $r^TA\wit\neq r^Tb$. If $\tilde{P}\neq P^*$, we have
+$\Delta_1(\tilde{P},P^*)\geq n-s-\ell$ by distance property of the code $L_3$
+(We note that a prover implicitly commits to a matrix in $L_3\oplus L_5$).
+Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
+$k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq \tilde{P}[\cdot,k]$. The check
+ 13(c) ensures that prover provides vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
+overwhelming probability. Then the consistency check succeeds for the 
+uniformly sampled query point $(j_u,k_u)$ when:
+\[ \tilde{P}[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
+\hat{P}[j_u,k_u] \]
+For $k_u\in E$, the above holds when the codewords $P^*[\cdot,k_u]$ and
+$\tilde{P}[\cdot,k_u]$ agree in the position $j_u$, which happens with 
+probability $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
+{\small
+\begin{align*}
+\prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
+\\
+&= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
+\end{align*}
+}
+The above probability is smaller than a constant $\epsilon<1$ for suitable
+choices of parameters. Hence, the overall probability of prover's success is
+$\negl(\secpar)$ for $t=O(\secpar)$.
 \end{proof}
 
 \begin{figure}[t!]
@@ -355,6 +379,7 @@ where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$).
 \label{fig:linearcheck}
 \end{figure}
 
+%<<<<<<<HEAD
 \begin{comment}
 \subsection{Quadratic Check Protocol}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
@@ -419,6 +444,8 @@ We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
 \end{comment}
+%=======
+%>>>>>>> a570c22d49f6a2b6c53bd2506676e2790bfe3c01
 \input{quadratic.tex}
 
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
