@@ -320,7 +320,7 @@ negligible over $t=O(\secpar)$ checks.
 %\centering
 \begin{framed}
 \noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}:
-\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
 \noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
 
 \begin{enumerate}[{\rm 1.}]
@@ -355,7 +355,7 @@ where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$).
 \label{fig:linearcheck}
 \end{figure}
 
-
+\begin{comment}
 \subsection{Quadratic Check Protocol}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
 $\wit_x$, $\wit_y$ and $\wit_z$ in $\FF^N$, satisfying $\wit_x\circ \wit_y =
@@ -418,7 +418,7 @@ made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
 We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
-
+\end{comment}
 \input{quadratic.tex}
 
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
@@ -733,7 +733,7 @@ Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
 $\distlinearcheck$. 
 
-\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a zero-knowledge argument of knowledge which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
+\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
 \begin{lemma}\label{lem:distlincheckzk}
 For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 linear check protocol consisting of messages from the prover $\distprover$ with
@@ -779,7 +779,7 @@ Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{lemma}
 
 \begin{proof}
-	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the commitment is extractable, so $\Sim$ extracts and gets shares of $\wit, x,y,z$ of the parties in $I$. 
+	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the provers are giving ZKAoK in addition to the commitment, by the extractor of argument of knowledge, $\Sim$ extracts and gets shares of $\wit, \wit_x,\wit_y,\wit_z$ of the parties in $I$. 
 	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ uses the same approach of  
 	%$\Sim$ picks random challenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
 	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$, using homomorphic property of the commitment scheme.
