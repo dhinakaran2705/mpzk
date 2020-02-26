@@ -1,8 +1,8 @@
-\subsection{Quadratic Check Protocol}
+\subsection{Quadratic Check Protocol}\label{sec:quadcheck}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
 $\wit_x$, $\wit_y$ and $\wit_z$ in $\FF^N$, satisfying $\wit_x\circ \wit_y =
 \wit_z$. As before we view $\wit_x, \wit_y$ and $\wit_z$ as $p \times m \times s$ matrix, where $N=pms$. 
-As described previously in Sections ~\ref{sec:witencoding} and ~\ref{sec:construct_oracle}, the prover obtains $\ewit_a \leftarrow \enc(\wit_a)$ and $\comoracle_a \leftarrow \comm(\ewit_a)$ $\forall a\in \{x,y,z\}$ . We present a full protocol in Figure ~\ref{}. First we describe the key ideas in the protocol for an honest prover. We then discuss how to achieve soundness against an adversarial prover.
+As described previously in Sections ~\ref{sec:witencoding} and ~\ref{sec:construct_oracle}, the prover obtains $\ewit_a \leftarrow \enc(\wit_a)$ and $\comoracle_a \leftarrow \comm(\ewit_a)$ $\forall a\in \{x,y,z\}$ . We present a full protocol in Figure ~\ref{fig:quadcheck}. First we describe the key ideas in the protocol for an honest prover. We then discuss how to achieve soundness against an adversarial prover.
 
 %Once again, the protocol requires the prover to construct encodings
 %$\ewit_x=\enc(\wit_x)$, $\ewit_y=\enc(\wit_y)$ and $\ewit_z=\enc(\wit_z)$ as
@@ -45,6 +45,58 @@ check $\innp{\tau}{p(\overline{\bm{\zeta}})}=0$ for a random $\tau\in \FF^s$.
 
 \noindent{\em Proximity Check for Oracle:}
 
+
+
+\begin{figure}[t!]
+	%\centering
+	\begin{framed}
+		\noindent{$\quadcheck(\mathsf{pp},[\pi];\ewit_x, \ewit_y, \ewit_z)$}:
+		
+		\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\wit_a=\dec(\ewit_a)$ $\forall a\in \{x,y,z\}$.
+		
+		\begin{enumerate}[{\rm 1.}]
+			\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+			\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+			commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+			\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+			\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
+			%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
+			\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
+			%\item 
+			$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+			Computes commitments $c_1,\ldots,c_{2\ell}$ form $P$.
+			\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{2\ell}$.
+			\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$
+			\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+			\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
+			
+			\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+			\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, %$\beta\sample \FF\backslash \{0\}$. 
+			\item $\prover$ and $\verifier$ run inner product arguments to check:
+			\begin{enumerate}
+				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
+				$v_u=\sum_{i=1}^p r^i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
+				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$ where $z=\overline{P}\varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
+				\item
+				\begin{itemize}  
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+				where $C_u=\sum_{i=1}^p\delta_i\comoracle_x[i,k_u]$
+					\item 
+					$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,D_u,\innp{\delta}{Y_u})$ for $u\in [t]$ 
+					where $D_u=\sum_{i=1}^p\delta_i\comoracle_y[i,k_u]$
+					\item
+					$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,E_u,\innp{\delta}{Z_u})$ for $u\in [t]$ 
+					where $E_u=\sum_{i=1}^p\delta_i\comoracle_z[i,k_u]$
+				\end{itemize}				
+				(consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+			\end{enumerate}
+			\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+		\end{enumerate}
+	\end{framed}
+	\caption{Quadratic Check Protocol}
+	\label{fig:quadcheck}
+\end{figure}
+\pnote{ Complete the protocol by including proximity check}
 
 %As in the linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we get the following inner product check
 %$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
