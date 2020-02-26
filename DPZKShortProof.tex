@@ -31,15 +31,15 @@ construction are summarized below:
 \item We use homomorphic commitment over witness encoding and provide oracle
 access to the commitment. This facilitates oracle realization through
 aggregation.
-\item We design protocols for checking linear constraints, quadratic constraints
-and with oracle access to the commitment.
+\item We design protocols for checking linear and quadratic constraints
+with oracle access to the commitment.
 \item We come up with new witness encoding scheme, to facilitate smaller
 argument size, and reduce communication between the provers during proof
 generation.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
 operations, we keep their usage strictly sub-linear. In particular, for an
-argument size of $O(N^{1/c})$, verification and aggregation incur $O(N^{1-2/c})$
-exponentiations, while the prover incurs $O(N/\log N)$ exponentiations. We also
-compare the concrete performance of our standalone SNARK with state of the art in Section
+argument size of $O(N^{1/c})$, the verifier and the aggregator incur $O(N^{1-2/c})$
+exponentiations. The prover incurs $O(N/\log N)$ exponentiations essentially while
+setting up the oracle. We compare the concrete performance of our standalone SNARK with state of the art in Section
 \ref{sec:snarkcomparison}.
