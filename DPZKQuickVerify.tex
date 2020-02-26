@@ -155,54 +155,6 @@ $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
 \dec(\ewit)$.
 .\nnote{Provide reference to Reed Solomon Decoding}
 
-\subsection{Proximity Check Protocol}\label{sec:proximity}
-We first describe an IPCP that allows a prover to prove that an oracle $\pi$
-opens to $\ewit\in \mc{W}_1$. Note that we do not check $\ewit\in \mc{W}_2$, as
- we implicitly commit to a matrix in $\mc{W}_2$.
-The high level idea is the following: The verifier sends
-a $\rho\sample \FF^p$ and asks the prover to send the commitments
-$\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_n)$ to the columns of the matrix 
-$\tilde{U}=\sum_{i=1}^p \rho_i\ewit[i,\cdot,\cdot]$. Thereafter the verifier
-checks:
-\begin{enumerate}[{\rm (a)}]
-\item $\innph{\mc{H}_1[\cdot,k]}{\tilde{\bm{c}}}=0_{\GG}$ for all $k\in
-[n-\ell]$ to ensure that the commitments correspond to a matrix in $\mc{C}_1$.
-The above check is done probabilistically by sampling $\delta\sample
-\FF^{n-\ell}$ and checking $\innph{\mc{H}_1\delta}{\tilde{\bm{c}}}=0_{\GG}$
-which involves a multi-exponentiation of size $n$.
-\item Verifier samples $t$ query points $Q=\{k_u: k_u\sample [n], u\in [t]\}$ and checks
-the consistency of $\tilde{\bm{c}}$ with the oracle $\pi$. It queries the oracle
-to obtain columns $\pi[\cdot,k_u]$ and checks
-$\innph{\rho}{\pi[\cdot,k_u]}=\tilde{c}_{k_u}$ for all $u\in [t]$.
-\end{enumerate}
-The complete protocol appears in Figure ~\ref{fig:proximitycheck}.
-
-\begin{figure}[h!]
-\begin{framed}
-\noindent{$\proximityThreeD(\mathsf{pp},[\pi];\ewit)$}:
-
-\noindent{\bf Relation}: $\ewit=\open(\pi)$ and $\ewit\in \mc{W}_1$.
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-\item $\prover\rightarrow\verifier$: $\prover$ computes
-$\tilde{U}=\sum_{i=1}^p\rho_i\ewit[i,\cdot,\cdot]$ and sends
- commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_n)$ to the columns of
-$\tilde{U}$.
-\item $\verifier\rightarrow\pi$: $Q=\{k_u: k_u\sample [n], u\in [t]\}$.
-\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
-\item $\verifier$ checks: $\innph{\mc{H}_1\delta}{\tilde{\bm{c}}}=0_\GG$ for
-random $\delta\sample \FF^{n-\ell}$ and
-$\innph{\rho}{\pi[\cdot,k_u]}=\tilde{c}_{k_u}$ for all $u\in [t]$.
-\item $\verifier$ accepts if all the checks succeed.
-\end{enumerate}
-\end{framed}
-\caption{Proximity Protocol}
-\label{fig:proximitycheck}
-\end{figure}
-
-
-
-
 \subsection{Linear Check Protocol}\label{sec:lincheck}
 In this section, we describe an IPCP that allows a prover to prove knowledge of
 witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
@@ -345,48 +297,47 @@ $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:
  we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
 \ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover in Step 3. Define 
 the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
-$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\tilde{c}_a$ for $k\in [n]$. Let
-$\hat{\bm{c}}=(\hat{c}_1,\ldots,\hat{c}_\ell)$ denote the honest commitments
-corresponding to $\tilde{U}$, i.e, $\hat{c}_k=\sum_{i=1}^p\rho_i\pi[i,k]$ for
-$k\in [\ell]$. Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ be such that
-$\hat{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\hat{c}_a$ for $k\in [n]$. Note that
-the commitment $\hat{C}_k$ opens to the column $\hat{U}[\cdot,k]$ of
-$\hat{U}=\tilde{U}\Lambda_1$ which is in $\mc{C}_1$. Thus,
-$d(\tilde{U},\hat{U})>e$. Let $E$ denote the column indices where the two
-matrices differ. 
+$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\tilde{c}_a$ for $k\in [n]$.
+ Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ where
+$\hat{C}_k=\sum_{i=1}^p\rho_i\pi[i,k]$. Now if
+$\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
+proximity check with probability at most $(1-1/n)^t$. In the complete proof in
+Appendix, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
+while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
+Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
+$d(\ewit,\mc{W}_1)>e$.
 
-Now assume that $\tilde{\bm{c}}=\hat{\bm{c}}$, i.e, the prover sends honest
-commitments to the first $\ell$ columns of $\tilde{U}$, in which case
-$\tilde{\bm{C}}=\hat{\bm{C}}$. Then, in the check $\sum_{a=1}^\ell
-\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$, the left hand side opens to the
-column $\hat{U}[\cdot,k_u]$, while the right hand side opens to the column
-$\tilde{U}[\cdot,k_u]$. Thus, unless the prover has two distinct openings to the
-same commitment, the check fails whenever $k_u\in E$. Thus the probability of
-prover's success in this case is at most $(1-e/n)^t$.   
-
-In a formal proof, $\ewit$ would be the ``extracted'' witness which
-opens to the oracle $\pi$. The proximity check ensures that for $e<d_1/3$,
-$d(\ewit,\mc{W}_1)<e$ and $\ewit\in \mc{W}_2)$ with probability $\approx
-1-(1-e/n)^t$.  Let $\ewit_{\rm hon}$ an encoding of $\wit$ such that
-$d_1(\ewit,\ewit_{\rm hon})<e$ (see the detailed proof in the Appendix for
-existence of such an encoding). Let $P_{\rm hon}$ denote honestly computed $P$
-matrix from $\ewit_{\rm hon}$. If the adverserial prover commits to a matrix
-$P_{\rm adv}$ such that $P_{\rm adv}=P_{\rm hon}$, it fails the inner product
-check, as $r^TAw\neq r^Tb$. If it commits to $P_{\rm adv}\neq P_{\rm hon}$, it
-fails the consistency checks with overwhelming probability. To see this consider
-the adversarial provers' success probability for the query point $(j_u,k_u)$.
-Let $E\subseteq [n]$ denote the indices of planes where $\ewit$ and $\ewit_{\rm
-hon}$ differ. The prover opens the vector $X_u=\ewit[\cdot,j_u,k_u]$ (unless it
-breaks the soundness of inner product protocol, or binding of the commitment
-scheme). For $k_u\not\in E$, we see that to succeed in the consistency check we
-must have: \[ P_{\rm adv}[j_u,k_u]=\sum_{i=1}^p
-R^i(\alpha_{j_u},\eta_{k_u})\ewit[i,j_u,k_u]=P_{\rm hon}[j_u,k_u] \] Let $E'$ be
-the column indices where $P_{\rm adv}$ and $P_{\rm hon}$ differ.  Then the above
-check succeeds if (i) $k_u\not\in E'\backslash E$, or (ii) $j_u$ is the common
-root of distinct $m$ degree polynomials corresponding to columns $P_{\rm
-adv}[\cdot,k_u]$ and $P_{\rm adv}[\cdot,k_u]$. In either case, adversary fails
-with constant probability, and hence it's success probability is negligible over
-$t=O(\secpar)$ checks.  
+We consider the second case now, when $d(\ewit,\mc{W}_1)\leq e$. Let $\ewit^*$
+denote the unique element of $\mc{W}_1$ such that $\Delta_1(\ewit,\ewit^*)\leq e$.
+Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
+probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA\neq
+r^Tb$. Let $P^*$ denote the correctly computed $P$ matrix from $\ewit^*$ and let
+$\hat{P}$ denote the correctly computed $P$ matrix from $\ewit$. We note that
+$\Delta_1(\hat{P},P^*)\leq e$. If the 
+prover commits to $\tilde{P}=P^*$, it fails the inner product check in Step
+13(b) as $r^TA\wit\neq r^Tb$. If $\tilde{P}\neq P^*$, we have
+$\Delta_1(\tilde{P},P^*)\geq n-s-\ell$ by distance property of the code $L_3$
+(We note that a prover implicitly commits to a matrix in $L_3\oplus L_5$).
+Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
+$k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq \tilde{P}[\cdot,k]$. The check
+ 13(c) ensures that prover provides vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
+overwhelming probability. Then the consistency check succeeds for the 
+uniformly sampled query point $(j_u,k_u)$ when:
+\[ \tilde{P}[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
+\hat{P}[j_u,k_u] \]
+For $k_u\in E$, the above holds when the codewords $P^*[\cdot,k_u]$ and
+$\tilde{P}[\cdot,k_u]$ agree in the position $j_u$, which happens with 
+probability $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
+{\small
+\begin{align*}
+\prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
+\\
+&= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
+\end{align*}
+}
+The above probability is smaller than a constant $\epsilon<1$ for suitable
+choices of parameters. Hence, the overall probability of prover's success is
+$\negl(\secpar)$ for $t=O(\secpar)$.
 \end{proof}
 
 \begin{figure}[t!]
@@ -427,70 +378,6 @@ where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$).
 \caption{Linear Check Protocol}
 \label{fig:linearcheck}
 \end{figure}
-
-
-\subsection{Quadratic Check Protocol}
-We now describe the IPCP which allows a prover to prove knowledge of vectors
-$\wit_x$, $\wit_y$ and $\wit_z$ in $\FF^N$, satisfying $\wit_x\circ \wit_y =
-\wit_z$. Once again, the protocol requires the prover to construct encodings
-$\ewit_x=\enc(\wit_x)$, $\ewit_y=\enc(\wit_y)$ and $\ewit_z=\enc(\wit_z)$ as
-described in Section \ref{sec:witencoding}. Thereafter, the prover uses
-commitment scheme $\comm$ to commit to these encodings as $\comoracle_x =
-\comm(\ewit_x)$, $\comoracle_y = \comm(\ewit_y)$ and $\comoracle_z = \comm(\ewit_z)$. 
-The prover forms the oracle $\pi\in \GG^{3p\times n}$ by vertically stacking the
-$p\times n$ matrices $\comoracle_x,\comoracle_y$ and $\comoracle_z$. As before,
-for a query $Q\subseteq [n]$, the oracle answers with columns $\pi[\cdot,k]$ for
-$k\in Q$. The columns returned by the oracle can be parsed into constituent columns 
-$\comoracle_x[\cdot,k]$, $\comoracle_y[\cdot,k]$ and $\comoracle_z[\cdot,k]$
-canonically. We again discuss the key ingredients of the protocol.
-
-\noindent{\em Probabilistic Reduction}: Let $Q^i_x,Q^i_y$ and $Q^i_z, i\in [p]$ be the
-polynomials interpolating the $i^{th}$ slices of $\wit_x$, $\wit_y$ and $\wit_z$
- as in Section \ref{sec:witencoding}. Then for vectors $\wit_x,\wit_y,\wit_z$ satisfying
-$\wit_x\circ \wit_y=\wit_z$, the polynomials $Q^i=Q^i_x\cdot Q^i_y - Q^z_i$ interpolate
-$\bm{0}^{m\times s}$ on the set $\{(\alpha_j,\zeta_k):j\in [m],k\in [s]\}$ for all $i\in [p]$. This can be probabilistically
-checked by checking that the polynomial $F := \sum_{i\in [p]}r_iQ^i$ interpolates
-$\bm{0}^{m\times s}$ on the above set for randomly sampled $r\in \FF^p$. Once again, we
-ask the prover to ``commit'' to $F$ using a tamper resistant structure, like a codeword,
-which enables the verifier to check the aforementioned condition, as well as to
-ensure that the commitment is consistent with oracle replies and prior
-messages.
-
-\noindent{\em Reduction to Inner Products}: The prover computes 
-$h\times n$ matrix $P$ given by $P[j,k]=F(\alpha_j,\eta_k)$. It commits to $P$
-using commitments $(c_1,\ldots,c_{2\ell})$ to the first $2\ell$ columns of $P$.
-Note that each row of $P$ commits to univariate component polynomials
-$F(\alpha_j,\cdot)$ of $F$ via their evaluations of $\bm{\eta}$. To check that
-$F$ interpolates $\bm{0}^{m\times s}$ on the points
-$\{(\alpha_j,\zeta_k)\}_{j\in [m],k\in [s]}$, the verifier checks that
-$p(\cdot) := \sum_{j\in [m]}\gamma_jF(\alpha_j,\cdot)$ interpolates $\bm{0}^s$ on
-$\overline{\bm{\zeta}}$ for randomly sampled $\gamma=(\gamma_1,\ldots,\gamma_m)\in \FF^m$.
-Again, the verifier checks $p(\overline{\bm{\zeta}})=\bm{0}^s$ via the inner product
-check $\innp{\tau}{p(\overline{\bm{\zeta}})}=0$ for a random $\tau\in \FF^s$. As in the
-linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we
-get the following inner product check
-$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
-The commitment to the vector $\overline{P}\varphi$ can be homomorphically computed
-from $c_1,\ldots,c_{2\ell}$.
-
-\noindent{\em Checking consistency with Oracle}: As in the linear check, the
-verifier uniformly and independently samples $(j_u,k_u)\in [h]\times [n]$ for
-$u\in [t]$, and queries the oracle $\pi$ for columns $\pi[\cdot,k_u]$. Let
-$\pi_x[\cdot,k_u]$, $\pi_y[\cdot,k_u]$ and $\pi_z[\cdot,k_u]$ denote the parse
-of $\pi[\cdot,k_u]$ into commitments corresponding to $\ewit_x,\ewit_y$ and
-$\ewit_z$ respectively. Further, the verifier asks prover for vectors
-$\ewit_x[\cdot,j_u,k_u]$, $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$
-for $u\in [t]$. The verifier then checks the following:
-\begin{enumerate}[{\rm (i)}]
-\item For all $u\in [t]$: $P[j_u,k_u]=\sum_{i\in
-[p]}r_i(\ewit_x[i,j_u,k_u]\cdot\ewit_y[i,j_u,k_u]-\ewit_z[i,j_u,k_u])$.
-\item Checks that vectors $\ewit_x[\cdot,j_u,k_u]$ are consistent with
-commitments $\pi_x[\cdot,k_u]$ as in linear check protocol. Similar checks are
-made for $\ewit_y[\cdot,j_u,k_u]$ and $\ewit_z[\cdot,j_u,k_u]$.
-\end{enumerate}
-We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
-the protocol can again be verified by direct calculation. We state the soundness
-of the protocol below:
 
 \input{quadratic.tex}
 
