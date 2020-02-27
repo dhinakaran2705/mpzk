@@ -83,9 +83,18 @@ verified using an inner product protocol as described in Section ~\ref{sec:matri
 \end{enumerate}
 
 \noindent{\em Proximity Check for Oracle:} We combine the proximity check for the three 
-encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector $\rho\sample \FF^{3p}$ and asks the verifier to commit to the matrix $\tilde{U}=\sum_{i=1}^p\rho_i\ewit_x[i,\cdot,\cdot]+
-\sum_{i=p+1}^{2p}\rho_i\ewit_y[i,\cdot,\cdot]+\sum_{i=2p+1}^{3p}\rho_i\ewit_z[i,\cdot,\cdot]$ by sending commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$. Thereafter, for $u\in [t]$, the verifier checks: $\sum_{a\in [\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi_x[i,k_u]+\sum_{i=p+1}^{2p}\rho_i\pi_y[i,k_u]+\sum_{i=2p+1}^{3p}\rho_i\pi_z[i,k_u]$.
-
+encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector
+$\rho\sample \FF^{3p}$ and asks the verifier to commit to the matrix
+$\tilde{U}=\sum_{i=1}^p\rho_i\ewit_x[i,\cdot,\cdot]+
+\sum_{i=p+1}^{2p}\rho_i\ewit_y[i,\cdot,\cdot]+\sum_{i=2p+1}^{3p}\rho_i\ewit_z[i,\cdot,\cdot]$
+by sending commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$. Thereafter, for
+$u\in [t]$, the verifier checks: 
+{\small
+\begin{align}\label{eq:combinedproximity}
+\sum_{a=1}^\ell \Lambda_1^T[a,k_u]\tilde{c}_a &=\sum_{i=1}^p\rho_i\pi_x[i,k_u]+\sum_{i=p+1}^{2p}\rho_i\pi_y[i,k_u] \nonumber \\
+&+\sum_{i=2p+1}^{3p}\rho_i\pi_z[i,k_u].
+\end{align}
+}
 \begin{figure}[t!]
 {\small
 	%\centering
@@ -111,26 +120,26 @@ encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector $\rho\sam
 			\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
 			
 			\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
-			\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, %$\beta\sample \FF\backslash \{0\}$. 
+			\item $\verifier\rightarrow\prover$: $\delta\sample
+\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$.
+			\item $\prover$ computes:
+$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
+%$\beta\sample \FF\backslash \{0\}$. 
+			\item $\prover\leftrightarrow\verifier$ compute:
+$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
+$T_u=\beta_xC_u+\beta_yD_u+\beta_zE_u$, for $u\in [t]$ where
+$C_u=\innph{\delta}{\pi_x[\cdot,k_u]}$, $D_u=\innph{\delta}{\pi_y[\cdot,k_u]}$
+and $E_u=\innph{\delta}{\pi_z[\cdot,k_u]}$.
 			\item $\prover$ and $\verifier$ run inner product arguments to check:
 			\begin{enumerate}
 				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
 				$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$ where $z=\overline{P}\varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
-				\item
-				\begin{itemize}  
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
-				where $C_u=\sum_{i=1}^p\delta_i\comoracle_x[i,k_u]$
-					\item 
-					$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,D_u,\innp{\delta}{Y_u})$ for $u\in [t]$ 
-					where $D_u=\sum_{i=1}^p\delta_i\comoracle_y[i,k_u]$
-					\item
-					$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,E_u,\innp{\delta}{Z_u})$ for $u\in [t]$ 
-					where $E_u=\sum_{i=1}^p\delta_i\comoracle_z[i,k_u]$
-				\end{itemize}				
-				(consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u)$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 			\end{enumerate}
-			\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+			\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
+and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
+			\item $\verifier$ accepts if all the checks succeed.
 		\end{enumerate}
 	\end{framed}
 	\caption{Quadratic Check Protocol}

@@ -362,7 +362,6 @@ Computes commitments $c_1,\ldots,c_{s+\ell}$ from $P$.
 \item $\prover$ and $\verifier$ run inner product arguments to check:
 \begin{enumerate}
 \item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
-\pnote{We can use $P[1:2m, k_u]$ to denote the first 2m entries of $P[\cdot,k_u]$ as $\overline{P}$ is the submatrix after cropping both the directions, $h$ and $n$.}
 for $u\in [t]$ where $\mathsf{cm}_u=\sum_{a=1}^{s+\ell}\Lambda_3[a,k_u]c_a$, 
 $v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
 \item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=\beta c_0+\sum_{a=1}^{s+\ell}\varphi_ac_a$ (check the condition $r^TAw=r^Tb$).
@@ -370,6 +369,7 @@ $v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ w
 where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$). 
 \end{enumerate}
 \item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+\item $\verifier$ accepts if all the checks succeed.
 \end{enumerate}
 \end{framed}
 \caption{Linear Check Protocol}
