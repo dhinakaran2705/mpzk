@@ -485,29 +485,45 @@ arguments, one can show that the above Lemma holds with:
 \end{proof}
 
 \subsection{Zero Knowledge}
-\pnote{Change the simulation according to the new protocol}
-We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier zero knowledge by
-designing simulators for them. We infact simulate ``extended'' view of the verifier which includes the witnesses for inner product protocols consisting of the committed vector and commitment randomness. It is clear then, that the simulation can be completed by running the inner product argument on these simulated witness vectors. We describe the view of the verifier in the linear check protocol with
-the aforementioned extensions. We decompose the view as:
-
-We will discuss the simulation for $\linearcheck$.
-
-\noindent {\bf Verifier Randomness}: Vector $\rho \in \FF^p$ for 3D compression of the proximity check of $\ewit$ in step 1. Vector $r\in \FF^M$ in Step 4, $Q= \{(j_u,k_u)\}_{u\in [t]}$ in step 8, $\beta\in \FF_\ast$ and $\delta \in \FF^p$ in Step 12.
+%\pnote{Change the simulation according to the new protocol}
+We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier
+zero knowledge by designing simulators for them. We will extend the verifier's
+view with commitment openings (committed vector, randomness) for the inner
+product protocols. This has two benefits: (i) the inner product argument need
+not be zero knowledge, and (ii) in the distributed setting, the openings can be
+shared with the aggregator which can complete the interaction with the verifer
+without further involvement of the provers. The verifier's veiw for
+the $\linearcheck$ protocol consists of:
+\begin{itemize}[\leftmargin=0pt]
+\item {\em Verifier Randomness}: Vector $\rho \in \FF^p$ for checking proximity,
+vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q=
+\{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF_\ast$ used in randomizing the vector
+$\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there.
 Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\noindent {\bf Commitments}: Commitment $c_0$ to the first $2m$ entries of the random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to the first $2m$ entries of the first $s+\ell$ columns of the matrix $P$. In addition to that prover also sends the commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$, which are commitments of the first $m$ entries of the first $\ell$ columns of the matrix $\tilde{U}$, which is compression of $\ewit$. %, commitment $d_0$ for random vector $u_0$ used in $\proximityTwoD$ subprotocol in Step 10, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ as part of $\proximityThreeD$ protocol in Step 15, and commitment $\tilde{d}_0$ to the random codeword in the invocation of $\proximityTwoD$ from within $\proximityThreeD$ in step 15. 
+\item {\em Commitments}: Commitment $c_0$ to the first $2m$ entries of the
+random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to
+commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the
+matrix $\tilde{U}$ used for proximity check. 
 Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \{\pi[\cdot,k_u]\}_{u\in [t]}$.
 
-\noindent {\bf Commitment Randomness}: We include randomness used to compute certain commitments as part of the extended view. We include
-$\{\tilde{O}[k_u]:u\in[t]\}$ as the randomness to commit to first $m$ entries of $\tilde{U}[\cdot, k_u]$ such that the commitment outcome is $\tilde{c}_{k_u} \, \forall u\in [t]$, $\{w_{k_u} : u\in[t]\}$ randomness to commit to first $2m$ entries $P[\cdot,k_u]$. $w_0$ to commit to the first $2m$ of $P_0$ and $w$, randomness to commit to the first $2m$ entries of $\beta P_0 + \overline{P}\varphi$. Finally, $\{O[\cdot,k_u]:u\in[t]\}$ to compute $\pi[\cdot,k_u]$. Note that, $\{\tilde{O}[k_u]:u\in[t]\}$ can be computed from $\{O[\cdot,k_u]:u\in[t]\}$, So, in the view we will not include $\{\tilde{O}[k_u]:u\in[t]\}$.
-
+\item {\em Commitment Randomness}: We include randomness used to compute certain
+commitments as part of the extended view. We include openings $w_u$, $u\in [t]$
+corresponding to commitments $\mathsf{cm}_u$ used in the inner product checks in
+Step 13(a), the randomness $w$ for the commitment $\mathsf{cm}$ used in inner
+product check in Step 13(b) and the randomness $O[\cdot,k_u]$ for $u\in [t]$
+used while computing the oracle. Note that the commitment randomness for inner
+product checks in Step 13(c) can be derived from $O[\cdot,k_u]$ and hence is
+omitted from the view.
  %$\nu=\nu_0+\sum_{a\in [s+\ell]}\mu_a\omega_a$ for the vector $z$ in the subprotocol $\proximityTwoD$ in Step 10 (here $\mu=\mc{T}\tau$), $\omega=\beta\omega_0+\sum_{a\in [s+\ell]}\varphi_ac_a$ for inner product in Step 11, $\chi_u=\sum_{a\in [s+\ell]}T[a,k_u]c_a$ for $u\in [t]$ for the inner products in Step 13, $\{O[\cdot,k_u]\}_{u\in [t]}$ for aggregate inner product arguments in Step 14, $\tilde{\nu}=\tilde{\nu}_0+\sum_{a\in [\ell]}\tilde{\mu}_a\tilde{c}_a$ for the vector $\tilde{z}$ in the $\proximityTwoD$ protocol called as part of $\proximityThreeD$ protocol in Step 15. Summarizing, the view includes $\nu,\omega,\{\chi_u\}_{u\in [t]},\{O[\cdot,k_u]\}_{u\in [t]},\tilde{\nu}$.
 
-\noindent {\bf Witness related vectors}: We describe various vectors derived from witness encoding provided to the verifier. Vectors $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$ in Step 10, the vector $z = \beta P_0 + \overline{P} \varphi$, witness of step 13(b) and $P[\cdot, k_u]$ witness of step 13(a).
-%$u_0 + \overline{P}\mu$ ($\mu=\mc{T}\tau$) as part of view of the subprotocol $\proximityTwoD$ in Step 10, the vector $z'=\beta P_0+\overline{P}\varphi$ as the witness to the inner product check in Step 11, vectors $P[\cdot,k_u]$ for $u\in [t]$ as witnesses to inner product checks in Step 13, matrices $\ewit[\cdot,\cdot,k_u]$ for $u\in [t]$ as witnesses to aggregate inner product checks in Step 14, and finally the vector $\tilde{z}=\tilde{u}_0 + \sum_{a\in [\ell]}\tilde{\mu}_a\tilde{c}_a$ as part of protocol $\proximityTwoD$ from within $\proximityThreeD$ in Step 15. 
+\item {\em Vectors}: The view includes vectors
+$X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, the vector $z = \beta P_0 +
+\overline{P} \varphi$, witness of step 13(b) and vectors $P[\cdot, k_u]$ for
+$u\in [t]$.
 We drop $\{X_u\}_{u\in [t]}$ and $\{P[\cdot,k_u]\}_{u\in [t]}$ from the view as these can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the view consist of: $z,\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}$.
-
+\end{itemize}
 Next, we describe a simulator that outputs a view indistinguishable from the
 above view.
 
