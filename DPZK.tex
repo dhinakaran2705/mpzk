@@ -118,7 +118,7 @@ is secure if whatever an adversary can do in the real protocol (where no trusted
 		The functionality is parametrized with an NP relation $R$ of an NP language $L$.
 		\begin{itemize}
 		\item[-] Upon receiving input $x_i = (\stmt, \wit_i)$ from $\prover_i$ $\forall i\in[\Num]$ and $\stmt$ from $\verifier$, do the following: if $x_i$ is an empty string or falls outside the range of the domain of $\prover_i$'s input,  reset $x_i = \abort$. 
-			\item[-] If any of the $x_i$ is $\abort$, send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots, \oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to $\verifier$ and $\bot$ to everyone else. 
+			\item[-] If any of the $x_i$ is $\abort$, send $\abort$ to everyone in $\Partyset$. Otherwise,   compute $\wit = \wit_1 \oplus \wit_2,\ldots, \oplus \wit_\Num$, where $\oplus$ is the combining function of the parts of the witness held by the provers distributedly and send $R(\stmt, \wit)$ to everyone. 
 		\end{itemize}
 	\end{framed}
 	\caption{Ideal Functionality $\Func_{\DPZK}$}
