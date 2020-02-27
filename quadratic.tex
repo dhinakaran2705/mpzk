@@ -114,7 +114,7 @@ $u\in [t]$, the verifier checks:
 			%\item 
 			$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
 			Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$.
-			\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{2\ell}$.
+			\item $\prover\rightarrow\verifier$: $c_1,\ldots,c_{2\ell}$.
 			\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
 			\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 			\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
