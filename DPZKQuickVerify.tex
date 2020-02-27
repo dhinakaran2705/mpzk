@@ -351,7 +351,7 @@ commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixco
 \item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 as in Section ~\ref{sec:lincheck}. 
 \item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
-Computes commitments $c_1,\ldots,c_{s+\ell}$ form $P$.
+Computes commitments $c_1,\ldots,c_{s+\ell}$ from $P$.
 \item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell}$.
 \item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
 \item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
@@ -361,6 +361,7 @@ Computes commitments $c_1,\ldots,c_{s+\ell}$ form $P$.
 \item $\prover$ and $\verifier$ run inner product arguments to check:
 \begin{enumerate}
 \item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
+\pnote{We can use $P[1:2m, k_u]$ to denote the first 2m entries of $P[\cdot,k_u]$ as $\overline{P}$ is the submatrix after cropping both the directions, $h$ and $n$.}
 for $u\in [t]$ where $\mathsf{cm}_u=\sum_{a=1}^{s+\ell}\Lambda_3[a,k_u]c_a$, 
 $v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
 \item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=\beta c_0+\sum_{a=1}^{s+\ell}\varphi_ac_a$ (check the condition $r^TAw=r^Tb$).
@@ -577,6 +578,7 @@ and computes the commitment $\shr{\comoracle}=\comm(\shr{\ewit})$. The provers
 then share $\shr{\comoracle}$ with the aggregator $\Ag$ which sets the oracle
 $\pi$ as $\pi := \combine(\shr{\comoracle})$.  
 
+\begin{comment}
 \noindent{\bf Distributed Proximity Test}: The provers jointly prove that 
 the oracle is well formed as follows: On receiving the verifier’s challenge 
 $r\in\FF^p$ on broadcast channel, the prover $\distprover$ locally computes
@@ -597,37 +599,61 @@ complete protocol appears in Figure \ref{fig:distprox2d}. In Figure
 \ref{fig:distprox2d}, we note that the aggregator obtains the witness to the
 inner product protocol in step 7, and hence does not need to interact further
 with the provers. 
+\end{comment}
 
-\noindent{\bf Distributed Linear Test}: We provide the
-complete distributed protocol in Figure \ref{fig:distlincheck}. Here we
-highlight key adaptations from the single prover variant. First we assume
-that the provers have a share of the vector $0^h$ (as part of obtaining
-shares of the extended witness).\pnote{How to get shares of zero in malicious secure way?} In response to verifier’s challenge $r\in
-\FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials
-$R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear
-operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally
-computing on their share of the witness. The provers compute commitments to the
-columns of their share of the $P$ matrix, and send those to the aggregator. The
-aggregator combines the shares to obtain the commitment to the $P$ matrix.
-Provers can jointly prove that $P$ matrix is a codeword in the product code
-using the distributed membership protocol as above. Similarly, the provers can
-send their shares of vectors $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u]$ for $u\in
-[t]$, required for consitency    checks. Due to the bounded independence
-property, for $t\leq \bi$, these shares    do not leak. The only point of
-departure is the shares of $z=\beta P_0 + \overline{P}\varphi$. The
-randomization by a random codeword $P_0\in L_2$ such that $\sum_{j\in [m]}
-P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$
-in an honest execution of the protocol for a witness satisfying
-$r^TA\wit=r^Tb$. However, individual shares may not satisfy the preceeding
-condition, and hence the provers further add a share of $0^h$ to the share
-$\beta\shr{P}_0 + \shr{\overline{P}}\varphi$. This allows the aggregator $\Ag$
-to obtain witnesses for all the inner product protocols that it runs with the
-verifier.  
+\noindent{\bf Distributed Linear Test}: We provide the complete distributed protocol in Figure \ref{fig:distlincheck}. Here we highlight key adaptations from the single prover variant. First we assume that the provers have a share of the vector $0^{2m}$ (as part of obtaining shares of the extended witness).\pnote{How to get shares of zero in malicious secure way?} In response to verifier’s challenge $r\in \FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials $R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally computing on their share of the witness. The provers compute commitments to the columns of their share of the $P$ matrix, following the similar procedure as in the single prover linear check protocol, and send those to the aggregator. The aggregator combines the shares to obtain the commitment to the $P$ matrix. %Provers can jointly prove that $P$ matrix is a codeword in the product code using the distributed membership protocol as above. 
+Similarly, the provers can send their shares of vectors $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u]$ for $u\in [t]$, required for consitency checks. Due to the bounded independence property, for $t\leq \bi$, these shares do not leak. The only point of departure is the shares of $z=\beta P_0 + \overline{P}\varphi$. The randomization by a random codeword $P_0\in L_2$ such that $\sum_{j\in [m]}
+P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$ in an honest execution of the protocol for a witness satisfying $r^TA\wit=r^Tb$. However, individual shares may not satisfy the preceeding condition, and hence the provers further add a share of $0^h$ to the share $\beta\shr{P}_0 + \shr{\overline{P}}\varphi$. This allows the aggregator $\Ag$ to obtain witnesses for all the inner product protocols that it runs with the verifier.  
 
-\noindent{\bf Distributed Quadratic Check}: This is the only protocol
-whose    distributed variant requires an additional interaction among the
-provers. Recall    that in response to the verifier’s challenge $r\in \FF^m$,
-the provers need to    compute the matrix $P$ given by:
+\begin{figure}[t!]
+	{\small
+		%\centering
+		\begin{framed}
+			\noindent{$\distlinearcheck(\mathsf{pp}, \, A\in \mc{M}_{M,N}, \, b\in \FF^M, \, [\pi];\, \shr{\ewit}, \, \shr{0^{2m}})$}:
+			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\shr{\wit}=\dec(\shr{\ewit})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit} = \wit$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^p$.
+				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
+				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
+				\item $\distprover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				as in Section ~\ref{sec:lincheck}. 
+				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{sec:lincheck}. Samples $\shr{P_0}\sample \FF^m$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^2m},\shr{o})$ where $\shr{o} \sample \FF$.
+				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell}}$ from $\shr{P}$.
+				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{s+\ell}}, d_0$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [s+\ell]$ and sends $c_0,c_1,\ldots,c_{s+\ell}$.}
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\distprover\rightarrow\Ag$: $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u],  \shr{P_u} = \shr{P}[\cdot,k_u]$ for $u\in [t]$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m}}$ and sends $\shr{z}$.
+				\item \textcolor{red}{$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
+				\item $\Ag$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
+					\pnote{We can use $P[1:2m, k_u]$ to denote the first 2m entries of $P[\cdot,k_u]$ as $\overline{P}$ is the submatrix after cropping both the directions, $h$ and $n$.}
+					for $u\in [t]$ where $\mathsf{cm}_u=\sum_{a=1}^{s+\ell}\Lambda_3[a,k_u]c_a$, 
+					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=\beta c_0+\sum_{a=1}^{s+\ell}\varphi_ac_a$ (check the condition $r^TAw=r^Tb$).
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+			\end{enumerate}
+		\end{framed}
+		\caption{Distributed Linear Check Protocol}
+		\label{fig:distlincheck}
+	}
+\end{figure}
+
+\noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
 \begin{align*}
 P[j,k] & =\sum_{i\in
 [p]}r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\    
@@ -636,20 +662,81 @@ P[j,k] & =\sum_{i\in
 In the above, the provers have additive shares of $\ewit_x$ and
 $\ewit_y$, and so they peformn an MPC with $O(N)$ multiplication gates and
 depth $1$, to obtain additive shares of $\ewit_x[i,j,k].\ewit_y[i,j,k]$.
-Concretely, we assume an MPC $\mathsf{Mult}$    with following input/output for
+Concretely, we assume an MPC $\mathsf{Mult}$ with following input/output for
 a prover $\distprover$:     
 \begin{align*}    
 \shr{\ewit_x.\ewit_y}\leftarrow \mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})    
 \end{align*}    
-Thereafter, each
-prover obtains a share of matrix $P$, and the remaining protocol proceeds as
+Thereafter, each prover obtains a share of matrix $P$, and the remaining protocol proceeds as
 the distributed linear check protocol, except that we do not need to send the
 shares $\shr{\overline{P}}\varphi$, since in the honest execution of the
 protocol with a correct witness, $\overline{P}\varphi$ is the unique codeword
 $P_0$ of $\dashL_2$ with $P_0[j]=0$ for $j\in [m]$. The complete protocol for
 distributed quadratic check appears in Figure \ref{fig:distquadcheck}.
-
-
+\begin{figure}[t!]
+	{\small
+		%\centering
+		\begin{framed}
+			\noindent{$\distquadcheck(\mathsf{pp}, [\pi];\, \shr{\ewit_x}, \shr{\ewit_y}, \shr{\ewit_z}\, \shr{0^{2m}})$}:
+			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\shr{\wit_a}=\dec(\shr{\ewit_a})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit_a} = \wit_a$ $\forall a\in \{x,y,z\}$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^p$.
+				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
+				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\distprover$: $r\sample \FF^p$.
+				\item Provers $\distprover$ run the MPC: $\shr{\ewit_x.\ewit_y}\leftarrow
+				\mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$ to obtain shares of the hadamard product of the encodings.
+				\item $\distprover$ computes: Matrix $\shr{P}$ from $r$ and $\shr{\ewit_x.\ewit_y}, \, \shr{\ewit_z}$ as described in Section ~\ref{sec:quadcheck}. %Samples $\shr{P_0}\sample \FF^m$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and 
+				$\shr{d_0}\gets \comm(\shr{0^{2m}},\shr{o})$ where $\shr{o} \sample \FF$.
+				Computes commitments $\shr{c_1},\ldots,\shr{c_{2\ell}}$ from $\shr{P}$.
+				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{2\ell}}, \shr{d_0}$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [2\ell]$ and sends $c_0,c_1,\ldots,c_{2\ell}$.}
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s, \, \gamma \sample \FF^m$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\distprover\rightarrow\Ag$: 
+				\begin{itemize}
+					\item $\shr{X_u}=\shr{\ewit_x}[\cdot,j_u,k_u]$,
+					\item $\shr{Y_u}=\shr{\ewit_y}[\cdot,j_u,k_u]$,
+					\item $\shr{Z_u}=\shr{\ewit_z}[\cdot,j_u,k_u]$,
+					\item $\shr{P_u} = \shr{P}[\cdot,k_u]$
+				\end{itemize} 
+				 for $u\in [t]$.
+				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $A_u = \sum_{\xi\in[\Num]} \shr{A_u}$ where $A\in \{X, Y, Z, P\}$ and sends ${X_u, Y_u, Z_u, P_u}$ for $u\in [t]$.}
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$. 
+				\item $\distprover\rightarrow\Ag$: $\shr{z} =  \shr{\overline{P}}\varphi + \shr{0^{2m}}$ and sends $\shr{z}$.
+				\item \textcolor{red}{$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
+				\item $\Ag$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
+					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$ where $z=\overline{P}\varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
+					\item
+					\begin{itemize}  
+						\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+						where $C_u=\sum_{i=1}^p\delta_i\comoracle_x[i,k_u]$
+						\item 
+						$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,D_u,\innp{\delta}{Y_u})$ for $u\in [t]$ 
+						where $D_u=\sum_{i=1}^p\delta_i\comoracle_y[i,k_u]$
+						\item
+						$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,E_u,\innp{\delta}{Z_u})$ for $u\in [t]$ 
+						where $E_u=\sum_{i=1}^p\delta_i\comoracle_z[i,k_u]$
+					\end{itemize}				
+					(consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+			\end{enumerate}
+		\end{framed}
+		\caption{Distributed Quadratic Check Protocol}
+		\label{fig:distquadcheck}
+	}
+\end{figure}
+\begin{comment}
 \begin{figure}[h!]
 \centering
 \begin{framed}
@@ -730,6 +817,7 @@ Q$.
 \caption{Distributed 3D Proximity Protocol}
 \label{fig:distprox3d}
 \end{figure}
+\end{comment} 
 
 Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
