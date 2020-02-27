@@ -248,7 +248,7 @@ the verifier initially (before sending messages $r,Q$) sends a vector $\rho\samp
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{U}=\sum_{i\in
 [p]}r_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
-[\ell]}\Omega_1[a,k_u]\tilde{c}_a = \sum_{i\in [p]}r_i\pi[i,k_u]$. It can be
+[\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}r_i\pi[i,k_u]$. It can be
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
 The complete linear check protocol is described in Figure \ref{fig:linearcheck}.
@@ -288,27 +288,28 @@ show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible pro
 $A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
 $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
  we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
-\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover in Step 3. Define 
+\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover
+(Step 3 in Figure ~\ref{fig:linearcheck}). Define 
 the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
-$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1[a,k]\tilde{c}_a$ for $k\in [n]$.
+$\tilde{C}_k=\sum_{a=1}^\ell \Lambda_1^T[a,k]\tilde{c}_a$ for $k\in [n]$.
  Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ where
 $\hat{C}_k=\sum_{i=1}^p\rho_i\pi[i,k]$. Now if
 $\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
-proximity check with probability at most $(1-1/n)^t$. In the complete proof in
+proximity check (Step 14) with probability at most $(1-e/n)^t$. In the complete proof in
 Appendix, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
 while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
 Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
 $d(\ewit,\mc{W}_1)>e$.
 
-We consider the second case now, when $d(\ewit,\mc{W}_1)\leq e$. Let $\ewit^*$
+We now consider the case when $d(\ewit,\mc{W}_1)\leq e$. Let $\ewit^*$
 denote the unique element of $\mc{W}_1$ such that $\Delta_1(\ewit,\ewit^*)\leq e$.
 Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
 probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA\neq
 r^Tb$. Let $P^*$ denote the correctly computed $P$ matrix from $\ewit^*$ and let
 $\hat{P}$ denote the correctly computed $P$ matrix from $\ewit$. We note that
 $\Delta_1(\hat{P},P^*)\leq e$. If the 
-prover commits to $\tilde{P}=P^*$, it fails the inner product check in Step
-13(b) as $r^TA\wit\neq r^Tb$. If $\tilde{P}\neq P^*$, we have
+prover commits to a matrix $\tilde{P}=P^*$, it fails the inner product check in Step
+13(b) as $r^TA\wit\neq r^Tb$. If it commits to a matrix $\tilde{P}\neq P^*$, we have
 $\Delta_1(\tilde{P},P^*)\geq n-s-\ell$ by distance property of the code $L_3$
 (We note that a prover implicitly commits to a matrix in $L_3\oplus L_5$).
 Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
