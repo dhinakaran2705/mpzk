@@ -54,7 +54,7 @@ $\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
 Let $n,k,d$ be positive integers with $n\geq k$ and $\FF$ be a finite field. We
-call $L\subseteq \FF^n$ to be an $[n,k,d]$ linear code if $L$ is a $k$-dimnensional
+call $L\subseteq \FF^n$ to be an $[n,k,d]$ linear code if $L$ is a $k$-dimensional
 subspace of $\FF^n$ and $d$ is the minimum value of $\Delta(x,y)$ for distinct
 $x,y\in L$. Elements of $L$ are conventionally called {\em codewords}.
 \end{definition}
@@ -63,7 +63,7 @@ For an $[n,k,d]$ code $L$, an $n\times k$ matrix $\calG$ is called a {\em
 generator matrix} for $L$ iff (i) $\calG x\in L$ for all $x \in \bbF^k$ and (ii)
 $\calG x\neq \calG y$ for $x\neq y$. Clearly, such a matrix $\calG$ has rank
 $k$. Similarly an $n\times (n-k)$ matrix $\calH$ such that $y^T \calH = 0$ for
-all $y\in L$ is called a {\em parity check} matrix for $L$. It is easily seen
+all $y\in L$ is called a {\em parity check} matrix for $L$. It is known
 that the above two matrices exist for any $[n,k,d]$ linear code $L$. We will
 assume that description of the linear code $L$ includes a generator matrix
 $\calG$ and a parity check matrix $\calH$.
@@ -137,7 +137,7 @@ Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
 $p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
 \mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
-$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$. Then for any
+$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$.  \commentA{in the following $u_0$ cannot be any $m\times n$ matrix  for the proposition to be true. check. it should be from $\mc{C}$ or with the same feature as that of a slice} Then for any
 $m\times n$ matrix $u_0$ over $\FF$, we have 
 \[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
 \frac{d}{|\FF|}\]  
@@ -160,7 +160,7 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 
 The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
 
-\begin{definition}[Inner-product Argument]\label{defn:innerproductarg}
+\begin{definition}[Inner-product Argument \cite{} \commentA{fill in the ref}]\label{defn:innerproductarg} 
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
@@ -177,7 +177,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \begin{align*}
 \condprob{
 	\begin{array}{l}
-	(\stmt,\wit)\in \calR_\sigma \vee\\ \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1
+	(\stmt,\wit)\in \calR_\sigma \wedge \\ \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1
 	\end{array}}{
 	\begin{array}{l}
 	\sigma\gets \gen(\secparam);\\
@@ -187,7 +187,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 =1
 \end{align*}
 \normalsize
-\pnote{Why $\vee$? not $\wedge$ in the definition of completeness}
+
 \item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
 
 \footnotesize
