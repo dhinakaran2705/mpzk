@@ -3,12 +3,12 @@
 In this section, we describe a sub-linear interactive zero knowledge argument as
 an Interactive PCP (IPCP). The IPCP we describe admits an efficient MPC to
 convert it to a publicly-verifiable, non-interactive argument of knowledge,
-using the ``BCS'' transformation in \cite{BCS16}. To serve as a
+using the ``BCS'' transformation in \cite{BCS16}.  \commentA{this part should move to the DPZK part}To serve as a
 baseline for comparison, we also describe naive extensions of existing protocols
 such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan} to the
 distributed prover setting. 
 
-Our protocol proves membership in the $\npol$ complete
+Our protocol proves membership in the $\npol$-complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
