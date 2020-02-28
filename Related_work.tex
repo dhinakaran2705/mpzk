@@ -4,7 +4,12 @@ As mentioned earlier in the introduction, Pedersen \cite{Ped92} defines the noti
 Trinocchio \cite{trinocchio} proposes a distributed proof generation method for the popular Pinocchio protocol \cite{pinnochio_PHGR} but only when there is a honest majority of semi-honest parties. The work DIZK \cite{dizk} provides a distributed implementation of the proof generation of a non-interactive zero-knowledge protocol (zkSNARK).
 
 
-Our single-prover version of the protocol is also competitive in the state-of-art of such protocols \cite{ligero, aurora, bulletproofs}. Table \ref{tab:SPZK} captures the summary.
+Our single-prover version of the protocol is also competitive in the state-of-art of such protocols \cite{ligero, aurora, bulletproofs}. 
+%We provide a brief summary of ``direct'' transformations of the state-of-art zero-knowledge protocols in our setting into their $\DPZK$ versions.
+The IPCP protocol Ligero \cite{ligero} requires no public key operations during its proof generation and admits efficient proof generation, in practice \cite{diogenes}, for a single prover. In asymptotics, it admits $O(N \log N)$ prover complexity and $O(\sqrt{N})$ proof size. Another oracle based construction Aurora \cite{aurora} admits $O(\log^2 N)$ proof size, but its prover algorithm is expensive in practice due to its high usage of memory even for moderate sized circuits with a million gates.\dnote{@Nitin: check the wording of the sentence}
+Ligero and Aurora also do not directly admit distributed proof generation unless a generic MPC is applied for constructing their oracle and answering its queries. The Bulletproofs protocol \cite{InnerProductDLS,bulletproofs} has one of the best proof sizes of $O(\log N)$, but its prover and verifier algorithms involves $O(N)$ public key operations which makes it expensive. 
+\dnote{once we get concrete number for our protocol for a million and a billion gate circuits, make the related work section more concrete, especially for the single prover protocol comparison}
+Table \ref{tab:SPZK} captures the summary.
 \begin{table*}[ht] 
 	\centering
 	\resizebox{\textwidth}{!}{
