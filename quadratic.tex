@@ -87,21 +87,20 @@ encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector
 $\rho\sample \FF^{3p}$ and asks the verifier to commit to the matrix
 $\tilde{U}=\sum_{i=1}^p\rho_i\ewit_x[i,\cdot,\cdot]+
 \sum_{i=p+1}^{2p}\rho_i\ewit_y[i,\cdot,\cdot]+\sum_{i=2p+1}^{3p}\rho_i\ewit_z[i,\cdot,\cdot]$
-by sending commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$. Thereafter, for
+by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$. Thereafter, for
 $u\in [t]$, the verifier checks: 
-{\small
 \begin{align}\label{eq:combinedproximity}
-\sum_{a=1}^\ell \Lambda_1^T[a,k_u]\tilde{c}_a &=\sum_{i=1}^p\rho_i\pi_x[i,k_u]+\sum_{i=p+1}^{2p}\rho_i\pi_y[i,k_u] \nonumber \\
-&+\sum_{i=2p+1}^{3p}\rho_i\pi_z[i,k_u].
+\innph{\Lambda_1[k_u,\cdot]}{\tilde{\bm{c}}}=
+\innph{\rho}{\pi_x[\cdot,k_u]\,||\,\pi_y[\cdot,k_u]\,||\,\pi_z[\cdot,k_u]}.
 \end{align}
-}
 \begin{figure}[t!]
 {\small
 	%\centering
 	\begin{framed}
-		\noindent{$\quadcheck(\mathsf{pp},[\pi];\ewit_x, \ewit_y, \ewit_z)$}:
+		\noindent{$\quadcheck(\mathsf{pp},[\pi_x],[\pi_y],[\pi_z];\ewit_x, \ewit_y, \ewit_z)$}:
 		
-		\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\wit_a=\dec(\ewit_a)$ $\forall a\in \{x,y,z\}$.
+		\noindent{\bf Relation}: $\ewit_a=\open(\pi_a)$ for $a\in \{x,y,z\}$,
+$\wit_x \circ \wit_y = \wit_z$ where  $\wit_a=\dec(\ewit_a)$ for $a\in \{x,y,z\}$.
 		
 		\begin{enumerate}[{\rm 1.}]
 			\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
@@ -135,7 +134,8 @@ and $E_u=\innph{\delta}{\pi_z[\cdot,k_u]}$.
 				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
 				$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$ where $z=\overline{P}\varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
-				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u)$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+				\item
+$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 			\end{enumerate}
 			\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
 and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
@@ -146,7 +146,6 @@ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
 	\label{fig:quadcheck}
 }
 \end{figure}
-\pnote{ Complete the protocol by including proximity check}
 
 %As in the linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we get the following inner product check
 %$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
