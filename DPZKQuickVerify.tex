@@ -247,8 +247,8 @@ to an encoding which is ``close'' to $\mc{W}$. To check proximity,
 the verifier initially (before sending messages $r,Q$) sends a vector $\rho\sample
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{U}=\sum_{i\in
-[p]}r_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
-[\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}r_i\pi[i,k_u]$. It can be
+[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
+[\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}\rho_i\pi[i,k_u]$. It can be
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
 The complete linear check protocol is described in Figure \ref{fig:linearcheck}.
