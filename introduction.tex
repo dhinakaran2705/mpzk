@@ -98,9 +98,7 @@ Building on \name{}, we design our DPZK protocol \dpname{} with the prover commu
 
 Each prover in \dpname{} starts with an additive share of the witness. Each prover generates an encoding of its witness using the same procedure as in \name{} due to the additive homomorphism in Reed-Solomon encoding and in oracle generation. \dnote{seems like we have to add slightly more details in the description of \name{} so that we can refer to it here to explain the dpzk construction. @Nitin can you take a shot at this paragraph after you augment the technical overview?}
 
-Proving the security of this construction is interesting because of a couple of reasons. The witness shares that the provers start with are additive, but they need not be from a secret sharing of a ``global'' witness. And, even if the provers' shares are secret shares of a global witness with a threshold of $\Num-1$, the aggregator in our construction sees messages from \textit{all} the $\Num$ provers. We prove the security of \dpname{} taking care of these aspects when the provers and the aggregator are semi-honest.
-
-\dnote{insert benchmarking numbers for \dpname{} here}
+Proving the security of this construction is interesting because of a couple of reasons. The witness shares that the provers start with are additive, but they need not be from a secret sharing of a ``global'' witness. And, even if the provers' shares are secret shares of a global witness with a threshold of $\Num-1$, the aggregator in our construction sees messages from \textit{all} the $\Num$ provers. We prove the security of \dpname{} taking care of these aspects when the provers and the aggregator are semi-honest.\dnote{insert benchmarking numbers for \dpname{} here}
 
 %\subsection*{Distributed proof generation}
 %--- Informal notion of Distributed Provers Zero Knowledge Protocol $\innp{\Pi}{\verifier}$--- 
@@ -142,7 +140,6 @@ Proving the security of this construction is interesting because of a couple of 
 
 
 \input{Related_work.tex}
-\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
 %Let $P$ be the predicate that is being proved. An aggregation of multiple proofs on the same $P$ produces a proof.  Let us consider the interactive version of the protocol. A proof consists of the messages sent by the prover to the verifier and, additionally in IOPs, the replies to the oracle queries of the verifier.
 %where each message from the prover is first identified whether it is homomorphic or not. If 
 %each prover can produce an additive share of the proof.  find a way to \textit{aggregate} the proof parts from each prover. identify the prover messages which are homomorphic.
