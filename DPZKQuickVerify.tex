@@ -312,7 +312,7 @@ $\Delta_1(\hat{P},P^*)\leq e$. If the
 prover commits to a matrix $\tilde{P}=P^*$, it fails the inner product check in Step
 13(b) as $r^TA\wit\neq r^Tb$. If it commits to a matrix $\tilde{P}\neq P^*$, we have
 $\Delta_1(\tilde{P},P^*)\geq n-s-\ell$ by distance property of the code $L_3$
-(We note that a prover implicitly commits to a matrix in $L_3\oplus L_5$).
+(We note that a prover implicitly commits to a matrix in $L_3\otimes L_5$).
 Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
 $k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq \tilde{P}[\cdot,k]$. The check
  13(c) ensures that prover provides vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
@@ -848,7 +848,12 @@ Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
 $\distlinearcheck$. 
 
-\noindent{\bf Semi-honest to Malicious Security:} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
+\subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
+\pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
+
+\noindent{\bf Overview of the proof}
+
+\noindent{\bf Difficulty in simulation while aggregator is malicious}
 \begin{lemma}\label{lem:distlincheckzk}
 For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 linear check protocol consisting of messages from the prover $\distprover$ with
