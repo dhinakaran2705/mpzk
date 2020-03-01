@@ -46,7 +46,7 @@ r_iQ^i(\alpha_j, \cdot)$. We define the matrix $P$ by $P[j,k]= p_j(\eta_k)$ for
 $j\in[h], k\in[n]$. The matrix $P$ is in the product code $L_4\oplus L_5$. As
 before we commit to $P$ by committing to the submatrix $\overline{P}$
 consisting of the first $2m$ rows and the first $2\ell$ columns of $P$. Let
-$c_1,\ldots,c_{2\ell}$ be the commitments to the columns of $\overline{P}$.\smallskip
+$c_1,\ldots,c_{2\ell}$ be the commitments to the columns of $\overline{P}$.
 
 \noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Let
 $\overline{\bm{\eta}}$ denote the vector $(\eta_1, \ldots, \eta_{2\ell})$, and
@@ -62,6 +62,11 @@ c_k$. Using an inner product argument the prover can show that the commitment
 $\cm$ opens to vector $z$ such that $\innp{[\gamma||0^m]^T}{z} = 0$. Binding
 property of the commitment ensures that $z = \overline{P}\varphi$ with
 overwhelming probability.
+As in the linear check, the prover uses a random vector $P_0\in \FF^{2m}$ such
+that $P_0[j]=0$ for $j\in [m]$ to blind the vector $\overline{P}\varphi$. The
+prover initially commits to $P_0$ by sending a commitment $c_0$ to it, and later
+sends uses the vector $z=\beta P_0 + \overline{P}\varphi$ in the preceeding
+inner product check.
 
 \noindent{\em Consistency of the oracles and  $P$:} 
 As in the linear check, the verifier checks
@@ -112,15 +117,18 @@ $\wit_x \circ \wit_y = \wit_z$ where  $\wit_a=\dec(\ewit_a)$ for $a\in \{x,y,z\}
 			\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
 			%\item 
 			$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
-			Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$.
-			\item $\prover\rightarrow\verifier$: $c_1,\ldots,c_{2\ell}$.
+			Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
+samples $P_0\sample \FF^{2m}$ with $P_0[1:m]=0^m$ and computes commitment $c_0$
+to $P_0$. 
+			\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell}$.
 			\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
 			\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 			\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
 			
 			\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
 			\item $\verifier\rightarrow\prover$: $\delta\sample
-\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$.
+\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
+$\beta\sample \FF\backslash \{0\}$.
 			\item $\prover$ computes:
 $W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
 %$\beta\sample \FF\backslash \{0\}$. 
@@ -133,7 +141,9 @@ and $E_u=\innph{\delta}{\pi_z[\cdot,k_u]}$.
 			\begin{enumerate}
 				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
 				$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
-				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$ where $z=\overline{P}\varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
+				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$
+where $z=\beta P_0 + \overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
+$\mathsf{cm} = \beta c_0+\sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
 				\item
 $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 			\end{enumerate}

@@ -579,11 +579,7 @@ $\linearcheck$ for $t\leq \bi$.
 \end{lemma}
 We defer the proof of the correctness of the simulation to Appendix.
 We omit the simulation for the quadratic check protocol, as it is very similar
-to the linear check. One key difference we highlight is that we do not need to
-randomize the vector $\overline{P}\varphi$, the witness in the inner product check in
-Step 10 (and part of the extended view), as in the honest execution of the
-protocol, $\overline{P}\varphi$ is the unique codeword $z$ of $L_2$ with $z[j]=0$ for
-all $j\in [m]$. We state the lemma formally, skipping the proof.
+to the linear check. 
 
 \begin{lemma}\label{lem:simquadcheck}
 There exists an efficient simulator $\simulator$ whose output is perfectly
@@ -919,9 +915,3 @@ Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
 %\end{enumerate}
-   
-
-
-
-\subsection{Non-interactive}
-IOP to NIROP

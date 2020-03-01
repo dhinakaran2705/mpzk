@@ -4,7 +4,12 @@ As mentioned earlier in the introduction, Pedersen \cite{Ped92} defines the noti
 Trinocchio \cite{trinocchio} proposes a distributed proof generation method for the popular Pinocchio protocol \cite{pinnochio_PHGR} but only when there is a honest majority of semi-honest parties. The work DIZK \cite{dizk} provides a distributed implementation of the proof generation of a non-interactive zero-knowledge protocol (zkSNARK).
 
 
-Our single-prover version of the protocol is also competitive in the state-of-art of such protocols \cite{ligero, aurora, bulletproofs}. Table \ref{tab:SPZK} captures the summary.
+Our single-prover version of the protocol is also competitive in the state-of-art of such protocols \cite{ligero, aurora, bulletproofs}. 
+%We provide a brief summary of ``direct'' transformations of the state-of-art zero-knowledge protocols in our setting into their $\DPZK$ versions.
+The IPCP protocol Ligero \cite{ligero} requires no public key operations during its proof generation and admits efficient proof generation, in practice \cite{diogenes}, for a single prover. In asymptotics, it admits $O(N \log N)$ prover complexity and $O(\sqrt{N})$ proof size. Another oracle based construction Aurora \cite{aurora} admits $O(\log^2 N)$ proof size, but its prover algorithm is expensive in practice due to its high usage of memory even for moderate sized circuits with a million gates.\dnote{@Nitin: check the wording of the sentence}
+Ligero and Aurora also do not directly admit distributed proof generation unless a generic MPC is applied for constructing their oracle and answering its queries. The Bulletproofs protocol \cite{InnerProductDLS,bulletproofs} has one of the best proof sizes of $O(\log N)$, but its prover and verifier algorithms involves $O(N)$ public key operations which makes it expensive. 
+\dnote{once we get concrete number for our protocol for a million and a billion gate circuits, make the related work section more concrete, especially for the single prover protocol comparison}
+Table \ref{tab:SPZK} captures the summary.
 \begin{table*}[ht] 
 	\centering
 	\resizebox{\textwidth}{!}{
@@ -37,6 +42,7 @@ Our single-prover version of the protocol is also competitive in the state-of-ar
 	\caption{Comparison table}\label{tab:SPZK}
 	
 \end{table*}
+.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
 %Ligero \cite{ligero}, a zero-knowledge protocol was given, which attains sublinear proof size, without any trusted setup and assuming that finding the collision for a hash function is difficult. Then in \cite{bulletproofs} zero-knowledge argument of logarithmic size without trusted setup, assuming the discrete log is hard. And then \cite{aurora} gave an IOP based protocol which is better than \cite{ligero} in terms of proof size, but not as good as \cite{bulletproofs}, but hardness assumption is a collision-resistant hash function. \cite{spartan} provides an argument which attains sublinear proof as well as sublinear verification, on the hardness assumption of the discrete log. Verification of \cite{bulletproofs} requires the exponentiation operation of linear order, which is very expensive in terms of practice. Whereas \cite{aurora} does not require exponentiation, but as all its messages are constructed as oracles, it takes too much memory in practice. \cite{spartan} is better in terms of verification. In our work, we provide a zero-knowledge protocol which has a sublinear proof size, same as \cite{spartan} and in verification number of required field operations is linear in size of the circuit but the number of exponentiations is very less, lesser than \cite{spartan}, in practice which can outperform all the above works.
 
 %In \cite{DDS} notion of distributed prover protocol was introduced, where provers jointly provide a signature. Generalization of this work came in 2012 by Marcel et al. \cite{EfficientTZ}, which gave a generic notion of the distributed proof generation system. In this paper, the protocols were restricted to $\Sigma$-protocol.
