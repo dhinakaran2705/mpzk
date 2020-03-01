@@ -91,7 +91,7 @@ where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$
 column of $\overline{U}$ for $k\in [\ell]$. We thus view the vector $\bm{c}$ as 
 an implicit commitment to the matrix $U$. The commitment scheme presents no difficulty in 
 proving inner product relations for a column (or a linear combination of them) with a public vector.
-To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as \commentA{new notation? explain what it means. I don't get it}$\mathsf{cm}=\innph{\Lambda_1[k,\cdot]}{\bm{c}}$. Then we reformulate the inner product
+To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as \commentA{new notation$\langle\langle \rangle \rangle$. explain what it means. I don't get it. Is it $c_k$ the commitment for $\overline{U}[\cdot,k]$?}$\mathsf{cm}=\innph{\Lambda_1[k,\cdot]}{\bm{c}}$. Then we reformulate the inner product
  as 
 $\innp{x}{U[\cdot,k]}=\innp{x}{\Lambda_2\overline{U}[\cdot,k]}=\innp{x^T\Lambda_2}{\overline{U}[\cdot,k]}$ where the last formulation involves a public vector $x^T\Lambda_2$ and private vector corresponding to commitment $\mathsf{cm}$. We make repeated use of such inner product checks.   
 
@@ -185,13 +185,13 @@ the polynomial $\sum_{j=1}^m\sum_{i=1}^p
 R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$. Let $\zetabar$ denote the vector
 $(\zeta_1,\ldots,\zeta_s)$ and let $p(\zetabar)$ denote the vector
 $(p(\zeta_1),\ldots,p(\zeta_s))$. Then the previous polynomial identity reduces to the
-inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$. \commentA{why do you check $s$ points? p is a poly of degree 2s} \smallskip  
+inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$.\smallskip  
 
 \noindent {\em Intermediate Commitment}: 
 We introduce an $h\times n$ matrix $P$
 which serves as a bridge between the oracle $\pi$ and the eventual vector
 $p(\zetabar)$. For $j\in [h]$, let $p_j$ denote the polynomial $\sum_{i\in
-[p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$. We define the matrix $P$ by
+[p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ (which will be of degree less than $s + \ell$). We define the matrix $P$ by
 $P[j,k]=p_j(\eta_k)$ for $j\in [h],k\in [n]$. Note that the matrix $P$ is in the
 product of codes $\rsc{\eta}{n,s+\ell}$ and $\rsc{\alpha}{h,2m}$. We let the
 prover commit to the matrix $P$, by sending column commitments for the $2m\times
@@ -202,16 +202,16 @@ helps in achieving soundness, as a cheating prover would be forced to commit to
 a $P$ which is substantially different from an honest $P$, and thus increasing
 the likelihood of getting ``caught'' in the consistency checks below.\smallskip 
 
-\noindent {\em Consistency of $P$ and $p(\zetabar)$}:
+\noindent {\em Consistency of matrix $P$ and $p(\zetabar)$}:
 Let $\etabar$ denote the vector
 $(\eta_1,\ldots,\eta_{s+\ell})$, and let $\Phi$ denote the $s\times (s+\ell)$
-matrix such that $p(\zetabar)=\Phi p(\etabar)$. Further, observe that
+matrix such that $p(\zetabar)=\Phi \times p(\etabar)$. Further, observe that
 $p(\etabar)=\overline{P}^T[1^m||0^m]^T$ and thus
 $p(\zetabar)=\Phi\overline{P}^T[1^m||0^m]^T$. Now, we have
 $\innp{1^s}{p(\zetabar)}=p(\zetabar)^T[1^s]=[1^m||0^m]\overline{P}\Phi^T[1^s]=\innp{1^m||0^m}{\overline{P}\varphi}$
 where $\varphi=\Phi^T[1^s]$. Given commitments $c_1,\ldots,c_{s+\ell}$, the
 commitment to $\overline{P}\varphi$ can be computed as
-$\mathsf{cm}=\sum_{k=1}^{s+\ell}\varphi_kc_k$. Using an inner product argument
+$\mathsf{cm}=\sum_{k=1}^{s+\ell}\varphi_kc_k$ \commentA{shouldn't $\varphi_k$ be in the exponent? you have never defined the homomorphic operations and their notations on the commitments }. Using an inner-product argument
 the prover can show that the commitment $\mathsf{cm}$ opens to vector $z$ such
 that $\innp{1^m||0^m}{z}=r^Tb$. Binding property of the commitment ensures that
 $z=\overline{P}\varphi$ with overwhelming probability. In the full protocol, 
@@ -221,7 +221,7 @@ $\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This rand
 precludes the need for the inner product argument to be zero knowledge, and as we shall later
 see, helps reduce interaction among provers in distributed variant of the protocol.\smallskip 
 
-\noindent{\em Consistency of $\pi$ and $P$}: The verifier additionally
+\noindent{\em Consistency of oracle $\pi$ and $P$}: The verifier additionally
 needs to determine if $P$ is correctly computed from the encoding $\ewit$
 committed to by the oracle $\pi$. The verifier proceeds to check the
 consistency at randomly sampled positions $Q=\{(j_u,k_u): u\in [t]\}$ from
@@ -244,11 +244,11 @@ $u\in [t]$ can be aggregated, leading to one inner product check for each $u\in
 \end{enumerate}
 
 \noindent{\em Proximity Check for Oracle}: This check forces a prover to commit
-to an encoding which is ``close'' to $\mc{W}$. To check proximity, 
+to an encoding which is ``close'' to well-formed encoding $\mc{W}$. To check proximity, 
 the verifier initially (before sending messages $r,Q$) sends a vector $\rho\sample
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{U}=\sum_{i\in
-[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
+[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ \commentA{what is $t$} that $\sum_{a\in
 [\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}\rho_i\pi[i,k_u]$. It can be
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
@@ -626,7 +626,7 @@ inner product protocol in step 7, and hence does not need to interact further
 with the provers. 
 \end{comment}
 
-\noindent{\bf Distributed Linear Test}: We provide the complete distributed protocol in Figure \ref{fig:distlincheck}. Here we highlight key adaptations from the single prover variant. First we assume that the provers have a share of the vector $0^{2m}$ (as part of obtaining shares of the extended witness).\pnote{How to get shares of zero in malicious secure way?} In response to verifier’s challenge $r\in \FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials $R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally computing on their share of the witness. The provers compute commitments to the columns of their share of the $P$ matrix, following the similar procedure as in the single prover linear check protocol, and send those to the aggregator. The aggregator combines the shares to obtain the commitment to the $P$ matrix. %Provers can jointly prove that $P$ matrix is a codeword in the product code using the distributed membership protocol as above. 
+\noindent{\bf Distributed Linear Test}: We provide the complete distributed protocol in Figure \ref{fig:distlincheck}. Here we highlight key adaptations from the single prover variant. First we assume that the provers have a share of the vector $0^{2m}$ (as part of obtaining shares of the extended witness). In response to verifier’s challenge $r\in \FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials $R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally computing on their share of the witness. The provers compute commitments to the columns of their share of the $P$ matrix, following the similar procedure as in the single prover linear check protocol, and send those to the aggregator. The aggregator combines the shares to obtain the commitment to the $P$ matrix. %Provers can jointly prove that $P$ matrix is a codeword in the product code using the distributed membership protocol as above. 
 Similarly, the provers can send their shares of vectors $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u]$ for $u\in [t]$, required for consitency checks. Due to the bounded independence property, for $t\leq \bi$, these shares do not leak. The only point of departure is the shares of $z=\beta P_0 + \overline{P}\varphi$. The randomization by a random codeword $P_0\in L_2$ such that $\sum_{j\in [m]}
 P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$ in an honest execution of the protocol for a witness satisfying $r^TA\wit=r^Tb$. However, individual shares may not satisfy the preceeding condition, and hence the provers further add a share of $0^h$ to the share $\beta\shr{P}_0 + \shr{\overline{P}}\varphi$. This allows the aggregator $\Ag$ to obtain witnesses for all the inner product protocols that it runs with the verifier.  
 

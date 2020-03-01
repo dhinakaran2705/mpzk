@@ -270,15 +270,17 @@
 \def\ctsize{N}
 
 %----------Comments-----------
-\newcommand{\pnote}[1] {\textcolor{red}  {[PKP:{\sl{#1}}]}}
-
 % Author notes
 \def\ShowAuthNotes{1}
 \ifnum\ShowAuthNotes=1
 %\newcommand{\authnote}[2]{{\textbf{$\mathbf{\big[}$~#1's note:}} \textbf{\em\small #2}~{$\mathbf{\big]}$}}
 \newcommand{\authnote}[2]{\\ \textcolor{red}{\parbox{0.9\linewidth}{[{\footnotesize {\bf #1:} { {#2}}}]}}\\}
+\newcommand{\pnote}[1] {\textcolor{red}  {[PKP:{\sl{#1}}]}}
+\newcommand{\commentA}[1]{\textcolor{cyan}{{\sf (Arpita's Note:} {\sl{#1}} {\sf EON)}}}
 \else
 \newcommand{\authnote}[2]{}
+\newcommand{\pnote}[1] {}
+\newcommand{\commentA}[1]{}
 \fi
 
 \newcommand{\dnote}[1]{\authnote{VD}{#1}}
@@ -286,7 +288,7 @@
 \newcommand{\nnote}[1]{\authnote{NS}{#1}}
 \newcommand{\pdnote}[1]{\authnote{PD}{#1}}
 
-\newcommand{\commentA}[1]{\textcolor{cyan}{{\sf (Arpita's Note:} {\sl{#1}} {\sf EON)}}}
+
 
 	\newcommand{\Func}{\mathcal{F}}
 %	\newcommand{\Env}{\mathcal{Z}}
