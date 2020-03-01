@@ -73,37 +73,72 @@ parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 }
 
 \subsection{Performance: Standalone}
-We now summarize several performance parameters attained by $\name$, for circuit
+We now summarize several performance parameters attained by our protocol for circuit
 size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
-previous sections. 
-\begin{enumerate}
-\item {\bf Argument Size}: $8pt+8t\log{m}+4\ell+s+8t+4\log{m}+4$, where $4pt$ comes as part
-of oracle openings, another $4pt$ from opening $t$ vectors
-$W_u=\ewit[\cdot,j_u,k_u]$, $u\in [t]$ of size $4p$ each, $(4t+2)(2\log{m}+2)$ from
-the $4t+2$ inner product subprotocols ($2t+1$ in linear and quadratic check
-each), $\ell+(s+\ell)+2\ell$ from the commitments sent for proximity check,
-linear check and quadratic check.
-\item {\bf Verifier Complexity}:
-$O(N)+(2t+2)\mexp(2m)+2t\mexp(m)+t(\mexp(4p+\ell))$. The first
-term comes from computing $r_{lc}^TW$ and the second term comes from
-verification in inner product subprotocols, and the last term comes from
-checking the proximity check equations.
-\item {\bf Prover Complexity}: Encoding the witness involves
-$4p\big(m(\cfft(\ell)+\cfft(m))+n(\cfft(m)+\cfft(h))\big)$ operations in $\FF$ , 
-constructing the oracle takes
-$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)$, commiting ``P'' matrices
-take a further $(s+\ell)\mexp(2m)+2\ell\mexp(2m)$, the inner product
-subprotocols account for $(2t+2).16m + 2t.8m$ exponentiations. This gives a
-total of $O(N\log{N})$ field ops +
-$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)+(s+3\ell)\mexp(2m)$ +
-$(48tm+32m)$ exps.
+previous sections. Let $\cfop$ denote the time taken for a field operation,
+$\cfft(x)$ denote the time to compute $\fft$ of a length $x$ vector, $\cmexp(x)$
+denote the time taken for a multiexponentiation of length $x$, and $\cexp$
+denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote
+the number of bits required to represent an element of $\FF$ and $\GG$
+respectively. Our protocol $\name$ achieves
+following efficiency parameters:
+{\footnotesize
+\begin{align*}
+\begin{array}{llrl}
+\mathrm{alphabet} & \Sigma & = & \FF \\
+& & & \\
+\mathrm{number\ of\ rounds} & \zkrounds & = & O(\log{N}) \\
+& & & \\
+\mathrm{argument\ size} & \zkcomm & = & 4pt\bitsF \\
+& & & +(4pt+8t\log{m}+4\ell+s+8t+4)\bitsG \\
+& & & \\
+\mathrm{prover\ complexity} & t_\prover & = &
+4p((m+n)\cfft(m)+m\cfft(l) \\
+& & &+n\cfft(h) + 4p\ell\cmexp(m)\\
+& & &+(n-\ell)\cmexp(\min(\ell,m))\\
+& & & +(s+3\ell)\cmexp(2m)\\
+& & &+ (48tm+32m)\cexp \\
+& & & \\
+\mathrm{verifier\ complexity} & t_\verifier & = &
+O(N)\cfop + (2t+2)\cmexp(2m)\\
+& & & +2t\cmexp(m)+t\cmexp(4p+\ell) \\
+& & & \\
+\mathrm{soundness\ error} & \kappa_{\rm gr} & = & (1-e/n)^t \\ 
+& & & +\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t 
+\end{array}
+\end{align*}
+}
 
-\item {\bf Soundness}: The soundness is given by:
-\begin{equation*}
-\kappa_{gr} :=
-\left(1-\frac{e}{n}\right)^t+2\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
-\end{equation*}
-\end{enumerate}
+We give details in the Appendix, on how we compute the above parameters.
+
+%\begin{enumerate}
+%\item {\bf Argument Size}: $8pt+8t\log{m}+4\ell+s+8t+4\log{m}+4$, where $4pt$ comes as part
+%of oracle openings, another $4pt$ from opening $t$ vectors
+%$W_u=\ewit[\cdot,j_u,k_u]$, $u\in [t]$ of size $4p$ each, $(4t+2)(2\log{m}+2)$ from
+%the $4t+2$ inner product subprotocols ($2t+1$ in linear and quadratic check
+%each), $\ell+(s+\ell)+2\ell$ from the commitments sent for proximity check,
+%linear check and quadratic check.
+%\item {\bf Verifier Complexity}:
+%$O(N)+(2t+2)\mexp(2m)+2t\mexp(m)+t(\mexp(4p+\ell))$. The first
+%term comes from computing $r_{lc}^TW$ and the second term comes from
+%verification in inner product subprotocols, and the last term comes from
+%checking the proximity check equations.
+%\item {\bf Prover Complexity}: Encoding the witness involves
+%$4p\big(m(\cfft(\ell)+\cfft(m))+n(\cfft(m)+\cfft(h))\big)$ operations in $\FF$ , 
+%constructing the oracle takes
+%$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)$, commiting ``P'' matrices
+%take a further $(s+\ell)\mexp(2m)+2\ell\mexp(2m)$, the inner product
+%subprotocols account for $(2t+2).16m + 2t.8m$ exponentiations. This gives a
+%total of $O(N\log{N})$ field ops +
+%$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)+(s+3\ell)\mexp(2m)$ +
+%$(48tm+32m)$ exps.
+
+%\item {\bf Soundness}: The soundness is given by:
+%\begin{equation*}
+%\kappa_{gr} :=
+%\left(1-\frac{e}{n}\right)^t+2\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
+%\end{equation*}
+%\end{enumerate}
 
 For $c\geq 2$, setting $p=s=O(N^{1/c})$, $m=O(N^{1-2/c})$, $t=O(\secpar)$,
 $n=O(\ell)$ and $h=O(m)$, we get $\kappa_{gr}=\negl(\secpar)$ with argument size
