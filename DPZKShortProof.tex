@@ -12,11 +12,11 @@ Our protocol proves membership in the $\npol$-complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
-$A\wit\circ B\wit=C\wit$. We follow the broad outline of the interactive PCP
-construction in \cite{ligero} which includes: (i) encoding the witness via suitable
-error correcting code, (ii) checking linear relations on the witness, and 
-(iii) checking quadratic relations on
-the witness. Both the linear and quadratic checks require sublinear (oracle) access to the 
+$A\wit\circ B\wit=C\wit$ \commentA{define the operation $\circ$}. We follow the broad outline of the interactive PCP
+construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of bits over all the wires in topological order of a Boolean circuit representing the statement   (ii) encoding the extended witness via suitable
+error correcting code, (iii) checking linear relations on the extended witness (for the bits concerning the wires going into and coming out from the XOR gates), and 
+(iv) checking quadratic relations on
+the extended witness  (for the bits concerning the wires going into and coming out from the AND gates). Both the linear and quadratic checks require sub-linear (oracle) access to the 
 witness encoding.
 However, one runs into 
 challenges in converting the IPCP to a non-interactive
@@ -35,11 +35,11 @@ aggregation.
 with oracle access to the commitment.
 \item We come up with new witness encoding scheme, to facilitate smaller
 argument size, and reduce communication between the provers during proof
-generation.
+generation in the DPZK latter.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
 operations, we keep their usage strictly sub-linear. In particular, for an
-argument size of $O(N^{1/c})$, the verifier and the aggregator incur $O(N^{1-2/c})$
+argument size of $O(N^{1/c})$, the verifier and \commentA{keep away aggregator from SPZK. report aggregator's complexity in the DPZK section latter} the aggregator incur $O(N^{1-2/c})$
 exponentiations. The prover incurs $O(N/\log N)$ exponentiations essentially while
 setting up the oracle. We compare the concrete performance of our standalone SNARK with state of the art in Section
 \ref{sec:snarkcomparison}.

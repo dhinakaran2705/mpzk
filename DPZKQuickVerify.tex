@@ -1,7 +1,7 @@
 %\newcommand{\enc}{\mathsf{Enc}}
 
 \subsection{Witness Encoding}\label{sec:witencoding}
-We start by describing a randomized encoding of the prover witness $\wit\in \FF^N$. Let $p,m$ and
+We start by describing a randomized encoding of the prover's extended witness $\wit\in \FF^N$ (henceforth referred as witness), where $N$ denotes the number of wires in the Boolean circuit representing the statement. Let $p,m$ and
 $s$ be integers such that $N=pms$. We canonically view the
 witness $\wit$ 
 as $p\times m\times s$ matrix with entries $\wit[i,j,k]$ for $i\in [p]$,
@@ -68,7 +68,7 @@ We defer the proof of the above Lemma to the Appendix. \commentA{appendix number
 We now fix the notation for some of the codes that will be
 frequently used throughout this section. We use $L_1$ and $L_2$ to denote codes
 $\rsc{\eta}{n,\ell}$ and $\rsc{\alpha}{h,m}$ respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ 
-and $\mc{C}_2 :=\cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. In addition 
+and $\mc{C}_2 :=\cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. In addition, 
 we use codes $L_3 := \rsc{\eta}{n,s+\ell}$, $L_4 := \rsc{\eta}{n,2\ell}$ and 
 $L_5=\rsc{\alpha}{h,2m}$ to encode some intermediate computations in our protocols.
 Let $\Lambda_1$ denote the matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
@@ -77,13 +77,13 @@ an $n\times \ell$ matrix. Let $\Lambda_2,\Lambda_3,\Lambda_4$ and $\Lambda_5$ be
 for the codes $L_2,L_3,L_4$ and $L_5$ respectively. We denote the
 parity check matrices for $L_i$  by $\mc{H}_i$ for $i\in \{1,\ldots,5\}$. 
 We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
-the set of two dimensional $h\times n$ matrices as $\mc{M}_{h\times n}$. We
+the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We
 assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
 
 \subsection{Commitments for Product Codewords}\label{sec:matrixcommitment}
 We now discuss the commitment scheme
-for matrices in $L_1\oplus L_2$. Similar scheme works for other product codes also. 
-Note that a matrix $U\in L_1\oplus L_2$ is
+for matrices in $L_1\otimes L_2$. Similar scheme works for other product codes also. 
+Note that a matrix $U\in L_1\otimes L_2$ is
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 In fact, $U=\Lambda_2\overline{U}\Lambda_1^T$. Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
@@ -91,7 +91,7 @@ where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$
 column of $\overline{U}$ for $k\in [\ell]$. We thus view the vector $\bm{c}$ as 
 an implicit commitment to the matrix $U$. The commitment scheme presents no difficulty in 
 proving inner product relations for a column (or a linear combination of them) with a public vector.
-To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as $\mathsf{cm}=\innph{\Lambda_1[k,\cdot]}{\bm{c}}$. Then we reforumulate the inner product
+To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as \commentA{new notation? explain what it means. I don't get it}$\mathsf{cm}=\innph{\Lambda_1[k,\cdot]}{\bm{c}}$. Then we reformulate the inner product
  as 
 $\innp{x}{U[\cdot,k]}=\innp{x}{\Lambda_2\overline{U}[\cdot,k]}=\innp{x^T\Lambda_2}{\overline{U}[\cdot,k]}$ where the last formulation involves a public vector $x^T\Lambda_2$ and private vector corresponding to commitment $\mathsf{cm}$. We make repeated use of such inner product checks.   
 
@@ -150,7 +150,7 @@ $\ewit_1[i,\cdot,\cdot]$ are the unique codewords in $\mc{C}_1$ and $\mc{C}_2$
 such that $d_1(\ewit[i,\cdot,\cdot],\ewit_1[i,\cdot,\cdot])<e_1$ and
 $d_2(\ewit[i,\cdot,\cdot],\ewit_2[i,\cdot,\cdot])<e_2$. These codewords and thus
 sets $F_1,F_2$ may be
-determined using algorithms for decoding Reed Solomon codes. From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\oplus L_2$ such
+determined using algorithms for decoding Reed Solomon codes. From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
 that $U^i[j,k]=\ewit^*[i,j,k]$ for $(j,k)\in F_2\times F_1$. We define the
 ``correction'' of $\ewit^*$ as $\ewit$ where
 $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
@@ -272,7 +272,7 @@ A\wit=b
 \end{array}
 }{
 \begin{array}{c}
-\sigma\sample \gen(\secparam) \\
+\sigma\gets \gen(\secparam) \\
 \ewit\gets \extr^{\mc{O}}(\bm{x},\sigma) \\
 \wit\gets \dec(\ewit)
 \end{array}}\geq
