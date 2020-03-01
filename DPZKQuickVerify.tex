@@ -108,13 +108,13 @@ Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
-$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\oplus L_2$. In contrast
+$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\otimes L_2$. In contrast
 to Section ~\ref{sec:matrixcommitment}, instead of
 committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
 as it only has oracle access to $\comoracle$. 
 
-\subsection{Well Formed Encodings}\label{sec:wellformedenc}
+\subsection{Well-formed Encodings}\label{sec:wellformedenc}
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
 consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\otimes L_2$ for all $i\in [p]$. 
 We call an encoding $\ewit$ to be {\em well-formed} if $\ewit\in \mc{W}$. Note
@@ -150,12 +150,13 @@ $\ewit_1[i,\cdot,\cdot]$ are the unique codewords in $\mc{C}_1$ and $\mc{C}_2$
 such that $d_1(\ewit[i,\cdot,\cdot],\ewit_1[i,\cdot,\cdot])<e_1$ and
 $d_2(\ewit[i,\cdot,\cdot],\ewit_2[i,\cdot,\cdot])<e_2$. These codewords and thus
 sets $F_1,F_2$ may be
-determined using algorithms for decoding Reed Solomon codes. From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
+determined using algorithms for decoding Reed Solomon codes \cite{CodingTheory}.
+ From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
 that $U^i[j,k]=\ewit^*[i,j,k]$ for $(j,k)\in F_2\times F_1$. We define the
 ``correction'' of $\ewit^*$ as $\ewit$ where
 $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
 \dec(\ewit)$.
-.\nnote{Provide reference to Reed Solomon Decoding}
+
 
 \subsection{Linear Check Protocol}\label{sec:lincheck}
 In this section, we describe an IPCP that allows a prover to prove knowledge of
@@ -184,7 +185,7 @@ the polynomial $\sum_{j=1}^m\sum_{i=1}^p
 R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$. Let $\zetabar$ denote the vector
 $(\zeta_1,\ldots,\zeta_s)$ and let $p(\zetabar)$ denote the vector
 $(p(\zeta_1),\ldots,p(\zeta_s))$. Then the previous polynomial identity reduces to the
-inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$.\smallskip  
+inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$. \commentA{why do you check $s$ points? p is a poly of degree 2s} \smallskip  
 
 \noindent {\em Intermediate Commitment}: 
 We introduce an $h\times n$ matrix $P$

@@ -154,12 +154,12 @@ Our final goal is to produce arguments/proofs that is non-interactive and public
 
 In summary,  we will prove three properties for our protocols: (a) ZK assuming a semi-honest verifier, (b)  SoWE tolerating  malicious provers and (c) WH tolerating semi-honest provers and aggregator. We propose an extension of our protocol that tolerates malicious provers for WH, yet fails when the aggregator is maliciously corrupt. We refer to section \ref{} \commentA{fill in} for the technical roadblock that we face to tackle a malicious aggregator and leave overcoming the roadblock as an open question.    As for the form of witness partition across the prover's, we assume that the provers jointly hold an additive sharing of the witness $\wit$. This is general enough for the following reasons: (i) a partitioning of the witness as $w_1 || w_2 || \cdots || w_\Num$ can be viewed under additive-sharing with party $i$'s share represented as its partition $w_i$ concatenated with zero for other parties' witnesses ($0 || \cdots || w_i || \cdots || 0$), (ii) a large class of cryptographic protocols start with additive-sharing of inputs, and (iii) there are not many use-cases for other types of sharing at this point, but even if any, that can be converted to additive-sharing as a first step before proceeding with our protocol.
 
-\begin{figure}[h!]
-	\centering	
-	\includegraphics[width=0.9\linewidth]{DPZK.jpg}
-	\caption{Distributed Proof Generation}
-	\label{fig:DPZK}
-\end{figure}
+%\begin{figure}[h!]
+%	\centering	
+%	\includegraphics[width=0.9\linewidth]{DPZK.jpg}
+%	\caption{Distributed Proof Generation}
+%	\label{fig:DPZK}
+%\end{figure}
 
 \subsection{Related Notions}
 Closely related to our notion is the work of \cite{EfficientTZ} which discusses threshold proofs. This work distributes the prover's side of interactive proofs of knowledge over multiple parties for: (i) improving the security against theft of the user's identity, (ii) improving robustness by ensuring that only a restricted size subset of the provers may be corrupted. The work of \cite{EfficientTZ} primarily captures sigma protocols without allowing interaction among the provers. Our definition captures a broader class of protocols via allowing interaction amongst the provers.  In other words, threshold proofs are a sub-class of the protocols we cater to. Also, other than increasing security via a decentralisation of the prover (or distributing prover's task), our goal is to capture scenarios where multiple provers would like to jointly prove a statement.  Our real-ideal world based definition is inline with MPC style definitions and is more powerful. Pedersen's PhD thesis \cite{Ped92} also defines distributed proofs. Our definition improves the notion of zero-knowledge in \cite{Ped92} where the security model is inherently restricted to a semi-honest collusion of the provers with the verifier. Also, \cite{Ped92} considers the provers' witnesses to always be secret shares of a ``global'' witness and hence the provers' witnesses are \textit{random} when the distributed proof generation begins. But, our definition allows for any distribution on the provers' witnesses, and this impacts some of our security proofs.
