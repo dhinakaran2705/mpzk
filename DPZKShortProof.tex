@@ -4,7 +4,7 @@ PCP}\label{sec:graphene}
 In this section, we describe a sub-linear interactive zero knowledge argument as
 an Interactive PCP (IPCP). The IPCP we describe admits an efficient MPC to
 convert it to a publicly-verifiable, non-interactive argument of knowledge,
-using the ``BCS'' transformation in \cite{BCS16}.  \commentA{this part should move to the DPZK part}To serve as a
+using the ``BCS'' transformation in \cite{BCS16} \commentA{BCS transformation in one line}.  \commentA{this part should move to the DPZK part}To serve as a
 baseline for comparison, we also describe naive extensions of existing protocols
 such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan} to the\pnote{ are we describing about DP of spartan?} \commentA{shouldn't you know and edit accordingly instead of leaving comments for others?}
 distributed prover setting. 
@@ -13,11 +13,11 @@ Our protocol proves membership in the $\npol$-complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
-$A\wit\circ B\wit=C\wit$, where $\bm{x} \circ \bm{y} = (x_1\cdot y_1, \cdot, x_n\cdot y_n)$ for any $n$-length vectors $\bm{x}$ and $\bm{y}$. We follow the broad outline of the interactive PCP
-construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of bits over all the wires in topological order of an arithmetic circuit  representing the statement   (ii) encoding the extended witness via suitable
-error correcting code, (iii) checking linear relations on the extended witness (for the bits concerning the wires going into and coming out from the addition gates), and
+$A\wit\circ B\wit=C\wit$, where $\bm{x} \circ \bm{y} = (x_1\cdot y_1, \cdot, x_n\cdot y_n)$ for any $n$-length vectors $\bm{x}$ and $\bm{y}$. \commentA{add one line why R1CS is better than arithmetic circuit formulation} We follow the broad outline of the interactive PCP
+construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of values over all the wires in topological order of an arithmetic circuit  representing the statement   (ii) encoding the extended witness via suitable
+error correcting code, (iii) checking linear relations on the extended witness (for the values concerning the wires going into and coming out from the addition gates), and
 (iv) checking quadratic relations on
-the extended witness  (for the bits concerning the wires going into and coming out from the multiplication gates). Both the linear and quadratic checks require sub-linear (oracle) access to the 
+the extended witness  (for the values concerning the wires going into and coming out from the multiplication gates). Both the linear and quadratic checks require sub-linear (oracle) access to the 
 witness encoding.
 However, one runs into 
 challenges in converting the IPCP to a non-interactive
@@ -35,8 +35,8 @@ aggregation.
 \item We design protocols for checking linear and quadratic constraints
 with oracle access to the commitment.
 \item We come up with new witness encoding scheme, to facilitate smaller
-argument size, and reduce communication between the provers during proof
-generation in the DPZK latter.
+argument size, and reduce communication amongst the provers during distributed proof
+generation.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
 operations, we keep their usage strictly sub-linear. In particular, for an

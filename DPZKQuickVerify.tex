@@ -87,8 +87,8 @@ denote group operation in $\GG$. For a set of generators
 $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment
 randomness $r\in \FF$ is given by $\comm(x,r)=\sum_{i=1}^m x_ig_i + rh$.
 We now discuss the commitment scheme
-for matrices in $L_1\oplus L_2$. Similar scheme works for other product codes also. 
-Note that a matrix $U\in L_1\oplus L_2$ is
+for matrices in $L_1\otimes L_2$. Similar scheme works for other product codes also. 
+Note that a matrix $U\in L_1\otimes L_2$ is
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 In fact, $U=\Lambda_2\overline{U}\Lambda_1^T$. Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
@@ -906,13 +906,14 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 	Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
-\subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
-\pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
+\subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output, he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation so that the simulator can extract the committed value and maliciously secure MPC to compute $\mathsf{Mult}$. Furthermore, all the messages to $\Ag$ are via broadcast. 
+pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
 
-\noindent{\bf Overview of the proof}
+\noindent{\bf Overview of the proof:} We will describe, in high-level, how to construct a simulator $\Sim$ which can generate a view which is indistinguishable from a real execution, where $\Sim$ has access to the extractor $\extrac$ for the ZKAoK and the simulator $\Sim_{Mult}$ for the secure multiplication and the zero-knowledge simulator $\Sim_{ZK}$ of \name. $\Sim$ receives the messages from the corrupt parties to $\Ag$ due to broadcast. Then, $\Sim$ calls $\extrac$ and obtains opening of $\shr{\comoracle}$ for all corrupt $\xi$. Using $\Sim_{ZK}$, $\Sim$ prepares the messages of the honest parties, and if there is any interaction required between the provers, that interaction is generated via $\Sim_{Mult}$. $\Sim$ checks if all the messages are consistent or not with all the previous messages if not $\Sim$ sends consistent but random values on behalf of honest parties, otherwise, just before sending $\shr{z_{lc}}$ and $\shr{z_{qd}}$, $\Sim$ invokes the $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ generates messages for honest parties using $\Sim_{ZK}$ otherwise it picks messages uniformly at random.
 
-\noindent{\bf Difficulty in simulation while aggregator is malicious}
+\noindent{\bf Difficulty in simulation while aggregator is malicious}  In the above construction, it considered that provers might deviate while interacting among themselves. However, we do not consider the scenario if $\Ag$ deviates. We do not have a simulator that can simulate a view when all the provers (corrupt and honest) behaving correctly, but $\Ag$ sends a wrong combined value to $\verifier$. To resolve, one can try to invoke the $\Func_{\DPZK}$ after $\Ag$ sending the final value to $\verifier$. However, $\Ag$ needs honest parties messages to generate the message for $\verifier$, and the simulator needs the output of the $\Func_{\DPZK}$. So, it is difficult to get a simulator, which can generate a view indistinguishable from the real world execution. Though we can not construct a simulator for our protocol, we do not have an attack in this corruption model. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
 
+\begin{comment}
 \begin{lemma}\label{lem:privacy}
 	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$\pnote{fix notation} denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from the real execution of the protocol given there is a secure MPC for multiplication which withstand against the corrupt parties in $I$. \pnote{(Maybe a broadcast required)}
 \end{lemma}
@@ -940,3 +941,4 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 \end{proof}
 
 %\end{enumerate}
+\end{comment}
