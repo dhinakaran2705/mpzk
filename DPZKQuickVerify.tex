@@ -28,7 +28,7 @@ $\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$.
 Then $\ewit$ is a randomized encoding of $\wit$.
 \end{enumerate}
  It is easily seen
-that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above
+that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\oplus \rsc{\alpha}{h,m}$. We remark that the above
 encoding can be computed using $O(N\log N)$ field operations (see Appendix for
 details \commentA{missing section no.}).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
@@ -81,9 +81,14 @@ the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We
 assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
 
 \subsection{Commitments for Product Codewords}\label{sec:matrixcommitment}
+We use Pedersen vector commitment scheme $\comm$ with message space $\FF^m$,
+commitment space $\GG$ and randomness space $\FF$. We use additive notation to
+denote group operation in $\GG$. For a set of generators
+$\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment
+randomness $r\in \FF$ is given by $\comm(x,r)=\sum_{i=1}^m x_ig_i + rh$.
 We now discuss the commitment scheme
-for matrices in $L_1\otimes L_2$. Similar scheme works for other product codes also. 
-Note that a matrix $U\in L_1\otimes L_2$ is
+for matrices in $L_1\oplus L_2$. Similar scheme works for other product codes also. 
+Note that a matrix $U\in L_1\oplus L_2$ is
 completely determined by the submatrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$.
 In fact, $U=\Lambda_2\overline{U}\Lambda_1^T$. Thus, it is sufficient to commit to the matrix $\overline{U}$. We commit to the
 matrix $\overline{U}$ using a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
@@ -91,16 +96,16 @@ where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$
 column of $\overline{U}$ for $k\in [\ell]$. We thus view the vector $\bm{c}$ as 
 an implicit commitment to the matrix $U$. The commitment scheme presents no difficulty in 
 proving inner product relations for a column (or a linear combination of them) with a public vector.
-To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as \commentA{new notation$\langle\langle \rangle \rangle$. explain what it means. I don't get it. Is it $c_k$ the commitment for $\overline{U}[\cdot,k]$?}$\mathsf{cm}=\innph{\Lambda_1[k,\cdot]}{\bm{c}}$. Then we reformulate the inner product
- as 
+To prove $\innp{x}{U[\cdot,k]}=v$, we first homomorphically compute commitment
+to $\overline{U}[\cdot,k]$ as $\mathsf{cm}=\sum_{a\in [\ell]}\Lambda_1^T[a,k]c_k$. 
+Then we reformulate the inner product as 
 $\innp{x}{U[\cdot,k]}=\innp{x}{\Lambda_2\overline{U}[\cdot,k]}=\innp{x^T\Lambda_2}{\overline{U}[\cdot,k]}$ where the last formulation involves a public vector $x^T\Lambda_2$ and private vector corresponding to commitment $\mathsf{cm}$. We make repeated use of such inner product checks.   
 
 \subsection{Oracle Construction}\label{sec:construct_oracle} 
 Unlike prior IOP constructions such as \cite{ligero, aurora}, we additionally
 obtain a homomorphic commitment on the encoded witness $\enc(\wit)$ and provide
-oracle access to the commitment. Concretely, we use a
-homomorphic vector commitment scheme $\comm$ with message space $\FF^m$,
-commitment space $\GG$ and randomness space $\FF$. For all $(i,k)\in [p]\times
+oracle access to the commitment. 
+For all $(i,k)\in [p]\times
 [n]$, we sample randomness $\delta_{ik}\sample \FF$, and obtain the commitment
 $c_{ik}=\comm(V_{ik},\delta_{ik})$ for the vector 
 $V_{ik}=(\ewit[i,1,k],\ldots,\ewit[i,m,k])\in \FF^m$. 
@@ -108,7 +113,7 @@ Finally we define $p\times n$ matrix $\comoracle$ as
 $\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
-$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\otimes L_2$. In contrast
+$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\oplus L_2$. In contrast
 to Section ~\ref{sec:matrixcommitment}, instead of
 committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
@@ -116,7 +121,7 @@ as it only has oracle access to $\comoracle$.
 
 \subsection{Well-formed Encodings}\label{sec:wellformedenc}
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
-consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\otimes L_2$ for all $i\in [p]$. 
+consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\oplus L_2$ for all $i\in [p]$. 
 We call an encoding $\ewit$ to be {\em well-formed} if $\ewit\in \mc{W}$. Note
 that an encoding $\ewit\gets \enc(\wit)$ for any $\wit\in \FF^N$ is well formed. 
 Let $\mc{W}_1$ denote the set of matrices
@@ -151,7 +156,7 @@ such that $d_1(\ewit[i,\cdot,\cdot],\ewit_1[i,\cdot,\cdot])<e_1$ and
 $d_2(\ewit[i,\cdot,\cdot],\ewit_2[i,\cdot,\cdot])<e_2$. These codewords and thus
 sets $F_1,F_2$ may be
 determined using algorithms for decoding Reed Solomon codes \cite{CodingTheory}.
- From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
+ From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\oplus L_2$ such
 that $U^i[j,k]=\ewit^*[i,j,k]$ for $(j,k)\in F_2\times F_1$. We define the
 ``correction'' of $\ewit^*$ as $\ewit$ where
 $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
@@ -211,7 +216,7 @@ $p(\zetabar)=\Phi\overline{P}^T[1^m||0^m]^T$. Now, we have
 $\innp{1^s}{p(\zetabar)}=p(\zetabar)^T[1^s]=[1^m||0^m]\overline{P}\Phi^T[1^s]=\innp{1^m||0^m}{\overline{P}\varphi}$
 where $\varphi=\Phi^T[1^s]$. Given commitments $c_1,\ldots,c_{s+\ell}$, the
 commitment to $\overline{P}\varphi$ can be computed as
-$\mathsf{cm}=\sum_{k=1}^{s+\ell}\varphi_kc_k$ \commentA{shouldn't $\varphi_k$ be in the exponent? you have never defined the homomorphic operations and their notations on the commitments }. Using an inner-product argument
+$\mathsf{cm}=\sum_{k=1}^{s+\ell}\varphi_kc_k$. Using an inner-product argument
 the prover can show that the commitment $\mathsf{cm}$ opens to vector $z$ such
 that $\innp{1^m||0^m}{z}=r^Tb$. Binding property of the commitment ensures that
 $z=\overline{P}\varphi$ with overwhelming probability. In the full protocol, 
@@ -224,8 +229,8 @@ see, helps reduce interaction among provers in distributed variant of the protoc
 \noindent{\em Consistency of oracle $\pi$ and $P$}: The verifier additionally
 needs to determine if $P$ is correctly computed from the encoding $\ewit$
 committed to by the oracle $\pi$. The verifier proceeds to check the
-consistency at randomly sampled positions $Q=\{(j_u,k_u): u\in [t]\}$ from
-$[h]\times [n]$. It queries the oracle for the columns $\pi[\cdot,k_u]$ for
+consistency at randomly sampled $t$ positions given by $Q=\{(j_u,k_u): u\in [t]\}$ from
+$[h]\times [n]$. We will later set $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ for
 $u\in [t]$ and queries the prover for vectors $X_u=\ewit[\cdot,j_u,k_u]$ for
 $u\in [t]$. For $u\in [t]$, let $f_u$ denote the unit vector in $\FF^h$ with $1$ in the position
 $j_u$. The prover and the verifier run inner product arguments to establish the following:
@@ -248,7 +253,7 @@ to an encoding which is ``close'' to well-formed encoding $\mc{W}$. To check pro
 the verifier initially (before sending messages $r,Q$) sends a vector $\rho\sample
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{U}=\sum_{i\in
-[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ \commentA{what is $t$} that $\sum_{a\in
+[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
 [\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}\rho_i\pi[i,k_u]$. It can be
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
@@ -283,7 +288,9 @@ A\wit=b
 where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
 \begin{proof}[Proof-Sketch]
-Suppose the oracle $\pi$ commits to $\ewit$. In a detailed proof, this $\ewit$ would be ``extracted'' by the appropriate extractor. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+Suppose the oracle $\pi$ commits to $\ewit$. In a detailed proof, this $\ewit$
+would be ``extracted'' by the appropriate extractor. Note that $\ewit\in
+\mc{W}_2$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
 an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
 show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
 $A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
@@ -302,8 +309,9 @@ while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
 Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
 $d(\ewit,\mc{W}_1)>e$.
 
-We now consider the case when $d(\ewit,\mc{W}_1)\leq e$. Let $\ewit^*$
-denote the unique element of $\mc{W}_1$ such that $\Delta_1(\ewit,\ewit^*)\leq e$.
+We now consider the case when $d(\ewit,\mc{W}_1)\leq e$. From Lemma
+~\ref{lem:bicdecoding}, there exists (unique) $\ewit^*\in \mc{W}$
+such that $\Delta_1(\ewit,\ewit^*)\leq e$.
 Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
 probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA\neq
 r^Tb$. Let $P^*$ denote the correctly computed $P$ matrix from $\ewit^*$ and let
@@ -312,7 +320,7 @@ $\Delta_1(\hat{P},P^*)\leq e$. If the
 prover commits to a matrix $\tilde{P}=P^*$, it fails the inner product check in Step
 13(b) as $r^TA\wit\neq r^Tb$. If it commits to a matrix $\tilde{P}\neq P^*$, we have
 $\Delta_1(\tilde{P},P^*)\geq n-s-\ell$ by distance property of the code $L_3$
-(We note that a prover implicitly commits to a matrix in $L_3\otimes L_5$).
+(We note that a prover implicitly commits to a matrix in $L_3\oplus L_5$).
 Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
 $k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq \tilde{P}[\cdot,k]$. The check
  13(c) ensures that prover provides vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
