@@ -507,7 +507,7 @@ Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$
 random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to
 commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the
 matrix $\tilde{U}$ used for proximity check. 
-Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \{\pi[\cdot,k_u]\}_{u\in [t]}$.
+Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \pi$, as a part of the extended view of $\verifier$.%$\{\pi[\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Commitment Randomness}: We include randomness used to compute certain
 commitments as part of the extended view. We include openings $w_u$, $u\in [t]$
@@ -538,13 +538,15 @@ z[j] = r^Tb$.
 	\item $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$ and $\cm \leftarrow
 \comm(z,w)$ where $P_0\sample \FF^{2m}$ such that $\innp{1^m}{P_0}=0$ and
 $w_0,w\sample \FF$.
-	\item $\Sim$ picks $O\sample \FF^{p\times t}$.
+	\item $\Sim$ picks $O\sample \FF^{p\times t}$. 
 	\item $\Sim$ computes $\tilde{U}[\cdot, k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i,u]$ and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] , \tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u], O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of $U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{U}[\cdot,k_u]$.
+	where $i\in[p]$ and $u\in [t]$ and for remaining positions, 
 	\item $\Sim$ picks $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way
 that $\tilde{c}_{k_u} = \sum_{a\in[\ell]} \Lambda^T_1[a,k_u]\tilde{c}_a \,
 \forall u\in [t]$. Picking such $\tilde{c}$ is efficient since the number of
 unknowns is more than the number of constraints, and the coefficient matrix has
 full row rank.
+	\item Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \sum_{i\in[p]} \rho_i\cdot \pi[i,k]$ for all $k=k_u:u\notin [t]$.
 	\item $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the first $2m$ entries of $P[\cdot,k_u] \, \forall u\in[t]$.
 	\item $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell}$ in such a way that
 ${c}_{k_u} = \sum_{a\in[s+\ell]} \Lambda^T_3[a,k_u]{c}_a \, \forall u\in [t]$
@@ -696,7 +698,7 @@ P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$ in a
 %=======
 \end{comment}
 
-\noindent{\bf Distributed Linear Test}: The messages sent by the prover to the
+\noindent{\bf Distributed Linear Check}: The messages sent by the prover to the
 verifier in the linear check protocol include:
 \begin{itemize}
 \item Commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ to the matrix $\tilde{U}=
@@ -859,7 +861,42 @@ Q$.
 
 Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
 knowledge from the messages sent by the provers in the distributed protocol
-$\distlinearcheck$. 
+$\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting only with the aggregator and in $\distquadcheck$ provers are interacting among themselves but to execute a secure MPC protocol. So, it is enough to argue that the aggregator is not learning any additional information.
+
+\begin{lemma}\label{lem:distlincheckzk}
+	For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
+	linear check protocol consisting of messages from the prover $\distprover$ with
+	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
+	which outputs a view indistinguishalbe from the joint view $\langle
+	\View^1_\Ag,\ldots,\View^K_\Ag\rangle$ 
+	%whenever $A\wit=b$ for
+	%$\wit=\combine(\shr{\wit})$.
+\end{lemma}
+\begin{proof}
+	
+	Let  $\rho, \, r, \, \{(j_u,k_u)\}_{u\in[t]}, \, \delta, \, \beta$ denote the verifier
+	randomness, which is shared by each view. Consider other messages in
+	$\View^\xi_\Ag$. Let $\shr{\comoracle}, \shr{\bm{\tilde{c}}}, \shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}, \shr{d_0}$ 
+	%$c_0^\xi,c_1^\xi,\ldots,c_{s+\ell}^\xi,d_0^\xi,\tilde{c}_1^\xi,\ldots,\tilde{c}_\ell^\xi,\tilde{d}_0^\xi,\{\pi^\xi[\cdot,k_u]\}_{u\in[t]}$ 
+	denote the commitments sent by $\distprover$. Also, $\Ag$ gets the opening of $\shr{\comoracle[\cdot,k_u]}, \shr{c_{k_u}}$.
+	Finally, $\Ag$ gets the vector $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m}}$.
+	%Similarly let $\nu^\xi,\omega^\xi,\{\chi^\xi_u\}_{u\in [t]},\{O^\xi[\cdot,k_u]\}_{u\in [t]})$ denote the commitment randomness sent by the $\distprover$. 
+	%Finally, the (extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$, $z^\xi=u_0^\xi+P^\xi\mu$, $\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. 
+	Note that other than $\shr{\comoracle}$ and $\shr{z}$, remaining
+	included in our definition of the extended view of the single prover case. As in the simulation of the
+	single prover case, given the verifier randomness. The joint distribution of ${z}^1,\ldots,{z}^{\Num}$ can be seen to be:
+	%({\color{red} Protik to finish the argument}).
+	%\begin{itemize}
+		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
+		%share of $0^h$.
+		Uniform distribution on the set codewords $P_0$ in $\dashL_2$ satisfying
+		$\sum_{j\in [m]}P_0[j]=0$ if all the provers follow the protocol and
+		jointly have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
+		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
+	%\end{itemize}
+	
+	Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
+\end{proof}
 
 \subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation, so that the simulator can extract the committed value.
 \pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
@@ -867,46 +904,7 @@ $\distlinearcheck$.
 \noindent{\bf Overview of the proof}
 
 \noindent{\bf Difficulty in simulation while aggregator is malicious}
-\begin{lemma}\label{lem:distlincheckzk}
-For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
-linear check protocol consisting of messages from the prover $\distprover$ with
-witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
-which outputs a view indistinguishalbe from the joint view $\langle
-\View^1_\Ag,\ldots,\View^K_\Ag\rangle$ 
-%whenever $A\wit=b$ for
-%$\wit=\combine(\shr{\wit})$.
-\end{lemma}
-\begin{proof}
 
-Let $r,\{j_u,k_u\}_{u\in
-[t]},\beta,\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$ denote the verifier
-randomness, which is shared by each view. Consider other messages in
-$\View^\xi_\Ag$. Let 
-$c_0^\xi,c_1^\xi,\ldots,c_{s+\ell}^\xi,d_0^\xi,\tilde{c}_1^\xi,\ldots,\tilde{c}_\ell^\xi,\tilde{d}_0^\xi,\{\pi^\xi[\cdot,k_u]\}_{u\in
-[t]}$ denote the commitments sent by $\distprover$. Similarly let 
-$\nu^\xi,\omega^\xi,\{\chi^\xi_u\}_{u\in [t]},\{O^\xi[\cdot,k_u]\}_{u\in [t]})$
-denote the commitment randomness sent by the $\distprover$. Finally, the
-(extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$,
-$z^\xi=u_0^\xi+P^\xi\mu$,
-$\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta
-P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. Note that these variables were
-included in our definition of the extended view of the single prover case. As in the simulation of the
-single prover case, given the verifier randomness, all variables except
-${z'}^\xi$ are distributed independent of the witness used by the prover
-$\distprover$, and can thus be simulated as in the zero knowledge simulation.
-The joint distribution of ${z'}^1,\ldots,{z'}^K$ can be seen to be:
-({\color{red} Protik to finish the argument}).
-\begin{itemize}
-\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
-share of $0^h$.
-\item Uniform distribution on the set codewords $P_0$ in $\dashL_2$ satisfying
-$\sum_{j\in [m]}P_0[j]=0$ if all the provers follow the protocol and
-jointly have the correct witness.
-\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
-\end{itemize}
-
-Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
-\end{proof}
 \begin{lemma}\label{lem:privacy}
 	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$\pnote{fix notation} denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from the real execution of the protocol given there is a secure MPC for multiplication which withstand against the corrupt parties in $I$. \pnote{(Maybe a broadcast required)}
 \end{lemma}

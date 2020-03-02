@@ -50,6 +50,7 @@ some of the private inputs may be additively secret shared  across multiple prov
 by enclosing those private inputs in $\langle\,\rangle$. For example, in the protocol
 $\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};\langle \bar{U} \rangle)$, each prover
 $\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
+\pnote{Changes required}
 
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
@@ -158,9 +159,11 @@ c_1=\com(x_1,r_1), c_2=\com(x_2,r_2) \text{ and } \innp{x_1}{x_2}=v\}
 \end{array}
 \end{equation*}
 
-The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$ 
+The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$.
+
 
 \begin{definition}[Inner-product Argument \cite{} \commentA{fill in the ref}]\label{defn:innerproductarg} 
+\commentA{say why inner-product argument does not need privacy. It seems it improves proof-sise and performs better than sending the witness on clear}
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,

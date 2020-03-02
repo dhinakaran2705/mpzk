@@ -680,7 +680,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 				as in Section ~\ref{sec:lincheck}. 
 				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{sec:lincheck}. Samples $\shr{P_0}\sample \FF^m$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^2m},\shr{o})$ where $\shr{o} \sample \FF$.
 				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell}}$ from $\shr{P}$.
-				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{s+\ell}}, d_0$.
+				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{s+\ell}}, \shr{d_0}$.
 				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [s+\ell]$ and sends $c_0,c_1,\ldots,c_{s+\ell}$.}
 				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
