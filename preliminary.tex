@@ -19,6 +19,10 @@ $X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $n\times p$ and $p\times m$
 matrices respectively. For three dimensional
 matrix $X$, we will refer to sub-matrices $X[i,\cdot,\cdot]$ as {\em slices} of
 $X$, sub-matrices $X[\cdot,j,\cdot]$ as {\em slabs}  of $X$ and sub-matrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
+$X^T$ denotes transpose of a  two dimensional matrix $X$. Inner-product of two vectors $X,Y$ is denoted as $\langle X,Y\rangle$.
+Inner-product of two three or two dimensional  matrices $X$ and $Y$, denoted as 
+$\langle X,Y\rangle$,  implies the inner-product of the corresponding one-dimensional vectors obtained from unrolling  the matrices.
+
 
 Throughout the paper we use several distance metrics on vectors and matrices,
 which we now introduce. For two vectors $x,y$ of length $n$, we define
@@ -132,7 +136,7 @@ compressing along a dimension using a random linear combination.
 While in \cite{ligero}, the witness was interleaved as a matrix,
 we interleave the witness as a three dimensional matrix to obtain smaller
 argument size. The following result is the key to testing proximity of a three
-dimensional matrix to a well-formed encoding.
+dimensional matrix to a well-formed encoding. The proof  appears in Appendix \ref{app:ProofofLem3dcompression}.
 \begin{proposition}[3D Compression]\label{lem:3dcompression}
 Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
@@ -144,12 +148,11 @@ $m\times n$ matrix $u_0$ over $\FF$, we have
 \frac{d}{|\FF|}\]  
 for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
 \end{proposition}
-The proof of this proposition appear in Appendix \ref{app:ProofofLem3dcompression}.
+
 
 \subsection{Inner-product Arguments}
 We define an interactive protocol that allows proving inner-product relation over committed values, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme defined in Appendix \ref{app:DefCommitment}. %We start with a definition of such a commitment scheme. 
-
-We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as:
+We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. We define the language $\calL_\sigma\subseteq \calC_\sigma\times \calC_\sigma\times Z$ as \commentA{change this language if needed; all cases I encountered so far didn't need the first commitment which is a public value}:
 \begin{equation*}
 %\begin{aligned}[c]
 \begin{array}{l}
@@ -167,7 +170,6 @@ The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pa
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL_\sigma$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
-
 %\begin{align*}
 %\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
 %\begin{array}{l}
@@ -176,7 +178,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 %\end{array}
 %}=1
 %\end{align*}
-\footnotesize
+\footnotesize \\~
 \begin{align*}
 \condprob{
 	\begin{array}{l}
@@ -192,8 +194,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \normalsize
 
 \item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$ adversaries $\adv$:
-
-\footnotesize
+\footnotesize \\~
 \begin{align*}
 \condprob{
 	\begin{array}{c}
@@ -212,7 +213,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 
 \end{definition}
 
-We mention some concrete instantiations of  commitment schemes and corresponding inner-product arguments in Appendix~\ref{inner-product-instan}. 
+We mention some instantiations of  commitment schemes and corresponding inner-product arguments in Appendix~\ref{inner-product-instan}. 
 
 
  

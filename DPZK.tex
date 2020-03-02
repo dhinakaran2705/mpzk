@@ -139,8 +139,7 @@ In summary,  the ``real" world execution involves the $\ppt$\ parties  in $\Part
 \paragraph{Security via Indistinguishability of Real and Ideal world} The definition is given below
 \begin{definition}
 Let $\Func_{\DPZK}$ be a $(\Num+1)$-party  functionality and let $\Pi_{\DPZK}$ be a $(\Num+1)$-party protocol involving $\Partyset$ for DPZK. We say that  $\Pi_\DPZK$ {\em securely realizes} $\Func_{\DPZK}$~if for every $\ppt$ probabilistic  real-world adversary $\Adv$, there exists an $\ppt$  expected polynomial-time ideal-world adversary $\Sim$, such that for every $I \subset \Partyset$, every $\vec{x} \in (\{0,1\}^*)^\Num$ where $\abs{x_1} = \ldots= \abs{x_\Num}$, and every $z \in \bit^*$, it holds that:
-	
-	$$\Big\{\Ideal_{\Func_{\DPZK}, \Sim(z),I}(\vec{x}) \Big\} \equiv \Big\{ \Real_{\Pi_\DPZK, \Adv(z),I}(\vec{x}) \Big\}. $$
+	$\Big\{\Ideal_{\Func_{\DPZK}, \Sim(z),I}(\vec{x}) \Big\} \equiv \Big\{ \Real_{\Pi_\DPZK, \Adv(z),I}(\vec{x}) \Big\}. $
 When $I$ is  $\{\prover_1,\ldots,\prover_\Num\}$, $\{\verifier\}$, a proper $t$-size subset of $\{\prover_1,\ldots,\prover_\Num\}$, a proper $t$-size subset of $\{\prover_1,\ldots,\prover_\Num\}$ plus   $\verifier$, the above indistinguishability  is referred as {\em Soundness with Witness Extraction (SoWE)}, {\em Zero-Knowledge (ZK)}, {\em witness-hiding (WH)}, {\em witness-hiding with collusion (WHwC)}.   	
 \end{definition}
 
