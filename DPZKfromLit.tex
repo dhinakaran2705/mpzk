@@ -7,41 +7,13 @@ Hence, starting with a $\round$-round interactive zero-knowledge proof system $\
 
 
 %<change from here>
-.\pnote{These parts should come in related work}
-We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation.
-The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup while obtaining reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}). %Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
-
-Among the state-of-art works, only Bulletproofs \cite{bulletproofs} discuss Aggregation of proofs. Even in \cite{bulletproofs}, this discussion was limited to range proofs, in which proof also grows with the number of parties and verifier always learns the number of provers. Also they require MPC for dot product in multiple rounds, in our construction, MPC is required only once. %In this section we will describe DPZK version of inner product argument which also has zero knowledge property and 
+%\pnote{These parts should come in related work}
+%We will first discuss how the state-of-art single prover zero-knowledge proof protocols can be made to support distributed proof generation. The literature on single prover zero-knowledge proofs with transparent setup has undergone tremendous progress over the last few years in terms of the concrete proof sizes. The literature has also introduced an ``updatable SRS'' setting \cite{sonic, libra, supersonic} to reduce the trust in the trusted setup while obtaining reasonable proof sizes (in between the trusted \cite{pinnochio_PHGR} and the untrusted setup \cite{aurora, bulletproofs}). %Table \ref{tab:SPZK} summarizes the state-of-art protocols in each dimension: proof size, prover and verifier complexities.
+\pnote{Check this part}
+Among the state-of-art works, we have efficient variant of Bulletproofs \cite{bulletproofs}.% discuss Aggregation of proofs. Even in \cite{bulletproofs}, this discussion was limited to range proofs, in which proof also grows with the number of parties and verifier always learns the number of provers. Also they require MPC for dot product in multiple rounds, in our construction, MPC is required only once. %In this section we will describe DPZK version of inner product argument which also has zero knowledge property and 
 %In Appendix \ref{app:BulletproofsDPZK}, we will discuss how we adapt bulletproofs to support distributed proof generation for arbitrary arithmetic circuit with one round of secure multiplication.%, which they mentioned as still open in \cite{bulletproofs}. %Looking ahead, all these protocols will be expensive in terms of the complexity of the provers. This will lead us to next section, where we will present our DPZK protocol \name{} which performs better than .
 %Note that any protocol can be made to support distributed proof generation by compiling the prover algorithm with an MPC protocol. In this section we will identify the steps in these ZK protocols which can be performed over the shares of the protocol and try to minimize the steps which need to be run using an MPC.
-\subsection{DPZK of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
-Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose $\C$ is a R1CS circuit of size $n$. Let $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ be the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and these satisfies the following linear constraints: 
-%$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
-%for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
-$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$$
-for $1\leq q \leq Q$, with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
-Consider
-$W_L = [\bm{w}_{L,1}, \ldots, \bm{w}_{L,Q}]^T$,%\vspace{10pt} 
-$W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, %\vspace{10pt} 
-$W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,%\vspace{10pt} 
-and $\bm{c} = [c_1, \ldots, c_q]^T$
-%\pnote{what is $W_v$ and $\bm{v}$ is not clear.}
-
-In \cite{bulletproofs}, these above checks are reduced to a single inner product argument, in the following way: 
-Prover commits to the input vectors $\bm{a}_L$ and $\bm{a}_R$ and output vector $\bm{a}_O$ and computes $A_I$ and $A_O$ respectively. Prover sends $A_I$ and $A_O$ to the verifier.
-Also, prover picks $s_L$ and $s_R$ uniformly at random and computes the commitment $S$ and sends $S$ to the verifier.
-Verifier gives random challenges $y, z$ from $\ZZ^\ast_p$ to the prover.
-Then prover computes vector polynomials $l(X)$ and $r(X)$ using $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R, y, z$ and other public vectors.
-Prover also computes a polynomial $t(X) = \innp{l(X)}{r(X)}$. And the construction of $l(X)$ and $r(X)$ is such that the co-efficient of $X^2$ in $t(X)$ is independent of $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R$, which can be computed by the verifier, if $\bm{a}_L, \bm{a}_R, \bm{a}_O$ satisfy the Hadamard-product relation and linear constraints. To check this, prover commits to all the co-efficients of $t(X)$ other than co-efficient of $X^2$, and verifier gives a random point $x$ to evaluate $\bm{l} = l(x)$ and $\bm{r} = r(x)$. Which reduces to an inner product check whose witness is $\bm{l}$ and $\bm{r}$. 
-
-We are giving a DPZK version of Bulletproofs, where $\distprover$ starts the protocol with $\shr{\bm{a}_L}, \shr{\bm{a}_R}, \shr{\bm{a}_O}$ $\forall \xi \in [\Num]$ such that $\sum_{\xi\in [\Num]} \shr{\bm{a}_L} = \bm{a}_L$, $\sum_{\xi\in [\Num]} \shr{\bm{a}_R} = \bm{a}_R$, $\sum_{\xi\in [\Num]} \shr{\bm{a}_O} = \bm{a}_O$. $\Ag$ is an aggregator.
-$\distprover$ computes the commitment $\shr{A_I}, \shr{A_O}, \shr{S}$ and sends these values to $\Ag$. $\Ag$ combines and gets $A_I$, $A_O$ and $S$, due to the homomorphic property of the commitment scheme, and sends these values to the verifier.
-The verifier broadcasts the random challenge $y,z \sample \ZZ^\ast_p$.
-Then each prover computes $\shr{l}(X)$ and $\shr{r}(X)$.
-All the provers interact securely to compute shares of $t(x) = \innp{\sum_{\xi\in [\Num]} \shr{l}(X)}{\sum_{\xi\in [\Num]} \shr{r}(X)}$, i.e., output for $\distprover$ is $\shr{t}(X)$ such that $\sum_{\xi\in [\Num]} \shr{t}(X) = t(X)$.
-$\distprover$ commits to all the coefficients of $\shr{t}(X)$ other than the coefficient of $X^2$. Sends these committed values to $\Ag$. $\Ag$ combines and sends them to the verifier.
-Verifier sends a random $x$. $\distprover$ evaluates $\shr{l}(x) = \shr{\bm{l}}$ and $\shr{r}(x) = \shr{\bm{r}}$ and sends these values to $\Ag$. $\Ag$ computes $\bm{l} = \sum_{\xi\in [\Num]} \shr{\bm{l}}$ and $\bm{r} = \sum_{\xi\in [\Num]} \shr{\bm{r}}$.
-Finally, $\Ag$ and verifier run the inner product protocol, same as the single prover protocol, where the witness is $\bm{l}$ and $\bm{r}$.
+We will discuss the Distributed prover variant of Bulletproofs \cite{bulletproofs} in Appendix ~\ref{app:BulletproofsDPZK}
 
 \paragraph*{Other works} such as \cite{aurora} requires quite heavy public key operations to obtain $\DPZK$, since all messages of \cite{aurora} are formed as an oracle and obtaining \cite{spartan} is difficult in the sense that privacy of the honest provers from the corrupted provers, in particular aggregator is difficult.
 %\subsection{DPZK-Aurora}

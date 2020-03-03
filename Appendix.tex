@@ -2,6 +2,7 @@
 
 
 \section{Coding Theory: Missing Parts and Proofs}
+\begin{comment}
 \subsection{Interleaved Codes: Alternative interpretation} \label{app:AltILC}
 For concreteness, let $\FF$ be the finite field $\FF_q$, consisting of $q$
 elements. Let $\HH$ denote the finite field consisting of $q^m$ elements. From
@@ -82,7 +83,7 @@ proof as it is standard.
 	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
 	This proves the above claim.	
 \end{proof}
-
+\end{comment}
 \subsection{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
 We need several observations to prove the proposition, which we present next.
 Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
@@ -274,10 +275,11 @@ x_0,x_1,r_0,r_1 \gets \adv(\secparam,\sigma)
 \subsection{Inter-product Arguments} \label{inner-product-instan}
 \noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM=\bbZ^n_p$, $\calR=\bbZ_p$, $\calC=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. 
 The commitment is a Pederson vector commitment  given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. 
-We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
+We use the inner-product argument $(\prover,\verifier)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\prover,\verifier)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
 
-
+\begin{comment}
 \noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
+\end{comment}
 
 \subsection{Forking Lemma and Knowledge Soundness}
 We use the Forking Lemma from \cite{InnerProductDLS,bulletproofs} to describe 
@@ -300,7 +302,7 @@ $(\setup,\prover,\verifier)$ is an {\em argument of knowledge} for the language
 $\mc{L}$ if for every $\ppt$
 prover $P^\ast$, there exists an expected polynomial time extractor $\extr$ such that for all $x$:
 %\begin{comment}
-\small
+{\small
 \begin{align*}
 \condprob{(x,w)\in \mc{L}}{
 \begin{array}{c}
@@ -311,7 +313,7 @@ w\sample \extr^{\mc{O}}(x,\sigma)
 \geq \condprob{\langle
 P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
 \negl(\lambda)
-\end{align*}
+\end{align*}}
 %\end{comment}
 %\begin{align}
 %&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
@@ -336,6 +338,7 @@ $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
 \commentA{change 'move' to 'round' in all the above text.}
 
+\begin{comment}
 \section{Proofs}
 \begin{proof}
 The extractor $\extr$ starts by emulating the verifier in the protocol
@@ -661,11 +664,145 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \end{align} 
 
 \end{proof}
+\end{comment}
 
+\section{DPZK of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
+Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose $\C$ is a R1CS circuit of size $n$. Let $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ be the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and these satisfies the following linear constraints: 
+%$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
+%for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
+$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$
+with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
+Consider
+$W_A = [\bm{w}_{A,1}, \ldots, \bm{w}_{A,Q}]^T$, for $A\in \{L,R,O\}$%\vspace{10pt} 
+%$W_R = [\bm{w}_{R,1}, \ldots, \bm{w}_{R,Q}]^T$, %\vspace{10pt} 
+%$W_O = [\bm{w}_{O,1}, \ldots, \bm{w}_{O,Q}]^T$,%\vspace{10pt} 
+and $\bm{c} = [c_1, \ldots, c_q]^T$
+%\pnote{what is $W_v$ and $\bm{v}$ is not clear.}
 
+\noindent In \cite{bulletproofs}, these above checks are reduced to a single inner product argument. $\prover$ commits to the input vectors $\bm{a}_L, \bm{a}_R$, output vector $\bm{a}_O$ and sends the commitment values $A_I$ and $A_O$ to $\verifier$. $\prover$ picks $s_L$ and $s_R$ uniformly at random and computes the commitment $S$ and sends to $\verifier$.
+$\verifier$ gives random challenges $y, z$ from $\ZZ^\ast_p$ to the prover.
+Then $\prover$ computes vector polynomials $l(X)$ and $r(X)$ using $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R, y, z$ and other public vectors, and computes a polynomial $t(X) = \innp{l(X)}{r(X)}$. The construction of $l(X)$ and $r(X)$ is such that the co-efficient of $X^2$ in $t(X)$ is independent of $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R$, which can be computed by $\verifier$, if $\bm{a}_L, \bm{a}_R, \bm{a}_O$ satisfy the Hadamard-product relation and linear constraints. To prove this, $\prover$ commits to all the co-efficients of $t(X)$ other than the co-efficient of $X^2$, and verifier gives a random point $x$ to evaluate $\bm{l} = l(x)$ and $\bm{r} = r(x)$. Which reduces to an inner product check whose witness is $\bm{l}$ and $\bm{r}$. 
+\smallskip
+
+ We are giving a DPZK version of Bulletproofs, where $\distprover$ starts the protocol with $\shr{\bm{a}_L}, \shr{\bm{a}_R}, \shr{\bm{a}_O}$ $\forall \xi \in [\Num]$ such that $\sum_{\xi\in [\Num]} \shr{\bm{a}_A} = \bm{a}_A$ $\forall A\in \{L,R,O\} $. $\Ag$ is an aggregator.
+$\distprover$ computes the commitment $\shr{A_I}, \shr{A_O}, \shr{S}$ and sends these values to $\Ag$. $\Ag$ combines and sends $A_I$, $A_O$ and $S$ to $\verifier$.
+The verifier broadcasts the random challenge $y,z \sample \ZZ^\ast_p$.
+Then each prover computes $\shr{l}(X)$ and $\shr{r}(X)$.
+All the provers interact securely to compute shares of $t(x) = \innp{\sum_{\xi\in [\Num]} \shr{l}(X)}{\sum_{\xi\in [\Num]} \shr{r}(X)}$, i.e., output for $\distprover$ is $\shr{t}(X)$ such that $\sum_{\xi\in [\Num]} \shr{t}(X) = t(X)$.
+$\distprover$ commits to all the coefficients of $\shr{t}(X)$ other than the coefficient of $X^2$. Sends these committed values to $\Ag$. $\Ag$ combines and sends them to $\verifier$.
+$\verifier$ sends a random $x$. $\distprover$ evaluates $\shr{l}(x) = \shr{\bm{l}}$ and $\shr{r}(x) = \shr{\bm{r}}$ and sends these values to $\Ag$. $\Ag$ computes $\bm{l} = \sum_{\xi\in [\Num]} \shr{\bm{l}}$ and $\bm{r} = \sum_{\xi\in [\Num]} \shr{\bm{r}}$.
+Finally, $\Ag$ and $\verifier$ run the inner product protocol, same as the single prover protocol, where the witness is $\bm{l}$ and $\bm{r}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Linear Check of Graphene
+\begin{figure}[hp]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: \commentA{what is pp? please do not leave undefined notations. if not necessary,  simplify and remove}
+			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
+				\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				as in Section ~\ref{sec:lincheck}. 
+				\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+				Computes commitments $c_1,\ldots,c_{s+\ell}$ from $P$.
+				\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell}$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\prover\rightarrow\verifier$: $\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+					for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell}c_a^{\Lambda^T_{n,s+\ell}[a,k_u]}$, 
+					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})U[i,j_u,k_u]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell}c_k^{\varphi_k}$ (check the condition $r^TAw=r^Tb$).
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				\item $\verifier$ accepts if all the checks succeed.
+			\end{enumerate}
+		\end{framed}
+		\caption{Linear Check Protocol}
+		\label{fig:linearcheck}
+	}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Quadratic Check of Graphene
+\begin{figure}[t!]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\quadcheck(\mathsf{pp},[\pi_x],[\pi_y],[\pi_z];\ewit_x, \ewit_y, \ewit_z)$}:
+			
+			\noindent{\bf Relation}: $\ewit_a=\open(\pi_a)$ for $a\in \{x,y,z\}$,
+			$\wit_x \circ \wit_y = \wit_z$ where  $\wit_a=\dec(\ewit_a)$ for $a\in \{x,y,z\}$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
+				%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
+				\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
+				%\item 
+				$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+				Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
+				samples $P_0\sample \FF^{2m}$ with $P_0[1:m]=0^m$ and computes commitment $c_0$
+				to $P_0$. 
+				\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell}$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
+				
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $\delta\sample
+				\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
+				$\beta\sample \FF\backslash \{0\}$.
+				\item $\prover$ computes:
+				$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
+				%$\beta\sample \FF\backslash \{0\}$. 
+				\item $\prover\leftrightarrow\verifier$ compute:
+				$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
+				$T_u=\beta_xC_u+\beta_yD_u+\beta_zE_u$, for $u\in [t]$ where
+				$C_u=\innph{\delta}{\pi_x[\cdot,k_u]}$, $D_u=\innph{\delta}{\pi_y[\cdot,k_u]}$
+				and $E_u=\innph{\delta}{\pi_z[\cdot,k_u]}$.
+				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
+					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$
+					where $z=\beta P_0 + \overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
+					$\mathsf{cm} = \beta c_0+\sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
+					\item
+					$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
+				and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
+				\item $\verifier$ accepts if all the checks succeed.
+			\end{enumerate}
+		\end{framed}
+		\caption{Quadratic Check Protocol}
+		\label{fig:quadcheck}
+	}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Distributed Linear Check of DP-Graphene
 
 \begin{figure}[t!]
-	{\small
+	{\footnotesize
 		%\centering
 		\begin{framed}
 			\noindent{$\distlinearcheck(\mathsf{pp}, \, A\in \mc{M}_{M,N}, \, b\in \FF^M, \, [\pi];\, \shr{\ewit}, \, \shr{0^{2m}})$}:
@@ -711,9 +848,10 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 		\label{fig:distlincheck}
 	}
 \end{figure}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Distributed Quadratic Check of DP-Graphene
 \begin{figure}[t!]
-	{\small
+	{\footnotesize
 		%\centering
 		\begin{framed}
 			\noindent{$\distquadcheck(\mathsf{pp}, [\pi];\, \shr{\ewit_x}, \shr{\ewit_y}, \shr{\ewit_z}\, \shr{0^{2m}})$}:
@@ -775,7 +913,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 		\label{fig:distquadcheck}
 	}
 \end{figure}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \begin{figure}[h!]
 \centering

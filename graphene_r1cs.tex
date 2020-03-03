@@ -66,8 +66,8 @@ $P_{qd}$.
 \item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
 \item $\prover$ and $\verifier$ run the linear and quadratic check protocols in
 parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
-\item Check proximity as: $\sum_{a=1}^\ell
-\Lambda_1^T[a,k_u]\tilde{c}_a=\sum_{i=1}^{4p}\rho_i\pi[i,k_u]$ for $u\in [t]$.
+\item Check proximity as: $\prod_{a=1}^\ell
+(\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
 \item $\verifier$ accepts if all the subprotocols accept.
 \end{enumerate}
 }
@@ -144,7 +144,7 @@ For $c\geq 2$, setting $p=s=O(N^{1/c})$, $m=O(N^{1-2/c})$, $t=O(\secpar)$,
 $n=O(\ell)$ and $h=O(m)$, we get $\kappa_{gr}=\negl(\secpar)$ with argument size
 $O(N^{1/c})$, verifier's complexity as $O(N)$ field operations and
 $O(N^{1-2/c})$ exponentiations. In Figure ~\ref{fig:standalonecompare}, we compare
-$\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{Bulletproofs} in
+$\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{bulletproofs} in
 single prover setting. The estimates were obtained by timing the $\fft$
 operations, exponentiations and multiexponentiations for different sizes, in a
 single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yeild best
