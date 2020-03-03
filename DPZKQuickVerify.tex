@@ -321,7 +321,7 @@ A\wit=b
 \epsilon(P^\ast)-\kappa_{lc}(\secpar)
 \end{align*}
 }
-where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\sample \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
+where $\epsilon(P^\ast):= \condprob{\langle P^\ast(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\gets \gen(\secparam)}$ denotes the success probability of $P^\ast$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
 \end{lemma}
 \begin{proof}[Proof-Sketch]
 Suppose the oracle $\pi$ commits to $\ewit$. In a detailed proof, this $\ewit$
@@ -462,8 +462,10 @@ with overwhelming probability whenever $P^\ast$ succeeds, i.e,
 \end{array}
 }{
 \begin{array}{c}
-\sigma\sample \gen(\secparam) \\
-{[}\ewit_x||\ewit_y||\ewit_z{]}\sample \extr^{\mc{O}}(\sigma)\\
+\sigma %\sample \gen(\secparam) \\
+\leftarrow \gen(\secparam) \\
+{[}\ewit_x||\ewit_y||\ewit_z{]}%\sample \extr^{\mc{O}}(\sigma)\\
+\leftarrow \extr^{\mc{O}}(\sigma) \\ 
 \wit_a=\dec(\ewit_a), a\in \{x,y,z\}
 \end{array}
 }\\
@@ -864,11 +866,11 @@ knowledge from the messages sent by the provers in the distributed protocol
 $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting only with the aggregator and in $\distquadcheck$ provers are interacting among themselves but to execute a secure MPC protocol. So, it is enough to argue that the aggregator is not learning any additional information.
 
 \begin{lemma}\label{lem:distlincheckzk}
-	For $\xi\in [K]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
+	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 	linear check protocol consisting of messages from the prover $\distprover$ with
 	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
 	which outputs a view indistinguishalbe from the joint view $\langle
-	\View^1_\Ag,\ldots,\View^K_\Ag\rangle$ 
+	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ 
 	%whenever $A\wit=b$ for
 	%$\wit=\combine(\shr{\wit})$.
 \end{lemma}
