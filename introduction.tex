@@ -1,57 +1,159 @@
 \section{Introduction} \label{sec:intro}
-In a zero-knowledge proof protocol, a verifier tries to verify that an instance $x$ is in a language $L$. A prover with a witness $w$ to $x \in L$ tries to convince the verifier on this without revealing any additional information to the verifier than what she already knows. Be it proving that a user is single-spending a coin that he has earned before in a private manner \cite{zerocash} or validating sensitive web browser data reported during telemetry \cite{MozillaPrio}, ZK protocols have garnered immense interest over the last few years. Still in the dream of a decentralized world, there are multiple co-opetitive entities interacting with each other to obtain insights and maximize their goals. A desirable goal is to enable these mutually distrusting entities to prove a predicate on their joint data. But, the traditional \textit{single-prover} ZK setting is restrictive here since there is a single prover holding the entire witness required to prove the predicate. 
+A zero knowledge protocol tries to convince a verifier about the truth of a
+statement, without revealing any additional information. Availability of
+practically efficient zero knowledge protocols is enabling their real life
+application. These include proving the correctness of
+transactions in cryptocurrencies such as \cite{zerocash} or validating sensitive web browser data reported during
+telemetry \cite{MozillaPrio}. Still in the dream of a decentralized world, there are
+multiple co-opetitive entities interacting with each other to obtain insights
+and maximize their goals. We envisage applications of zero knowledge
+proofs to enable these mutually
+distrusting entities to prove a claim on their joint data. In this setting, the 
+traditional zero knowledge protocols are restrictive since they require
+a single prover to have the entire witness needed to generate the proof. 
 
 %\pdnote{do we want to motivate it in a way such that the honest prover setting we are looking at will suffice for the listed applications? }
-In this work, we study the general setting of \textit{distributed prover zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive i.e., collaborating but mutually distrusting entities each possessing their own secret data want to prove to a verifier that their secret data together satisfies a predicate of common interest. This is done without revealing any information about their sensitive data to each other or to the verifier, more than what each of them know about it beforehand. Some real-world applications follow:
+In this work, we study the general setting of \textit{distributed prover
+zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive i.e.,
+collaborating but mutually distrusting entities each possessing their own secret
+data want to prove to a verifier that their secret data together satisfies a
+predicate of common interest. This is to be done without revealing any information
+about their sensitive data to each other or to the verifier. We illustrate
+through some potential real world applications:
 \begin{itemize}
 \item A simple but pertinent scenario is of a \textit{joint loan application} by an association of companies from a particular industry. The loan issuer has a set of financial requirements that it wants the association to satisfy, but there is no single trusted entity to act as the prover whom all the companies are willing to provide their sensitive business information with.
 \item In cryptocurrency settings \cite{bitcoin, ethereum, zerocash}, this would enable a \textit{multi-wallet transaction} where the wallets are held by different parties or a \textit{proof of joint stake} where the stake is held by different parties. These in turn enable secure collaboration applications by design on a blockchain network. % use it for joint auction-
 \item In trade logistics business networks \cite{scbn, e2open, tradelens}, a major reason for businesses to enter these networks is to benefit from cross-industry statistics. Publishing these statistics in a publicly verifiable manner without having a single trusted entity is another embodiment of this setting.
 \end{itemize}
 
-In abstract terms, we have multiple provers $\prover_1, \ldots, \prover_{\Num}$ respectively possessing witnesses $\wit_1, \ldots, \wit_{\Num}$. For a predicate $C$ from the supported class of predicates $\cC$, the provers want to prove to a verifier that $C(w_1,\cdots,w_{\Num}) = 1$.
-A natural solution for distributed proof generation is to start with the prover algorithm from a single prover protocol and run this algorithm between multiple provers using multi-party computation (MPC). Pedersen \cite{Ped92} proposed this notion and discussed this generic construction using MPC.
-%Each round of proof generation is implemented by an MPC among the provers to generate the message to be sent to the verifier.
-The generic construction is optimal in proof size and verifier complexity in that it retains these complexities from the single-prover version irrespective of the number of provers. But, the complexity of proof generation suffers when the single prover protocol is not constructed with distributed proof generation in mind. Even an optimal $\round$-round proof generation algorithm with $O(N)$ multiplicative complexity of the prover's computation might result in a distributed proof generation algorithm with $\Omega(R \cdot N)$ communication among the provers.
-Prior works have improved the complexity of distributed proof generation $o(R \cdot N)$, but only when considering simple predicates involved in threshold signatures \cite{DDS}, some sigma protocols \cite{EfficientTZ} and range proofs \cite{bulletproofs}, or when working in the trusted setup setting with a weaker adversarial model of majority of parties being honest \cite{trinocchio}.
+Formally, we have multiple provers $\prover_1, \ldots, \prover_{\Num}$
+respectively possessing witnesses $\wit_1, \ldots, \wit_{\Num}$. For a predicate
+$C$ the provers wish to prove to a verifier that $C(w_1,\cdots,w_{\Num}) = 1$.  
+A natural solution for distributed
+proof generation is to start with the prover algorithm with a single prover
+protocol and run this algorithm between multiple provers using multi-party
+computation (MPC). This generic construction was discussed by Pedersen in
+~\cite{Ped92}. However, the generic construction is likely to be concretely
+inefficient: Implementing high level abstractions such as fields, groups and
+generic algorithms like $\fft$ etc to compute the next prover message as an
+arithmetic circuit is challenging, and would lead to large circuit
+representations. Running multiparty computation over such circuits with several
+parties would incur more overheads.
+\nnote{Any numbers to support the above?}
+%Each round of proof generation is implemented by an MPC among the provers to
+%generate the message to be sent to the verifier.
+%The generic construction is optimal in proof size and verifier complexity in that it retains these complexities from the single-prover version irrespective of the number of provers. But, the complexity of proof generation suffers when the single prover protocol is not constructed with distributed proof generation in mind. Even an optimal $\round$-round proof generation algorithm with $O(N)$ multiplicative complexity of the prover's computation might result in a distributed proof generation algorithm with $\Omega(R \cdot N)$ communication among the provers.
+To get around the inefficiency of a generic constructionm, some prior works have
+proposed efficient distributed proof generation in restricted settings. These
+include simple predicates involved in threshold signatures ~\cite{DDS}, some
+sigma protocols ~\cite{EfficientTZ}, combined range proofs ~\cite{bulletproofs},
+or under trusted setup with a weaker adversarial model of majority of parties
+being honest ~\cite{trinocchio}. The goal of this paper is to address the
+aforementioned shortcomings.
 
-The goal of this work is to study zero-knowledge protocols with efficient distributed proof generation, informally an ``MPC-friendly'' proof generation, while supporting \textit{arbitrary} predicates. %The proof generation algorithm is usually measured for efficiency in terms of number of group operations and number of rounds of interaction with the verifier.
-Our work first identifies complexity measures that a ZK protocol should optimize for to admit efficient distributed proof generation. We then construct a ZK protocol which is the state-of-art in these parameters. The discussions will focus on {\em public-coin honest-verifier} protocols with a transparent setup, which is essentially the setting for real-world applications: 1) protocols with such verifiers can be converted to succinct non-interactive  arguments (zk-SNARGs)  via the Fiat-Shamir transform \cite{FS86, BCS16}, and  2) generating the parameters of the protocol should ideally {\em not} involve a trusted third party. The next few subsections elaborate on the new efficiency measures, formal definition and our new construction for DPZK that itself relies on a new single-prover ZK.
+We design zero knowledge protocols which enable efficient distributed proof generation, informally an ``MPC-friendly'' proof generation, while supporting \textit{arbitrary} predicates. %The proof generation algorithm is usually measured for efficiency in terms of number of group operations and number of rounds of interaction with the verifier.
+Our work first identifies and motivates relevant efficiency parameters that a
+zero knowledge protocol should meet to admit efficient distributed proof generation. 
+We then construct a zero knowledge 
+protocol which is the state-of-art in these parameters. The discussions will
+focus on {\em public-coin honest-verifier} protocols with a transparent setup,
+which is essentially the setting for real-world applications we envisage: 1) protocols with
+such verifiers can be converted to succinct non-interactive  arguments
+(zk-SNARGs)  via the Fiat-Shamir and like transforms \cite{FS86, BCS16}, and  2)
+generating the parameters of the protocol should ideally {\em not} involve a
+trusted third party. The next few subsections elaborate on the new efficiency
+parameters, formal definition and our new construction for DPZK that leverages 
+a new zero knowledge argument constructed in this paper, which may be of
+independent interest. 
 
 \subsection{Efficiency parameters for $\DPZK$}
-In the single-prover setting, the efficiency of a proof generation algorithm is usually measured in terms of: 
+In the single-prover setting, the efficiency of a zero knowledge protocol is usually measured in terms of: 
 \begin{itemize}
-\item the number of arithmetic operations performed by the prover, referred as \textit{prover complexity}, with the number of group/field multiplications dominating the costs
-\item proof/argument size denoted as $\zkcomm$ that refers to the amount of communication from the prover to the verifier
-\item verifier complexity
-\item the number of \textit{rounds} ($\zkrounds$) of interaction between the prover and the verifier. %especially when a non-interactive prover is obtained from its interactive version in a provably secure manner \cite{BCS16}.
+\item {\em prover complexity}, denoted by $t_\prover$, which represents the time
+complexity of the prover algorithm,
+\item {\em proof/argument size}, denoted by $\zkcomm$ that refers to the amount
+of communication from the prover to the verifier,
+\item {\em verifier complexity}, denoted by $t_\verifier$, which represents the
+time complexity of the verifier algorithm, and
+\item {\em round complexiry}, denoted as $\zkrounds$, which represents rounds of interaction between the prover and the verifier. %especially when a non-interactive prover is obtained from its interactive version in a provably secure manner \cite{BCS16}.
 \end{itemize} 
 But, these parameters do not capture the core bottleneck in the setting of multiple provers.  
 %For instance, Spartan \cite{spartan} has an $O(N \log N)$ \commentA{unclear; you mean no. of multiplication or overall arithmetic operations? } proof generation algorithm, but due to the high multiplicative complexity of proof generation its straightforward distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved.  \commentA{intuitively explain why the jump from $NlogN$ to $N^2$ happens}%Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
-As a first step in our work, we identify parameters with significant impact in distributed proof generation. 
+As a first step in our work, we identify additional parameters with significant impact in distributed proof generation. 
 
 \paragraph{Proof generation communication ($\prcomm$)}
 %The first parameter of interest is \textit{proof generation communication} $(\prcomm)$. 
-This quantifies the amount of communication between the provers during the distributed proof generation. In general, this grows linearly with the circuit complexity of the proof generation algorithm for the practical MPC protocols. 
+This parameter quantifies the amount of communication between the provers during the
+distributed proof generation. This is meant to capture additional MPC
+communication that provers would incur while computing the messages to the
+verifier. Using secret-sharing based MPC protocols ~\cite{GMW87, BGW88, SPDZ},
+this depends on the number of multiplications between bits from different
+parties ({\em cross-multiplications}), that need to be performed to compute the
+messages to the verifier. 
+\nnote{Don't we need to motivate why this parameter is important. For ex,
+constraint network bandwidth, geographically spread provers etc. I have reworded
+and compressed earlier discussion. It's not readily apparent what is meant by
+circuit complexity of proof generation algorithm}.
+
+%In general, this grows linearly with the circuit complexity of the proof generation algorithm for the practical MPC protocols. 
+%\nnote{Why are we discussing circuit complexity of proof generation algorithm?}
 %\dnote{I am saying "practical" because there are RAM based protocols which do better than circuit complexity of the algorithm.}
-But, there also exist MPC protocols, the secret-sharing based MPC protocols \cite{GMW87, BGW88, SPDZ}, where the communication is only dependent on the number of cross-multiplications i.e., the multiplications between the witness bits from different parties. %This parameter \textit{circuit share complexity}, which we will explain later, will be relevant in many real-world applications. 
+%But, there also exist MPC protocols, the secret-sharing based MPC protocols \cite{GMW87, BGW88, SPDZ}, where the communication is only dependent on the number of cross-multiplications i.e., the multiplications between the witness bits from different parties. %This parameter \textit{circuit share complexity}, which we will explain later, will be relevant in many real-world applications. 
 
 %\commentA{section 1.2 should be here, circuit share complexity is related to cross multiplications which is what you talk above. in its current location, it is not clear if it is another parameter of DPZK. If it is, it should be part of this section. To me, it looks like a parameter that impacts both proof generation and proof generation rounds. So after explaining both this parameters, say that we identify a common parameter called 'circuit share complexity' that impacts both in bla bla way. But the above four parameters will be the ones we use for stating the complexity of our protocols and for the purpose of comparison  }
 %, since an affine function over the witnesses and a multiplication between witness bits from the same prover can be computed without any interaction in a secret-sharing based MPC.
 
 \paragraph{Proof generation rounds ($\prrounds$)}
 %The next parameter of interest is the number of \textit{proof generation rounds ($\prrounds$)} which 
-This indicates the number of rounds of communication between the provers during the distributed proof generation. In a typical MPC, this parameter would be a constant number for the garbled-circuit based protocols and be the cross-multiplicative depth of the circuit for the secret-sharing based protocols. But in our setting of distributed proof generation, the provers have to compute their message for that round, in clear, to be sent to the verifier. Thus, even a garbled-circuit based approach here might result in $\prrounds$ be linear in the number of $\zkrounds$, and hence not a constant with respect to the size of the instance unless $\zkrounds$ is also a constant. 
+This indicates the number of rounds of communication between the provers during
+the distributed proof generation. Informally, it denotes the number of separate
+MPCs that the provers have to run throughout the proof generation process. Note
+that this could be lower than the round complexity of the zero knowledge
+protocol. A lower value of this parameter enhances the practicality of the
+distributed protocol.
+\nnote{Do we really need the discussion below? What is the conclusion?}
+{\color{blue} In a typical MPC, this parameter would be a constant number for
+the garbled-circuit based protocols and be the cross-multiplicative depth of the
+circuit for the secret-sharing based protocols. But in our setting of
+distributed proof generation, the provers have to compute their message for that
+round, in clear, to be sent to the verifier. Thus, even a garbled-circuit based
+approach here might result in $\prrounds$ be linear in the number of
+$\zkrounds$, and hence not a constant with respect to the size of the instance
+unless $\zkrounds$ is also a constant.} 
 %\commentA{it's hard to digest the above; what's the point you are trying to make; some of the zkRounds do not need MPC and hence we can get read of the linear independence of prRounds from zkRounds?  }
 %\dnote{The above point makes sense only for the interactive version. Should we also argue for non-interactive proof generation?-that it requires us to do hash inside MPC if MPC is not done for each step.} 
 %\commentA{I didn't understand your comment. other can help?}
-This parameter $\prrounds$ is also of cryptographic interest. If there is more than one round of prover message generation which requires MPC, care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol secure.
+The parameter $\prrounds$ is also of cryptographic interest. If there is more than one round of prover message generation which requires MPC, care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol secure.
 
 \paragraph{Shared circuit complexity}
-We will now elaborate a bit more on the notion of cross-multiplication since that is of practical relevance and influences $\prcomm$ and $\prrounds$. In applications where the initial witness is \textit{partitioned} among the provers, the term \textit{shared circuit} denotes the part of the circuit whose wire values are functions of inputs from more than one prover. Consider the earlier example of a trade-logistics business network, now on top of a blockchain where the hashes (or any other commitment) of large number of data points from different participants are stored on the blockchain. When parties come together to prove a statistic on their combined data, they first prove that each data point used to compute the statistic corresponds to a hash entry in the blockchain, and then prove the result of the statistic on these data points. But here, the value of the circuit wires for the part on hash verification depend only on witness bits from a single party. Only the part of the circuit computing the statistic will take witness bits from multiple parties. With the standard SHA hash function having around 30 thousand gates, and with a hash circuit required for each data point, the practicality of a zero-knowledge protocol will be heavily improved if its parameters like $\prcomm$ and $\prrounds$ are linear in the size of the shared circuit $N_s$ and not the total circuit size $N$.
+We will now elaborate a bit more on the number of cross-multiplications since
+that is of practical relevance and influences prover communication ($\prcomm$)
+and proof generation rounds ($\prrounds$). In applications where the initial
+witness is canonically \textit{partitioned} among the provers, the term
+\textit{shared circuit} denotes sub-circuit consisting of wires, whose 
+values are functions of inputs from more than one prover. 
+Consider the earlier example of a trade-logistics business network, now on top of 
+a blockchain where the hashes (or any other commitment) of large number of data points
+from different participants are stored. 
+When parties come together to prove a statistic on their combined data, they
+need to establish that each data point used to compute the statistic corresponds to a 
+hash entry in the blockchain (ledger?), and the correctness of the result of the statistic
+computation on these data points. But here, the values of the circuit wires
+connecting each data point to its respective hash depends only on witness bits from a 
+single party which owns the data point. Only the part of the circuit computing the 
+statistic takes witness bits from multiple parties, and thus only this part
+needs to be considered for MPC while computing shares of extended witness. It
+would be desirable, though not evident, that the complexity of the MPC for {\em proof
+generation} also depends favorably on the size of the shared circuit. 
+With the standard SHA hash function having around 30,000 gates, the practicality of 
+distributed proof generation will be
+greatly improved if its parameters (like $\prcomm$ and $\prrounds$) are 
+linear in the size of the shared circuit $N_s$ and not the total circuit size $N$.
 %Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the total size of the circuit. 
 
- In summary, the efficiency of a DPZK in the public-verifiable and non-interactive setting (which is our concern) will be measured via four parameters:  $\prcomm$,  $\prrounds$, proof-size and verifier computation complexity. While the latter two parameters are relevant in both single and multi prover settings, the former two are exclusively meant for DPZK protocols.    
+In summary, the efficiency of a DPZK in the public-verifiable and
+non-interactive setting (which is our concern) will be measured via $\prcomm$,
+$\prrounds$, in addition to the parameters for the single prover protocol.
 
 \subsection{On the formal Definition of $\DPZK$}
 %\commentA{changed the title of this subsection and the text below sightly} 
