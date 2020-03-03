@@ -55,7 +55,7 @@ details \commentA{missing section no.}).
 %[m]$. This allows us to consistently define polynomials $p_j$ for $m<j\leq h$ by
 %$p_j=\ifft((\matz[j,1],\ldots,\matz[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$.
 %%
-The encoding $\enc$ satisfies the following {\em bounded independence} property:
+The encoding $\enc$ satisfies the following {\em bounded independence} property proved in Appendix \commentA{appendix number is missing}:
 \begin{lemma}[Bounded Independence]\label{lem:boundedindependence}
 Let $B\subseteq [n]$ be a set of size $\bi$. Let $\mc{U}(p,h,b)$ denote the
 set of $p\times h\times b$ matrices $\matx$ such
@@ -64,23 +64,32 @@ that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{h,m}$ for all $i\in
 variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is
 distributed uniformly on $\mc{U}(p,h,b)$.
 \end{lemma}
-We defer the proof of the above Lemma to the Appendix. \commentA{appendix number is missing}
+
 
 \subsection{Codes and Matrices}\label{sec:codesandmatrices}
+For code $\rsc{\eta}{n,\ell}$, let $\Lambda_{n,\ell}$ denote the $n\times \ell$ matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
+to the unique codeword $y$ in  $\rsc{\eta}{n,\ell}$ such that $y_i=x_i$ for $i\in [\ell]$. For codes  $\rsc{\alpha}{h,m}$, $\rsc{\eta}{n,s+\ell}$, $ \rsc{\eta}{n,2\ell}$, and $\rsc{\alpha}{h,2m}$, let  $\Lambda_{h,m},\Lambda_{n,s+\ell},\Lambda_{n,2\ell}$ and $\Lambda_{h,2m}$ be similar matrices. We denote the corresponding
+parity-check matrices as   $\mac{H}_{n,\ell},\mc{H}_{h,m},\mc{H}_{n,s+\ell},\mc{H}_{n,2\ell}$. 
+We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
+the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We
+assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
+
+\begin{comment}
 We now fix the notation for some of the codes that will be
 frequently used throughout this section. We use $L_1$ and $L_2$ to denote codes
 $\rsc{\eta}{n,\ell}$ and $\rsc{\alpha}{h,m}$ respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ 
 and $\mc{C}_2 :=\cic{L_2}{n}$ denote the interleaved codes of $L_1$ and $L_2$. In addition, 
 we use codes $L_3 := \rsc{\eta}{n,s+\ell}$, $L_4 := \rsc{\eta}{n,2\ell}$ and 
 $L_5=\rsc{\alpha}{h,2m}$ to encode some intermediate computations in our protocols.
-Let $\Lambda_1$ denote the matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
-to the unique codeword $y$ in $L_1$ such that $y_i=x_i$ for $i\in [\ell]$. Thus $\Lambda_1$ is 
-an $n\times \ell$ matrix. Let $\Lambda_2,\Lambda_3,\Lambda_4$ and $\Lambda_5$ be similar matrices
+Let $\Lambda_{n,\ell}$ denote the matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
+to the unique codeword $y$ in $L_1$ such that $y_i=x_i$ for $i\in [\ell]$. Thus $\Lambda_{n,\ell}$ is 
+an $n\times \ell$ matrix. Let $\Lambda_{h,m},\Lambda_{n,s+\ell},\Lambda_{n,2\ell}$ and $\Lambda_{h,2m}$ be similar matrices
 for the codes $L_2,L_3,L_4$ and $L_5$ respectively. We denote the
 parity check matrices for $L_i$  by $\mc{H}_i$ for $i\in \{1,\ldots,5\}$. 
 We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
 the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We
-assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
+assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$.
+\end{comment}
 
 \subsection{Commitment of product codewords}\label{sec:matrixcommitment}
 
@@ -892,12 +901,12 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
 		%share of $0^h$.
 		Uniform distribution on the set codewords $P_0$ in $\dashL_2$ satisfying
-		$\sum_{j\in [m]}P_0[j]=0$ if all the provers follow the protocol and
+		$\sum_{j\in [m]}P_0[j]=0$ 
 		jointly have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
 		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
 	%\end{itemize}
 	
-	Thus, in each case, the view of the aggregator $\Ag$ can be perfectly simulated.
+	Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
 \subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output, he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation so that the simulator can extract the committed value and maliciously secure MPC to compute $\mathsf{Mult}$. Furthermore, all the messages to $\Ag$ are via broadcast. 
