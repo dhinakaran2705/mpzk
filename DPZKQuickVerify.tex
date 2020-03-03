@@ -30,7 +30,7 @@ $\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$.
 Then $\ewit$ is a randomized encoding of $\wit$.
 \end{enumerate}
  It is easily seen
-that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\oplus \rsc{\alpha}{h,m}$. We remark that the above
+that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above
 encoding can be computed using $O(N\log N)$ field operations (see Appendix for
 details \commentA{missing section no.}).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
@@ -125,7 +125,7 @@ as it only has oracle access to $\comoracle$.
 
 \subsection{Well-formed Encodings}\label{sec:wellformedenc}
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
-consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\oplus L_2$ for all $i\in [p]$. 
+consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\otimes L_2$ for all $i\in [p]$. 
 We call an encoding $\ewit$ to be {\em well-formed} if $\ewit\in \mc{W}$. Note
 that an encoding $\ewit\gets \enc(\wit)$ for any $\wit\in \FF^N$ is well formed. 
 Let $\mc{W}_1$ denote the set of matrices
@@ -160,7 +160,7 @@ such that $d_1(\ewit[i,\cdot,\cdot],\ewit_1[i,\cdot,\cdot])<e_1$ and
 $d_2(\ewit[i,\cdot,\cdot],\ewit_2[i,\cdot,\cdot])<e_2$. These codewords and thus
 sets $F_1,F_2$ may be
 determined using algorithms for decoding Reed Solomon codes \cite{CodingTheory}.
- From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\oplus L_2$ such
+ From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
 that $U^i[j,k]=\ewit^*[i,j,k]$ for $(j,k)\in F_2\times F_1$. We define the
 ``correction'' of $\ewit^*$ as $\ewit$ where
 $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
@@ -257,8 +257,7 @@ to an encoding which is ``close'' to well-formed encoding $\mc{W}$. To check pro
 the verifier initially  sends a vector $\rho\sample
 \FF^p$ and asks the prover to send commitments
 $(\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{U}=\sum_{i\in
-[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\sum_{a\in
-[\ell]}\Lambda_1^T[a,k_u]\tilde{c}_a = \sum_{i\in [p]}\rho_i\pi[i,k_u]$. It can be
+[p]}\rho_i\ewit[i,\cdot,\cdot]$. It then checks for all $u\in [t]$ that $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_1[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$. It can be
 seen that for an honest computation, both the commitments open to the vector
 $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
 %The complete linear check protocol is described in Figure \ref{fig:linearcheck}.
@@ -296,14 +295,14 @@ Computes commitments $c_1,\ldots,c_{s+\ell}$ from $P$.
 \item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
 \item $\prover$ and $\verifier$ run inner product arguments to check:
 \begin{enumerate}
-\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
-for $u\in [t]$ where $\mathsf{cm}_u=\sum_{a=1}^{s+\ell}\Lambda_3[a,k_u]c_a$, 
+\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell}c_a^{\Lambda^T_3[a,k_u]}$, 
 $v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
-\item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=\beta c_0+\sum_{a=1}^{s+\ell}\varphi_ac_a$ (check the condition $r^TAw=r^Tb$).
+\item $\innerproduct(\mathsf{pp},1^m,\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell}c_a^{\varphi_a}$ (check the condition $r^TAw=r^Tb$).
 \item $\innerproduct(\mathsf{pp},f_u^T\Lambda_2,C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
-where $C_u=\sum_{i=1}^p\delta_i\pi[i,k_u]$ (consistency of $X_u$ with $\pi$). 
+where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
 \end{enumerate}
-\item $\verifier$ checks: $\sum_{a=1}^\ell\Lambda_1[a,k_u]\tilde{c}_a=\sum_{i=1}^p\rho_i\pi[i,k_u]$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_1[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
 \item $\verifier$ accepts if all the checks succeed.
 \end{enumerate}
 \end{framed}
@@ -552,17 +551,17 @@ z[j] = r^Tb$.
 $w_0,w\sample \FF$.
 	\item $\Sim$ picks $O\sample \FF^{p\times t}$. 
 	\item $\Sim$ computes $\tilde{U}[\cdot, k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i,u]$ and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] , \tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u], O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of $U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{U}[\cdot,k_u]$.
-	where $i\in[p]$ and $u\in [t]$ and for remaining positions, 
+	where $i\in[p]$ and $u\in [t]$. 
 	\item $\Sim$ picks $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way
-that $\tilde{c}_{k_u} = \sum_{a\in[\ell]} \Lambda^T_1[a,k_u]\tilde{c}_a \,
+that $\tilde{c}_{k_u} = \prod_{a\in[\ell]} (\tilde{c}_a)^{\Lambda^T_1[a,k_u]} \,
 \forall u\in [t]$. Picking such $\tilde{c}$ is efficient since the number of
 unknowns is more than the number of constraints, and the coefficient matrix has
 full row rank.
-	\item Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \sum_{i\in[p]} \rho_i\cdot \pi[i,k]$ for all $k=k_u:u\notin [t]$.
+	\item Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \prod_{i\in[p]}( \pi[i,k])^{\rho_i}$ for all $k=k_u:u\notin [t]$.
 	\item $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the first $2m$ entries of $P[\cdot,k_u] \, \forall u\in[t]$.
 	\item $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell}$ in such a way that
-${c}_{k_u} = \sum_{a\in[s+\ell]} \Lambda^T_3[a,k_u]{c}_a \, \forall u\in [t]$
-and $\cm = \beta c_0 + \sum_{a\in[s+\ell]} c_a \varphi_a$. Picking such ${c}$ is
+${c}_{k_u} = \prod_{a\in[s+\ell]} ({c}_a)^{\Lambda^T_3[a,k_u]} \, \forall u\in [t]$
+and $\cm =  c_0^{\beta} + \prod_{a\in[s+\ell]} (c_a)^{\varphi_a}$. Picking such ${c}$ is
 efficient since the number of unknowns is more than the number of constraints,
 and the coefficient matrix has full row rank.
 \end{itemize}
