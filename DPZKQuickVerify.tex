@@ -30,7 +30,8 @@ $\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$.
 Then $\ewit$ is a randomized encoding of $\wit$.
 \end{enumerate}
  It is easily seen
-that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above
+that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. 
+We remark that the above
 encoding can be computed using $O(N\log N)$ field operations (see Appendix for
 details \commentA{missing section no.}).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
@@ -69,10 +70,17 @@ distributed uniformly on $\mc{U}(p,h,b)$.
 \subsection{Codes and Matrices}\label{sec:codesandmatrices}
 For code $\rsc{\eta}{n,\ell}$, let $\Lambda_{n,\ell}$ denote the $n\times \ell$ matrix for the linear transformation that maps a vector $x\in \FF^\ell$ 
 to the unique codeword $y$ in  $\rsc{\eta}{n,\ell}$ such that $y_i=x_i$ for $i\in [\ell]$. For codes  $\rsc{\alpha}{h,m}$, $\rsc{\eta}{n,s+\ell}$, $ \rsc{\eta}{n,2\ell}$, and $\rsc{\alpha}{h,2m}$, let  $\Lambda_{h,m},\Lambda_{n,s+\ell},\Lambda_{n,2\ell}$ and $\Lambda_{h,2m}$ be similar matrices. We denote the corresponding
-parity-check matrices as   $\mac{H}_{n,\ell},\mc{H}_{h,m},\mc{H}_{n,s+\ell},\mc{H}_{n,2\ell}$. 
+parity-check matrices as   $\mc{H}_{n,\ell},\mc{H}_{h,m},\mc{H}_{n,s+\ell},\mc{H}_{n,2\ell}$. 
+
 We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and
 the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We
-assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
+assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$.
+Let $\mc{W}_1$ denote the set of matrices
+$U$ in $\mc{M}_{p,h,n}$ such that the $n$-length vector $U[i,j,\cdot]$ is a
+codeword in $\rsc{\eta}{n,\ell}$ for all $i,j$. Similarly let $\mc{W}_2$ denote the set of
+matrices $U$ such that the $h$-length vector $U[i,\cdot,k]$ is a codeword in
+$\rsc{\alpha}{h,m}$ for all $i,k$.  Let $\mc{W}=\mc{W}_1\cap \mc{W}_2$. $\mc{W}$ denotes the set of {\em well-formed} encodings  and consists of $U$ such that each slice $U[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. For $U^\ast\in \mc{M}_{p,h,n}$ define
+$d(U^\ast,\mc{W}_i)=\min\{\Delta_i(U^\ast,U):U\in \mc{W}_i\}$ for $i=1,2$.
 
 \begin{comment}
 We now fix the notation for some of the codes that will be
@@ -95,11 +103,11 @@ assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$
 
 We now discuss the commitment scheme for matrices in $\rsc{\eta}{n,\ell} \otimes \rsc{\alpha}{h,m}$. Similar scheme works for other product codes also. 
 A matrix $U$ in the above product code is
-completely determined by the sub-matrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$ and can be expressed as $U=\Lambda_2\overline{U}\Lambda_1^T$. 
+completely determined by the sub-matrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$ and can be expressed as $U=\Lambda_{h,m}\overline{U}\Lambda_{n,\ell}^T$. 
 A commitment to $U$ is defined as  a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$
 where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$
-column of $\overline{U}$ for $k\in [\ell]$. We use the notation $\bm{c} = (c_1,\ldots,c_\ell) \gets \com(U)$. Given $\bm{c}$, commitment to $k$th column of $U$ for $k > \ell$ 
-can be computed as  $c_k=\prod_{a\in [\ell]}(c_a)^{\Lambda_1^T[a,k]}$, thanks to the homomorphicity.
+column of $\overline{U}$ for $k\in [\ell]$. We use the notation $\bm{c} = (c_1,\ldots,c_\ell) \gets \pccom(U)$. Given $\bm{c}$, commitment to $k$th column of $U$ for $k > \ell$ 
+can be computed as  $c_k=\prod_{a\in [\ell]}(c_a)^{\Lambda_{n,\ell}^T[a,k]}$, thanks to the homomorphicity.
 
 %The commitment scheme presents no difficulty in  proving inner-product relations for a column (or a linear combination of them) with a public vector. For example, to prove $\innp{x}{U[\cdot,k]}=v$ for any $k \in [n]$ and a public vector $x$, we first homomorphically compute commitment to $\overline{U}[\cdot,k]$ as $c_k=\prod_{a\in [\ell]}(c_a)^{\Lambda_1^T[a,k]}$.  Then we reformulate the inner-product as  $\innp{x}{U[\cdot,k]}=\innp{x}{\Lambda_2\overline{U}[\cdot,k]}=\innp{x^T\Lambda_2}{\overline{U}[\cdot,k]}$ where the last formulation involves a public vector $x^T\Lambda_2$ and private vector corresponding to commitment $\mathsf{cm}$. We make repeated use of such inner-product checks.   
 
@@ -112,15 +120,15 @@ For all $(i,k)\in [p]\times
 $c_{ik}=\comm(V_{ik})$ for the vector 
 $V_{ik}=(\ewit[i,1,k],\ldots,\ewit[i,m,k])\in \FF^m$. 
 Finally we define $p\times n$ matrix $\comoracle$ as
-$\comoracle[i,k]=c_{ik}$. We provide oracle access to $\comoracle$ where for a
+$\comoracle[i,k]=c_{ik}$. We write this as $\comoracle \gets \ocom(\ewit)$. We provide oracle access to $\comoracle$ where for a
 query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
-$i^{th}$ slice of $\ewit$, which is a codeword in $L_1\otimes L_2$. In contrast
-to Section ~\ref{sec:matrixcommitment}, instead of
-committing to its $\ell$ columns as above, we commit to all $n$ columns. This is
+$i^{th}$ slice of $\ewit$.   This is different from  commitment of a product codeword 
+(Section ~\ref{sec:matrixcommitment})  where only 
+$\ell$ columns are committed. This is
 because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
 as it only has oracle access to $\comoracle$. 
-
+\begin{comment}
 \subsection{Well-formed Encodings}\label{sec:wellformedenc}
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
 consisting of matrices $U$ such that $U[i,\cdot,\cdot]\in L_1\otimes L_2$ for all $i\in [p]$. 
@@ -132,18 +140,18 @@ codeword in $L_1$ for all $i,j$. Similarly let $\mc{W}_2$ denote the set of
 matrices $U$ such that the $h$-length vector $U[i,\cdot,k]$ is a codeword in
 $L_2$ for all $i,k$. It can be seen that $\mc{W}=\mc{W}_1\cap \mc{W}_2$. For $U^\ast\in \mc{M}_{p,h,n}$ define
 $d(U^\ast,\mc{W}_i)=\min\{\Delta_i(U^\ast,U):U\in \mc{W}_i\}$ for $i=1,2$.
-
+\end{comment}
 \subsection{Witness Decoding}\label{sec:witdecoding}
 We describe a decoding procedure $\dec$ for obtaining a witness $\wit$ from an encoding
-$\ewit$. Let $\ewit\in \mc{W}$ be a well formed encoding. Such an encoding can
+$\ewit$. Let $\ewit\in \mc{W}$ be a well-formed encoding. Such an encoding can
 be decoded slice by slice, i.e, for each $i\in [p]$, we interpolate bivariate
 polynomial $Q^i\in \FF[x,y]$ with $deg_x(Q^i)<m$ and $deg_y(Q^i)<\ell$ such that
-$Q^i$ interpolates $\ewit[i,\cdot,\cdot]$ on $H$. This can be accomplished using
+$Q^i$ interpolates $\ewit[i,\cdot,\cdot]$ on evaluation domain $H=\{(\alpha_j,\eta_k): j\in [h],
+k\in [n]\}$. This can be accomplished using
 standard algorithms. The decoded witness $\wit$ is then given by
-$\wit[i,j,k]=Q^i(\alpha_j,\zeta_k)$. We extend the above decoding procedure to
-recover from slightly malformed encodings. Let
-$e_1<(n-\ell)/2$ and $e_2<(h-m)/2$. Let $\ewit^*\in \mc{M}_{p,h,n}$ be such
-that $d(\ewit^*,\ewit_1)<e_1$ and $d(\ewit^*,\ewit_2)<e_2$ for some $\ewit_1\in
+$\wit[i,j,k]=Q^i(\alpha_j,\zeta_k)$. \commentA{nitin: can you simplify the following. it's a notational mess}We extend the above decoding procedure to
+recover from slightly malformed encodings. Let $\ewit^*\in \mc{M}_{p,h,n}$ be such
+that $d(\ewit^*,\ewit_1)<e_1 <(n-\ell)/2 $ and $d(\ewit^*,\ewit_2)<e_2 <(h-m)/2$ for some $\ewit_1\in
 \mc{W}_1$ and $\ewit_2\in \mc{W}_2$. Let $E_1$ denote
 the indices of the planes where $\ewit^*$ differs from $\ewit_1$ and 
 $E_2$ denote the indices of the slabs where $\ewit^*$ differs from $\ewit_2$.
@@ -158,7 +166,7 @@ such that $d_1(\ewit[i,\cdot,\cdot],\ewit_1[i,\cdot,\cdot])<e_1$ and
 $d_2(\ewit[i,\cdot,\cdot],\ewit_2[i,\cdot,\cdot])<e_2$. These codewords and thus
 sets $F_1,F_2$ may be
 determined using algorithms for decoding Reed Solomon codes \cite{CodingTheory}.
- From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in L_1\otimes L_2$ such
+ From Lemma ~\ref{lem:bicdecoding}, it follows that for all $i\in [p]$, there exists $U^i\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$ such
 that $U^i[j,k]=\ewit^*[i,j,k]$ for $(j,k)\in F_2\times F_1$. We define the
 ``correction'' of $\ewit^*$ as $\ewit$ where
 $\ewit[i,j,k]=U^i[j,k]$. Finally, we define the decoding $\dec(\ewit^*) =
@@ -171,7 +179,7 @@ witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
 for some $A\in \FF^{M\times N}$ and $b\in \FF^M$. As before we veiw $\wit$ as
 $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, the prover obtains $\ewit\gets 
-\enc(\wit)$ and $\comoracle\gets \comm(\ewit)$. The prover then sets the oracle 
+\enc(\wit)$ and $\comoracle \gets \ocom(\ewit)$. The prover then sets the oracle 
 $\pi := \comoracle$, which can then be queried by the verifier. We present broad
  outline of the protocol below. The full protocol appears in
 Figure \ref{fig:linearcheck}.\smallskip
@@ -185,16 +193,18 @@ satisfying $R^i(\alpha_j,\zeta_k)=R[i,j,k]$. Let $Q^i$, $i\in [p]$ denote the
 polynomials used in interpolating (and encoding) witness $\wit$. Then, 
 $\wit[i,j,k]=Q^i(\alpha_j,\zeta_k)$. The check $\innp{R}{\wit}=r^Tb$ reduces to
 $\sum_{i,j,k}R^i(\alpha_j,\zeta_k).Q^i(\alpha_j,\zeta_k)=r^Tb$ where $i,j$ and
-$k$ run over indices in $[p],[m]$ and $[s]$ respectively. The preceeding
-identity can be succinctly
-expressed as $\sum_{k\in [s]}p(\zeta_k)=r^Tb$, where $p(\cdot)$ denotes
-the polynomial $\sum_{j=1}^m\sum_{i=1}^p
-R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$. Let $\zetabar$ denote the vector
-$(\zeta_1,\ldots,\zeta_s)$ and let $p(\zetabar)$ denote the vector
-$(p(\zeta_1),\ldots,p(\zeta_s))$. Then the previous polynomial identity reduces to the
-inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$.\smallskip  
+$k$ run over indices in $[p],[m]$ and $[s]$ respectively. 
+%The preceding identity can be succinctly expressed as $\sum_{k\in [s]}p(\zeta_k)=r^Tb$, where $p(\cdot)$ denotes the polynomial $\sum_{j=1}^m\sum_{i=1}^p R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$. Let $\zetabar$ denote the vector $(\zeta_1,\ldots,\zeta_s)$ and let $p(\zetabar)$ denote the vector $(p(\zeta_1),\ldots,p(\zeta_s))$. Then the previous polynomial identity reduces to the inner product check $\innp{1^s}{p(\zetabar)}=r^Tb$.  
+For $j\in [h]$, denoting  the polynomial $\sum_{i\in
+[p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ as $p_j$ (which will be of degree less than $s + \ell$), we can rewrite the expression as $\sum_{j}p_j(\zeta_k)=r^Tb$. Let $\Phi$ denote the $s\times (s+\ell)$ matrix such that $p_j(\zetabar)=\Phi \times p_j(\etabar)$ 
 
-\noindent {\em Intermediate Commitment}: 
+We define the matrix $P$ by $P[j,k]=p_j(\eta_k)$ for $j\in [h],k\in [n]$ which is a product codeword from $\rsc{\eta}{n,s+\ell} \otimes \rsc{\alpha}{h,2m}$ and fully determined by sub-matrix $\overline{P}$ consisting of the first $2m$ rows and
+the first $s+\ell$ columns of $P$. Now our idea is to commit  $P$ using  commitment for product codeword and write the above expression as an inner-product argument involving $\overline{P}$. 
+
+
+\smallskip  
+
+\noindent {\em A product codeword Commitment}: 
 We introduce an $h\times n$ matrix $P$
 which serves as a bridge between the oracle $\pi$ and the vector
 $p(\zetabar)$. For $j\in [h]$, let $p_j$ denote the polynomial $\sum_{i\in
@@ -914,7 +924,7 @@ pnote{Give the overview of the proof. and explain why the does not go through wh
 
 \noindent{\bf Overview of the proof:} We will describe, in high-level, how to construct a simulator $\Sim$ which can generate a view which is indistinguishable from a real execution, where $\Sim$ has access to the extractor $\extrac$ for the ZKAoK and the simulator $\Sim_{Mult}$ for the secure multiplication and the zero-knowledge simulator $\Sim_{ZK}$ of \name. $\Sim$ receives the messages from the corrupt parties to $\Ag$ due to broadcast. Then, $\Sim$ calls $\extrac$ and obtains opening of $\shr{\comoracle}$ for all corrupt $\xi$. Using $\Sim_{ZK}$, $\Sim$ prepares the messages of the honest parties, and if there is any interaction required between the provers, that interaction is generated via $\Sim_{Mult}$. $\Sim$ checks if all the messages are consistent or not with all the previous messages if not $\Sim$ sends consistent but random values on behalf of honest parties, otherwise, just before sending $\shr{z_{lc}}$ and $\shr{z_{qd}}$, $\Sim$ invokes the $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ generates messages for honest parties using $\Sim_{ZK}$ otherwise it picks messages uniformly at random.
 
-\noindent{\bf Difficulty in simulation while aggregator is malicious}  In the above construction, it considered that provers might deviate while interacting among themselves. However, we do not consider the scenario if $\Ag$ deviates. We do not have a simulator that can simulate a view when all the provers (corrupt and honest) behaving correctly, but $\Ag$ sends a wrong combined value to $\verifier$. To resolve, one can try to invoke the $\Func_{\DPZK}$ after $\Ag$ sending the final value to $\verifier$. However, $\Ag$ needs honest parties messages to generate the message for $\verifier$, and the simulator needs the output of the $\Func_{\DPZK}$. So, it is difficult to get a simulator, which can generate a view indistinguishable from the real world execution. Though we can not construct a simulator for our protocol, we do not have an attack in this corruption model. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
+\noindent{\bf Difficulty in simulation while aggregator is malicious:}  In the above construction, it considered that provers might deviate while interacting among themselves. However, we do not consider the scenario if $\Ag$ deviates. We do not have a simulator that can simulate a view when all the provers (corrupt and honest) behaving correctly, but $\Ag$ sends a wrong combined value to $\verifier$. To resolve, one can try to invoke the $\Func_{\DPZK}$ after $\Ag$ sending the final value to $\verifier$. However, $\Ag$ needs honest parties messages to generate the message for $\verifier$, and the simulator needs the output of the $\Func_{\DPZK}$. So, it is difficult to get a simulator, which can generate a view indistinguishable from the real world execution. Though we can not construct a simulator for our protocol, we do not have an attack in this corruption model. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
 
 \begin{comment}
 \begin{lemma}\label{lem:privacy}
