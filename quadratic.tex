@@ -43,13 +43,15 @@ construct $h\times n$ matrix $P$ which serves as a bridge between the oracles
 $\pi_a$ $\forall a \in \{x,y,z\}$ and the vector $p(\overline{\bm{\zeta}})$.
 For $j\in [h]$, let $p_j(\cdot)$ denote the polynomial $\sum_{i\in[p]}
 r_iQ^i(\alpha_j, \cdot)$. We define the matrix $P$ by $P[j,k]= p_j(\eta_k)$ for
-$j\in[h], k\in[n]$. The matrix $P$ is in the product code $L_4\otimes L_5$. As
+$j\in[h], k\in[n]$. The matrix $P$ is in the product code $L_{n,2\ell}\otimes L_{h,m}$. As
 before we commit to $P$ by committing to the submatrix $\overline{P}$
 consisting of the first $2m$ rows and the first $2\ell$ columns of $P$. Let
 $c_1,\ldots,c_{2\ell}$ be the commitments to the columns of $\overline{P}$.
 
-\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Let
-$\overline{\bm{\eta}}$ denote the vector $(\eta_1, \ldots, \eta_{2\ell})$, and
+\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is a polynomial of degree $2\ell$, $\Phi$ is a matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell})]$ and $p(\zetabar)$ is same as linear check. Here, Finally inner product reduces to $\innp{[\gamma||0^m]^T}{z}$, where $z= beta P_0 + \overline{P}\times \varphi$ and $P_0\in \FF^{2m}$ is a random vector such that $P_0[j]=0 \forall j\in [m]$. Commitment of $P_0$ is $c_0$ is sent to the verifier apriori. Therefore, commitment to $z$ is $\cm = c_0^{\beta}\prod_{k=1}^{2\ell}(c_k)^{\varphi_k}$.
+
+\begin{comment} 
+Let$\overline{\bm{\eta}}$ denote the vector $(\eta_1, \ldots, \eta_{2\ell})$, and
 let $\Phi$ denote the $s\times 2\ell$ matrix such that
 $p(\overline{\bm{\zeta}}) = \Phi p(\overline{\bm{\eta}})$. Observe
 that $p(\overline{\bm{\eta}}) = \overline{P}^T [\gamma||0^m]^T$ and thus
@@ -66,6 +68,7 @@ that $P_0[j]=0$ for $j\in [m]$ to blind the vector $\overline{P}\varphi$. The
 prover initially commits to $P_0$ by sending a commitment $c_0$ to it, and later
 sends uses the vector $z=\beta P_0 + \overline{P}\varphi$ in the preceeding
 inner product check.
+\end{comment}
 
 \noindent{\em Consistency of the oracles and  $P$:} 
 As in the linear check, the verifier checks
@@ -100,64 +103,7 @@ $u\in [t]$, the verifier checks:
 %\innph{\rho}{\pi_x[\cdot,k_u]\,||\,\pi_y[\cdot,k_u]\,||\,\pi_z[\cdot,k_u]}.
 \end{align}
 }
-\begin{figure}[t!]
-{\small
-	%\centering
-	\begin{framed}
-		\noindent{$\quadcheck(\mathsf{pp},[\pi_x],[\pi_y],[\pi_z];\ewit_x, \ewit_y, \ewit_z)$}:
-		
-		\noindent{\bf Relation}: $\ewit_a=\open(\pi_a)$ for $a\in \{x,y,z\}$,
-$\wit_x \circ \wit_y = \wit_z$ where  $\wit_a=\dec(\ewit_a)$ for $a\in \{x,y,z\}$.
-		
-		\begin{enumerate}[{\rm 1.}]
-			\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-			\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
-			commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
-			\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
-			\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
-			%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
-			\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
-			%\item 
-			$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
-			Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
-samples $P_0\sample \FF^{2m}$ with $P_0[1:m]=0^m$ and computes commitment $c_0$
-to $P_0$. 
-			\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell}$.
-			\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
-			\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
-			\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
-			
-			\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
-			\item $\verifier\rightarrow\prover$: $\delta\sample
-\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
-$\beta\sample \FF\backslash \{0\}$.
-			\item $\prover$ computes:
-$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
-%$\beta\sample \FF\backslash \{0\}$. 
-			\item $\prover\leftrightarrow\verifier$ compute:
-$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
-$T_u=\beta_xC_u+\beta_yD_u+\beta_zE_u$, for $u\in [t]$ where
-$C_u=\innph{\delta}{\pi_x[\cdot,k_u]}$, $D_u=\innph{\delta}{\pi_y[\cdot,k_u]}$
-and $E_u=\innph{\delta}{\pi_z[\cdot,k_u]}$.
-			\item $\prover$ and $\verifier$ run inner product arguments to check:
-			\begin{enumerate}
-				\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_5,\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\sum_{a=1}^{2\ell}\Lambda_4^T[a,k_u]c_a$, 
-				$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
-				\item $\innerproduct(\mathsf{pp},\gamma||0^m,\mathsf{cm},0;z)$
-where $z=\beta P_0 + \overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
-$\mathsf{cm} = \beta c_0+\sum_{a=1}^{2\ell} \varphi_ac_a$ %(check the condition $r^TAw = r^Tb$).
-				\item
-$\innerproduct(\mathsf{pp},f_u^T\Lambda_2,T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
-			\end{enumerate}
-			\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
-and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
-			\item $\verifier$ accepts if all the checks succeed.
-		\end{enumerate}
-	\end{framed}
-	\caption{Quadratic Check Protocol}
-	\label{fig:quadcheck}
-}
-\end{figure}
+\pnote{check this}
 
 %As in the linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we get the following inner product check
 %$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 

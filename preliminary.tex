@@ -39,6 +39,7 @@ dimenional) $U$ and a set of matrices $\mc{M}$, we define $d_i(U,\mc{M}) :=
 
 We use $\sample$ to denote drawing from a distribution uniformly at random.  \commentA{added this; please replace  $\sample$ with $\gets$ in all the appropriate contexts. I am doing it on my way; but I do not think I can make a pass on the whole paper; so do in your respective sections}
 
+\begin{comment} 
 \subsection{Notations for Protocols}
 We describe some of the notation that we use to describe our protocols. We
 notate our interactive protocols with a name and a list of parameters. The
@@ -55,6 +56,7 @@ by enclosing those private inputs in $\langle\,\rangle$. For example, in the pro
 $\proximityTwoD(\FF,\GG,\ell,L_1,L_2,\bm{c};\langle \bar{U} \rangle)$, each prover
 $\distprover$ only has a share $\shr{\bar{U}}$ of the matrix $\bar{U}$.
 \pnote{Changes required}
+\end{comment}
 
 \subsection{Linear Codes}
 \begin{definition}\label{defn:lincode}
@@ -124,8 +126,8 @@ Then, there exists $U\in L_1\otimes L_2$ and sets
 $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \end{lemma}
-The proof is given in Appendix~\ref{prooflemmaRScode}.
-
+%The proof is given in Appendix~\ref{prooflemmaRScode}.
+The proof will be given in full version.
  
 
 \subsection{Coding Theoretic Results for our Constructions}
@@ -217,7 +219,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \end{definition}
 
 We mention some instantiations inner-product arguments in Appendix~\ref{inner-product-instan}. 
-
+we will we a variant of inner product where one of the vector is public and the other one is private. $\innerproduct(\pp, x, \cm, v ; z)$ is the notation we will be using through out the paper, where $x$ is a public vector and $\cm$ is the commitment of the private vector $z$ such that $\innp{x}{z} = v$.
 
  
 %--------------------------------Protik's prelims--------------------------------
