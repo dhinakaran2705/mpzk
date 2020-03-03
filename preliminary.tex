@@ -142,7 +142,7 @@ Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
 $p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
 \mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
-$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$.  \commentA{in the following $u_0$ cannot be any $m\times n$ matrix  for the proposition to be true. check. it should be from $\mc{C}$ or with the same feature as that of a slice}\pnote{I cross checked with Nitin, statement of the proposition is correct.} Then for any
+$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$.  Then for any
 $m\times n$ matrix $u_0$ over $\FF$, we have 
 \[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
 \frac{d}{|\FF|}\]  
@@ -151,7 +151,7 @@ for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$.
 
 
 \subsection{Vector Commitment Schemes and Inner-product Arguments}
-We define an interactive protocol that allows proving inner-product relation over committed vectors, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme, with an additional property of homomorphicity.  \commentA{removed ref to commitment scheme. it's standard. comment out from appendix}\pnote{Done} We use Pedersen vector commitment scheme $\comm$ with message space $\FF^m$,
+We define an interactive protocol that allows proving inner-product relation over committed vectors, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme, with an additional property of homomorphicity.  We use Pedersen vector commitment scheme $\comm$ with message space $\FF^m$,
 commitment space $\GG$ and randomness space $\FF$. For a set of generators
 $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment
 randomness $r\in \FF$ is given by $\comm(x,r)=h^r \prod_{i=1}^m (g_i)^{x_i} $.  This commitment is homomorphic and let $\calC$ determines commitment space.
@@ -169,7 +169,7 @@ c=\com(y,r)  \text{ and } \innp{x}{y}=z\}
 
 %The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$.
  Interestingly, the inner-product argument is used to save on communication. Proving  an inner-product statement requires sending $y$ on clear which costs more than  the argument-size. Our language for inner-product is a simpler version of those defined in \cite{}, where the first argument is also hidden in a commitment. 
-\begin{definition}[Inner-product Argument \cite{InnerProductDLS,bulletproofs} \commentA{fill in the ref}]\label{defn:innerproductarg} 
+\begin{definition}[Inner-product Argument \cite{InnerProductDLS,bulletproofs} ]\label{defn:innerproductarg} 
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
 \item {\bf Completeness}: For all adversaries $\adv$,
