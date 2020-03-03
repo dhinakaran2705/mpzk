@@ -1,5 +1,15 @@
 \section{Introduction} \label{sec:intro}
-In a zero-knowledge proof protocol, a verifier tries to verify that an instance $x$ is in a language $L$. A prover with a witness $w$ to $x \in L$ tries to convince the verifier on this without revealing any additional information to the verifier than what she already knows. Be it proving that a user is single-spending a coin that he has earned before in a private manner \cite{zerocash} or validating sensitive web browser data reported during telemetry \cite{MozillaPrio}, ZK protocols have garnered immense interest over the last few years. Still in the dream of a decentralized world, there are multiple co-opetitive entities interacting with each other to obtain insights and maximize their goals. A desirable goal is to enable these mutually distrusting entities to prove a predicate on their joint data. But, the traditional \textit{single-prover} ZK setting is restrictive here since there is a single prover holding the entire witness required to prove the predicate. 
+A zero knowledge protocol tries to convince a verifier about the truth of a
+statement, without revealing any additional information. Availability of
+practically efficient zero knowledge protocols is enabling their application in
+several real life scenarios. These include proving the correctness of
+transactions in cryptocurrencies such as \cite{zerocash} or validating sensitive web browser data reported during
+telemetry \cite{MozillaPrio}. Still in the dream of a decentralized world, there are
+multiple co-opetitive entities interacting with each other to obtain insights
+and maximize their goals. A desirable goal is to enable these mutually
+distrusting entities to prove a predicate on their joint data. But, the
+traditional \textit{single-prover} ZK setting is restrictive here since there is
+a single prover holding the entire witness required to prove the predicate. 
 
 %\pdnote{do we want to motivate it in a way such that the honest prover setting we are looking at will suffice for the listed applications? }
 In this work, we study the general setting of \textit{distributed prover zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive i.e., collaborating but mutually distrusting entities each possessing their own secret data want to prove to a verifier that their secret data together satisfies a predicate of common interest. This is done without revealing any information about their sensitive data to each other or to the verifier, more than what each of them know about it beforehand. Some real-world applications follow:
