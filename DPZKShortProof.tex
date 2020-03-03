@@ -13,7 +13,7 @@ Our protocol proves membership in the $\npol$-complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
-$A\wit\circ B\wit=C\wit$, where $\bm{x} \circ \bm{y} = (x_1\cdot y_1, \cdot, x_n\cdot y_n)$ for any $n$-length vectors $\bm{x}$ and $\bm{y}$. \commentA{add one line why R1CS is better than arithmetic circuit formulation} We follow the broad outline of the interactive PCP
+$A\wit\circ B\wit=C\wit$, where $\bm{x} \circ \bm{y} = (x_1\cdot y_1, \cdot, x_n\cdot y_n)$ for any $n$-length vectors $\bm{x}$ and $\bm{y}$. R1CS circuits are equivalent to Arithmetic circuits, to avoid additional linear check for the addition gates, we are considering R1CS circuits for our protocol, with one additional linear check, one can easily modify our protocol for arbitrary arithmetic circuits. \commentA{add one line why R1CS is better than arithmetic circuit formulation} We follow the broad outline of the interactive PCP
 construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of values over all the wires in topological order of an arithmetic circuit  representing the statement   (ii) encoding the extended witness via suitable
 error correcting code, (iii) checking linear relations on the extended witness (for the values concerning the wires going into and coming out from the addition gates), and
 (iv) checking quadratic relations on
@@ -40,7 +40,7 @@ generation.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
 operations, we keep their usage strictly sub-linear. In particular, for an
-argument size of $O(N^{1/c})$, the verifier and \commentA{keep away aggregator from SPZK. report aggregator's complexity in the DPZK section latter} the aggregator incur $O(N^{1-2/c})$
+argument size of $O(N^{1/c})$, the verifier \commentA{keep away aggregator from SPZK. report aggregator's complexity in the DPZK section latter} incurs $O(N^{1-2/c})$
 exponentiations. The prover incurs $O(N/\log N)$ exponentiations essentially while
 setting up the oracle. We compare the concrete performance of our standalone SNARK with state of the art in Section
 \ref{sec:snarkcomparison}.

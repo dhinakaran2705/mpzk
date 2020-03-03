@@ -227,6 +227,7 @@ $\mc{C}$, we have the desired bound.
 \end{proof}
 
 \section{cryptographic preliminaries}
+\begin{comment}
 \subsection{Commitment scheme} \label{app:DefCommitment}
 \begin{definition}\label{defn:commscheme}
  A pair of $\ppt$ algorithms $(\gen,\com)$ constitute a non-interactive commitment scheme if $\sigma\sample \gen(\secparam)$ consists of description of sets $\calM_\sigma$ (message space), $\calR_\sigma$ (randomness space), $\calC_\sigma$ (commitment space) and an efficiently computable function $\com_\sigma: \calM_\sigma\times \calR_\sigma\rightarrow \calC_\sigma$ which is {\em hiding} and {\em binding} as defined later.
@@ -269,8 +270,11 @@ x_0,x_1,r_0,r_1 \gets \adv(\secparam,\sigma)
 }
 
 \end{definition}
+\end{comment}
 \subsection{Inter-product Arguments} \label{inner-product-instan}
-\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM_\sigma=\bbZ^n_p$, $\calR_\sigma=\bbZ_p$, $\calC_\sigma=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. The commitment is a Pederson vector commitment given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
+\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM=\bbZ^n_p$, $\calR=\bbZ_p$, $\calC=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. 
+The commitment is a Pederson vector commitment  given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. 
+We use the inner-product argument $(\piplog,\viplog)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\piplog,\viplog)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
 
 
 \noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
