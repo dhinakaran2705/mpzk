@@ -32,8 +32,7 @@ Then $\ewit$ is a randomized encoding of $\wit$.
  It is easily seen
 that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. 
 We remark that the above
-encoding can be computed using $O(N\log N)$ field operations (see Appendix for
-details \commentA{missing section no.}).
+encoding can be computed using $O(N\log N)$ field operations by applying $\fft$ along the rows and columns of the slices. %$m$ direction and $s$ direction.%(see Appendix for details \commentA{missing section no.}).
 %%  Computing the encoding in O(Nlog N) time: Move to Appendix
 %\noindent{\em Efficiently computing the encoding}: Although the previous
 %description of the encoding involves the bivariate polynomials, 
@@ -56,7 +55,7 @@ details \commentA{missing section no.}).
 %[m]$. This allows us to consistently define polynomials $p_j$ for $m<j\leq h$ by
 %$p_j=\ifft((\matz[j,1],\ldots,\matz[j,\ell]),(\eta_1,\ldots,\eta_{\ell}))$.
 %%
-The encoding $\enc$ satisfies the following {\em bounded independence} property proved in Appendix \commentA{appendix number is missing}:
+The encoding $\enc$ satisfies the following {\em bounded independence} property. The proof is elementary and it will be presented in the full version.% proved in Appendix \commentA{appendix number is missing}:
 \begin{lemma}[Bounded Independence]\label{lem:boundedindependence}
 Let $B\subseteq [n]$ be a set of size $\bi$. Let $\mc{U}(p,h,b)$ denote the
 set of $p\times h\times b$ matrices $\matx$ such
@@ -663,7 +662,7 @@ P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$ in a
 				\item $\distprover\rightarrow\Ag$: $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u],  \shr{P_u} = \shr{P}[\cdot,k_u]$ for $u\in [t]$.
 				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
 				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
-				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta \FF\backslash \{0\}$. 
 				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m}}$ and sends $\shr{z}$.
 				\item \textcolor{red}{$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:

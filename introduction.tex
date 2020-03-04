@@ -81,7 +81,7 @@ But, these parameters do not capture the core bottleneck in the setting of multi
 %For instance, Spartan \cite{spartan} has an $O(N \log N)$ \commentA{unclear; you mean no. of multiplication or overall arithmetic operations? } proof generation algorithm, but due to the high multiplicative complexity of proof generation its straightforward distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved.  \commentA{intuitively explain why the jump from $NlogN$ to $N^2$ happens}%Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
 As a first step in our work, we identify additional parameters with significant impact in distributed proof generation. 
 
-\paragraph{Proof-generation communication ($\prcomm$)}
+\paragraph{Proof-generation communication ($\prcomm$)}\pnote{For one prover or cumulative of all the provers?}
 %The first parameter of interest is \textit{proof generation communication} $(\prcomm)$. 
 This parameter quantifies the amount of communication between the provers during the
 distributed proof generation. This is meant to capture additional MPC

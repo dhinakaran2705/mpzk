@@ -273,7 +273,7 @@ x_0,x_1,r_0,r_1 \gets \adv(\secparam,\sigma)
 \end{definition}
 \end{comment}
 \subsection{Inter-product Arguments} \label{inner-product-instan}
-\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM=\bbZ^n_p$, $\calR=\bbZ_p$, $\calC=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\sample \bbG$. 
+\noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM=\bbZ^n_p$, $\calR=\bbZ_p$, $\calC=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\gets \bbG$. 
 The commitment is a Pederson vector commitment  given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. 
 We use the inner-product argument $(\prover,\verifier)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\prover,\verifier)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
 
@@ -306,12 +306,12 @@ prover $P^\ast$, there exists an expected polynomial time extractor $\extr$ such
 \begin{align*}
 \condprob{(x,w)\in \mc{L}}{
 \begin{array}{c}
-\sigma\sample\setup(\secparam) \\
-w\sample \extr^{\mc{O}}(x,\sigma)
+\sigma\gets\setup(\secparam) \\
+w\gets \extr^{\mc{O}}(x,\sigma)
 \end{array}
 }\\
 \geq \condprob{\langle
-P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\sample \setup(\secparam)} -
+P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\gets \setup(\secparam)} -
 \negl(\lambda)
 \end{align*}}
 %\end{comment}
@@ -698,7 +698,7 @@ Finally, $\Ag$ and $\verifier$ run the inner product protocol, same as the singl
 $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 $\mathsf{pp} = (\FF, \GG, L_{n,\ell}, L_{h,m}, L_{n,s+\ell}, L_{n,2\ell}, L_{h,2m}, \bm{g},h)$
 %Linear Check of Graphene
-\begin{figure}[hp]
+\begin{figure}[h!]
 	{\footnotesize
 		%\centering
 		\begin{framed}
@@ -742,7 +742,7 @@ $\mathsf{pp} = (\FF, \GG, L_{n,\ell}, L_{h,m}, L_{n,s+\ell}, L_{n,2\ell}, L_{h,2
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Quadratic Check of Graphene
-\begin{figure}[t!]
+\begin{figure}[h!]
 	{\footnotesize
 		%\centering
 		\begin{framed}
@@ -775,7 +775,7 @@ $\mathsf{pp} = (\FF, \GG, L_{n,\ell}, L_{h,m}, L_{n,s+\ell}, L_{n,2\ell}, L_{h,2
 				$\beta\sample \FF\backslash \{0\}$.
 				\item $\prover$ computes:
 				$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
-				%$\beta\sample \FF\backslash \{0\}$. 
+				%$\beta \FF\backslash \{0\}$. 
 				\item $\prover\leftrightarrow\verifier$ compute:
 				$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
 				$T_u=(C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
@@ -857,7 +857,7 @@ $\mathsf{pp} = (\FF, \GG, L_{n,\ell}, L_{h,m}, L_{n,s+\ell}, L_{n,2\ell}, L_{h,2
 	{\footnotesize
 		%\centering
 		\begin{framed}
-			\noindent{$\distquadcheck(\mathsf{pp}, [\pi];\, \shr{\ewit_x}, \shr{\ewit_y}, \shr{\ewit_z}\, \shr{0^{2m}})$}:
+			\noindent{$\distquadcheck(\mathsf{pp}, [\pi_x], [\pi_y], [\pi_z];\, \shr{\ewit_x}, \shr{\ewit_y}, \shr{\ewit_z}\, \shr{0^{2m}})$}:
 			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
 			
 			\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\shr{\wit_a}=\dec(\shr{\ewit_a})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit_a} = \wit_a$ $\forall a\in \{x,y,z\}$.
