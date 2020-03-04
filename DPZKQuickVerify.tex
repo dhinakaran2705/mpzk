@@ -534,36 +534,66 @@ shared with the aggregator which can complete the interaction with the verifer
 without further involvement of the provers. The verifier's veiw for
 the $\linearcheck$ protocol consists of:
 \begin{itemize}[\leftmargin=0pt]
-\item {\em Verifier Randomness}: The verifier's random messages are $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
+\item {\em Verifier Randomness}: The verifier's messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
 %Vector $\rho \in \FF^p$ for checking proximity, vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q= \{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF^\ast$ used in randomizing the vector $\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there. Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\item {\em Commitments}: The prover's commitment messages are $c_0, c_1, \ldots, c_{s+\ell-1}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. And oracle responses are $\pi[\cdot,k_u]$, $k_u$ corresponding to $Q$. In the extended view we will consider the whole of $\pi$.
+\item {\em Commitments}: The prover sends following commitments: $c_0, c_1,
+\ldots, c_{s+\ell-1}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. The oracle
+response consists of  $\pi[\cdot,k_u]$, for $u\in [t]$. We subsume the oracle
+responses by including the whole oracle $\pi$ in the extended view.
 %Commitment $c_0$ to the first $2m$ entries of the random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the matrix $\tilde{U}$ used for proximity check. Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \pi$, as a part of the extended view of $\verifier$.%$\{\pi[\cdot,k_u]\}_{u\in [t]}$.
-
-\item {\em Commitment Randomness}: We include randomness used to compute certain
-commitments as part of the extended view. We include openings $w_u$, $u\in [t]$
-corresponding to commitments $\mathsf{cm}_u$ used in the inner product checks in
-Step 13(a), the randomness $w$ for the commitment $\mathsf{cm}$ used in inner
-product check in Step 13(b) and the randomness $O[\cdot,k_u]$ for $u\in [t]$
-used while computing the oracle. Note that the commitment randomness for inner
-product checks in Step 13(c) can be derived from $O[\cdot,k_u]$ and hence is
-omitted from the view.
- %$\nu=\nu_0+\sum_{a\in [s+\ell]}\mu_a\omega_a$ for the vector $z$ in the subprotocol $\proximityTwoD$ in Step 10 (here $\mu=\mc{T}\tau$), $\omega=\beta\omega_0+\sum_{a\in [s+\ell]}\varphi_ac_a$ for inner product in Step 11, $\chi_u=\sum_{a\in [s+\ell]}T[a,k_u]c_a$ for $u\in [t]$ for the inner products in Step 13, $\{O[\cdot,k_u]\}_{u\in [t]}$ for aggregate inner product arguments in Step 14, $\tilde{\nu}=\tilde{\nu}_0+\sum_{a\in [\ell]}\tilde{\mu}_a\tilde{c}_a$ for the vector $\tilde{z}$ in the $\proximityTwoD$ protocol called as part of $\proximityThreeD$ protocol in Step 15. Summarizing, the view includes $\nu,\omega,\{\chi_u\}_{u\in [t]},\{O[\cdot,k_u]\}_{u\in [t]},\tilde{\nu}$.
 
 \item {\em Vectors}: The view includes vectors
 $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, the vector $z = \beta P_0 +
-\overline{P} \varphi$, witness of step 13(b) and vectors $P[\cdot, k_u]$ for
-$u\in [t]$.
-We drop $\{X_u\}_{u\in [t]}$ and $\{P[\cdot,k_u]\}_{u\in [t]}$ from the view as these can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the view consist of: $z,\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}$.
+\overline{P} \varphi$,  and vectors $P[\cdot, k_u]$ for $u\in [t]$.  We drop
+$\{X_u\}_{u\in [t]}$ and $\{P[\cdot,k_u]\}_{u\in [t]}$ from the view as these
+can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the
+view consist of: $z,\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}$.
+
+\item {\em Commitment Randomness}: We include randomness corresponding to
+witness vectors in the inner product subprotocols as part of the extended view.
+We include randomness $w_u$, $u\in
+[t]$, corresponding to vectors $\overline{P}[\cdot,k_u]$, 
+randomness $w$ for the vector $z=\beta P_0 +
+\overline{P}\varphi$, randomness $O[\cdot,k_u]$, $u\in [t]$ 
+corresponding to commitments $\pi[\cdot,k_u]$. These can be used to compute
+randomness for the inner product protocols establishing consistency of vectors
+$X_u$, $u\in [t]$ with the oracle.
+ %$\nu=\nu_0+\sum_{a\in [s+\ell]}\mu_a\omega_a$ for the vector $z$ in the subprotocol $\proximityTwoD$ in Step 10 (here $\mu=\mc{T}\tau$), $\omega=\beta\omega_0+\sum_{a\in [s+\ell]}\varphi_ac_a$ for inner product in Step 11, $\chi_u=\sum_{a\in [s+\ell]}T[a,k_u]c_a$ for $u\in [t]$ for the inner products in Step 13, $\{O[\cdot,k_u]\}_{u\in [t]}$ for aggregate inner product arguments in Step 14, $\tilde{\nu}=\tilde{\nu}_0+\sum_{a\in [\ell]}\tilde{\mu}_a\tilde{c}_a$ for the vector $\tilde{z}$ in the $\proximityTwoD$ protocol called as part of $\proximityThreeD$ protocol in Step 15. Summarizing, the view includes $\nu,\omega,\{\chi_u\}_{u\in [t]},\{O[\cdot,k_u]\}_{u\in [t]},\tilde{\nu}$.
 \end{itemize}
 Next, we describe a simulator that outputs a view indistinguishable from the
 above view.
 
 \noindent{\bf Simulator}: 
 %\begin{itemize}
- $\Sim$ picks $\{\rho, r, Q, \delta, \beta \}$ uniformly at random from their respective domains. Then picks $\ewit[\cdot, \cdot, k_u]$ uniformly such that each plane has columns as codewords in $L_2$ for all $u\in [t]$, and picks $z$ unifromly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$. After that, $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$ and $\cm \leftarrow \comm(z,w)$ where $P_0\sample \FF^{2m-1}$ such that $\innp{1^m}{P_0}=0$ and $w_0,w\sample \FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{U}[\cdot, k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] , \tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u], O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of $U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{U}[\cdot,k_u]$, where $i\in[p]$ and $u\in [t]$. Next, $\Sim$ picks $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way that $\tilde{c}_{k_u} = \prod_{a\in[\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]} \,
-\forall u\in [t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank. Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \prod_{i\in[p]}( \pi[i,k])^{\rho_i}$ for all $k=k_u:u\notin [t]$. $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the first $2m$ entries of $P[\cdot,k_u] \, \forall u\in[t]$, and picks ${c}_1, \ldots, {c}_{s+\ell-1}$ in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell-1]} ({c}_a)^{\Lambda^T_{n,s+\ell-1}[a,k_u]} \, \forall u\in [t]$
+ $\Sim$ picks $\{\rho, r, Q, \delta, \beta \}$ uniformly at random from their
+respective domains. Then it picks $\ewit[\cdot, \cdot, k_u]$ uniformly such that
+$\ewit[i,\cdot,k_u]\in \rsc{\alpha}{h,2m-1}$ for all $i\in [p]$ and $u\in [t]$.
+$\Sim$ picks $z$
+unifromly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$.
+Subsequently,
+$\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$, $\cm \leftarrow \comm(z,w)$
+where $P_0\sample \FF^{2m-1}$ is such that $\innp{1^m}{P_0}=0$ and $w_0,w\sample
+\FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{U}[\cdot,
+k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]}
+\rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] ,
+\tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u],
+O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of
+$U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of
+$\tilde{U}[\cdot,k_u]$, where $i\in[p]$ and $u\in [t]$. Next, $\Sim$ picks
+$\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way that $\tilde{c}_{k_u} =
+\prod_{a\in[\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]} \, \forall u\in
+[t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more
+than the number of constraints, and the coefficient matrix has full row rank.
+Now $\Sim$ picks $\pi[\cdot, k]$ such that $\tilde{c}_k = \prod_{i\in[p]}(
+\pi[i,k])^{\rho_i}$ for all $k\notin \{k_u:u\in [t]\}$. $\Sim$ picks $w_{k_u}$
+uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow
+\comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the vector consisting
+of the first $2m$ entries
+of $P[\cdot,k_u]$ for $ u\in[t]$. Finally $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell-1}$
+in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell-1]}
+({c}_a)^{\Lambda^T_{n,s+\ell-1}[a,k_u]} \, \forall u\in [t]$
 and $\cm =  c_0^{\beta} \cdot \prod_{a\in[s+\ell-1]} (c_a)^{\varphi_a}$. Picking such ${c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
 %\end{itemize}
 \begin{comment}
@@ -592,10 +622,8 @@ The output of the above simulator is perfectly indistinguishable
 from the extended view of the verifier in honest execution of the protocol
 $\linearcheck$ for $t\leq \bi$.
 \end{lemma}
-We defer the proof of the correctness of the simulation to Appendix.
-We omit the simulation for the quadratic check protocol, as it is very similar
-to the linear check. 
 
+Similarly, we can construct a simulator for the quadratic check.
 \begin{lemma}\label{lem:simquadcheck}
 There exists an efficient simulator $\simulator$ whose output is perfectly
 indistinguishable from the extended view of the verifier in the honest execution
@@ -609,11 +637,7 @@ statement, when the witness is shared between several provers. We assume that
 there are $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
 let $\shr{\wit}$ denote the prover $\distprover$'s share of the witness $\wit$.
 We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} =
-\wit$. When denoting witnesses to certain protocols, we use the %$[[\cdot]]$
-$\langle {\cdot} \rangle$ to denote that the witness is additively
-shared among the provers, i.e, notation $\langle x \rangle$ in the witness list
-of the protocol denotes that the provers have shares $\shr{x}$ of $x$. Recall
-from Section ~\ref{sec:security model}, that there is an algorithm $\Ag$ 
+\wit$. Recall from Section ~\ref{sec:security model}, that there is an algorithm $\Ag$ 
 which aggregates the messages received
 from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
 sent to the verifier $\verifier$. We assume one of the provers executes $\Ag$.
@@ -778,11 +802,7 @@ a prover $\distprover$:
 $\shr{\ewit_x.\ewit_y}\leftarrow \mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$    
 %\end{align*}    
 Thereafter, each prover obtains a share of matrix $P$, and the remaining protocol proceeds as
-the distributed linear check protocol. Let $\wit_{sh}$ denote the subvector of
-$\wit$ whose value depends on inputs of more than one prover. Let $S\subseteq
-[p]$ denote the slices which contain elements of $\wit_{sh}$. We note that in
-this case the multiplication MPC is only required for slices in $S$. This
-optimization is particularly useful for $|S|\ll p$. 
+the distributed linear check protocol. 
 The complete protocol for
 distributed quadratic check appears in Figure \ref{fig:distquadcheck} in
 Appendix.
@@ -869,18 +889,20 @@ Q$.
 \end{figure}
 \end{comment} 
 
-Our next lemma captures the fact that the aggregator $\Ag$ gains no additional
-knowledge from the messages sent by the provers in the distributed protocol
-$\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting only with the aggregator and in $\distquadcheck$ provers are interacting among themselves but to execute a secure MPC protocol. So, it is enough to argue that the aggregator is not learning any additional information.
+We show that the messages received by the
+aggregator in both the distributed protocols can be efficiently simulated, independent of
+their views in the preceeding MPC protocols, provided the parties follow the
+protocol and jointly possess a valid witness. We present a proof for the
+distributed linear check protocol. The same for the distributed quadratic check
+may be similarly argued.
 
 \begin{lemma}\label{lem:distlincheckzk}
 	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
 	linear check protocol consisting of messages from the prover $\distprover$ with
 	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
 	which outputs a view indistinguishalbe from the joint view $\langle
-	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ 
-	%whenever $A\wit=b$ for
-	%$\wit=\combine(\shr{\wit})$.
+	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ whenever
+$\wit=\combine(\shr{\wit})$ is valid.
 \end{lemma}
 \begin{proof}
 	
@@ -888,24 +910,25 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 	randomness, which is shared by each view. Consider other messages in
 	$\View^\xi_\Ag$. Let $\shr{\comoracle}, \shr{\bm{\tilde{c}}}, \shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell-1}}, \shr{d_0}$ 
 	%$c_0^\xi,c_1^\xi,\ldots,c_{s+\ell}^\xi,d_0^\xi,\tilde{c}_1^\xi,\ldots,\tilde{c}_\ell^\xi,\tilde{d}_0^\xi,\{\pi^\xi[\cdot,k_u]\}_{u\in[t]}$ 
-	denote the commitments sent by $\distprover$. Also, $\Ag$ gets the opening of $\shr{\comoracle[\cdot,k_u]}, \shr{c_{k_u}}$.
+	denote the commitments sent by $\distprover$. Also, $\Ag$ gets the openings
+of commitments $\shr{\comoracle[\cdot,k_u]}, \shr{c_{k_u}}$.
 	Finally, $\Ag$ gets the vector $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
 	%Similarly let $\nu^\xi,\omega^\xi,\{\chi^\xi_u\}_{u\in [t]},\{O^\xi[\cdot,k_u]\}_{u\in [t]})$ denote the commitment randomness sent by the $\distprover$. 
 	%Finally, the (extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$, $z^\xi=u_0^\xi+P^\xi\mu$, $\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. 
-	Note that other than $\shr{\comoracle}$ and $\shr{z}$, remaining
-	included in our definition of the extended view of the single prover case. As in the simulation of the
-	single prover case, given the verifier randomness. The joint distribution of $\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num}$ can be seen to be:
-	%({\color{red} Protik to finish the argument}).
-	%\begin{itemize}
-		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
-		%share of $0^h$.
-		uniform distribution on the set $\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}: z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$. %$P_0$ of length $2m$ satisfying $\sum_{j\in [m]}P_0[j]=0$ 
-		Therefore, jointly all the provers have the correct witness and individually it does not reveal any information due to padding with shares of $0^{2m-1}$.
-		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
-	%\end{itemize}
-	
-	Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
+	Note that other than $\shr{z}$, the other random variables in the views are
+independent of the witness shares $\shr{\wit}$ and $\shr{z}$. Thus these
+variables in each of the views are distributed independently and identically,
+and are simulated as in the single prover case. By the properties of shares
+$\shr{0^{2m}}$, the joint distribution of $\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num}$ 
+can be seen to be the uniform distribution on the set
+$\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}:
+z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$, provided
+the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$. 
+Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
+
+\subsection{Reducing MPC overhead for small shared circuits}:
+
 
 \subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} 
 To achieve security against malicious provers, every prover $\distprover$ sends Zero-Knowledge Argument of Knowledge (ZKAoK) along with every committed value sent to $\Ag$, which says $\distprover$ knows what value is committed. A malicious secure MPC executes multiplication. Furthermore, all messages are sent via broadcast.
