@@ -2,18 +2,29 @@
 \section{\name:MPC-friendly Zero Knowledge Argument from Interactive
 PCP}\label{sec:graphene}
 In this section, we describe a sub-linear interactive zero knowledge argument as
-an Interactive PCP (IPCP). The IPCP we describe admits an efficient MPC to
-convert it to a publicly-verifiable, non-interactive argument of knowledge,
-using the ``BCS'' transformation in \cite{BCS16} \commentA{BCS transformation in one line}.  \commentA{this part should move to the DPZK part}To serve as a
-baseline for comparison, we also describe naive extensions of existing protocols
-such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan}
-distributed prover setting. 
+a public coin Interactive PCP (IPCP). The IPCPs are special cases of more
+general Interactive Oracle Proofs (IOP) ~\cite{BCS16}. In ~\cite{BCS16}, the
+authors present a transformation (commonly referred to as ``BCS'' after the
+authors) to compile a public coin IOP into a non-interactive argument in the
+Random Oracle Model. The transformation can be applied to our protocol to obtain
+a publicly verifiable non-interactive argument as well. Moreover, in distributed
+setting, the aggregator $\Ag$ can apply the transformation on provers' messages
+to output a non-interactive argument. 
 
+%\commentA{this part should move to the DPZK part}To serve as a
+%baseline for comparison, we also describe naive extensions of existing protocols
+%such as Bulletproofs \cite{bulletproofs}, Spartan \cite{spartan}
+%distributed prover setting. 
 Our protocol proves membership in the $\npol$-complete
 language specified by {\em rank one constraint system} (R1CS). An R1CS over a
 field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the
 associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that
-$A\wit\circ B\wit=C\wit$, where $\circ$ defines position-wise product. \commentA{what does the following sentence mean?} We are considering R1CS circuits for our protocol as they are equivalent to arithmetic circuits, and do not require an additional linear check, which would be required for the case of an arbitrary arithmetic circuit.  In order to get a protocol for arbitrary arithmetic circuits, one can modify our protocol by adding additional linear check for addition gates. \commentA{add one line why R1CS is better than arithmetic circuit formulation} We follow the broad outline of the interactive PCP
+$A\wit\circ B\wit=C\wit$, where $\circ$ defines position-wise product. Several
+recent zero knowledge constructions ~\cite{Groth16,aurora,marlin}, and 
+circuit compilers such as ~\cite{zokrates} natively support the R1CS formulation. 
+The arithmetic circuit representation can also be easily
+expressed as an R1CS by introducing a constraint for each multiplication gate.
+We follow the broad outline of the interactive PCP
 construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of values over all the wires in topological order of an arithmetic circuit  representing the statement   (ii) encoding the extended witness via suitable
 error correcting code, (iii) checking linear relations on the extended witness (for the values concerning the wires going into and coming out from the addition gates), and
 (iv) checking quadratic relations on
@@ -40,7 +51,9 @@ generation.
 \end{itemize}
 While our use of homomorphic commitments introduces expensive cryptographic
 operations, we keep their usage strictly sub-linear. In particular, for an
-argument size of $O(N^{1/c})$, the verifier \commentA{keep away aggregator from SPZK. report aggregator's complexity in the DPZK section latter} incurs $O(N^{1-2/c})$
-exponentiations. The prover incurs $O(N/\log N)$ exponentiations essentially while
-setting up the oracle. We compare the concrete performance of our standalone SNARK with state of the art in Section
-\ref{sec:snarkcomparison}.
+argument size of $O(N^{1/c})$, the verifier 
+incurs $O(N^{1-2/c})$ exponentiations. The prover incurs
+$O(N/\log N)$ exponentiations essentially while
+setting up the oracle. We report the concrete performance of our new zero
+knowledge argument $\name$ in Section
+\ref{sec:performancecompare}.
