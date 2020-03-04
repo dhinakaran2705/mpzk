@@ -876,7 +876,7 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 \subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} 
 To achieve security against malicious provers, every prover $\distprover$ sends Zero-Knowledge Argument of Knowledge (ZKAoK) along with every committed value sent to $\Ag$, which says $\distprover$ knows what value is committed. A malicious secure MPC executes multiplication. Furthermore, all messages are sent via broadcast.
 %In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output, he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation so that the simulator can extract the committed value and maliciously secure MPC to compute $\mathsf{Mult}$. Furthermore, all the messages to $\Ag$ are via broadcast. 
-\pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
+%\pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
 
 \noindent{\bf Overview of the proof:} 
 With the above modification, our protocol can withstand malicious provers. We can design a simulator for the protocol, which uses $\extrac$, the extractor of ZKAoK, Simulator $\Sim_{Mult}$ for the secure MPC for multiplication, and zero-knowledge simulator $\Sim_{ZK}$ of Graphene. \pnote{I think a little detailing is required here.}
