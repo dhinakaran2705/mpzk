@@ -385,9 +385,9 @@ to the intermediate matrix sent by the prover. If these commitments correspond t
 matrix $P=P^*$, the inner product check
 $\innerproduct(\mathsf{pp},[1^m||0^m],\mathsf{cm},r^Tb)$ fails when using the
 commitment $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}c_k^{\varphi_k}$ for
-$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^m}{\overline{P}\times
-\varphi}=r^TA\wit\neq r^Tb$, where $\overline{P}$ denotes the
-$(2m-1)\times (s+\ell-1)$ submatrix of $P$,
+$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^m}{\overline{P^*}\times
+\varphi}=r^TA\wit\neq r^Tb$, where $\overline{P^*}$ denotes the
+$(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
 as discussed in the protocol. If the
 commitments correspond  to a matrix $P\neq P^*$, we have
 $\Delta_1(P,P^*)\geq n-s-\ell$ by distance property of the code
