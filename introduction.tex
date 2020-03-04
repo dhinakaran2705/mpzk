@@ -66,7 +66,7 @@ parameters, formal definition and our new construction for DPZK that leverages
 a new zero knowledge argument constructed in this paper, which may be of
 independent interest. 
 
-\subsection{Efficiency parameters for $\DPZK$}
+\subsection{Efficiency parameters for $\DPZK$}\label{sec:efficiencyparams}
 In the single-prover setting, the efficiency of a zero knowledge protocol is usually measured in terms of: 
 \begin{itemize}
 \item {\em prover complexity}, denoted by $t_\prover$, which represents the time
@@ -90,11 +90,7 @@ verifier. Using secret-sharing based MPC protocols ~\cite{GMW87, BGW88, SPDZ},
 this depends on the number of multiplications between bits from different
 parties ({\em cross-multiplications}), that need to be performed to compute the
 messages to the verifier. 
-\nnote{Don't we need to motivate why this parameter is important. For ex,
-constraint network bandwidth, geographically spread provers etc. I have reworded
-and compressed earlier discussion. It's not readily apparent what is meant by
-circuit complexity of proof generation algorithm}.
-
+\nnote{Don't we need to motivate why this parameter is important ?}
 %In general, this grows linearly with the circuit complexity of the proof generation algorithm for the practical MPC protocols. 
 %\nnote{Why are we discussing circuit complexity of proof generation algorithm?}
 %\dnote{I am saying "practical" because there are RAM based protocols which do better than circuit complexity of the algorithm.}
@@ -111,15 +107,15 @@ MPCs that the provers have to run throughout the proof generation process. Note
 that this could be lower than the round complexity of the zero knowledge
 protocol. A lower value of this parameter enhances the practicality of the
 distributed protocol.
-\nnote{Do we really need the discussion below? What is the conclusion?}
-{\color{blue} In a typical MPC, this parameter would be a constant number for
-the garbled-circuit based protocols and be the cross-multiplicative depth of the
-circuit for the secret-sharing based protocols. But in our setting of
-distributed proof generation, the provers have to compute their message for that
-round, in clear, to be sent to the verifier. Thus, even a garbled-circuit based
-approach here might result in $\prrounds$ be linear in the number of
-$\zkrounds$, and hence not a constant with respect to the size of the instance
-unless $\zkrounds$ is also a constant.} 
+%\nnote{Do we really need the discussion below? What is the conclusion?}
+%{\color{blue} In a typical MPC, this parameter would be a constant number for
+%the garbled-circuit based protocols and be the cross-multiplicative depth of the
+%circuit for the secret-sharing based protocols. But in our setting of
+%distributed proof generation, the provers have to compute their message for that
+%round, in clear, to be sent to the verifier. Thus, even a garbled-circuit based
+%approach here might result in $\prrounds$ be linear in the number of
+%$\zkrounds$, and hence not a constant with respect to the size of the instance
+%unless $\zkrounds$ is also a constant.} 
 %\commentA{it's hard to digest the above; what's the point you are trying to make; some of the zkRounds do not need MPC and hence we can get read of the linear independence of prRounds from zkRounds?  }
 %\dnote{The above point makes sense only for the interactive version. Should we also argue for non-interactive proof generation?-that it requires us to do hash inside MPC if MPC is not done for each step.} 
 %\commentA{I didn't understand your comment. other can help?}
@@ -137,7 +133,7 @@ a blockchain where the hashes (or any other commitment) of large number of data 
 from different participants are stored. 
 When parties come together to prove a statistic on their combined data, they
 need to establish that each data point used to compute the statistic corresponds to a 
-hash entry in the blockchain (ledger?), and the correctness of the result of the statistic
+hash entry in the blockchain, and the correctness of the result of the statistic
 computation on these data points. But here, the values of the circuit wires
 connecting each data point to its respective hash depends only on witness bits from a 
 single party which owns the data point. Only the part of the circuit computing the 
@@ -157,23 +153,38 @@ $\prrounds$, in addition to the parameters for the single prover protocol.
 
 \subsection{On the formal Definition of $\DPZK$}
 %\commentA{changed the title of this subsection and the text below sightly} 
-The primary departures that the security definition of $\DPZK$ witness compared to the  traditional single-prover ZK are concerning the zero-knowledge property.     
+%The primary departures that the security definition of $\DPZK$ witness compared to the  traditional single-prover ZK are concerning the zero-knowledge property.     
 %Before we delve into our DPZK construction, we would also provide a couple of subtle notes regarding the zero-knowledge property of DPZK protocols. This would shed some light on the rationale for some of the artefacts of DPZK protocols. 
-In an $\DPZK$ protocol, the verifier is allowed to collude with a subset of provers to learn the witnesses of the other provers. A strong definition of zero-knowledge should ensure that this collusion does not learn any additional information than what they know before the protocol. %Here, one should also consider the number of other provers involved in the proof generation as an additional information. In our protocols, we will allow all the provers to know the total number of provers involved. This will lead to a relaxed definition where a verifier colluding with a prover will additionally learn the total number of provers\pnote{usage of broadcast reveals the number of provers even without collusion}. This still does not let a standalone verifier learn the total number of provers during its interaction with the provers.
+%In an $\DPZK$ protocol, the verifier is allowed to collude with a subset of provers to learn the witnesses of the other provers. A strong definition of zero-knowledge should ensure that this collusion does not learn any additional information than what they know before the protocol. %Here, one should also consider the number of other provers involved in the proof generation as an additional information. In our protocols, we will allow all the provers to know the total number of provers involved. This will lead to a relaxed definition where a verifier colluding with a prover will additionally learn the total number of provers\pnote{usage of broadcast reveals the number of provers even without collusion}. This still does not let a standalone verifier learn the total number of provers during its interaction with the provers.
 
 %\commentA{I am not finding the following paragraph pressing. Should we remove? }\dnote{This is to emphasize the need for public key ops or communication in oracle generation/answering too. I cut it short though.}
 %This subtle note also impacts the size of the oracles for the protocols in the IOP framework \cite{aurora, ligero}. The oracle and the answers to the oracle queries should be independent of the total number of provers. Hence, for the IOP-based protocols, the efficiency parameters discussed above should be optimized not only for the prover message generation but also for the oracle generation and the query answering.\footnote{In principle, generating the oracle or answering a query would form a part of the prover message generation when IOP is viewed in the lens of an arbitrary interactive protocol.}
 %The IOP-based protocols in the literature \cite{aurora, ligero} market their non-use of public-key cryptography and thus a potential post-quantum security feature. To achieve zero-knowledge in the distributed prover setting while retaining these features, at a high level, they have to incur the additional overhead in $\prcomm$ due to using information-theoretic MPC to also construct the oracle and answer oracle queries. 
 
-Another subtle point here is that a single-prover ZK protocol provides the zero-knowledge property only for honest provers. The witness is not guaranteed to be hidden from the verifier if a prover deviates from the protocol. Hence, in a distributed prover setting it is non-trivial to prove or even define the zero-knowledge property if some of the provers deviate from the protocol or if they do not have the valid witness. 
+%Another subtle point here is that a single-prover ZK protocol provides the zero-knowledge property only for honest provers. The witness is not guaranteed to be hidden from the verifier if a prover deviates from the protocol. Hence, in a distributed prover setting it is non-trivial to prove or even define the zero-knowledge property if some of the provers deviate from the protocol or if they do not have the valid witness. 
 
+Just like the efficiency considerations, the security definition for a DPZK
+protocol needs to account for additional interaction. In particular, the
+security definition needs to capture the fact that interaction among the provers
+to generate the proof does not leak knowledge about their respective witnesses
+to other provers. 
 We come up with an MPC-style definition based on real-world ideal world paradigm \cite{Canetti00,Goldreich2001,Lindell17,CohenL14}  that takes the above issues into account. In the ideal-world, the provers deliver their respective part of the witnesses and the functionality (that is parametrised with a language) combines them and check the assertion of a statement. In the real protocol,  the provers participate in  instances of MPC for `proof-generating functions' to generate messages for the verifier. To hide the number of provers from a corrupt verifier and to keep the proof-size  independent of the number of provers, one of the provers enacts in a special role called aggregator   that prepares the message for the verifier taking into account communication from all its fellow provers and communicates the same to the verifier on behalf of all the provers. We say our protocol is secure if whatever an adversary (corrupting various subset of provers and verifier) can do in real execution can be done in the ideal execution. Lastly, keeping in mind the final goal of non-interactive and publicly-verifiable proofs/arguments, we explicitly mention the exact corruption scenario that we handle for our constructions.  For example, it is enough to tackle a semi-honestly corrupt verifier (since a non-interactive proof does not give any additional scope of misbehaviour to a maliciously corrupt verifier  over a semi-honestly corrupt one).  We refer to Section~\ref{sec:security model} for complete details. Next, we move on to discuss the single-prover construction on which we build our DPZK. 
 To preserve the privacy, we assume that provers are not going to deviate from the protocol, since that may lead to rejection of the proof, though our protocol can withstand the scenario if all the provers are maliciously corrupt together due to the soundness property of the underlying ZK protocol.% Also, we will discuss how can we achieve security against maliciously corrupt provers (assuming the aggregator \commentA{we have not introduced aggregator} to be semi-honest).
 
 \subsection{\name{}: an MPC-friendly zero-knowledge protocol}
-We propose an MPC-friendly single-prover protocol \name{} with a transparent setup which would allow for an efficient  DPZK.
+We present an MPC-friendly single-prover protocol \name{} with a transparent setup which
+allows an efficient  DPZK.
 %This linear $\prComm$ is due to linear number of cross-multiplications which can be done concurrently, and hence the MPC is only performed on an $N$ mult-gates circuit of depth 1. 
-\name{} achieves proof size and verification complexity competitive with the state-of-art zero-knowledge protocols, while achieving efficient distributed proof generation. In particular, \name{} admits a proof size of $O(N^{1/c})$ for arbitrary $c\geq 2$, and a verification complexity of $O(N^{1-2/c})$ public key operations and $O(N)$ field operations. \name{} is a public-coin honest verifier zero-knowledge protocol in the Interactive PCP (IPCP) \cite{KR08, KR09, GIMS10} paradigm. % that achieves the property of zero-knowledge-with-collusion i.e., the witnesses from a set of provers are not revealed to a verifier even when it colludes with the complimentary set of provers who are honest-but-curious.
+\name{} achieves proof size and verification complexity competitive with the
+state-of-art zero knowledge protocols, while achieving efficient distributed
+proof generation. In particular, for a circuit with $N$ multiplication gates,
+\name{} admits a proof size of $O(N^{1/c})$ for
+arbitrary $c\geq 2$, with a verification complexity of $O(N^{1-2/c})$ public key
+operations and $O(N)$ field operations. \name{} is a public-coin honest verifier
+zero-knowledge protocol in the Interactive PCP (IPCP) \cite{KR08, KR09, GIMS10}
+paradigm. % that achieves the property of zero-knowledge-with-collusion i.e.,
+%the witnesses from a set of provers are not revealed to a verifier even when it
+%colludes with the complimentary set of provers who are honest-but-curious.
 
 %Efficiency Desiderata:  
 %- Transparent setup 
@@ -189,23 +200,146 @@ We propose an MPC-friendly single-prover protocol \name{} with a transparent set
 %Also, its verifier requires $O(N)$ public key operations to verify a proof. 
 %Spartan \cite{spartan} admits sublinear verifier complexity in an amortized sense, but its prover again incurs $O(N^2)$ multiplications.
 
-\name{} follows the outline of Ligero: (i) encoding the witness via a suitable error correcting code, (ii) checking linear relations on the witness, (iii) checking quadratic relations on the witness, and (iv) a proximity protocol to check that the witness is correctly encoded. The witness encoding is committed as an ``oracle'' and is queried during the linear, quadratic and the proximity checks.  Our innovations are listed below.
-\paragraph{New encoding} A core technical contribution of our work is a novel way to encode the witness and thereby design the three checks in the zero-knowledge protocol around the new encoding. The \textit{witness} is represented as a \textit{3D matrix} of dimensions $p \times m \times s$ whose product is $O(N)$. The \textit{witness encoding} is obtained by encoding every $m \times s$ `slice' of the 3D matrix using a carefully crafted 2D product Reed-Solomon code. %careful crafting: along rows, we interpolate and evaluate with different sets of disctinct points; but along columns, we interpolate with a set of distinct points, and evaluate with the same set of points + some extra disctinct points. For rows, we choose evaluation points distinct from interpolation points because the extra t randoms rows added for ZK should be interpresed during encoding to achieve ZK. But for columns, it is good enough to just encode for soundness and not for ZK, so we can just augment the interpolation points to get the evaluation points. Interestingly, having the evaluation points as an augmentation of interpolation points is \textit{necessary} for us in our protocol to check some properties. \dnote{what properties exactly? for plain correctness, or during some verifier check?}
-The \textit{oracle} is now obtained by committing each $O(m)$-sized `column' in the encoded witness using homomorphic vector commitments \cite{Ped92}. 
-Our oracle is a $O(p \cdot n)$-sized matrix of commitments. The use of homomorphic vector commitments helps in two aspects: (i) enabling distributed proof generation and (ii) achieving proof sizes independent of the largest dimension of the matrix.
-As we will see later, we will be able to regulate the three dimensions such that we get \textit{sub-linear} complexities in both the communication between the provers $\prcomm$ and the proof size $\zkcomm$, when building DPZK based on it. 
+\name{} follows the broad outline of Ligero ~\cite{ligero} including: 
+(i) encoding the witness via a suitable error correcting code, (ii) using the
+encoding to check linear and quadratic relations on the
+witness, and (iii) a check to ensure that the witness is correctly
+encoded. The witness encoding is committed as an ``oracle'' and is queried
+during the linear and quadratic checks.  Our key innovations are
+listed below. 
+
+\paragraph{New encoding} A core technical contribution of our
+work is a novel way to encode the witness and design the three checks in
+the zero-knowledge protocol around the new encoding. The \textit{witness} is
+represented as a \textit{3D matrix} of dimensions $p \times m \times s$ whose
+product is $O(N)$. The \textit{witness encoding} is obtained by encoding every
+$m \times s$ `slice' of the 3D matrix using a carefully selected product of
+Reed-Solomon codes. %careful crafting: along rows, we interpolate and evaluate
+%with different sets of disctinct points; but along columns, we interpolate with
+%a set of distinct points, and evaluate with the same set of points + some extra
+%disctinct points. For rows, we choose evaluation points distinct from
+%interpolation points because the extra t randoms rows added for ZK should be
+%interpresed during encoding to achieve ZK. But for columns, it is good enough to
+%just encode for soundness and not for ZK, so we can just augment the
+%5interpolation points to get the evaluation points. Interestingly, having the
+%evaluation points as an augmentation of interpolation points is
+%\textit{necessary} for us in our protocol to check some properties. \dnote{what
+%properties exactly? for plain correctness, or during some verifier check?}
+The \textit{oracle} is now obtained by committing each $O(m)$-sized `column' in 
+the encoded witness using homomorphic vector commitments \cite{Ped92}. 
+This results in an oracle that is a $O(p \cdot n)$-sized matrix of commitments.
+The use of homomorphic vector commitments helps in two aspects: (i) enabling
+distributed proof generation and (ii) achieving proof sizes independent of the
+largest dimension of the matrix. The latter is crucially dependent on the use
+of prodcut codes to achieve soundness with very small {\em query complexity} (the size of the
+oracle revealed to the verifier).
+As we will see later, we will be able to regulate the three dimensions such that
+both the communication between the provers and the
+aggregator and that between aggregator and the verifier (argument size) are 
+{\em sub-linear}. 
 % \paragraph{Proximity check} The proximity protocol checks that the encoding is well-formed by verifying that a random linear combination of the slices of the 3D matrix is \textit{near} to a 2D product code, which is a matrix of size $h\times n$. This is sufficient due to the claim, that we prove, that a random linear combination of the rows is far from the codespace if at least one row of the matrix is far from the codespace. A Ligero-style proximity check protocol is additionally performed to check that the encoding used in the above step is the same one that is committed in the oracle. The salient feature of the above two steps is that the proof size $\zkcomm$ is independent of the largest dimension of the witness matrix and linear in the sum of the other two dimensions. We also carefully design the distributed proof generation protocol such that the communication between the provers $\prcomm$ is only linear in the largest dimension.
 %\pnote{We don't have a separate proximity check, it is u}
+\begin{comment}
+<<<<<<< HEAD
 \paragraph{Linear check} The protocol to check the linear relations on the witness starts as in Ligero to reduce the checks to polynomial identity testing. We then design new steps to further reduce this test to multiple inner-product arguments on vectors of lengths linear in the individual dimensions of the 3D witness matrix. An additional check is performed to test the consistency of the inputs used in the inner-products with those committed in the oracle.
 \paragraph{Quadratic check} This protocol follows the same set of steps as the linear check, except that additional MPC is required to obtain the inputs for the inner product arguments during distributed proof generation. The MPC will be required for $N$ independent multiplications between the witness bits and this would incur an additional $O(N\times \Num^2)$ communication among the provers.\dnote{Check complexity in prev sentence.}  This protocol is presented in Section~\ref{sec:graphene}.
+=======
+\end{comment}
+\paragraph{Checking Linear and Quadratic Relations} As in other oracle based protocols
+~\cite{ligero,aurora}, checking the linear and quadratic relations on the witness reduces to 
+ checking identities on the polynomials derived from polynomials encoding the witness. 
+To ensure that the size of the final polynomial, which can be shared with the verifier is
+proportional to the smallest dimension of the three dimensional witness matrix,
+we need to achieve two stages of ``compression''. To ensure soundness for both
+stages of compression, we introduce an intermediate structure (a two dimensional
+matrix) to which the prover commits. This intermediate matrix enforces
+consistency between the three dimensional encoding, and one dimensional
+polynomial message to the verifier as it can be checked to be consistent with
+both. Having an extra dimensiona also allows us to shave off the size of the
+largest dimension over which we run (expensive) inner product arguments. This
+allows us to achieve inner products over vectors of size $N^{1-2/c}$, which
+makes our verifier quite efficient despite using public key operations. These
+protocols are discussed in detail in Section ~\ref{sec:graphene}.
+%>>>>>>> 23d366f2e2ed1d9aa1e813a97eaeee4f95db57a1
 
 \subsection{\dpname: A new $\DPZK$ protocol}
-\commentA{The structure of this section should be as follows:  (a) state what the extract result for $\DPZK$, mentioning the achieved complexities (can plug in the best-known MPC)  (b) tell the high level idea for the approach taken. be concise (c) tell about the difficulties in turning existing spzks to DPZK (d) compare and put the table with asymptotic complexity; (e) report some  of the numbers that we obtain from benchmarking.  }
-Building on \name{}, we design our DPZK protocol \dpname{} with the prover communication $\prcomm$ linear in circuit size and a constant number of $\prrounds$. To be more precise, the communication for a $\Num$-prover proof generation would be $O(\Num^2\cdot N_s + \Num \cdot N^{1-2/c})$, where $N_s$ is the circuit share complexity \cite{DKLPSS13}. The provers in \dpname{} are semi-honest in trying to learn each other's witnesses while constructing messages for the verifier. We compare the complexities of \dpname{} with our DPZK construction building on Bulletproofs \cite{bulletproofs}.\footnote{Our DPZK-Bulletproofs construction supporting arbitrary predicates readily follows from their single-prover construction, even though they mention it as an open problem to support arbitrary predicates after they build a distributed proof generation algorithm for range proofs. Our efforts simply distil the multiplicative parts of their inner-product protocol. \pnote{Bulletproofs proof aggregation is not same as distributed proof generation.}} \dnote{is the phrasing in the footnote fine?}
+%\commentA{The structure of this section should be as follows:  (a) state what the extract result for $\DPZK$, mentioning the achieved complexities (can plug in the best-known MPC)  (b) tell the high level idea for the approach taken. be concise (c) tell about the difficulties in turning existing spzks to DPZK (d) compare and put the table with asymptotic complexity; (e) report some  of the numbers that we obtain from benchmarking.  }
+Building on \name{}, we design our DPZK protocol \dpname{} with the prover
+communication $\prcomm$ linear in circuit size and a constant number of rounds
+of prover interaction ($\prrounds$). To be more precise, the communication for a
+$\Num$-prover proof generation for an $N$-multiplication gate circuit 
+would be $O(N_s + \Num \cdot N^{1-1/c})$, where
+$N_s$ is the shared circuit size as introduced in Section
+~\ref{sec:efficiencyparams}. Moreover, although the provers need to
+compute $O(\log{N})$ messages to the verifier, the rounds of interaction 
+among the provers is constant, limited to a secret sharing MPC on a circuit
+of size $\max(N_s,N^{1-1/c})$. To emphasize the non-trivial properties attained
+by our protocol, we discuss the roadblocks in naively adapting existing
+state-of-art zero knowledge protocols to the distributed prover
+setting.\smallskip
 
-Each prover in \dpname{} starts with an additive share of the witness. Each prover generates an encoding of its witness using the same procedure as in \name{} due to the additive homomorphism in Reed-Solomon encoding and in oracle generation. \dnote{seems like we have to add slightly more details in the description of \name{} so that we can refer to it here to explain the dpzk construction. @Nitin can you take a shot at this paragraph after you augment the technical overview?}
+\noindent{\em Roadblocks in achieving DPZK}: Intuitively, to satisfy the desiderata
+of distributed proof generation with minimal prover communication, large parts
+of the messages to the verifier must be computable {\em locally} by the provers
+using their respective shares of the witness, which then must be efficiently 
+aggregatable later to obtain the final message. Thus, the prover messages must have some
+``homomorphic'' properties with respect to the witness. This requirement
+precludes naively extending recent efficient zero knowledge protocols based on
+interactive oracles like \cite{ligero,aurora}. Realizing the oracle while constructing a non-interactive
+argument in the Random Oracle Model uses hash functions, which exhibit no such
+homomorphic properties. We address this roadblock in our construction by making
+the oracle homomorphic. However, constructing such an oracle incurs expensive
+public key operations for the prover. For the restricted case of IPCP, where
+only the initial message is an oracle, the additional overhead though
+substantial is tolerable. For more general interactive oracle protocols, such as
+Aurora ~\cite{aurora}, our methods may not be the most efficient. Nevertheless,
+we pose efficient DPZK construction from general interactive oracle protocols as an
+interesting open question. Even if the messages in the protocol are largely
+homomorphic, small amount of non-homomorphic computation in several rounds 
+would require repeated interaction among the provers. Intuitively, one way to
+avoid repeated prover interaction is to reduce the initial statement, to a
+statement involving ``random witnesses'', which can then be ``handed off'' to the
+aggregator to complete the remaining rounds of interaction with the verifier. It is essential that
+the witnesses in the reduced statement are ``random'' or ``simulatable'' to
+ensure that the aggregator gains no knowledge of provers' witnesses from them.
+In general, in such constructions one must ensure that in addition to verifier's
+view, the aggregator's view also leaks no knowledge. We did not see an obvious
+way to overcome this roadblock for Spartan ~\cite{spartan}, without resorting to
+expensive MPC among the provers. Among the existing zero knowledge protocols, we
+were only able to obtain an efficient DPZK from Bulletproofs
+~\cite{bulletproofs} with moderate effort. This construction appears in Appendix
+{\color{blue} (Put appropriate section)}, and is serves as a baseline for
+comparison with $\dpname$. Even for the Bulletproofs based construction, we are
+unable to achieve sublinear prover communication for a sublinear shared circuit
+size $N_s$. We extensively compare the two constructions across both the DPZK
+parameters, and the single prover parameters in Section
+~\ref{sec:performancecompare}.
+  
+Finally, we mention that the provers in \dpname{} are semi-honest in trying to learn 
+each other's witnesses while constructing messages for the verifier. This view
+fits well with the kind of applications we forsee, where incentive to make a
+joint claim is greater than that to deviate from the protocol.
+Even for this weaker adversarial model, proving the security of this
+construction is interesting because of a couple of reasons. The witness shares
+that the provers start with are additive, but they need not be from a secret
+sharing of a ``global'' witness. And, even if the provers' shares are secret
+shares of a global witness with a threshold of $\Num-1$, the aggregator in our
+construction sees messages from \textit{all} the $\Num$ provers. We prove the
+security of \dpname{} taking care of these aspects when the provers and the
+aggregator are semi-honest.
+\dnote{insert benchmarking numbers for \dpname{}
+here}
 
-Proving the security of this construction is interesting because of a couple of reasons. The witness shares that the provers start with are additive, but they need not be from a secret sharing of a ``global'' witness. And, even if the provers' shares are secret shares of a global witness with a threshold of $\Num-1$, the aggregator in our construction sees messages from \textit{all} the $\Num$ provers. We prove the security of \dpname{} taking care of these aspects when the provers and the aggregator are semi-honest.\dnote{insert benchmarking numbers for \dpname{} here}
+%\footnote{Our DPZK-Bulletproofs construction supporting
+%arbitrary predicates readily follows from their single-prover construction, even
+%though they mention it as an open problem to support arbitrary predicates after
+%they build a distributed proof generation algorithm for range proofs. Our
+%efforts simply distil the multiplicative parts of their inner-product protocol.
+%\pnote{Bulletproofs proof aggregation is not same as distributed proof
+%generation.}} \dnote{is the phrasing in the footnote fine?}
+
+%Each prover in \dpname{} starts with an additive share of the witness. Each prover generates an encoding of its witness using the same procedure as in \name{} due to the additive homomorphism in Reed-Solomon encoding and in oracle generation. \dnote{seems like we have to add slightly more details in the description of \name{} so that we can refer to it here to explain the dpzk construction. @Nitin can you take a shot at this paragraph after you augment the technical overview?}
+
 
 %\subsection*{Distributed proof generation}
 %--- Informal notion of Distributed Provers Zero Knowledge Protocol $\innp{\Pi}{\verifier}$--- 

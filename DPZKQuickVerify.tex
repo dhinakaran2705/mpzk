@@ -377,7 +377,6 @@ The above probability is smaller than a constant $\epsilon<1$ for suitable
 choices of parameters. Hence, the overall probability of prover's success is
 $\negl(\secpar)$ for $t=O(\secpar)$.
 \end{proof}
-%<<<<<<<HEAD
 \begin{comment}
 \subsection{Quadratic Check Protocol}
 We now describe the IPCP which allows a prover to prove knowledge of vectors
@@ -442,8 +441,7 @@ We present the full protocol in Figure \ref{fig:quadcheck}. The completeness of
 the protocol can again be verified by direct calculation. We state the soundness
 of the protocol below:
 \end{comment}
-%=======
-%>>>>>>> a570c22d49f6a2b6c53bd2506676e2790bfe3c01
+
 \input{quadratic.tex}
 
 \begin{lemma}[Soundness]\label{lem:quadcheck_sound}
@@ -618,7 +616,6 @@ with the provers.
 \end{comment}
 
 \begin{comment}
-<<<<<<< HEAD
 \noindent{\bf Distributed Linear Test}: We provide the complete distributed protocol in Figure \ref{fig:distlincheck}. Here we highlight key adaptations from the single prover variant. First we assume that the provers have a share of the vector $0^{2m}$ (as part of obtaining shares of the extended witness). In response to verifier’s challenge $r\in \FF^M$, each prover locally computes $R=r^TA$ and the associated polynomials $R^i$, $i\in [p]$. Since, the computation of the $P$ matrix is a linear operation, each prover obtains a share $\shr{P}$ of the $P$ matrix by locally computing on their share of the witness. The provers compute commitments to the columns of their share of the $P$ matrix, following the similar procedure as in the single prover linear check protocol, and send those to the aggregator. The aggregator combines the shares to obtain the commitment to the $P$ matrix. %Provers can jointly prove that $P$ matrix is a codeword in the product code using the distributed membership protocol as above. 
 Similarly, the provers can send their shares of vectors $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u]$ for $u\in [t]$, required for consitency checks. Due to the bounded independence property, for $t\leq \bi$, these shares do not leak. The only point of departure is the shares of $z=\beta P_0 + \overline{P}\varphi$. The randomization by a random codeword $P_0\in L_2$ such that $\sum_{j\in [m]}
 P_0[j]=0$ was based on the distribution of the vector $\overline{P}\varphi$ in an honest execution of the protocol for a witness satisfying $r^TA\wit=r^Tb$. However, individual shares may not satisfy the preceeding condition, and hence the provers further add a share of $0^h$ to the share $\beta\shr{P}_0 + \shr{\overline{P}}\varphi$. This allows the aggregator $\Ag$ to obtain witnesses for all the inner product protocols that it runs with the verifier.  
@@ -726,7 +723,6 @@ We provide the complete distributed linear protocol in Figure
 %algorithm
 %$\Ag$ to obtain witnesses for all the inner product protocols that it runs with
 %the verifier.  
-%>>>>>>> bee3adb42b709af2d55598b10d73189cef6372ba
 
 \noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
 \begin{align*}

@@ -18,7 +18,7 @@ relations to the linear relation:
 \end{bmatrix}=\bm{0}
 \end{align}
 for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we
-$\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$\pnote{It should be $p\times m\times s$ not $pmn$} matrices. Let $\bwit$
+$\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$
 denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$
 and $\wit$ along ``slices''. The encoding $\ewit\gets\enc(\bwit)$ and commitment to
 the encoding $\comoracle\gets \comm(\ewit)$ are computed as in Sections
@@ -72,8 +72,9 @@ parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 \end{enumerate}
 }
 \smallskip
-\subsection{Performance: Standalone} \pnote{Rename this subsection} We now summarize several performance parameters attained by our protocol for circuit of size $N$ and soundness $2^{-\secpar}$. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multiexponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
+\section{Performance Evaluation}\label{sec:performancecompare} We now summarize several performance parameters attained by our protocol for circuit of size $N$ and soundness $2^{-\secpar}$. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multiexponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
 
+%<<<<<<< HEAD
 %We now summarize several performance parameters attained by our protocol for circuit
 %size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
 %previous sections. Let $\cfop$ denote the time taken for a field operation,
@@ -83,6 +84,20 @@ parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 %the number of bits required to represent an element of $\FF$ and $\GG$
 %respectively. Our protocol $\name$ achieves
 %following efficiency parameters:
+%=======
+\begin{comment}
+\section{Performance Evaluation}\label{sec:performancecompare}
+We now summarize several performance parameters attained by our protocol for circuit
+size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
+previous sections. Let $\cfop$ denote the time taken for a field operation,
+$\cfft(x)$ denote the time to compute $\fft$ of a length $x$ vector, $\cmexp(x)$
+denote the time taken for a multiexponentiation of length $x$, and $\cexp$
+denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote
+the number of bits required to represent an element of $\FF$ and $\GG$
+respectively. Our protocol $\name$ achieves
+following efficiency parameters:
+>>>>>>> 23d366f2e2ed1d9aa1e813a97eaeee4f95db57a1
+\end{comment}
 {\footnotesize
 \begin{align*}
 \begin{array}{llrl}
@@ -111,7 +126,7 @@ O(N)\cfop + (2t+2)\cmexp(2m)\\
 }
 
 We give details in the Appendix, on how we compute the above parameters.
-
+\pnote{No details are given in the appendix}
 %\begin{enumerate}
 %\item {\bf Argument Size}: $8pt+8t\log{m}+4\ell+s+8t+4\log{m}+4$, where $4pt$ comes as part
 %of oracle openings, another $4pt$ from opening $t$ vectors
