@@ -84,10 +84,9 @@ $\calG$ and a parity check matrix $\calH$.
 For an $[n,k,d]$ linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
 \end{definition}
 
-Let $L$ be a linear $[n,k,d]$ code over the field $\FF$ and let
-$\mc{C}=\ric{L}{m}$ be the row interleaved code of $L$. One can view $\mc{C}$ as
-a $[mn,mk,d]$ linear code over the field $\FF$. Alternatively, we can view
-$\mc{C}$ as an $[n,k,d]$ code over the field $\HH$, where $\HH\cong \FF^m$. %We elaborate on this correspondence in Appendix \ref{app:AltILC}.
+%Let $L$ be a linear $[n,k,d]$ code over the field $\FF$ and let $\mc{C}=\ric{L}{m}$ be the row interleaved code of $L$. 
+For  an  $[n,k,d]$ linear code $L$ over $\FF$, one can view $\ric{L}{m}$ as
+an $[mn,mk,d]$ linear code over  $\FF$ or alternatively,  as an $[n,k,d]$ code over $\HH$, where $\HH\cong \FF^m$. %We elaborate on this correspondence in Appendix \ref{app:AltILC}.
 
 Analogous to the row interleaved code, a column interleaved code $\cic{L}{m}$ 
 can be viewed as an $[n,k,d]$ code over $\bbF^m$ by viewing each row of the
@@ -98,21 +97,21 @@ Section \ref{sec:basicnotation}.
  
 \begin{definition}[Product Code]\label{defn:productcode}
 Let $L_i$ be an $[n_i,k_i,d_i]$-linear code for $i=1,2$. We define the product
-code $L_1\oplus L_2$ to be the code consisting of $n_2\times n_1$ matrices $A$
+code $L_1\otimes L_2$ to be the code consisting of $n_2\times n_1$ matrices $A$
 such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a
 codeword in $L_2$.
 \end{definition}
 
 Note that by definition, the product code $L_1\oplus L_2$ is a row interleaved
 code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\oplus L_2 =
-\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\oplus L_2$, we define
+\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\otimes L_2$, we define
 $\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and
 $\dham_2(A,A')=|\{i\in [n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance
 $\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we
 view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$
 corresponds to the distance function of the code $\cic{L}{n_1}$.
 
-\begin{definition}[Reed Solomon Code]\label{defn:rscode}
+\begin{definition}[Reed-Solomon Code]\label{defn:rscode}
 An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors
 $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less
 than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\bbF$. We will use
@@ -120,29 +119,27 @@ $\rsc{\eta}{n,k}$ to denote the Reed Solomon code with
 $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$. 
 \end{definition}
 
-\begin{lemma}\label{lem:bicdecoding}
-Let $L_1 := \rsc{\eta}{n,\ell}$ and $L_2 := \rsc{\alpha}{h,m}$ be $[n,\ell]$ and
-$[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and
-$\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. Suppose
-a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast,\mc{C}_1)<e_1$ and
-$d_2(U^\ast,\mc{C}_2)<e_2$ for $e_1\leq n-\ell$ and $e_2\leq h-m$.
-Then, there exists $U\in L_1\oplus L_2$ and sets
+\begin{lemma}[\cite{CodingTheory}]\label{lem:bicdecoding}
+%Let $L_1 := \rsc{\eta}{n,\ell}$ and $L_2 := \rsc{\alpha}{h,m}$ be $[n,\ell]$ and $[h,m]$ Reed Solomon codes respectively. Let $\mc{C}_1 := \ric{L_1}{h}$ and $\mc{C}_2 := \cic{L_2}{n}$ be the interleaved codes of $L_1$ and $L_2$. 
+Suppose
+a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast, \ric{\rsc{\eta}{n,\ell}}{h})<e_1 \leq n-\ell $ and
+$d_2(U^\ast, \cic{ \rsc{\alpha}{h,m}}{n})<e_2 \leq h-m$.
+Then, there exists $U\in \rsc{\eta}{n,\ell} \otimes \rsc{\alpha}{h,m}$ and sets
 $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such
 that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 \end{lemma}
 %The proof is given in Appendix~\ref{prooflemmaRScode}.
-The proof will be given in full version.
+%The proof is standard and  will be given in full version.
  
 
 \subsection{Coding Theoretic Results for our Constructions}
 In this section we prove the coding theoretic result (Proposition \ref{lem:3dcompression}), which underlies
-the construction of our new ``MPC-friendly'' zero knowledge protocol. The result
+the construction of our new ``MPC-friendly'' zero-knowledge protocol. The result
 extends the approach in \cite{ligero}  of interleaving the witness and checking proximity (to well-formed encoding) by
 compressing along a dimension using a random linear combination. 
 While in \cite{ligero}, the witness was interleaved as a matrix,
-we interleave the witness as a three dimensional matrix to obtain smaller
-argument size. The following result is the key to testing proximity of a three
-dimensional matrix to a well-formed encoding. The proof  appears in Appendix \ref{app:ProofofLem3dcompression}.
+we interleave the witness as a three-dimensional matrix to obtain smaller
+argument size. The following result is the key to testing proximity of a three-dimensional matrix to a well-formed encoding. The proof  appears in Appendix \ref{app:ProofofLem3dcompression}.
 \begin{proposition}[3D Compression]\label{lem:3dcompression}
 Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
 \ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
@@ -227,7 +224,7 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 
 \end{definition}
 
-We mention some instantiations inner-product arguments in Appendix~\ref{inner-product-instan}. 
+We mention some instantiations inner-product arguments in Appendix~\ref{inner-product-instan}.  \commentA{something wrong here. bring back the bulletproof ref}
 we will we a variant of inner product where one of the vector is public and the other one is private. $\innerproduct(\pp, x, \cm, v ; z)$ is the notation we will be using through out the paper, where $x$ is a public vector and $\cm$ is the commitment of the private vector $z$ such that $\innp{x}{z} = v$.
 
  
