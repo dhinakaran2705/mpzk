@@ -53,12 +53,12 @@ by $p_j(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot).Q_x^i(\alpha_j,\cdot)+
 R^{3p+i}(\alpha_j,\cdot)Q^i(\alpha_j,\cdot))$. The $p_j$ polynomials for the
 matrix $P_{qd}$ are given by
 $p_j(\cdot)=\sum_{i=1}^{p}r_{qd}[i](Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot))$.
-\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m}$ for linear and quadratic check protocols
+\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m-1}$ for linear and quadratic check protocols
 respectively, and commitments $c_0,d_0$ to vectors $U_{lc}$
 and $U_{qd}$.
 \end{itemize}
-\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell}$ for
-the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell}$ for matrix
+\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell-1}$ for
+the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell-1}$ for matrix
 $P_{qd}$. 
 \item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$.
 \item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
@@ -163,13 +163,13 @@ $O(N^{1-2/c})$ exponentiations. In Figure ~\ref{fig:standalonecompare}, we compa
 $\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{bulletproofs} in
 single prover setting. The estimates were obtained by timing the $\fft$
 operations, exponentiations and multiexponentiations for different sizes, in a
-single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yeild best
-proving time, while those for Ligero were optimized to yeild best proof size.
+single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
+proving time, while those for Ligero were optimized to yield best proof size.
 \begin{figure*}
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-$|C|$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
+$N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
         \multicolumn{3}{|c|}{Verifier Time($t_\verifier$) sec} &
         \multicolumn{3}{|c|}{Prover Time($t_\prover$) sec} \\
 \hline

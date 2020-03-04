@@ -538,7 +538,7 @@ the $\linearcheck$ protocol consists of:
 %Vector $\rho \in \FF^p$ for checking proximity, vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q= \{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF^\ast$ used in randomizing the vector $\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there. Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\item {\em Commitments}: The prover's commitment messages are $c_0, c_1, \ldots, c_{s+\ell}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. And oracle responses are $\pi[\cdot,k_u]$, $k_u$ corresponding to $Q$. In the extended view we will consider the whole of $\pi$.
+\item {\em Commitments}: The prover's commitment messages are $c_0, c_1, \ldots, c_{s+\ell-1}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. And oracle responses are $\pi[\cdot,k_u]$, $k_u$ corresponding to $Q$. In the extended view we will consider the whole of $\pi$.
 %Commitment $c_0$ to the first $2m$ entries of the random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the matrix $\tilde{U}$ used for proximity check. Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \pi$, as a part of the extended view of $\verifier$.%$\{\pi[\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Commitment Randomness}: We include randomness used to compute certain
@@ -562,9 +562,9 @@ above view.
 
 \noindent{\bf Simulator}: 
 %\begin{itemize}
- $\Sim$ picks $\{\rho, r, Q, \delta, \beta \}$ uniformly at random from their respective domains. Then picks $\ewit[\cdot, \cdot, k_u]$ uniformly such that each plane has columns as codewords in $L_2$ for all $u\in [t]$, and picks $z$ unifromly from $\FF^{2m}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$. After that, $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$ and $\cm \leftarrow \comm(z,w)$ where $P_0\sample \FF^{2m}$ such that $\innp{1^m}{P_0}=0$ and $w_0,w\sample \FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{U}[\cdot, k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] , \tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u], O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of $U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{U}[\cdot,k_u]$, where $i\in[p]$ and $u\in [t]$. Next, $\Sim$ picks $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way that $\tilde{c}_{k_u} = \prod_{a\in[\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]} \,
-\forall u\in [t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank. Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \prod_{i\in[p]}( \pi[i,k])^{\rho_i}$ for all $k=k_u:u\notin [t]$. $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the first $2m$ entries of $P[\cdot,k_u] \, \forall u\in[t]$, and picks ${c}_1, \ldots, {c}_{s+\ell}$ in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell]} ({c}_a)^{\Lambda^T_{n,s+\ell}[a,k_u]} \, \forall u\in [t]$
-and $\cm =  c_0^{\beta} \cdot \prod_{a\in[s+\ell]} (c_a)^{\varphi_a}$. Picking such ${c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
+ $\Sim$ picks $\{\rho, r, Q, \delta, \beta \}$ uniformly at random from their respective domains. Then picks $\ewit[\cdot, \cdot, k_u]$ uniformly such that each plane has columns as codewords in $L_2$ for all $u\in [t]$, and picks $z$ unifromly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$. After that, $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$ and $\cm \leftarrow \comm(z,w)$ where $P_0\sample \FF^{2m-1}$ such that $\innp{1^m}{P_0}=0$ and $w_0,w\sample \FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{U}[\cdot, k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] , \tilde{O}[k_u] ) \, \forall u\in[t]$ and $\pi[i,k_u] = \comm(U'[i,\cdot,k_u], O[i,u])$, where $U'[i,\cdot,k_u]$ consists of first $m$ entries of $U[i,\cdot,k_u]$ and $\tilde{U}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{U}[\cdot,k_u]$, where $i\in[p]$ and $u\in [t]$. Next, $\Sim$ picks $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$ in such a way that $\tilde{c}_{k_u} = \prod_{a\in[\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]} \,
+\forall u\in [t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank. Now $\Sim$ picks $\pi[\cdot, k]$ such that $c_k = \prod_{i\in[p]}( \pi[i,k])^{\rho_i}$ for all $k=k_u:u\notin [t]$. $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the first $2m$ entries of $P[\cdot,k_u] \, \forall u\in[t]$, and picks ${c}_1, \ldots, {c}_{s+\ell-1}$ in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell-1]} ({c}_a)^{\Lambda^T_{n,s+\ell-1}[a,k_u]} \, \forall u\in [t]$
+and $\cm =  c_0^{\beta} \cdot \prod_{a\in[s+\ell-1]} (c_a)^{\varphi_a}$. Picking such ${c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
 %\end{itemize}
 \begin{comment}
 The simulator outputs $r$, $\{j_u,k_u\}_{u\in [t]}$,
@@ -715,9 +715,9 @@ verifier in the linear check protocol include:
 \item Commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ to the matrix $\tilde{U}=
 \sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$ for verifier's challenge $\rho\sample
 \FF^p$.
-\item Commitments $c_0,\ldots,c_{s+\ell}$ where $c_0$ is a commitment to random
-vector $P_0\in \FF^{2m}$ satisfying $\innp{1^m}{P_0}=0$ and
-$c_1,\ldots,c_{s+\ell}$ are commitments to the $h\times n$ matrix $P$.
+\item Commitments $c_0,\ldots,c_{s+\ell-1}$ where $c_0$ is a commitment to random
+vector $P_0\in \FF^{2m-1}$ satisfying $\innp{1^m}{P_0}=0$ and
+$c_1,\ldots,c_{s+\ell-1}$ are commitments to the $h\times n$ matrix $P$.
 \item The vectors $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, for verifier's
 query $Q=\{(j_u,k_u):u\in [t]\}$.
 \end{itemize}
@@ -886,22 +886,21 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 	
 	Let  $\rho, \, r, \, \{(j_u,k_u)\}_{u\in[t]}, \, \delta, \, \beta$ denote the verifier
 	randomness, which is shared by each view. Consider other messages in
-	$\View^\xi_\Ag$. Let $\shr{\comoracle}, \shr{\bm{\tilde{c}}}, \shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}, \shr{d_0}$ 
+	$\View^\xi_\Ag$. Let $\shr{\comoracle}, \shr{\bm{\tilde{c}}}, \shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell-1}}, \shr{d_0}$ 
 	%$c_0^\xi,c_1^\xi,\ldots,c_{s+\ell}^\xi,d_0^\xi,\tilde{c}_1^\xi,\ldots,\tilde{c}_\ell^\xi,\tilde{d}_0^\xi,\{\pi^\xi[\cdot,k_u]\}_{u\in[t]}$ 
 	denote the commitments sent by $\distprover$. Also, $\Ag$ gets the opening of $\shr{\comoracle[\cdot,k_u]}, \shr{c_{k_u}}$.
-	Finally, $\Ag$ gets the vector $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m}}$.
+	Finally, $\Ag$ gets the vector $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
 	%Similarly let $\nu^\xi,\omega^\xi,\{\chi^\xi_u\}_{u\in [t]},\{O^\xi[\cdot,k_u]\}_{u\in [t]})$ denote the commitment randomness sent by the $\distprover$. 
 	%Finally, the (extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$, $z^\xi=u_0^\xi+P^\xi\mu$, $\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. 
 	Note that other than $\shr{\comoracle}$ and $\shr{z}$, remaining
 	included in our definition of the extended view of the single prover case. As in the simulation of the
-	single prover case, given the verifier randomness. The joint distribution of ${z}^1,\ldots,{z}^{\Num}$ can be seen to be:
+	single prover case, given the verifier randomness. The joint distribution of $\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num}$ can be seen to be:
 	%({\color{red} Protik to finish the argument}).
 	%\begin{itemize}
 		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
 		%share of $0^h$.
-		Uniform distribution on the set codewords $P_0$ of length $2m$ satisfying
-		$\sum_{j\in [m]}P_0[j]=0$ 
-		jointly have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
+		uniform distribution on the set $\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}: z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$. %$P_0$ of length $2m$ satisfying $\sum_{j\in [m]}P_0[j]=0$ 
+		Therefore, jointly all the provers have the correct witness and individually it does not reveal any information due to padding with shares of $0^{2m-1}$.
 		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
 	%\end{itemize}
 	

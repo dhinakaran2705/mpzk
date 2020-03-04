@@ -43,12 +43,12 @@ construct $h\times n$ matrix $P$ which serves as a bridge between the oracles
 $\pi_a$ $\forall a \in \{x,y,z\}$ and the vector $p(\overline{\bm{\zeta}})$.
 For $j\in [h]$, let $p_j(\cdot)$ denote the polynomial $\sum_{i\in[p]}
 r_iQ^i(\alpha_j, \cdot)$. We define the matrix $P$ by $P[j,k]= p_j(\eta_k)$ for
-$j\in[h], k\in[n]$. The matrix $P$ is in the product code $L_{n,2\ell}\otimes L_{h,m}$. As
+$j\in[h], k\in[n]$. The matrix $P$ is in the product code $\rsc{\eta}{n,2\ell-1}\otimes \rsc{\alpha}{h,2m-1}$. As
 before we commit to $P$ by committing to the submatrix $\overline{P}$
-consisting of the first $2m$ rows and the first $2\ell$ columns of $P$. Let
-$c_1,\ldots,c_{2\ell}$ be the commitments to the columns of $\overline{P}$.
+consisting of the first $2m-1$ rows and the first $2\ell-1$ columns of $P$. Let
+$c_1,\ldots,c_{2\ell-1}$ be the commitments to the columns of $\overline{P}$.
 
-\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is a polynomial of degree $2\ell$, $\Phi$ is a matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell})]$ and $p(\zetabar)$ is same as linear check. Here, Finally inner product reduces to $\innp{[\gamma||0^m]^T}{z}$, where $z= \beta P_0 + \overline{P}\times \varphi$ and $P_0\in \FF^{2m}$ is a random vector such that $P_0[j]=0 \forall j\in [m]$, and $\varphi = \Phi\times \tau$. Commitment of $P_0$ is $c_0$ is sent to the verifier apriori. Therefore, commitment to $z$ is $\cm = c_0^{\beta}\prod_{k=1}^{2\ell}(c_k)^{\varphi_k}$.
+\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is a polynomial of degree $<2\ell$-1, $\Phi$ is a $s \times 2\ell -1$ matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell-1})]$ and $p(\zetabar)$ is same as linear check. Here, Finally inner product reduces to $\innp{[\gamma||0^{m-1}]^T}{z}$, where $z= \beta P_0 + \overline{P}\times \varphi$ and $P_0\in \FF^{2m-1}$ is a random vector such that $P_0[j]=0 \forall j\in [m]$, and $\varphi = \Phi\times \tau$. Commitment of $P_0$ is $c_0$ is sent to the verifier apriori. Therefore, commitment to $z$ is $\cm = c_0^{\beta}\prod_{k=1}^{2\ell-1}(c_k)^{\varphi_k}$.
 
 \begin{comment} 
 Let$\overline{\bm{\eta}}$ denote the vector $(\eta_1, \ldots, \eta_{2\ell})$, and
@@ -92,8 +92,8 @@ verified using an inner product protocol as described in Section ~\ref{sec:matri
 \noindent{\em Proximity Check for Oracle:} We combine the proximity check for the three 
 encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector
 $\rho\sample \FF^{3p}$ and asks the verifier to commit to the matrix
-$\tilde{U}=\sum_{i=1}^p\rho_i\ewit_x[i,\cdot,\cdot]+
-\sum_{i=p+1}^{2p}\rho_i\ewit_y[i,\cdot,\cdot]+\sum_{i=2p+1}^{3p}\rho_i\ewit_z[i,\cdot,\cdot]$
+$\tilde{U}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
+\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$
 by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$. Thereafter, for
 $u\in [t]$, the verifier checks: 
 {\small
@@ -103,7 +103,7 @@ $u\in [t]$, the verifier checks:
 %\innph{\rho}{\pi_x[\cdot,k_u]\,||\,\pi_y[\cdot,k_u]\,||\,\pi_z[\cdot,k_u]}.
 \end{align}
 }
-\pnote{check this}
+
 
 %As in the linear check protocol, using $p(\overline{\bm{\zeta}})=\Phi p(\overline{\bm{\eta}})$, we get the following inner product check
 %$\innp{(\gamma,0^{h-m})}{\overline{P}\varphi}=0$ where $\varphi=\Phi^T\tau$. 
