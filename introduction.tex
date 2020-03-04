@@ -283,11 +283,11 @@ ensure that the aggregator gains no knowledge of provers' witnesses from them.
 In general, in such constructions one must ensure that in addition to verifier's
 view, the aggregator's view also leaks no knowledge. We did not see an obvious
 way to overcome this roadblock for Spartan ~\cite{spartan}, without resorting to
-expensive MPC among the provers. Among the existing zero knowledge protocols, we
+expensive MPC among the provers. Among the existing zero-knowledge protocols, we
 were only able to obtain an efficient DPZK from Bulletproofs
 ~\cite{bulletproofs} with moderate effort. This construction appears in Appendix ~\ref{app:BulletproofsDPZK}
 %{\color{blue} (Put appropriate section)}, 
-and is serves as a baseline for
+and serves as a baseline for
 comparison with $\dpname$. Even for the Bulletproofs based construction, we are
 unable to achieve sub-linear prover communication for a sub-linear shared circuit
 size $N_s$. We extensively compare the two constructions across both the DPZK

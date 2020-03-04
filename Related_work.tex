@@ -14,9 +14,7 @@ Trinocchio \cite{trinocchio} proposes a distributed proof generation method for
  Pinocchio  \cite{pinnochio_PHGR} but only when there is a
 honest majority of semi-honest parties. Moreover, it needs the trusted setup
 model. The work DIZK \cite{dizk} provides a distributed implementation of the proof generation of a non-interactive zero-knowledge protocol (zkSNARK).
-Table \ref{tab:SPZK} captures the summary. \commentA{there is no explanation why other protocols are not compared in the table. explian why alone DP-bulletproof is compared. what is E in the table? Protik: stop leaving undefined symbols}
-
- In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. $M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. And $N_s$ denotes the size of the shared circuit.
+ In Table ~\ref{tab:SPZK}, we compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. $M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. And $N_s$ denotes the size of the shared circuit.
 \begin{table*}[htb!] 
 	\centering
 	\resizebox{\textwidth}{!}{
@@ -25,7 +23,7 @@ Table \ref{tab:SPZK} captures the summary. \commentA{there is no explanation why
 			\hline
 			Protocols &  $\zkcomm$ & $\zkrounds$ & $t_\prover$ & $t_\verifier$ & $\prrounds$ & $\prcomm$ \\
 			\hline
-			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & 2 & $ \Num\cdot N + \Num^2\cdot N_s$ \\
+			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)E$ & $O(N)E$ & 2 & $ \Num\cdot N + \Num^2\cdot N_s$ \\
 			\hline
 			\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 2 & $ \Num\cdot N^{1-2/c} + \Num^2\cdot \max(N_s,N^{1-1/c})$ \\
 			\hline
@@ -46,7 +44,7 @@ Table \ref{tab:SPZK} captures the summary. \commentA{there is no explanation why
 		\end{tabular}
 		%\end{threeparttable}
 	}
-	\caption{Comparison amongst the DPZKs}\label{tab:SPZK}
+	\caption{Comparison amongst the DPZKs \commentA{E is meant to stay outside order?}}\label{tab:SPZK}
 	%\pnote{Con}
 \end{table*}
 %.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
