@@ -163,13 +163,13 @@ $O(N^{1-2/c})$ exponentiations. In Figure ~\ref{fig:standalonecompare}, we compa
 $\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{bulletproofs} in
 single prover setting. The estimates were obtained by timing the $\fft$
 operations, exponentiations and multiexponentiations for different sizes, in a
-single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yeild best
-proving time, while those for Ligero were optimized to yeild best proof size.
+single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
+proving time, while those for Ligero were optimized to yield best proof size.
 \begin{figure*}
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-$|C|$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
+$N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
         \multicolumn{3}{|c|}{Verifier Time($t_\verifier$) sec} &
         \multicolumn{3}{|c|}{Prover Time($t_\prover$) sec} \\
 \hline
