@@ -181,7 +181,7 @@ $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, the prover obtains $\ewit\gets 
 \enc(\wit)$ and $\pi=\comoracle \gets \ocom(\ewit)$. The prover then sets the oracle 
 $\pi := \comoracle$, which can then be queried by the verifier. The broad
- outline of the protocol given below follows the steps--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and the oracle (c) check if the oracle committed a well-formed codeword. The full protocol appears in
+ outline of the protocol given below follows the steps--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and the oracle (c) check if the oracle committed a well-formed codeword. The full protocol appears in the Appendix ~\ref{app:protocolboxes},
 Figure \ref{fig:linearcheck}.\smallskip
 
 \noindent {\em Reduction to Inner-product}: To check $A\wit=b$, the verifier 
@@ -198,30 +198,46 @@ $k$ run over indices in $[p],[m]$ and $[s]$ respectively.
 For $j\in [h]$, denoting  the polynomial $\sum_{i\in
 [p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ as $p_j$ (which will be of degree less than $s + \ell$), we can rewrite the expression as $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$.  We define the matrix $P$ by $P[j,k]=p_j(\eta_k)$ for $j\in [h],k\in [n]$ which is a product codeword from $\rsc{\eta}{n,s+\ell} \otimes \rsc{\alpha}{h,2m}$ and fully determined by sub-matrix $\overline{P}$ consisting of the first $2m$ rows and the first $s+\ell$ columns of $P$. Now our idea is to commit  $P$ using  commitment for product codeword i.e. $(c_1,\ldots,c_{s+\ell}) \gets \pccom(P)$ and write the above expression as an inner-product argument involving $\overline{P}$ such as $\innp{*}{\overline{P}\times\varphi} = r^Tb$, where $*$ is a public vector and $\varphi$ is a vector and so the commitment for $\overline{P}\times\varphi$ can be computed given the commitment of the columns of $\overline{P}$.
 
-\commentA{now complete and derive the above inner product form}. 
+\commentA{now complete and derive the above inner product form} \commentA{I tried to avoid p poly altogether as it is unnecessarily brought in the picture. try to complete the explanation without brining p in the picture. }. 
 
-Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$, $p(\zetabar) = [p(\zeta_1),\ldots,p(\zeta_s)]$, and $p(\etabar) = [p(\eta_1),\ldots,p(\eta_{s+\ell})]$. \newline
-\noindent {\em Consistency of $P$ and $p(\zetabar)$} Let $\Phi$ be a $s\times (s+\ell)$ matrix such that $p(\zetabar)^T = \Phi \times p(\etabar)^T$. \\
+%Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$, $p(\zetabar) = [p(\zeta_1),\ldots,p(\zeta_s)]$, and $p(\etabar) = [p(\eta_1),\ldots,p(\eta_{s+\ell})]$. \newline
+%\noindent {\em Consistency of $P$ and $p(\zetabar)$} 
+Let $\Phi$ be a $s\times (s+\ell)$ matrix such that $[p_j(\zeta_1), \ldots, p_j(\zeta_s)]^T = \Phi \times [p_j(\zeta_1), \ldots, p_j(\zeta_s)]^T \forall j\in[h]$ %$p(\zetabar)^T = \Phi \times p(\etabar)^T$. \\
+{\footnotesize
+\begin{align*}
+	\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= \Phi \bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{j\in[m]} p_j(\zeta_s)\bigg]^T\\
+	\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= \Phi \times \overline{P}^T \times [1^m||0^m]^T\\
+	\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= [1^m||0^m]\times \overline{P} \times \Phi^T\\
+\end{align*}}
+Therefore, the check $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} =r^Tb$ 
+$\Rightarrow \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$.
+Here, $[1^m||0^m]^T$ is the public vector and the vector $\varphi = \Phi^T \times [1^s]^T$. 
+Given commitment of $P$,  $c_1,\ldots,c_{s+\ell}$, the
+commitment to $\overline{P}\varphi$ can be computed as
+$\mathsf{cm}=\prod_{k=1}^{s+\ell}(c_k)^{\varphi_k}$.
+In the full protocol, 
+the prover initially commits to a random $P_0\in \FF^{2m}$ subject to $\innp{1^m}{P_0}=0$ and 
+uses $\beta P_0 + \overline{P}\times \varphi$ as witness in the inner product protocol. Here 
+$\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This randomization
+precludes the need for the inner-product argument to be zero knowledge, and as we will later
+see, helps reduce interaction among provers in its distributed variant.
+\smallskip  
+
+
+\begin{comment} 
   %$[p_j(\zeta_1),\ldots,p_j(\zeta_s)]^T =\Phi \times [p_j(\eta_1),\ldots,p_j(\eta_{s+\ell})]^T$ $\forall j\in[h]$ . Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$. 
  %$\Rightarrow [\sum_{j\in[m]} p_j(\zeta_1),\ldots,\sum_{j\in[m]}p_j(\zeta_s)]^T =\Phi \times [\sum_{j\in[m]}p_j(\eta_1),\ldots,\sum_{j\in[m]} p_j(\eta_{s+\ell})]^T$. Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$.
  Observe that, $p(\etabar)^T = \overline{P}^T \times [1^m || 0^m]^T$\\
  $\Rightarrow p(\zetabar)^T =\Phi \times \overline{P}^T \times [1^m || 0^m]^T$\\
  $\Rightarrow p(\zetabar)^T =[1^m || 0^m] \times \overline{P}\times \Phi^T$\\
- Therefore, the check $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{p(\zetabar)}{[1^s]} =r^Tb$ that can be viewed as $\innp{[1^m || 0^m] \times \overline{P}\times \Phi^T}{[1^s]} = \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$. Here, $[1^m||0^m]^T$ is the public vector and the linear transformation $\varphi = \Phi^T \times [1^s]^T$. 
- Given commitment of $P$,  $c_1,\ldots,c_{s+\ell}$, the
- commitment to $\overline{P}\varphi$ can be computed as
- $\mathsf{cm}=\prod_{k=1}^{s+\ell}(c_k)^{\varphi_k}$. %Using an inner-product argument
+ Therefore, the check $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{p(\zetabar)}{[1^s]} =r^Tb$ that can be viewed as $\innp{[1^m || 0^m] \times \overline{P}\times \Phi^T}{[1^s]} = \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$. 
+ \end{comment} 
+ 
+  %Using an inner-product argument
  %the prover can show that the commitment $\mathsf{cm}$ opens to vector $z$ such
  %that $\innp{1^m||0^m}{z}=r^Tb$. Binding property of the commitment ensures that
  %$z=\overline{P}\varphi$ with overwhelming probability.
- In the full protocol, 
- the prover initially commits to a random $P_0\in \FF^{2m}$ subject to $\innp{1^m}{P_0}=0$ and 
- uses $\beta P_0 + \overline{P}\times \varphi$ as witness in the inner product protocol. Here 
- $\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This randomization
- precludes the need for the inner-product argument to be zero knowledge, and as we will later
- see, helps reduce interaction among provers in its distributed variant.
-\smallskip  
-
+ 
 \begin{comment}
 \noindent {\em A product codeword Commitment}: 
 We introduce an $h\times n$ matrix $P$
@@ -860,7 +876,7 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 	%\begin{itemize}
 		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
 		%share of $0^h$.
-		Uniform distribution on the set codewords $P_0$ in $\dashL_2$ satisfying
+		Uniform distribution on the set codewords $P_0$ of length $2m$ satisfying
 		$\sum_{j\in [m]}P_0[j]=0$ 
 		jointly have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
 		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 

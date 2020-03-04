@@ -28,11 +28,11 @@ Table \ref{tab:SPZK} captures the summary.
 		%\begin{threeparttable}
 		\begin{tabular}{|c|c|c|c|c|c|c|} 
 			\hline
-			Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & Number of MPC & $\prcomm$ \\
+			Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & $\prrounds$ & $\prcomm$ \\
 			\hline
-			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & MPC($N_s,1$) & $\Num N$ \\
+			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & 2 & $\Num N + \Num^2\cdot N_s$ \\
 			\hline
-			\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & MPC($N_s,1$) & $\Num N^{1-1/c}$ \\
+			\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 2 & $\Num \cdot N^{1-2/c} + \Num^2\cdot N_s$ \\
 			\hline
 			%&computation & communi- cation & MPC rounds& & & \\ 
 			%\hline
@@ -54,7 +54,7 @@ Table \ref{tab:SPZK} captures the summary.
 	\caption{Comparison table}\label{tab:SPZK}
 	%\pnote{Add trinocchio in the table}
 \end{table*}
-.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
+%.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
 %Ligero \cite{ligero}, a zero-knowledge protocol was given, which attains sublinear proof size, without any trusted setup and assuming that finding the collision for a hash function is difficult. Then in \cite{bulletproofs} zero-knowledge argument of logarithmic size without trusted setup, assuming the discrete log is hard. And then \cite{aurora} gave an IOP based protocol which is better than \cite{ligero} in terms of proof size, but not as good as \cite{bulletproofs}, but hardness assumption is a collision-resistant hash function. \cite{spartan} provides an argument which attains sublinear proof as well as sublinear verification, on the hardness assumption of the discrete log. Verification of \cite{bulletproofs} requires the exponentiation operation of linear order, which is very expensive in terms of practice. Whereas \cite{aurora} does not require exponentiation, but as all its messages are constructed as oracles, it takes too much memory in practice. \cite{spartan} is better in terms of verification. In our work, we provide a zero-knowledge protocol which has a sublinear proof size, same as \cite{spartan} and in verification number of required field operations is linear in size of the circuit but the number of exponentiations is very less, lesser than \cite{spartan}, in practice which can outperform all the above works.
 
 %In \cite{DDS} notion of distributed prover protocol was introduced, where provers jointly provide a signature. Generalization of this work came in 2012 by Marcel et al. \cite{EfficientTZ}, which gave a generic notion of the distributed proof generation system. In this paper, the protocols were restricted to $\Sigma$-protocol.

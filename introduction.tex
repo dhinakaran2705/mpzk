@@ -1,7 +1,7 @@
 \section{Introduction} \label{sec:intro}
 A zero knowledge protocol tries to convince a verifier about the truth of a
 statement, without revealing any additional information. Availability of
-practically efficient zero knowledge protocols is enabling their real life
+practically efficient zero knowledge protocols is enabling their real-life
 application. These include proving the correctness of
 transactions in cryptocurrencies such as \cite{zerocash} or validating sensitive web browser data reported during
 telemetry \cite{MozillaPrio}. Still in the dream of a decentralized world, there are
@@ -19,7 +19,7 @@ collaborating but mutually distrusting entities each possessing their own secret
 data want to prove to a verifier that their secret data together satisfies a
 predicate of common interest. This is to be done without revealing any information
 about their sensitive data to each other or to the verifier. We illustrate
-through some potential real world applications:
+through some  real-world applications: %potential
 \begin{itemize}
 \item A simple but pertinent scenario is of a \textit{joint loan application} by an association of companies from a particular industry. The loan issuer has a set of financial requirements that it wants the association to satisfy, but there is no single trusted entity to act as the prover whom all the companies are willing to provide their sensitive business information with.
 \item In cryptocurrency settings \cite{bitcoin, ethereum, zerocash}, this would enable a \textit{multi-wallet transaction} where the wallets are held by different parties or a \textit{proof of joint stake} where the stake is held by different parties. These in turn enable secure collaboration applications by design on a blockchain network. % use it for joint auction-
@@ -34,16 +34,16 @@ proof generation is to start with the prover algorithm with a single prover
 protocol and run this algorithm between multiple provers using multi-party
 computation (MPC). This generic construction was discussed by Pedersen in
 ~\cite{Ped92}. However, the generic construction is likely to be concretely
-inefficient: Implementing high level abstractions such as fields, groups and
+inefficient, as implementing high level abstractions such as fields, groups and
 generic algorithms like $\fft$ etc to compute the next prover message as an
 arithmetic circuit is challenging, and would lead to large circuit
 representations. Running multiparty computation over such circuits with several
 parties would incur more overheads.
-\nnote{Any numbers to support the above?}
+%\nnote{Any numbers to support the above?}
 %Each round of proof generation is implemented by an MPC among the provers to
 %generate the message to be sent to the verifier.
 %The generic construction is optimal in proof size and verifier complexity in that it retains these complexities from the single-prover version irrespective of the number of provers. But, the complexity of proof generation suffers when the single prover protocol is not constructed with distributed proof generation in mind. Even an optimal $\round$-round proof generation algorithm with $O(N)$ multiplicative complexity of the prover's computation might result in a distributed proof generation algorithm with $\Omega(R \cdot N)$ communication among the provers.
-To get around the inefficiency of a generic constructionm, some prior works have
+To get around the inefficiency of a generic construction, some prior works have
 proposed efficient distributed proof generation in restricted settings. These
 include simple predicates involved in threshold signatures ~\cite{DDS}, some
 sigma protocols ~\cite{EfficientTZ}, combined range proofs ~\cite{bulletproofs},
@@ -63,11 +63,11 @@ such verifiers can be converted to succinct non-interactive  arguments
 generating the parameters of the protocol should ideally {\em not} involve a
 trusted third party. The next few subsections elaborate on the new efficiency
 parameters, formal definition and our new construction for DPZK that leverages 
-a new zero knowledge argument constructed in this paper, which may be of
+a new zero-knowledge argument constructed in this paper, which may be of
 independent interest. 
 
 \subsection{Efficiency parameters for $\DPZK$}\label{sec:efficiencyparams}
-In the single-prover setting, the efficiency of a zero knowledge protocol is usually measured in terms of: 
+In the single-prover setting, the efficiency of a zero-knowledge protocol is usually measured in terms of: 
 \begin{itemize}
 \item {\em prover complexity}, denoted by $t_\prover$, which represents the time
 complexity of the prover algorithm,
@@ -81,16 +81,16 @@ But, these parameters do not capture the core bottleneck in the setting of multi
 %For instance, Spartan \cite{spartan} has an $O(N \log N)$ \commentA{unclear; you mean no. of multiplication or overall arithmetic operations? } proof generation algorithm, but due to the high multiplicative complexity of proof generation its straightforward distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved.  \commentA{intuitively explain why the jump from $NlogN$ to $N^2$ happens}%Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
 As a first step in our work, we identify additional parameters with significant impact in distributed proof generation. 
 
-\paragraph{Proof generation communication ($\prcomm$)}
+\paragraph{Proof-generation communication ($\prcomm$)}
 %The first parameter of interest is \textit{proof generation communication} $(\prcomm)$. 
 This parameter quantifies the amount of communication between the provers during the
 distributed proof generation. This is meant to capture additional MPC
 communication that provers would incur while computing the messages to the
 verifier. Using secret-sharing based MPC protocols ~\cite{GMW87, BGW88, SPDZ},
-this depends on the number of multiplications between bits from different
+this depends on the number of multiplications between inputs from different
 parties ({\em cross-multiplications}), that need to be performed to compute the
 messages to the verifier. 
-\nnote{Don't we need to motivate why this parameter is important ?}
+%\nnote{Don't we need to motivate why this parameter is important ?}
 %In general, this grows linearly with the circuit complexity of the proof generation algorithm for the practical MPC protocols. 
 %\nnote{Why are we discussing circuit complexity of proof generation algorithm?}
 %\dnote{I am saying "practical" because there are RAM based protocols which do better than circuit complexity of the algorithm.}
@@ -102,7 +102,7 @@ messages to the verifier.
 \paragraph{Proof generation rounds ($\prrounds$)}
 %The next parameter of interest is the number of \textit{proof generation rounds ($\prrounds$)} which 
 This indicates the number of rounds of communication between the provers during
-the distributed proof generation. Informally, it denotes the number of separate
+the distributed proof generation. \commentA{this is not correct; a single MPC may take more more than one rounds, since the multiplicative depth may be high. reword}Informally, it denotes the number of separate
 MPCs that the provers have to run throughout the proof generation process. Note
 that this could be lower than the round complexity of the zero knowledge
 protocol. A lower value of this parameter enhances the practicality of the
@@ -307,8 +307,9 @@ view, the aggregator's view also leaks no knowledge. We did not see an obvious
 way to overcome this roadblock for Spartan ~\cite{spartan}, without resorting to
 expensive MPC among the provers. Among the existing zero knowledge protocols, we
 were only able to obtain an efficient DPZK from Bulletproofs
-~\cite{bulletproofs} with moderate effort. This construction appears in Appendix
-{\color{blue} (Put appropriate section)}, and is serves as a baseline for
+~\cite{bulletproofs} with moderate effort. This construction appears in Appendix ~\ref{app:BulletproofsDPZK}
+%{\color{blue} (Put appropriate section)}, 
+and is serves as a baseline for
 comparison with $\dpname$. Even for the Bulletproofs based construction, we are
 unable to achieve sublinear prover communication for a sublinear shared circuit
 size $N_s$. We extensively compare the two constructions across both the DPZK
