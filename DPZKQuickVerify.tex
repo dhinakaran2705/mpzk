@@ -872,14 +872,13 @@ $\distlinearcheck$. Note that in $\distlinearcheck$, provers are interacting onl
 	%Finally, the (extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$, $z^\xi=u_0^\xi+P^\xi\mu$, $\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. 
 	Note that other than $\shr{\comoracle}$ and $\shr{z}$, remaining
 	included in our definition of the extended view of the single prover case. As in the simulation of the
-	single prover case, given the verifier randomness. The joint distribution of ${z}^1,\ldots,{z}^{\Num}$ can be seen to be:
+	single prover case, given the verifier randomness. The joint distribution of $\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num}$ can be seen to be:
 	%({\color{red} Protik to finish the argument}).
 	%\begin{itemize}
 		%\item Uniform distribution on $\FF^h$ if one of the provers sends an incorrect
 		%share of $0^h$.
-		Uniform distribution on the set codewords $P_0$ of length $2m$ satisfying
-		$\sum_{j\in [m]}P_0[j]=0$ 
-		jointly have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
+		uniform distribution on the set $\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m})^{\Num}: z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$. %$P_0$ of length $2m$ satisfying $\sum_{j\in [m]}P_0[j]=0$ 
+		Therefore, jointly all the provers have the correct witness and individually it does not reveal any information due to padding with $0^{2m}$.
 		%\item Provers follow the protocol but with incorrect inputs: in lemma ~\ref{lem:privacy}, we described a simulator which can simulate the messages of the honest parties. 
 	%\end{itemize}
 	

@@ -6,33 +6,28 @@ MPC. Over the years, works have discussed distributed proof generation for a
 restricted class of predicates: Desmedt et al. \cite{DDB94} proposing proofs for
 graph isomorphism, various works \cite{King05, DDS, Desmedt2011} for proposing
 threshold signatures, Keller et al. \cite{EfficientTZ} for a class of sigma
-protocols. The Bulletproofs paper \cite{bulletproofs} also presents a
+protocols. Bulletproof  \cite{bulletproofs} presents a
 ``distributed'' protocol to produce an aggregation of range proofs on inputs
 held by different parties. However, their completeness property is weaker than
 ours, i.e, a set of provers with valid witness can only prove the statement only if each input gate is exclusive to one prover. 
 Trinocchio \cite{trinocchio} proposes a distributed proof generation method for
-the popular Pinocchio protocol \cite{pinnochio_PHGR} but only when there is a
+ Pinocchio  \cite{pinnochio_PHGR} but only when there is a
 honest majority of semi-honest parties. Moreover, it needs the trusted setup
 model. The work DIZK \cite{dizk} provides a distributed implementation of the proof generation of a non-interactive zero-knowledge protocol (zkSNARK).
+Table \ref{tab:SPZK} captures the summary. \commentA{there is no explanation why other protocols are not compared in the table. explian why alone DP-bulletproof is compared. what is E in the table? Protik: stop leaving undefined symbols}
 
-
-%Our single-prover version of the protocol is also competitive in the state-of-art of such protocols \cite{ligero, aurora, bulletproofs}. 
-%We provide a brief summary of ``direct'' transformations of the state-of-art zero-knowledge protocols in our setting into their $\DPZK$ versions.
-%The IPCP protocol Ligero \cite{ligero} requires no public key operations during its proof generation and admits efficient proof generation, in practice \cite{diogenes}, for a single prover. In asymptotics, it admits $O(N \log N)$ prover complexity and $O(\sqrt{N})$ proof size. Another oracle based construction Aurora \cite{aurora} admits $O(\log^2 N)$ proof size, but its prover algorithm is expensive in practice due to its high usage of memory even for moderate sized circuits with a million gates.\dnote{@Nitin: check the wording of the sentence}
-%Ligero and Aurora also do not directly admit distributed proof generation unless a generic MPC is applied for constructing their oracle and answering its queries. The Bulletproofs protocol \cite{InnerProductDLS,bulletproofs} has one of the best proof sizes of $O(\log N)$, but its prover and verifier algorithms involves $O(N)$ public key operations which makes it expensive. 
-%\dnote{once we get concrete number for our protocol for a million and a billion gate circuits, make the related work section more concrete, especially for the single prover protocol comparison}
-Table \ref{tab:SPZK} captures the summary.
-\begin{table*}[ht] 
+ In the following table ~\ref{tab:SPZK}, we will compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. $M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. And $N_s$ denotes the size of the shared circuit.
+\begin{table*}[htb!] 
 	\centering
 	\resizebox{\textwidth}{!}{
 		%\begin{threeparttable}
 		\begin{tabular}{|c|c|c|c|c|c|c|} 
 			\hline
-			Protocols & Argument size & $\zkrounds$ & Prover's complexity & Verifier's complexity & $\prrounds$ & $\prcomm$ \\
+			Protocols &  $\zkcomm$ & $\zkrounds$ & $t_\prover$ & $t_\verifier$ & $\prrounds$ & $\prcomm$ \\
 			\hline
-			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & 2 & $ N + \Num\cdot N_s$ \\
+			D-Bulletproofs & $\log (N)$ & $\log(N)$ & $O(N)$E & $O(N)$E & 2 & $ \Num\cdot N + \Num^2\cdot N_s$ \\
 			\hline
-			\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 2 & $ N^{1-2/c} + \Num\cdot N_s$ \\
+			\name & $N^{1/c}$ & $\log(N)$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 2 & $ \Num\cdot N^{1-2/c} + \Num^2\cdot \max(N_s,N^{1-1/c})$ \\
 			\hline
 			%&computation & communi- cation & MPC rounds& & & \\ 
 			%\hline
@@ -51,7 +46,7 @@ Table \ref{tab:SPZK} captures the summary.
 		\end{tabular}
 		%\end{threeparttable}
 	}
-	\caption{Comparison table}\label{tab:SPZK}
+	\caption{Comparison amongst the DPZKs}\label{tab:SPZK}
 	%\pnote{Con}
 \end{table*}
 %.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}

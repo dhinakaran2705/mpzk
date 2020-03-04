@@ -60,7 +60,7 @@ that the code $\tilde{f}(\mc{C})=\tilde{\mc{C}}$ also has the same parity check
 matrix as the code $L$, and hence has the same minimum distance $d$. We skip the
 proof as it is standard. 
 \end{proof}
-
+\end{comment}
 \subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
 \begin{proof}
 	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
@@ -83,7 +83,7 @@ proof as it is standard.
 	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
 	This proves the above claim.	
 \end{proof}
-\end{comment}
+
 \subsection{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
 We need several observations to prove the proposition, which we present next.
 Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
@@ -281,6 +281,7 @@ We use the inner-product argument $(\prover,\verifier)$ from Bootle et. al in \c
 \noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
 \end{comment}
 
+\begin{comment}
 \subsection{Forking Lemma and Knowledge Soundness}
 We use the Forking Lemma from \cite{InnerProductDLS,bulletproofs} to describe 
 expected polynomial time knowledge extractors for our protocols. Let
@@ -295,7 +296,7 @@ $x_i$. We call a $\ppt$ algorithm $\chi$ to be a {\em witness extraction
 algorithm} if $\chi$ can extract a witness $w$ to the statement, given an
 appropriate tree of accepting transcripts. This can be seen as a generalization
 of the notion of special soundness for Sigma protocols with $n=2$ and $\mu=1$.
-
+\end{comment}
 \begin{definition}[Argument of Knowledge]\label{def:argofknowledge}
 Let $(\setup,\prover,\verifier)$ be an public coin interactive protocol. We say that
 $(\setup,\prover,\verifier)$ is an {\em argument of knowledge} for the language
@@ -327,7 +328,7 @@ Our argument of knowledge proofs rely on the following result from \cite{bulletp
 While the result is originally stated and proved for showing witness-extended
 emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
-
+\begin{comment}
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
 Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-round public coin interactive
 protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
@@ -337,7 +338,7 @@ polynomial in security parameter $\secpar$, the protocol
 $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
 \commentA{change 'move' to 'round' in all the above text.}
-
+\end{comment}
 \begin{comment}
 \section{Proofs}
 \begin{proof}
