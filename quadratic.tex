@@ -48,12 +48,9 @@ before we commit to $P$ by committing to the submatrix $\overline{P}$
 consisting of the first $2m-1$ rows and the first $2\ell-1$ columns of $P$. Let
 $c_1,\ldots,c_{2\ell-1}$ be the commitments to the columns of $\overline{P}$.
 
-\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the
-linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is
-a polynomial of degree $<2\ell$-1, $\Phi$ is a $s \times 2\ell -1$ matrix that
-takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots,
-p(\eta_{2\ell-1})]$ and $p(\zetabar)$ is same as linear check. Proceeding as in
-the linear check protocol, the inner product finally reduces to
+
+\noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is a polynomial of degree $<2\ell$-1, $\Phi$ is a $s \times 2\ell -1$ matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell-1})]$ and $p(\zetabar) = [p(\zeta_1),\ldots, p(\zeta_{s})]$.  
+Proceeding as in the linear check protocol, the inner product finally reduces to
 $\innp{[\gamma||0^{m-1}]^T}{z}$, where $z= \beta P_0 + \overline{P}\times
 \varphi$ and $P_0\in \FF^{2m-1}$ is a random vector such that $P_0[j]=0$ for
 $j\in [m]$, and $\varphi = \Phi\times \tau$. Commitment $c_0$ of $P_0$ is sent to the verifier apriori. Therefore, commitment to $z$ is $\cm = c_0^{\beta}\prod_{k=1}^{2\ell-1}(c_k)^{\varphi_k}$.
