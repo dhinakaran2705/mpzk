@@ -315,7 +315,53 @@ $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u
 %for veryfying inner products of several commited vectors with a common vector. 
 %The completeness of the linear check protocol can be easily verified. We sketch the proof for its
 %soundness, leaving the detailed proof to the Appendix.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+{\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
+%Linear Check of Graphene
+\begin{figure}[h!]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: \commentA{what is pp? please do not leave undefined notations. if not necessary,  simplify and remove}
+			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
+				\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				as in Section ~\ref{sec:lincheck}. 
+				\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^{2m-1}$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+				Computes commitments $c_1,\ldots,c_{s+\ell-1}$ from $P$.
+				\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell-1}$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\prover\rightarrow\verifier$: $\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+					for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell-1}c_a^{\Lambda^T_{n,s+\ell-1}[a,k_u]}$, 
+					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})U[i,j_u,k_u]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell-1}c_k^{\varphi_k}$ (check the condition $r^TAw=r^Tb$).
+					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				\item $\verifier$ accepts if all the checks succeed.
+			\end{enumerate}
+		\end{framed}
+		\caption{Linear Check Protocol}
+		\label{fig:linearcheck}
+	}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{lemma}[Soundness]\label{lem:linercheck_sound}
@@ -398,12 +444,13 @@ $\innp{f_u}{\ewit[i,\cdot,k_u]}=X_u[i]$ for $i\in [p]$ and $u\in [t]$
 force the prover to provide vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
 overwhelming probability. Then the consistency check succeeds for the 
 uniformly sampled query point $(j_u,k_u)$ when:
+{\footnotesize
 \[ P[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
-\hat{P}[j_u,k_u] \]
+\hat{P}[j_u,k_u] \]}
 For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
 $P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
 probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
-{\small
+{\footnotesize
 \begin{align*}
 \prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
 \\
@@ -487,7 +534,7 @@ there exists an expected polynomial time extractor $\extr$ with rewinding access
 to the transcript oracle $\mc{O}=\innp{P^\ast(\cdot)}{\verifier^{\pi}(\cdot)}$
 such that either $\extr$ breaks the commitment binding, or it outputs a witness
 with overwhelming probability whenever $P^\ast$ succeeds, i.e,
-{\small
+{\footnotesize
 \begin{align*}
 \condprob{
 \begin{array}{c}
@@ -512,7 +559,7 @@ denotes the success probability of the prover $P^\ast$ as before.
 \begin{proof}
 The proof is similar to the proof of the linear check protocol. Using similar
 arguments, one can show that the above Lemma holds with:
-{\small
+{\footnotesize
 \begin{equation*}
 \kappa_{qd}(\secpar) := \left(1-\frac{e}{n}\right)^t +
 \left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
@@ -786,11 +833,13 @@ We provide the complete distributed linear protocol in Figure
 %the verifier.  
 
 \noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
+{\footnotesize 
 \begin{align*}
 P[j,k] & =\sum_{i\in
 [p]}r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\    
 & = \sum_{i\in [p]}r_i(\ewit_x[i,j,k].\ewit_y[i,j,k] - \ewit_z[i,j,k])
 \end{align*}    
+}
 In the above, the provers have additive shares of $\ewit_x$ and
 $\ewit_y$, and so they peformn an MPC with $O(N)$ multiplication gates and
 depth $1$, to obtain additive shares of $\ewit_x[i,j,k].\ewit_y[i,j,k]$.
@@ -925,47 +974,7 @@ the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$.
 Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
+For security against malicious provers see in Appendix ~\ref{app:semi-honesttomalicious}
 \subsection{Reducing MPC overhead for small shared circuits}:
 
 
-\subsection{Semi-honest to Malicious Security: }\label{sec:semi-honesttomalicious} 
-To achieve security against malicious provers, every prover $\distprover$ sends Zero-Knowledge Argument of Knowledge (ZKAoK) along with every committed value sent to $\Ag$, which says $\distprover$ knows what value is committed. A malicious secure MPC executes multiplication. Furthermore, all messages are sent via broadcast.
-%In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output, he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation so that the simulator can extract the committed value and maliciously secure MPC to compute $\mathsf{Mult}$. Furthermore, all the messages to $\Ag$ are via broadcast. 
-%\pnote{Give the overview of the proof. and explain why the does not go through when the aggregator is corrupt.}
-
-\noindent{\bf Overview of the proof:} 
-With the above modification, our protocol can withstand malicious provers. We can design a simulator for the protocol, which uses $\extrac$, the extractor of ZKAoK, Simulator $\Sim_{Mult}$ for the secure MPC for multiplication, and zero-knowledge simulator $\Sim_{ZK}$ of Graphene. \pnote{I think a little detailing is required here.}
-%We will describe, in high-level, how to construct a simulator $\Sim$ which can generate a view which is indistinguishable from a real execution, where $\Sim$ has access to the extractor $\extrac$ for the ZKAoK and the simulator $\Sim_{Mult}$ for the secure multiplication and the zero-knowledge simulator $\Sim_{ZK}$ of \name. $\Sim$ receives the messages from the corrupt parties to $\Ag$ due to broadcast. Then, $\Sim$ calls $\extrac$ and obtains opening of $\shr{\comoracle}$ for all corrupt $\xi$. Using $\Sim_{ZK}$, $\Sim$ prepares the messages of the honest parties, and if there is any interaction required between the provers, that interaction is generated via $\Sim_{Mult}$. $\Sim$ checks if all the messages are consistent or not with all the previous messages if not $\Sim$ sends consistent but random values on behalf of honest parties, otherwise, just before sending $\shr{z_{lc}}$ and $\shr{z_{qd}}$, $\Sim$ invokes the $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ generates messages for honest parties using $\Sim_{ZK}$ otherwise it picks messages uniformly at random.
-
-\noindent{\bf Difficulty in simulation while aggregator is malicious:} The above proof works against malicious provers but semi-honest aggregator. To generate the messages on behalf of honest parties, $\Sim$ needs the output of $\Func_{DPZK}$. If $\Ag$ deviates from the protocol at the last round, then the simulator cannot generate an appropriate message, which gives the same output as real-execution. Though we don't have a simulator when $\Ag$ is malicious, we do not have an attack either. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
- %In the above construction, it considered that provers might deviate while interacting among themselves. However, we do not consider the scenario if $\Ag$ deviates. We do not have a simulator that can simulate a view when all the provers (corrupt and honest) behaving correctly, but $\Ag$ sends a wrong combined value to $\verifier$. To resolve, one can try to invoke the $\Func_{\DPZK}$ after $\Ag$ sending the final value to $\verifier$. However, $\Ag$ needs honest parties messages to generate the message for $\verifier$, and the simulator needs the output of the $\Func_{\DPZK}$. So, it is difficult to get a simulator, which can generate a view indistinguishable from the real world execution. Though we can not construct a simulator for our protocol, we do not have an attack in this corruption model. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
-
-\begin{comment}
-\begin{lemma}\label{lem:privacy}
-	For $\xi\in [K]$, let $\View^{\xi}_{\adv}$\pnote{fix notation} denotes the view of the adversary $\adv$ corrupting parties in $I$, where $I$ is a proper subset of the sets of the provers. Then there is a $\ppt$ simulator $\Sim$ which can generate a view of $\adv$ which is indistinguishable from the real execution of the protocol given there is a secure MPC for multiplication which withstand against the corrupt parties in $I$. \pnote{(Maybe a broadcast required)}
-\end{lemma}
-
-\begin{proof}
-	To prove the above theorem we will design a simulator $\Sim$ which has access to the ideal functionality $\Func_{\DPZK}$ (~\ref{func:DPZK}). Provers in $I$ encode and commit to their inputs and $\Sim$ gets $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$. Since the provers are giving ZKAoK in addition to the commitment, by the extractor of argument of knowledge, $\Sim$ extracts and gets shares of $\wit, \wit_x,\wit_y,\wit_z$ of the parties in $I$. 
-	%Now $\Sim$ checks if all the steps of Linear and Quadratic checks are done using the same inputs extracted by $\Sim$. If yes, then $\Sim$ calls the functionality $\Func_{\DPZK}$ if it outputs 1, then $\Sim$ uses the same approach of  
-	%$\Sim$ picks random challenges for both linear and quadratic checks on behalf of the verifier (picking random challenges on behalf of the verifier is fine since the verifier is semi-honest). 
-	Then $\Sim$ uses the simulator for \name and gets an accepting transcript. Using that computes $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall \xi\notin I$, using homomorphic property of the commitment scheme.
-	$\Sim$ gets $\shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell}}$ and $\shr{Z}$ for all $\xi\in I$ in the linear check, as all the provers are sending this values to $\Ag$, which is done using broadcast. Using extraction of commitment $\Sim$ gets the decommitted values. If there is some inconsistency in the values extracted from $\shr{\comoracle}, \shr{\comoracle}_a$ $\forall a\in\{x,y,z\}$ and $\forall \xi \in I$ and these decommitted values then
-	%output $\abort$, else continue.
-	sets $\mathsf{state}$ as fail, otherwise pass.
-	For quadratic check, $\Sim$ calls the simulator, $\Sim_M$, of the secure multiplication protocol and extracts the input of the MPC, and does the consistency check, as in the linear case. If there is some inconsistency then 
-	%output $\abort$, else continue.
-	sets $\mathsf{state}$ as fail, otherwise, pass.
-	Similarly, $\mathsf{state}$ is set for the remaining part of the protocol.
-	(This part is informally stated here, details will be provided in the full version.)
-	Now for both the protocols if $\mathsf{state}$ remains pass till the provers send the final messages to $\Ag$, which are the witnesses of the inner product arguments, 
-	\pnote{Should we add the details such as what are the consistency checks? From the protocol that is quite evident.}
-	then $\Sim$ calls the functionality $\Func_{\DPZK}$ with the input $\wit, x,y,z$ of the parties in $I$. If it outputs 1, then $\Sim$ generates the final messages of the honest parties using the accepting transcript produced by the zero-knowledge simulator, else $\Sim$ picks any random message which is consistent with the transcript so far.
-	
-	If there is some inconsistency in some intermediate step, i.e., the $\mathsf{state}$ is fail, then $\Sim$ calls the functionality $\Func_{\DPZK}$ on some random value and proceeds accordingly with the simulation.
-	
-	This proves that the view of the corrupt provers can be simulated, which ensures privacy of the honest provers.
-\end{proof}
-
-%\end{enumerate}
-\end{comment}

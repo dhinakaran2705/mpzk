@@ -147,8 +147,10 @@ $p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
 \mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
 $p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$.  Then for any
 $m\times n$ matrix $u_0$ over $\FF$, we have 
+{\small
 \[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
 \frac{d}{|\FF|}\]  
+}
 for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
 \end{proposition}
 
@@ -163,6 +165,9 @@ This commitment is homomorphic with $\calC=\GG$ as the commitment space.
 %We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. 
 We now define the language for inner-product w.r.t. the above  as $\calL
 \subseteq \FF^m \times \calC \times \FF$ given by:
+
+%\\~
+{\small
 \begin{equation*}
 %\begin{aligned}[c]
 \begin{array}{l}
@@ -171,7 +176,7 @@ c=\com(y,r)  \text{ and } \innp{x}{y}=z\}
 %\end{aligned}
 \end{array}
 \end{equation*}
-
+}
 %The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$.
  Interestingly, the inner-product argument is used to save on communication.
 Proving  an inner-product statement requires sending $y$ on clear which costs
