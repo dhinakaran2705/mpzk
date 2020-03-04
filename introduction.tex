@@ -5,7 +5,8 @@ practically efficient zero knowledge protocols is enabling their real-life
 application. These include proving the correctness of
 transactions in cryptocurrencies such as \cite{zerocash} or validating sensitive web browser data reported during
 telemetry \cite{MozillaPrio}. Still in the dream of a decentralized world, there are
-multiple co-opetitive entities interacting with each other to obtain insights
+multiple co-opetitive entities i.e.,
+collaborating but mutually distrusting entities interacting with each other to obtain insights
 and maximize their goals. We envisage applications of zero knowledge
 proofs to enable these mutually
 distrusting entities to prove a claim on their joint data. In this setting, the 
@@ -14,8 +15,7 @@ a single prover to have the entire witness needed to generate the proof.
 
 %\pdnote{do we want to motivate it in a way such that the honest prover setting we are looking at will suffice for the listed applications? }
 In this work, we study the general setting of \textit{distributed prover
-zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive i.e.,
-collaborating but mutually distrusting entities each possessing their own secret
+zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive entities each possessing their own secret
 data want to prove to a verifier that their secret data together satisfies a
 predicate of common interest. This is to be done without revealing any information
 about their sensitive data to each other or to the verifier. We illustrate
@@ -75,7 +75,7 @@ complexity of the prover algorithm,
 of communication from the prover to the verifier,
 \item {\em verifier complexity}, denoted by $t_\verifier$, which represents the
 time complexity of the verifier algorithm, and
-\item {\em round complexiry}, denoted as $\zkrounds$, which represents rounds of interaction between the prover and the verifier. %especially when a non-interactive prover is obtained from its interactive version in a provably secure manner \cite{BCS16}.
+\item {\em round complexity}, denoted as $\zkrounds$, which represents rounds of interaction between the prover and the verifier. %especially when a non-interactive prover is obtained from its interactive version in a provably secure manner \cite{BCS16}.
 \end{itemize} 
 But, these parameters do not capture the core bottleneck in the setting of multiple provers.  
 %For instance, Spartan \cite{spartan} has an $O(N \log N)$ \commentA{unclear; you mean no. of multiplication or overall arithmetic operations? } proof generation algorithm, but due to the high multiplicative complexity of proof generation its straightforward distributed version requires $O(N^2)$ MPC multiplications where $N$ is the number of gates in the circuit representation of the predicate being proved.  \commentA{intuitively explain why the jump from $NlogN$ to $N^2$ happens}%Similar arguments will be made in a future section for the other state-of-art protocols like Aurora \cite{aurora}, Bulletproofs \cite{bulletproofs}. \dnote{mention the asymptotics in the above claims}
