@@ -117,7 +117,7 @@ the distributed proof generation. Informally, it denotes the number of rounds th
 %\commentA{it's hard to digest the above; what's the point you are trying to make; some of the zkRounds do not need MPC and hence we can get read of the linear independence of prRounds from zkRounds?  }
 %\dnote{The above point makes sense only for the interactive version. Should we also argue for non-interactive proof generation?-that it requires us to do hash inside MPC if MPC is not done for each step.} 
 %\commentA{I didn't understand your comment. other can help?}
-The parameter $\prrounds$ is also of cryptographic interest. If there is more than one round of prover message generation which requires MPC, care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol secure.
+The parameter $\prrounds$ is also of cryptographic interest. If there is more than one round of prover message generation which requires MPC, care has to be taken to ensure a secure composition of the individual MPCs to prove the complete protocol is secure.
 
 \paragraph{Shared circuit complexity}
 We will now elaborate a bit more on the number of cross-multiplications in the circuit that needs to be evaluated distributedly for proof generation since
@@ -217,7 +217,7 @@ product is $O(N)$. The \textit{witness encoding} is obtained by encoding every
 $m \times s$ `slice' of the 3D matrix using a carefully selected product of
 Reed-Solomon codes.  The \textit{oracle} is now obtained by committing each $O(m)$-sized `column' in 
 the encoded witness using homomorphic vector commitments \cite{Ped92}. 
-This results in an oracle that is a $O(p \cdot n)$-sized matrix of commitments.
+This results in an oracle that is a $O(p \cdot s)$-sized matrix of commitments.
 The use of homomorphic vector commitments helps in two aspects: (i) enabling
 distributed proof generation and (ii) achieving proof sizes independent of the
 largest dimension of the matrix. The latter is crucially dependent on the use
