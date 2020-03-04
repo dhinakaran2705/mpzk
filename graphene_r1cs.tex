@@ -53,12 +53,12 @@ by $p_j(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot).Q_x^i(\alpha_j,\cdot)+
 R^{3p+i}(\alpha_j,\cdot)Q^i(\alpha_j,\cdot))$. The $p_j$ polynomials for the
 matrix $P_{qd}$ are given by
 $p_j(\cdot)=\sum_{i=1}^{p}r_{qd}[i](Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot))$.
-\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m}$ for linear and quadratic check protocols
+\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m-1}$ for linear and quadratic check protocols
 respectively, and commitments $c_0,d_0$ to vectors $U_{lc}$
 and $U_{qd}$.
 \end{itemize}
-\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell}$ for
-the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell}$ for matrix
+\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell-1}$ for
+the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell-1}$ for matrix
 $P_{qd}$. 
 \item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$.
 \item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
