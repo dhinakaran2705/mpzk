@@ -271,13 +271,13 @@ x_0,x_1,r_0,r_1 \gets \adv(\secparam,\sigma)
 }
 
 \end{definition}
-\end{comment}
+
 \subsection{Inter-product Arguments} \label{inner-product-instan}
 \noindent{\em Logarithmic Inner-product Argument}: In this setting, we have $\calM=\bbZ^n_p$, $\calR=\bbZ_p$, $\calC=\bbG$ where $\bbG$ is group of prime order $p$. The algorithm $\gen$ samples generators $g_1,\ldots,g_n$, $h$ $\gets \bbG$. 
 The commitment is a Pederson vector commitment  given by $\com({\bf x } ,r ) = h^r \cdot \prod_{i=1}^n {g_i}^{x_i}$ where ${\bf x}=(x_1,\ldots,x_n)$. 
 We use the inner-product argument $(\prover,\verifier)$ from Bootle et. al in \cite{bulletproofs} for the commitment scheme $(\gen,\com)$. The interactive protocol $(\prover,\verifier)$ is a $O(\log n)$ round protocol with argument size $O(\log n)$. The verifier $\viplog$ performs $O(n)$ operations in $\bbZ_p$ and $O(n)$ operations in $\bbG$.\smallskip
 
-\begin{comment}
+
 \noindent{\em Square-root Inner-product Argument}: In this setting we use the same commitment scheme as above. For the inner product argument we use the interactive protocol $(\pipsq,\vipsq)$ from \cite{InnerProductDLS}. The construction in \cite{InnerProductDLS} gives a $5$-round protocol with total communication complexity $O(\sqrt{n})$. Here, the verifier $\vipsq$ performs $O(n)$ operations in $\bbZ_p$ and $O(\sqrt{n})$ operations in $\bbG$.
 \end{comment}
 

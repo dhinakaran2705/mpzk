@@ -15,7 +15,7 @@ Trinocchio \cite{trinocchio} proposes a distributed proof generation method for
 honest majority of semi-honest parties. Moreover, it needs the trusted setup
 model. The work DIZK \cite{dizk} provides a distributed implementation of the proof generation of a non-interactive zero-knowledge protocol (zkSNARK).
  In Table ~\ref{tab:SPZK}, we compare the different metrics of efficiency for both the available $\DPZK$ protocols. Here $N$ is the size of the circuit and, $c$ is a positive integer of our choice. $\Num$ is the number provers in the $\DPZK$ setting. $M$ is to indicate the amount of computation required for a single multiplication on the field elements, and $E$ is to indicate the amount of computation required for single exponentiation on the group elements, in which $\mathsf{Dlog}$ is assumed to be hard. And $N_s$ denotes the size of the shared circuit.
-\begin{table*}[htb!] 
+\begin{table*}[h!] 
 	\centering
 	\resizebox{\textwidth}{!}{
 		%\begin{threeparttable}
@@ -44,7 +44,7 @@ model. The work DIZK \cite{dizk} provides a distributed implementation of the pr
 		\end{tabular}
 		%\end{threeparttable}
 	}
-	\caption{Comparison amongst the DPZKs \commentA{E is meant to stay outside order?} \pnote{As described above, E is the cost (time) of single exponentiation. That is why E is outside of order}}\label{tab:SPZK}
+	\caption{Comparison amongst the DPZKs }\label{tab:SPZK}
 	%\pnote{Con}
 \end{table*}
 %.\dnote{should section and subsection titles have caps only for the first letter of the first word, or in the first letter of every word?}
