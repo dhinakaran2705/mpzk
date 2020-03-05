@@ -61,6 +61,8 @@ matrix as the code $L$, and hence has the same minimum distance $d$. We skip the
 proof as it is standard. 
 \end{proof}
 \end{comment}
+% removing proof of Lemma bicdecoding
+\begin{comment}
 \subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
 \begin{proof}
 	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
@@ -83,6 +85,7 @@ proof as it is standard.
 	And $|S_1|= n-\beta_1 > n-e_1$ and $|S_2|= h-\beta_2 > h-e_2$.
 	This proves the above claim.	
 \end{proof}
+\end{comment}
 
 \subsection{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
 We need several observations to prove the proposition, which we present next.
@@ -129,7 +132,8 @@ Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\H
 \end{lemma}
 \begin{proof}
 %\nnote{Candidate for Appendix: Putting it here just to have all content for the moment}
-The above is equivalent to
+In this proof, let $\delta(x,y)$ denote the set of positions where the vectors
+$x$ and $y$ differ, and let $\wt{x}$ denote $|\delta(x,\bm{0})|$. The above is equivalent to
 proving that if there exist $d+1$ distinct points $X =
 \{x_1,\ldots,x_{d+1}\}\subseteq \ell_{u,v}$ such
 that $d(x_i,L)\leq e$ for all $i\in [d+1]$, then $d(x,L)\leq e$ for all $x\in
@@ -174,14 +178,14 @@ $\eta_i=\alpha_i\eta_1+\beta_i\eta_2$. Observe that any $x^\ast\in \ell_{u,v}$ c
 be written as $x^\ast=\alpha^\ast x_1+\beta^\ast x_2$. Thus
 $d(x^\ast,L)=d(\alpha^\ast x_1+\beta^\ast x_2,L)\leq \wt{\alpha^\ast
 \eta_1+\beta^\ast \eta_2}\leq |E|$ where $E$ denotes the set
-$\Delta(\eta_1,0)\cup \Delta(\eta_2,0)$. Our final effort will be to show that
+$\delta(\eta_1,0)\cup \delta(\eta_2,0)$. Our final effort will be to show that
 $|E|\leq e$.
 
-\noindent{\it Claim}: $|E|\leq e$ where $E = \Delta(\eta_1,0)\cup
-\Delta(\eta_2,0)$. We consider the partition of $E$ into sets
-$E_0=\Delta(\eta_1,0)\backslash \Delta(\eta_2,0)$,
-$E_1=\Delta(\eta_2,0)\backslash \Delta(\eta_1,0)$ and
-$E_{01}=\Delta(\eta_1,0)\cap \Delta(\eta_2,0)$. Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$
+\noindent{\it Claim}: $|E|\leq e$ where $E = \delta(\eta_1,0)\cup
+\delta(\eta_2,0)$. We consider the partition of $E$ into sets
+$E_0=\delta(\eta_1,0)\backslash \delta(\eta_2,0)$,
+$E_1=\delta(\eta_2,0)\backslash \delta(\eta_1,0)$ and
+$E_{01}=\delta(\eta_1,0)\cap \delta(\eta_2,0)$. Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$
 where $m_{ij}=0$ if $j^{th}$ coordinate ($\eta_i^j$) of $\eta_i$ is zero, and $m_{ij}=1$
 otherwise. We will show that each row of $M$ has at most one $0$. Assume that
 there exists $i$ such that $m_{ip}=0$ and $m_{iq}=0$ for $p\neq q$. We consider
@@ -192,8 +196,8 @@ three cases:
 This contradicts the fact that $X$ is not degenerate.
 \item The case $i\in E_1$ is similar to above.
 \item If $i\in E_{01}$ we have
-$\alpha_p\eta_0^i+\beta_p\eta_1^i=\alpha_q\eta_0^i+\beta_q\eta_1^i=0$ which
-implies $\alpha_p/\beta_p=\alpha_q/\beta_q=-\eta_1^i/\eta_0^i$, or
+$\alpha_p\eta_1^i+\beta_p\eta_2^i=\alpha_q\eta_1^i+\beta_q\eta_2^i=0$ which
+implies $\alpha_p/\beta_p=\alpha_q/\beta_q=-\eta_2^i/\eta_1^i$, or
 $\alpha_p/\alpha_q = \beta_p/\beta_q$ which contradicts the fact that $X$ is
 not degenerate. Note that all denominators can be argued to be non-zero for $i\in E_{01}$. 
 \end{itemize}
@@ -297,6 +301,9 @@ algorithm} if $\chi$ can extract a witness $w$ to the statement, given an
 appropriate tree of accepting transcripts. This can be seen as a generalization
 of the notion of special soundness for Sigma protocols with $n=2$ and $\mu=1$.
 \end{comment}
+
+% remove argument of knowledge
+\begin{comment}
 \begin{definition}[Argument of Knowledge]\label{def:argofknowledge}
 Let $(\setup,\prover,\verifier)$ be an public coin interactive protocol. We say that
 $(\setup,\prover,\verifier)$ is an {\em argument of knowledge} for the language
@@ -328,6 +335,8 @@ Our argument of knowledge proofs rely on the following result from \cite{bulletp
 While the result is originally stated and proved for showing witness-extended
 emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
+\end{comment}
+
 \begin{comment}
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
 Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-round public coin interactive
@@ -667,6 +676,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \end{proof}
 \end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
 \subsection{Semi-honest to Malicious Security: }\label{app:semi-honesttomalicious} 
 To achieve security against malicious provers, every prover $\distprover$ sends Zero-Knowledge Argument of Knowledge (ZKAoK) along with every committed value sent to $\Ag$, which says $\distprover$ knows what value is committed. A malicious secure MPC executes multiplication. Furthermore, all messages are sent via broadcast.
 %In our protocol, when a prover $\distprover$ sends any commitment output to the aggregator, in the maliciously secure protocol $\distprover$ with that commitment output, he additionally sends a Zero-Knowledge Argument of Knowledge (ZKAoK) which says $\distprover$ knows which value is committed. This additional step is required in the simulation so that the simulator can extract the committed value and maliciously secure MPC to compute $\mathsf{Mult}$. Furthermore, all the messages to $\Ag$ are via broadcast. 
@@ -680,6 +690,7 @@ $\Sim$ receives the messages from the corrupt parties to $\Ag$ due to broadcast.
 
 \noindent{\bf Difficulty in simulation while aggregator is malicious:} The above proof works against malicious provers but semi-honest aggregator. To generate the messages on behalf of honest parties, $\Sim$ needs the output of $\Func_{DPZK}$. If $\Ag$ deviates from the protocol at the last round, then the simulator cannot generate an appropriate message, which gives the same output as real-execution. Though we don't have a simulator when $\Ag$ is malicious, we do not have an attack either. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
 %In the above construction, it considered that provers might deviate while interacting among themselves. However, we do not consider the scenario if $\Ag$ deviates. We do not have a simulator that can simulate a view when all the provers (corrupt and honest) behaving correctly, but $\Ag$ sends a wrong combined value to $\verifier$. To resolve, one can try to invoke the $\Func_{\DPZK}$ after $\Ag$ sending the final value to $\verifier$. However, $\Ag$ needs honest parties messages to generate the message for $\verifier$, and the simulator needs the output of the $\Func_{\DPZK}$. So, it is difficult to get a simulator, which can generate a view indistinguishable from the real world execution. Though we can not construct a simulator for our protocol, we do not have an attack in this corruption model. Also, it is possible to identify the malicious behavoiur of $\Ag$ since messages to $\Ag$ are via broadcast, and $\Ag$ does not require any internal randomness to generate messages to the $\verifier$. 
+\end{comment}
 
 \begin{comment}
 \begin{lemma}\label{lem:privacy}
