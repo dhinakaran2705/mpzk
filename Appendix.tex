@@ -897,7 +897,7 @@ This proves that the view of the corrupt provers can be simulated, which ensures
 %\end{enumerate}
 \end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{DPZK of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
+\subsection{$\DPZK$ of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
 Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose $\C$ is a R1CS circuit of size $n$. Let $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ be the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and these satisfies the following linear constraints: 
 %$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
 %for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
@@ -916,7 +916,7 @@ $\verifier$ gives random challenges $y, z$ from $\ZZ^\ast_p$ to the prover.
 Then $\prover$ computes vector polynomials $l(X)$ and $r(X)$ using $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R, y, z$ and other public vectors, and computes a polynomial $t(X) = \innp{l(X)}{r(X)}$. The construction of $l(X)$ and $r(X)$ is such that the co-efficient of $X^2$ in $t(X)$ is independent of $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R$, which can be computed by $\verifier$, if $\bm{a}_L, \bm{a}_R, \bm{a}_O$ satisfy the Hadamard-product relation and linear constraints. To prove this, $\prover$ commits to all the co-efficients of $t(X)$ other than the co-efficient of $X^2$, and verifier gives a random point $x$ to evaluate $\bm{l} = l(x)$ and $\bm{r} = r(x)$. Which reduces to an inner product check whose witness is $\bm{l}$ and $\bm{r}$. 
 \smallskip
 
- We are giving a DPZK version of Bulletproofs, where $\distprover$ starts the protocol with $\shr{\bm{a}_L}, \shr{\bm{a}_R}, \shr{\bm{a}_O}$ $\forall \xi \in [\Num]$ such that $\sum_{\xi\in [\Num]} \shr{\bm{a}_A} = \bm{a}_A$ $\forall A\in \{L,R,O\} $. $\Ag$ is an aggregator.
+ We are giving a $\DPZK$ version of Bulletproofs, where $\distprover$ starts the protocol with $\shr{\bm{a}_L}, \shr{\bm{a}_R}, \shr{\bm{a}_O}$ $\forall \xi \in [\Num]$ such that $\sum_{\xi\in [\Num]} \shr{\bm{a}_A} = \bm{a}_A$ $\forall A\in \{L,R,O\} $. $\Ag$ is an aggregator.
 $\distprover$ computes the commitment $\shr{A_I}, \shr{A_O}, \shr{S}$ and sends these values to $\Ag$. $\Ag$ combines and sends $A_I$, $A_O$ and $S$ to $\verifier$.
 The verifier broadcasts the random challenge $y,z \sample \ZZ^\ast_p$.
 Then each prover computes $\shr{l}(X)$ and $\shr{r}(X)$.

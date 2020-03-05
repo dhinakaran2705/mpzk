@@ -82,16 +82,16 @@ the consistency at randomly sampled positions $Q=\{(j_u,k_u) : u\in[t] \}
 $\pi_a[\cdot, k_u]$ for $a\in \{x,y,z\}$ and $u\in [t]$. 
 Then it queries the prover for vectors $X_u = \ewit_x[\cdot,j_u,k_u], Y_u =
 \ewit_y[\cdot, j_u,k_u], Z_u = \ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$. Let
-$f_u$ denote the unit vector in $\FF^h$ with $1$ in the $j_u^{th}$ position. The
+$\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the $j_u^{th}$ position. The
 prover and the verifier run inner product arguments to establish the following: 
 
 \begin{enumerate}[{\rm 1.}]
-	\item $\innp{f_u}{P[\cdot,k_u]} = \sum_{i\in[p]} r_i[X_u[i]\cdot Y_u[i]
+	\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]} = \sum_{i\in[p]} r_i[X_u[i]\cdot Y_u[i]
 - Z_u[i]]$ for $u\in[t]$. It can be seen that the identity holds for honestly
 computed $P$ and honest vectors $X_u,Y_u$ and $Z_u$. The inner product may be 
 verified using an inner product protocol as described in Section ~\ref{sec:matrixcommitment}.
 	
-	\item $\innp{f_u}{\ewit_x[i,\cdot,k_u]} = X_u[i]$, $\innp{f_u}{\ewit_y[i,\cdot,k_u]}=Y_u[i]$ and $\innp{f_u}{\ewit_z[i,\cdot,k_u]}=Z_u[i]$. These inner products check the consistency of the vectors sent by the prover with the respective oracles. These can be verified in a similar manner to that in the linear check protocol. 
+	\item $\innp{\bm{1}_{j_u}}{\ewit_x[i,\cdot,k_u]} = X_u[i]$, $\innp{\bm{1}_{j_u}}{\ewit_y[i,\cdot,k_u]}=Y_u[i]$ and $\innp{\bm{1}_{j_u}}{\ewit_z[i,\cdot,k_u]}=Z_u[i]$. These inner products check the consistency of the vectors sent by the prover with the respective oracles. These can be verified in a similar manner to that in the linear check protocol. 
 \end{enumerate}
 
 \noindent{\em Proximity Check for Oracle:} We combine the proximity check for the three 
