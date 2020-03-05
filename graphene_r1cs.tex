@@ -45,15 +45,17 @@ following efficiency parameters:
 & & &+ (48tm+32m)\cexp \\
 & & & \\
 \mathrm{verifier\ complexity} & t_\verifier & = &
-O(N)\cfop + (2t+2)\cmexp(2m)\\
+O(N)\cfop + 4pm\cfft(s)+(2t+2)\cmexp(2m)\\
 & & & +2t\cmexp(m)+t\cmexp(4p+\ell) \\
 & & & \\
 \mathrm{soundness\ error} & \kappa_{\rm gr} & = & (1-e/n)^t \\ 
-& & & +\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t 
+& & & +2\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t 
 \end{array}
 \end{align*}
 }
 
+In Appendix ~\ref{sec:performance}, we give similar expressions for Ligero and
+Bulletproofs protocols. 
 %\item {\bf Argument Size}: $8pt+8t\log{m}+4\ell+s+8t+4\log{m}+4$, where $4pt$ comes as part
 %of oracle openings, another $4pt$ from opening $t$ vectors
 %$W_u=\ewit[\cdot,j_u,k_u]$, $u\in [t]$ of size $4p$ each, $(4t+2)(2\log{m}+2)$ from
@@ -85,10 +87,20 @@ O(N)\cfop + (2t+2)\cmexp(2m)\\
 For $c\geq 2$, setting $p=s=O(N^{1/c})$, $m=O(N^{1-2/c})$, $t=O(\secpar)$,
 $n=O(\ell)$ and $h=O(m)$, we get $\kappa_{gr}=\negl(\secpar)$ with argument size
 $O(N^{1/c})$, verifier's complexity as $O(N)$ field operations and
-$O(N^{1-2/c})$ exponentiations. In Figure ~\ref{fig:standalonecompare}, we compare
+$O(N^{1-2/c})$ exponentiations. 
+
+In Figure ~\ref{fig:standalonecompare}, we compare
 $\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{bulletproofs} in
-single prover setting. The estimates were obtained by timing the $\fft$
+single prover setting based on the expressions in Appendix
+~\ref{sec:performance}. The concrete estimates were obtained by timing the $\fft$
 operations, exponentiations and multiexponentiations for different sizes, in a
 single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
 proving time, while those for Ligero were optimized to yield best proof size.
-
+From the table in Figure ~\ref{fig:standalonecompare}, we see that our protocol offers much more practical argument
+sizes compared to Ligero, while still attaining low verifier complexity. Our
+proofs are two orders of magnitude larger than those in Bulletproofs, but our
+verifier is much more efficient. As such our construction offers a balance
+between prover and verifier efficiency of Ligero, and succinct argument size of
+Bulletproofs. Moreover, as discussed in the paper, our construction allows
+efficient distributed proof generation, with sublinear communication between the
+provers and the aggregator. 
