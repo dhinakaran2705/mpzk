@@ -316,7 +316,7 @@ $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u
 %The completeness of the linear check protocol can be easily verified. We sketch the proof for its
 %soundness, leaving the detailed proof to the Appendix.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+in Figure ~\ref{fig:linearcheck}, $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 {\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
 \begin{figure}[h!]
@@ -444,12 +444,14 @@ $\innp{f_u}{\ewit[i,\cdot,k_u]}=X_u[i]$ for $i\in [p]$ and $u\in [t]$
 force the prover to provide vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
 overwhelming probability. Then the consistency check succeeds for the 
 uniformly sampled query point $(j_u,k_u)$ when:
+
 {\footnotesize
 \[ P[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
 \hat{P}[j_u,k_u] \]}
 For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
 $P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
 probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
+
 {\footnotesize
 \begin{align*}
 \prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
@@ -559,6 +561,7 @@ denotes the success probability of the prover $P^\ast$ as before.
 \begin{proof}
 The proof is similar to the proof of the linear check protocol. Using similar
 arguments, one can show that the above Lemma holds with:
+
 {\footnotesize
 \begin{equation*}
 \kappa_{qd}(\secpar) := \left(1-\frac{e}{n}\right)^t +
@@ -833,6 +836,7 @@ We provide the complete distributed linear protocol in Figure
 %the verifier.  
 
 \noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
+
 {\footnotesize 
 \begin{align*}
 P[j,k] & =\sum_{i\in
