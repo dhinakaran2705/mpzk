@@ -13,8 +13,7 @@ $\ell,n,h$ respectively. We write $\bm{\zeta}=(\zeta_1,\ldots,\zeta_\ell)$,
 $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $\bm{\alpha}=(\alpha_1,\ldots,\alpha_h)$. 
 Next we define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m],
 k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [h],
-k\in [n]\}$. Finally, we encode $\wit$ as follows and denote the below randomized computation as $\ewit\gets \enc(\wit)$.
- We may denote $\enc(\wit)$ as the random variable denoting the encodings of $\wit$:
+k\in [n]\}$. Finally, we encode $\wit$ as follows and denote the below randomized computation as $\ewit\gets \enc(\wit)$, where  $\enc(\wit)$ is the random variable denoting the encodings of $\wit$:
 \begin{enumerate}[{\rm (i)}]
 \item First we embed $\wit$ into a $p\times m\times \ell$ matrix $\hat{\wit}$
 where $\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$, while the entries
@@ -842,13 +841,21 @@ P[j,k] & =\sum_{i\in
 & = \sum_{i\in [p]}r_i(\ewit_x[i,j,k].\ewit_y[i,j,k] - \ewit_z[i,j,k])
 \end{align*}    
 }
-In the above, the provers have additive shares of $\ewit_x$ and
-$\ewit_y$, and so they peformn an MPC with $O(N)$ multiplication gates and
-depth $1$, to obtain additive shares of $\ewit_x[i,j,k].\ewit_y[i,j,k]$.
+where $\ewit_x$, $\ewit_y$ and $\ewit_z$ are the encodings of the witness
+vectors $\wit_x$, $\wit_y$ and $\wit_z$ respectively. 
+Since the matrix $P$ above is completely determined by it's first $2m-1$ rows
+and first $2\ell-1$ columns, the provers need to obtain the shares
+$\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}$ for $i\in [p],j\in [2m-1],k\in [2\ell-1]$.
+From the shares of witness $\shr{\wit_x},\shr{\wit_y}$ and $\shr{\wit_z}$ the
+provers can locally compute shares $\shr{\ewit_x},\shr{\ewit_y},\shr{\ewit_z}$
+of $\ewit_x,\ewit_y$ and $\ewit_z$. Now, the provers can perform an MPC with
+$p.(2m-1).(2\ell-1)\approx 4N$ multiplication gates, and depth 1, to obtain the
+shares $\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}$ for $i\in [p],j\in [2m-1],k\in [2\ell-1]$.
 Concretely, we assume an MPC $\mathsf{Mult}$ with following input/output for
 a prover $\distprover$:     
 %\begin{align*}    
-$\shr{\ewit_x.\ewit_y}\leftarrow \mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$    
+$\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}\leftarrow
+\mathsf{Mult}(\shr{\ewit_x[i,j,k]},\shr{\ewit_y[i,j,k]})$    
 %\end{align*}    
 Thereafter, each prover obtains a share of matrix $P$, and the remaining protocol proceeds as
 the distributed linear check protocol. 
@@ -977,6 +984,16 @@ Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
 For security against malicious provers see in Appendix ~\ref{app:semi-honesttomalicious}
-\subsection{Reducing MPC overhead for small shared circuits}:
 
-
+\subsection{Reudcing MPC Overhead for Small Shared Circuits}
+Let $C$ be a circuit with $N$ wires (we assume a unique incoming wire for each
+input gate), let $\wit=(w_1,\ldots,w_N)$ denote the vector of wire values in a
+satisfying assignment according to some ordering on the wires. We consider the
+case, when each input wire is ``assigned'' to a unique prover. We call a wire
+$i$, for $i\in [N]$ to be {\em shared} if its value depends on input wires from
+more than one prover, otherwise we call it {\em non-shared}. 
+Let $N_s$ denote the number of shared wires. Without loss
+of generality, we may assume that $\wit_s=(w_1,\ldots,w_{N_s})$ corresponds to values of
+the shared wires. We write $\wit=[\wit_s||\wit_{ns}]$, where $\wit_s$ and
+$\wit_{ns}$
+represent shared and non-shared wires respectively. {\color{blue} To complete:}
