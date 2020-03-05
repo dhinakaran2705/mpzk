@@ -69,7 +69,8 @@
 				samples $P_0\sample \FF^{2m-1}$ with $P_0[1:m]=0^m$ and computes commitment $c_0$
 				to $P_0$. 
 				\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell-1}$.
-				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
+				$Q\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
 				
@@ -87,13 +88,13 @@
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
 				\item $\prover$ and $\verifier$ run inner product arguments to check:
 				\begin{enumerate}
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$
 					where $z=\beta P_0 + \overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
 					$\mathsf{cm} =  (c_0)^{\beta}\cdot\prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
 				and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
@@ -122,30 +123,31 @@
 				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
 				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
 				\item $\distprover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
 				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{sec:lincheck}. Samples $\shr{P_0}\sample \FF^{2m-1}$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$.
 				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ from $\shr{P}$.
 				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{s+\ell-1}}, \shr{d_0}$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [s+\ell-1]$ and sends $c_0,c_1,\ldots,c_{s+\ell-1}$.}
-				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item  {$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [s+\ell-1]$ and sends $c_0,c_1,\ldots,c_{s+\ell-1}$.}
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
+				$Q\sample [h]\times [n]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\distprover\rightarrow\Ag$: $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u],  \shr{P_u} = \shr{P}[\cdot,k_u]$ for $u\in [t]$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
+				\item  {$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
 				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
 				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$ and sends $\shr{z}$.
-				\item \textcolor{red}{$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:
 				\begin{enumerate}
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m-1},\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
-					\pnote{We can use $P[1:2m, k_u]$ to denote the first 2m entries of $P[\cdot,k_u]$ as $\overline{P}$ is the submatrix after cropping both the directions, $h$ and $n$.}
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
+					%\pnote{We can use $P[1:2m, k_u]$ to denote the first 2m entries of $P[\cdot,k_u]$ as $\overline{P}$ is the submatrix after cropping both the directions, $h$ and $n$.}
 					for $u\in [t]$ where $\mathsf{cm}_u=\prod_{a=1}^{s+\ell-1}(c_a)^{\Lambda_{n,s+\ell-1}[a,k_u]}$, 
 					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}= (c_0)^{\beta}\cdot\prod_{a=1}^{s+\ell-1}(c_a)^{\varphi_a}$ (check the condition $r^TAw=r^Tb$).
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
 					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks: $\sum_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
@@ -171,7 +173,7 @@
 				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
 				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^p$.
 				\item Provers $\distprover$ run the MPC: $\shr{\ewit_x.\ewit_y}\leftarrow
 				\mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$ to obtain shares of the hadamard product of the encodings.
@@ -179,18 +181,19 @@
 				$\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$.
 				Computes commitments $\shr{c_1},\ldots,\shr{c_{2\ell-1}}$ from $\shr{P}$.
 				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{2\ell-1}}, \shr{d_0}$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [2\ell-1]$ and sends $c_0,c_1,\ldots,c_{2\ell-1}$.}
-				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s, \, \gamma \sample \FF^m, \beta\sample \FF^\ast$.
+				\item  {$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [2\ell-1]$ and sends $c_0,c_1,\ldots,c_{2\ell-1}$.}
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
+				$Q\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s, \, \gamma \sample \FF^m, \beta\sample \FF^\ast$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\distprover\rightarrow\Ag$: 
-				\begin{itemize}
-					\item $\shr{X_u}=\shr{\ewit_x}[\cdot,j_u,k_u]$,
-					\item $\shr{Y_u}=\shr{\ewit_y}[\cdot,j_u,k_u]$,
-					\item $\shr{Z_u}=\shr{\ewit_z}[\cdot,j_u,k_u]$,
-					\item $\shr{P_u} = \shr{P}[\cdot,k_u]$
-				\end{itemize} 
+				%\begin{itemize}
+					 $\shr{X_u}=\shr{\ewit_x}[\cdot,j_u,k_u]$,
+					 $\shr{Y_u}=\shr{\ewit_y}[\cdot,j_u,k_u]$,
+					 $\shr{Z_u}=\shr{\ewit_z}[\cdot,j_u,k_u]$,
+					 $\shr{P_u} = \shr{P}[\cdot,k_u]$
+				%\end{itemize} 
 				 for $u\in [t]$.
-				\item \textcolor{red}{$\Ag\rightarrow\verifier$: $A_u = \sum_{\xi\in[\Num]} \shr{A_u}$ where $A\in \{X, Y, Z, P\}$ and sends ${X_u, Y_u, Z_u}$ for $u\in [t]$.}
+				\item  {$\Ag\rightarrow\verifier$: $A_u = \sum_{\xi\in[\Num]} \shr{A_u}$ where $A\in \{X, Y, Z, P\}$ and sends ${X_u, Y_u, Z_u}$ for $u\in [t]$.}
 				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
 				$\beta\sample \FF\backslash \{0\}$. 
@@ -198,17 +201,17 @@
 				\item $\distprover$ computes:
 				$\shr{W_u}=\sum_{i=1}^p\delta_i\big(\beta_x\shr{\ewit_x}[i,\cdot,k_u]+\beta_y\shr{\ewit_y}[i,\cdot,k_u]+\beta_z\shr{\ewit}[i,\cdot,k_u]\big)$ and $\shr{z} =  \beta\cdot P_0 + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
 				\item $\distprover\rightarrow\Ag$:  sends $\shr{z}, \shr{W_u}$.
-				\item \textcolor{red}{$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $W_u = \sum_{\xi\in[\Num]} \shr{W_u}$.
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $W_u = \sum_{\xi\in[\Num]} \shr{W_u}$.
 				\item $\Ag \leftrightarrow \verifier$: Both compute $V_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:
 				\begin{enumerate}
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=c_0^{\beta}\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=c_0^{\beta}\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$ where $z=\beta\cdot P_0 + \overline{P}\times \varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
 			\end{enumerate}
@@ -308,9 +311,10 @@ proof as it is standard.
 \subsection{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
 We need several observations to prove the proposition, which we present next.
 Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space given by:
+{
 \begin{equation}\label{eq:affspace}
 \aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
-\end{equation}
+\end{equation}}
 Note that in the above, the scalars in the linear combination come from $\FF$.
 
 The following result was proved in \cite{ligero} for the setting $\HH=\FF$.
