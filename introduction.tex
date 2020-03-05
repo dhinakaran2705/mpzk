@@ -62,7 +62,7 @@ such verifiers can be converted to succinct non-interactive  arguments
 (zk-SNARGs)  via the Fiat-Shamir and like transforms \cite{FS86, BCS16}, and  2)
 generating the parameters of the protocol should ideally {\em not} involve a
 trusted third party. The next few subsections elaborate on the new efficiency
-parameters, formal definition and our new construction for DPZK that leverages 
+parameters, formal definition and our new construction for $\DPZK$ that leverages 
 a new zero-knowledge argument constructed in this paper, which may be of
 independent interest. 
 
@@ -145,7 +145,7 @@ greatly improved if its parameters (like $\prcomm$ and $\prrounds$) are
 linear in the size of the shared circuit $N_s$ and not the total circuit size $N$.
 %Looking ahead, the complexity of the interaction between the provers in our DPZK protocol will be linear only in the circuit share complexity of the circuit predicate to be proven, and not in the total size of the circuit. 
 
-In summary, the efficiency of a DPZK in the public-verifiable and
+In summary, the efficiency of a $\DPZK$ in the public-verifiable and
 non-interactive setting (which is our concern) will be measured via $\prcomm$,
 $\prrounds$, in addition to the parameters for the single prover protocol.
 
@@ -161,17 +161,17 @@ $\prrounds$, in addition to the parameters for the single prover protocol.
 
 %Another subtle point here is that a single-prover ZK protocol provides the zero-knowledge property only for honest provers. The witness is not guaranteed to be hidden from the verifier if a prover deviates from the protocol. Hence, in a distributed prover setting it is non-trivial to prove or even define the zero-knowledge property if some of the provers deviate from the protocol or if they do not have the valid witness. 
 
-Just like the efficiency considerations, the security definition for a DPZK
+Just like the efficiency considerations, the security definition for a $\DPZK$
 protocol needs to account for additional interaction. In particular, the
 security definition needs to capture the fact that interaction among the provers
 to generate the proof does not leak knowledge about their respective witnesses
 to other provers. 
-We come up with an MPC-style definition based on real-world ideal world paradigm \cite{Canetti00,Goldreich2001,Lindell17,CohenL14}  that takes the above issues into account. In the ideal-world, the provers deliver their respective part of the witnesses and the functionality (that is parametrised with a language) combines them and check the assertion of a statement. In the real protocol,  the provers participate in  instances of MPC for `proof-generating functions' to generate messages for the verifier. To  keep the proof-size  independent of the number of provers, one of the provers enacts in a special role called aggregator   that prepares the message for the verifier taking into account communication from all its fellow provers and communicates the same to the verifier on behalf of all the provers. We say our protocol is secure if whatever an adversary (corrupting various subset of provers and verifier) can do in real execution can be done in the ideal execution. Lastly, keeping in mind the final goal of non-interactive and publicly-verifiable proofs/arguments, we explicitly mention the exact corruption scenario that we handle for our constructions.  For example, it is enough to tackle a semi-honestly corrupt verifier (since a non-interactive proof does not give any additional scope of misbehaviour to a maliciously corrupt verifier  over a semi-honestly corrupt one).  We refer to Section~\ref{sec:security model} for complete details. Next, we move on to discuss the single-prover construction on which we build our DPZK. 
+We come up with an MPC-style definition based on real-world ideal world paradigm \cite{Canetti00,Goldreich2001,Lindell17,CohenL14}  that takes the above issues into account. In the ideal-world, the provers deliver their respective part of the witnesses and the functionality (that is parametrised with a language) combines them and check the assertion of a statement. In the real protocol,  the provers participate in  instances of MPC for `proof-generating functions' to generate messages for the verifier. To  keep the proof-size  independent of the number of provers, one of the provers enacts in a special role called aggregator   that prepares the message for the verifier taking into account communication from all its fellow provers and communicates the same to the verifier on behalf of all the provers. We say our protocol is secure if whatever an adversary (corrupting various subset of provers and verifier) can do in real execution can be done in the ideal execution. Lastly, keeping in mind the final goal of non-interactive and publicly-verifiable proofs/arguments, we explicitly mention the exact corruption scenario that we handle for our constructions.  For example, it is enough to tackle a semi-honestly corrupt verifier (since a non-interactive proof does not give any additional scope of misbehaviour to a maliciously corrupt verifier  over a semi-honestly corrupt one).  We refer to Section~\ref{sec:security model} for complete details. Next, we move on to discuss the single-prover construction on which we build our $\DPZK$. 
 To preserve the privacy, we assume that provers are not going to deviate from the protocol, since that may lead to rejection of the proof, though our protocol can withstand the scenario if all the provers are maliciously corrupt together due to the soundness property of the underlying ZK protocol.% Also, we will discuss how can we achieve security against maliciously corrupt provers (assuming the aggregator \commentA{we have not introduced aggregator} to be semi-honest). hide the number of provers from a corrupt verifier and to
 
 \subsection{\name{}: an MPC-friendly zero-knowledge protocol}
 We present an MPC-friendly single-prover protocol \name{} with a transparent setup which
-allows an efficient  DPZK.
+allows an efficient $\DPZK$.
 %This linear $\prComm$ is due to linear number of cross-multiplications which can be done concurrently, and hence the MPC is only performed on an $N$ mult-gates circuit of depth 1. 
 \name{} achieves proof size and verification complexity competitive with the
 state-of-art zero knowledge protocols, while achieving efficient distributed
@@ -249,7 +249,7 @@ protocols appear in Section~\ref{sec:graphene}.
 
 \subsection{\dpname: A new $\DPZK$ protocol}
 %\commentA{The structure of this section should be as follows:  (a) state what the extract result for $\DPZK$, mentioning the achieved complexities (can plug in the best-known MPC)  (b) tell the high level idea for the approach taken. be concise (c) tell about the difficulties in turning existing spzks to DPZK (d) compare and put the table with asymptotic complexity; (e) report some  of the numbers that we obtain from benchmarking.  }
-Building on \name{}, we design our DPZK protocol \dpname{} with  $\prcomm$ linear in size of the $\npol$ verification circuit for the language and with a constant $\prrounds$. To be more precise, the communication for a
+Building on \name{}, we design our $\DPZK$ protocol \dpname{} with  $\prcomm$ linear in size of the $\npol$ verification circuit for the language and with a constant $\prrounds$. To be more precise, the communication for a
 $\Num$-prover proof generation for an $N$-multiplication gate circuit 
 would be $O(\Num^2\cdot N_s + \Num \cdot N^{1-2/c})$, where
 $N_s$ is the shared circuit size as introduced in Section
@@ -259,7 +259,7 @@ by our protocol, we discuss the roadblocks in naively adapting existing
 state-of-art zero-knowledge protocols to the distributed prover
 setting.\smallskip
 
-\noindent{\em Roadblocks in achieving DPZK}: Intuitively, to satisfy the desiderata
+\noindent{\em Roadblocks in achieving $\DPZK$}: Intuitively, to satisfy the desiderata
 of distributed proof generation with minimal prover communication, large parts
 of the messages to the verifier must be computable {\em locally} by the provers
 using their respective shares of the witness, which then must be efficiently 
@@ -274,7 +274,7 @@ public key operations for the prover. For the restricted case of IPCP, where
 only the initial message is an oracle, the additional overhead though
 substantial is tolerable. For more general interactive oracle protocols, such as
 Aurora ~\cite{aurora}, our methods may not be the most efficient. Nevertheless,
-we pose efficient DPZK construction from general interactive oracle protocols as an
+we pose efficient $\DPZK$ construction from general interactive oracle protocols as an
 interesting open question. Even if the messages in the protocol are largely
 homomorphic, small amount of non-homomorphic computation in several rounds 
 would require repeated interaction among the provers. Intuitively, one way to
@@ -287,13 +287,13 @@ In general, in such constructions one must ensure that in addition to verifier's
 view, the aggregator's view also leaks no knowledge. We did not see an obvious
 way to overcome this roadblock for Spartan ~\cite{spartan}, without resorting to
 expensive MPC among the provers. Among the existing zero-knowledge protocols, we
-were only able to obtain an efficient DPZK from Bulletproofs
+were only able to obtain an efficient $\DPZK$ from Bulletproofs
 ~\cite{bulletproofs} with moderate effort. This construction appears in Appendix ~\ref{app:BulletproofsDPZK}
 %{\color{blue} (Put appropriate section)}, 
 and serves as a baseline for
 comparison with $\dpname$. Even for the Bulletproofs based construction, we are
 unable to achieve sub-linear prover communication for a sub-linear shared circuit
-size $N_s$. We extensively compare the two constructions across both the DPZK
+size $N_s$. We extensively compare the two constructions across both the $\DPZK$
 parameters, and the single prover parameters in Section
 ~\ref{sec:performancecompare}.
   

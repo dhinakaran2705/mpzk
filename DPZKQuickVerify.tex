@@ -181,7 +181,7 @@ $k$ run over indices in $[p],[m]$ and $[s]$ respectively.
 For $j\in [h]$, denoting  the polynomial $\sum_{i\in
 [p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ as $p_j$ (which will be of degree
 less than $s + \ell$), we can rewrite the expression as
-$\sum_{k\in[s], j\in[m]}p_j(\zeta_k)=r^Tb$.  We define the matrix $P$ by
+$\sum_{k\in[s], j\in[m]}p_j(\zeta_k)= r^Tb$.  We define the matrix $P$ by
 $P[j,k]=p_j(\eta_k)$ for $j\in [h],k\in [n]$ which is a product codeword from
 $\rsc{\eta}{n,s+\ell-1} \otimes \rsc{\alpha}{h,2m-1}$ and fully determined by
 sub-matrix $\overline{P}$ consisting of the first $2m-1$ rows and the first
@@ -201,18 +201,18 @@ $\big[ \sum_{j\in[m]} p_j(\zeta_1), \ldots,  \sum_{j\in[m]}
 p_j(\zeta_s)\big]^T 
     =\Phi  \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]}
 p_j(\eta_{s+\ell-1})\right]^T
-	= \Phi  \overline{P}^T  [1^m||0^m]^T
+	= \Phi  \overline{P}^T  [1^m||0^{m-1}]^T
 	%\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= [1^m||0^m]\times \overline{P} \times \Phi^T\\
 $.
 Therefore, the check $\sum_{k\in[s], j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} =r^Tb$ 
-$\Rightarrow \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$.
-Here, $[1^m||0^m]^T$ is the public vector and the vector $\varphi = \Phi^T \times [1^s]^T$. 
+$\Rightarrow \innp{[1^m||0^{m-1}]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$.
+Here, $[1^m||0^{m-1}]^T$ and $\varphi = \Phi^T \times [1^s]^T$ are public vectors. 
 Given commitment of $P$,  $c_1,\ldots,c_{s+\ell-1}$, the
 commitment to $\overline{P}\varphi$ can be computed as
 $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}(c_k)^{\varphi_k}$.
-In the full protocol, 
-the prover initially commits to a random $P_0\in \FF^{2m-1}$ subject to $\innp{1^m}{P_0}=0$ and 
-uses $\beta P_0 + \overline{P}\times \varphi$ as witness in the inner product protocol. Here 
+In the protocol, 
+the prover initially commits to a random $P_0\in \FF^{2m-1}$ subject to $\innp{1^{m}|| 0^{m-1}}{P_0}=0$, and 
+uses $\beta P_0 + \overline{P} \varphi$ as witness in the inner product protocol. Here 
 $\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This randomization
 precludes the need for the inner-product argument to be zero knowledge, and as we will later
 see, helps reduce interaction among provers in its distributed variant.
@@ -273,16 +273,16 @@ see, helps reduce interaction among provers in its distributed variant.\smallski
 \noindent{\em Consistency of oracle $\pi$ and $P$}: The verifier additionally
 needs to determine if the committed $P$ and the oracle $\pi$ are consistent or not. The verifier proceeds to check the
 consistency at randomly sampled $t$ positions given by $\{(j_u,k_u): u\in [t]\}$ from
-$[h]\times [n]$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
-$u\in [t]$. Let $X_u$, $u\in [t]$ denote the vectors sent by the prover. For $u\in [t]$, let $f_u$ denote the unit vector in $\FF^h$ with $1$ in the position
+$\bm{\alpha} \times \bm{\eta}$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
+$u\in [t]$. Let $X_u$, $u\in [t]$ denote the $p$-length vectors sent by the prover. For an honest prover $X_u=U[\cdot, j_u, k_u]$. For $u\in [t]$, let \commentA{changed this notation. change in other places}$\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the position
 $j_u$. The prover and the verifier run inner-product arguments to establish the following:
 \begin{enumerate}[{\rm 1.}]
-\item $\innp{f_u}{P[\cdot,k_u]}=\sum_{i\in [p]}R^i(j_u,k_u)X_u[i]$ for $u\in
+\item \commentA{is this correct? I don't think so. $R^i(j_u,k_u) = X_u[i]$, no? check}\pnote{The identity below is not correct. It's a typo. All the other places we are using $R^i(\alpha_{j_u}, \eta_{k_u})$ but for $U$ we are using $U[i,j_u,k_u]$} $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})\cdot X_u[i]$ for $u\in
 [t]$. It is readily checked that for $P$ computed as per the protocol, 
 and honest vectors $X_u$ ($=\ewit[\cdot , j_u,k_u]$), the identity holds. The inner-product
 can be checked as in Section ~\ref{sec:matrixcommitment}.
 
-\item $\innp{f_u}{\ewit[i,\cdot,k_u]}=X_u[i]$ for all $u\in [t],i\in
+\item $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for all $u\in [t],i\in
 [p]$. %Here $W_{iu}$ denotes the vector $\ewit[i,\cdot,k_u]$. 
 Again, 
 the inner-products can be verified as in Section ~\ref{sec:matrixcommitment}.
@@ -317,8 +317,7 @@ in Figure ~\ref{fig:linearcheck}, $\mathsf{pp}$ is the public parameter, consist
 	{\footnotesize
 		%\centering
 		\begin{framed}
-			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: \commentA{what is pp? please do not leave undefined notations. if not necessary,  simplify and remove}
-			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: 			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
 			
 			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
 			
@@ -340,11 +339,11 @@ in Figure ~\ref{fig:linearcheck}, $\mathsf{pp}$ is the public parameter, consist
 				\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
 				\item $\prover$ and $\verifier$ run inner product arguments to check:
 				\begin{enumerate}
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
 					for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell-1}c_a^{\Lambda^T_{n,s+\ell-1}[a,k_u]}$, 
 					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})U[i,j_u,k_u]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell-1}c_k^{\varphi_k}$ (check the condition $r^TAw=r^Tb$).
-					\item $\innerproduct(\mathsf{pp},f_u^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
 					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
@@ -421,9 +420,9 @@ $\hat{P}$ denote the correctly computed intermediate matrix from $\ewit$. We not
 $\Delta_1(\hat{P},P^*)\leq e$. Let $c_1,\ldots,c_{s+\ell-1}$ be the commitments
 to the intermediate matrix sent by the prover. If these commitments correspond to a
 matrix $P=P^*$, the inner product check
-$\innerproduct(\mathsf{pp},[1^m||0^m],\mathsf{cm},r^Tb)$ fails when using the
+$\innerproduct(\mathsf{pp},[1^m||0^{m-1}],\mathsf{cm},r^Tb)$ fails when using the
 commitment $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}c_k^{\varphi_k}$ for
-$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^m}{\overline{P^*}\times
+$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^{m-1}}{\overline{P^*}\times
 \varphi}=r^TA\wit\neq r^Tb$, where $\overline{P^*}$ denotes the
 $(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
 as discussed in the protocol. If the
@@ -617,7 +616,7 @@ $\Sim$ picks $z$
 unifromly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$.
 Subsequently,
 $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$, $\cm \leftarrow \comm(z,w)$
-where $P_0\sample \FF^{2m-1}$ is such that $\innp{1^m}{P_0}=0$ and $w_0,w\sample
+where $P_0\sample \FF^{2m-1}$ is such that $\innp{1^m||0^{m-1}}{P_0}=0$ and $w_0,w\sample
 \FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{U}[\cdot,
 k_u] = \sum_{i\in[p]} \rho_i U[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]}
 \rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow \comm(\tilde{U}'[\cdot, k_u] ,
@@ -783,7 +782,7 @@ verifier in the linear check protocol include:
 \sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$ for verifier's challenge $\rho\sample
 \FF^p$.
 \item Commitments $c_0,\ldots,c_{s+\ell-1}$ where $c_0$ is a commitment to random
-vector $P_0\in \FF^{2m-1}$ satisfying $\innp{1^m}{P_0}=0$ and
+vector $P_0\in \FF^{2m-1}$ satisfying $\innp{1^m||0^{m-1}}{P_0}=0$ and
 $c_1,\ldots,c_{s+\ell-1}$ are commitments to the $h\times n$ matrix $P$.
 \item The vectors $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, for verifier's
 query $Q=\{(j_u,k_u):u\in [t]\}$.
@@ -796,10 +795,10 @@ witnesses to the inner product protocols namely, the vectors
 $\overline{P}[\cdot,k_u]$, $W_u=\sum_{i\in [p]}\delta_i\ewit[i,\cdot,k_u]$ for
 $u\in [t]$, $z=\beta P_0+\overline{P}\varphi$ and the randomness used to commit
 the vectors. Each of these can again be obtained by combining the respective shares.
-Note that the share $\shr{z}$ leaks $r^TA\shr{\wit}=\innp{1^m||0^m}{\shr{z}}$, which
+Note that the share $\shr{z}$ leaks $r^TA\shr{\wit}=\innp{1^m||0^{m-1}}{\shr{z}}$, which
 is non-trivial knowledge about an individual witness share. Thus provers use a
-random share $\shr{0^{2m}}$ to randomize their share of $z$, and send
-$\shr{z}=\beta\shr{P_0}+\shr{\overline{P}}\varphi+\shr{0^{2m}}$. 
+random share $\shr{0^{2m-1}}$ to randomize their share of $z$, and send
+$\shr{z}=\beta\shr{P_0}+\shr{\overline{P}}\varphi+\shr{0^{2m-1}}$. 
 We provide the complete distributed linear protocol in Figure
 \ref{fig:distlincheck} in Appendix.  
 
