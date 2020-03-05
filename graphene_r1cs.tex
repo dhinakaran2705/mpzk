@@ -1,81 +1,7 @@
-\section{Graphene for R1CS}\label{sec:graphener1cs}
-We use the linear and quadratic check protocols from Section \ref{sec:graphene}
-to describe an efficient protocol for rank one constraint system (R1CS). Let 
-$A,B$ and $C$ be $M\times N$ matrices. We prove existence of $\wit\in \FF^N$
-satisfying $A\wit\circ B\wit=C\wit$ by showing existence of
-$\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wit=\wit_x$,
-$B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadractic relation
-$\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear
-relations to the linear relation:
-
-{\footnotesize
-\begin{align}\label{eq:comblincheck}
-\begin{bmatrix}
-\gamma_xI\,|\gamma_yI\,|\gamma_zI\,|-(\gamma_xA+\gamma_yB+\gamma_zC)
-\end{bmatrix}\begin{bmatrix}
-\wit_x\\
-\wit_y\\
-\wit_z\\
-\wit
-\end{bmatrix}=\bm{0}
-\end{align}
-}
-for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we
-$\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$
-denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$
-and $\wit$ along ``slices''. The encoding $\ewit\gets\enc(\bwit)$ and commitment to
-the encoding $\comoracle\gets \comm(\ewit)$ are computed as in Sections
-~\ref{sec:witencoding} and ~\ref{sec:construct_oracle}. Note that
-$\comoracle$ is a $4p\times n$ matrix. 
-We now present the high level protocol for R1CS instance $(A,B,C)$.\smallskip
-
-{\small
-\noindent{$\grapheneRCS(\mathsf{pp},A,B,C,[\pi];\wit_x,\wit_y,\wit_z,\wit)$}:\\
-\noindent{\bf Relation}: $A\wit\circ B\wit=C\wit$. \\
-\noindent{\bf Oracle Setup}: Compute $\comoracle$ as described above. Set $\pi
-:= \comoracle$.
-\begin{enumerate}[{\rm 1.}]
-\item $\verifier\rightarrow\prover$: $\gamma_x,\gamma_y,\gamma_z\sample \FF$,
-$r_{lc}\sample \FF^M$, $r_{qd}\sample \FF^{p}$, $\rho\sample \FF^{4p}$.
-\item $\prover\rightarrow\verifier$: $\prover$ computes $\tilde{U}=\sum_{i\in
-[4p]}\rho_i\ewit[i,\cdot,\cdot]$ and sends commitments
-$\tilde{c}_1,\ldots,\tilde{c}_\ell$ to $\tilde{U}$.
-\item $\prover\leftrightarrow\verifier$ compute: $R=r_{lc}^TW$ for
-$W=[\gamma_xI\,||\gamma_yI\,||\gamma_zI\,||-(\gamma_xA+\gamma_yB+\gamma_zC)]$,
- polynomials $R^i$,$i\in [4p]$ interpolating the slices of $R$ viewed as a
-$4p\times m\times n$ matrix.
-\item $\prover$ computes: 
-\begin{itemize}
-\item Polynomials $Q^i_x,Q^i_y,Q^i_z,Q^i$ for $i\in [p]$,
-where polynomials $Q^i_a$, $i\in [p]$ correspond to $\wit_a$ for $a\in \{x,y,z\}$ and
-polynomials $Q^i$,$i\in [p]$ correspond to $\wit$. 
-\item $h\times n$ matrices $P_{lc}$ and $P_{qd}$ as ``P'' matrices for the linear check and
-quadratic check respectively. Note that $p_j$ polynomial for $P_{lc}$ is given
-by $p_j(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot).Q_x^i(\alpha_j,\cdot)+
- R^{p+i}(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)+R^{2p+i}(\alpha_j,\cdot)Q^i_z(\alpha_j,\cdot)+
-R^{3p+i}(\alpha_j,\cdot)Q^i(\alpha_j,\cdot))$. The $p_j$ polynomials for the
-matrix $P_{qd}$ are given by
-$p_j(\cdot)=\sum_{i=1}^{p}r_{qd}[i](Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot))$.
-\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m-1}$ for linear and quadratic check protocols
-respectively, and commitments $c_0,d_0$ to vectors $U_{lc}$
-and $U_{qd}$.
-\end{itemize}
-\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell-1}$ for
-the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell-1}$ for matrix
-$P_{qd}$. 
-\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$.
-\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
-\item $\prover\rightarrow\verifier$: $V_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
-\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
-\item $\prover$ and $\verifier$ run the linear and quadratic check protocols in
-parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
-\item Check proximity as: $\prod_{a=1}^\ell
-(\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
-\item $\verifier$ accepts if all the subprotocols accept.
-\end{enumerate}
-}
-\smallskip
-\section{Performance Evaluation}\label{sec:performancecompare} We now summarize several performance parameters attained by our protocol for circuit of size $N$ and soundness $2^{-\secpar}$. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multiexponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
+\section{Performance Evaluation}\label{sec:performancecompare} 
+In Appendix ~\ref{sec:graphener1cs}, we present complete protocol for an R1CS
+instance. Here we summarize several performance parameters attained by our protocol for 
+R1CS with $N$ variables. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multiexponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
 
 %<<<<<<< HEAD
 %We now summarize several performance parameters attained by our protocol for circuit
@@ -165,28 +91,4 @@ single prover setting. The estimates were obtained by timing the $\fft$
 operations, exponentiations and multiexponentiations for different sizes, in a
 single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
 proving time, while those for Ligero were optimized to yield best proof size.
-\begin{figure*}
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-\hline
-$N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
-        \multicolumn{3}{|c|}{Verifier Time($t_\verifier$) sec} &
-        \multicolumn{3}{|c|}{Prover Time($t_\prover$) sec} \\
-\hline
- & \textsf{G} & \textsf{L} & \textsf{B} &
-   \textsf{G} & \textsf{L} & \textsf{B} &
-   \textsf{G} & \textsf{L} & \textsf{B} \\
-\hline
-$2^{19}$ & 0.728 & 3.5 & 0.001 & 43.0 & 3.0 & 89.1 & 802 & 137 & 662 \\
-$2^{20}$ & 0.759 & 4.9 & 0.001 & 45.2 & 6.5 & 178.2 & 1514 & 291 & 1324 \\
-$2^{21}$ & 0.884 & 6.95 & 0.001 & 46.7 & 13.1 & 356.5 & 2877 & 582 & 2648 \\
-$2^{22}$ & 1.28  & 9.8 & 0.001 & 88.5 & 28.3 & 713 & 5558 & 1258 & 5297 \\
-$2^{23}$ & 1.31  & 13.8 & 0.001 & 97.4 & 56.6 & 1426 & 10757 & 2516 & 10595 \\
-$2^{24}$ & 1.34  & 19.5 & 0.001 & 115 & 120 & 2852 & 20878 & 5044 & 21190 \\
-\hline
-\end{tabular}
-\caption{Comparison of Graphene(G), Ligero(L) and Bulletproofs(B) in single
-prover setting for 80 bits of security}
-\label{fig:standalonecompare}
-\end{figure*}
 

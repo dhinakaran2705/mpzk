@@ -753,6 +753,31 @@ the distributed linear check protocol.
 The complete protocol for
 distributed quadratic check appears in Figure \ref{fig:distquadcheck} in
 Appendix.
+
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
+        \multicolumn{3}{|c|}{Verifier Time($t_\verifier$) sec} &
+        \multicolumn{3}{|c|}{Prover Time($t_\prover$) sec} \\
+\hline
+ & \textsf{G} & \textsf{L} & \textsf{B} &
+   \textsf{G} & \textsf{L} & \textsf{B} &
+   \textsf{G} & \textsf{L} & \textsf{B} \\
+\hline
+$2^{19}$ & 0.728 & 3.5 & 0.001 & 43.0 & 3.0 & 89.1 & 802 & 137 & 662 \\
+$2^{20}$ & 0.759 & 4.9 & 0.001 & 45.2 & 6.5 & 178.2 & 1514 & 291 & 1324 \\
+$2^{21}$ & 0.884 & 6.95 & 0.001 & 46.7 & 13.1 & 356.5 & 2877 & 582 & 2648 \\
+$2^{22}$ & 1.28  & 9.8 & 0.001 & 88.5 & 28.3 & 713 & 5558 & 1258 & 5297 \\
+$2^{23}$ & 1.31  & 13.8 & 0.001 & 97.4 & 56.6 & 1426 & 10757 & 2516 & 10595 \\
+$2^{24}$ & 1.34  & 19.5 & 0.001 & 115 & 120 & 2852 & 20878 & 5044 & 21190 \\
+\hline
+\end{tabular}
+\caption{Comparison of Graphene(G), Ligero(L) and Bulletproofs(B) in single
+prover setting for 80 bits of security}
+\label{fig:standalonecompare}
+\end{figure*}
 \begin{comment}
 \begin{figure}[h!]
 \centering
