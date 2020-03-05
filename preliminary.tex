@@ -132,7 +132,7 @@ that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
 %The proof is standard and  will be given in full version.
  
 
-\subsection{Coding Theoretic Results for our Constructions}
+\subsection{Coding Theoretic Results for our Constructions}\label{new_result_coding_theory}
 In this section we prove the coding theoretic result (Proposition \ref{lem:3dcompression}), which underlies
 the construction of our new ``MPC-friendly'' zero-knowledge protocol. The result
 extends the approach in \cite{ligero}  of interleaving the witness and checking proximity (to well-formed encoding) by
@@ -165,8 +165,8 @@ This commitment is homomorphic with $\calC=\GG$ as the commitment space.
 %We will assume that all the message spaces $\calM_\sigma$ output by the $\gen$ algorithm come equipped with an inner-product operator $\innp{\cdot}{\cdot}:\calM_\sigma\times \calM_\sigma\rightarrow Z$. 
 We now define the language for inner-product w.r.t. the above  as $\calL
 \subseteq \FF^m \times \calC \times \FF$ given by:
-
 %\\~
+
 {\small
 \begin{equation*}
 %\begin{aligned}[c]
@@ -185,7 +185,7 @@ of the one defined in ~\cite{bulletproofs}, where the first argument is also hid
 \begin{definition}[Inner-product Argument \cite{InnerProductDLS,bulletproofs} ]\label{defn:innerproductarg} 
 We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
 \begin{enumerate}[{\rm (i)}]
-\item {\bf Completeness}: For all adversaries $\adv$,
+\item {\bf Completeness}: For all \ppt $\adv$, the following should be $1$
 %\begin{align*}
 %\condprob{(\stmt,\wit)\in \calR_\sigma \vee \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1}{
 %\begin{array}{l}
@@ -198,11 +198,11 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 \begin{align*}
 \condprob{
 	\begin{array}{l}
-	(\stmt,\wit)\in \calR \wedge \\ \langle \pip(\sigma,\stmt,\wit),\vip(\sigma,\stmt)\rangle=1
+	(\stmt,\wit)\in \calR \wedge \\ \langle \pip(\mathsf{pp},\stmt,\wit),\vip(\mathsf{pp},\stmt)\rangle
 	\end{array}}{
 	\begin{array}{l}
-	\sigma\gets \gen(\secparam);\\
-	(\stmt,\wit)\gets \adv(\secparam,\sigma)
+	\mathsf{pp}\gets \gen(\secparam);\\
+	(\stmt,\wit)\gets \adv(\secparam,\mathsf{pp})
 	\end{array}
 }
 =1
@@ -216,11 +216,11 @@ We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interac
 	\begin{array}{c}
 	\stmt\not\in \calL \wedge \\
 	\langle
-\prover^*(\sigma,\stmt,s),\vip(\sigma,u)\rangle=1
+\prover^*(\mathsf{pp},\stmt,s),\vip(\mathsf{pp},u)\rangle=1
 \end{array}}{
 \begin{array}{l}
 \sigma\gets \gen(\secparam);\\
-(\stmt,s)\gets \adv(\secparam,\sigma)
+(\stmt,s)\gets \adv(\secparam,\mathsf{pp})
 \end{array}
 } = \negl(\lambda)
 \end{align*}

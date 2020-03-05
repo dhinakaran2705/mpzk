@@ -181,7 +181,7 @@ arbitrary $c\geq 2$, with a verification complexity of $O(N^{1-2/c})$ public key
 operations and $O(N)$ field operations. \name{} is a public-coin, honest verifier
 zero-knowledge protocol in the Interactive PCP (IPCP) \cite{KR08, KR09, GIMS10,ligero}
 paradigm. In IPCP paradigm, the verifier reads a small number of bits from PCP created by the prover and exchanges a small number of bits with the prover.
-There is known transformation that converts ZK designed with IPCP to an interactive ZK via collision-resistant hash functions \cite{IshaiMS12, IshaiW14} which in turn can be made non-interactive   via Fiat-Shamir transform \cite{FS86, BCS16}. 
+There is known transformation that converts ZK designed with IPCP to an interactive ZK via collision-resistant hash functions \cite{IshaiMS12, IshaiW14} which in turn can be made non-interactive  \cite{FS86, BCS16}. 
 
 % that achieves the property of zero-knowledge-with-collusion i.e.,
 %the witnesses from a set of provers are not revealed to a verifier even when it
@@ -207,7 +207,7 @@ encoding to check linear and quadratic relations on the extended
 witness, and (iii) a check to ensure that the extended witness is correctly
 encoded. The extended witness (henceforth witness) encoding is committed as an ``oracle'' and is queried
 during the linear and quadratic checks.  Our key innovations are
-listed below.  \commentA{can you point out the coding theory result below. it was in the earlier version. seems to get washed out}
+listed below. 
 
 \paragraph{New encoding and oracle} A core technical contribution of our
 work is a novel way to encode the witness and design the three checks in
@@ -226,7 +226,8 @@ oracle revealed to the verifier).
 As we will see later, we will be able to regulate the three dimensions such that
 both the communication between the provers and the
 aggregator and that between aggregator and the verifier (argument size) are 
-{\em sub-linear} in circuit-size $N$. 
+{\em sub-linear} in circuit-size $N$.  \commentA{can you point out the coding theory result below. it was in the earlier version. seems to get washed out. made a blunt attempt below. refine} Lastly, the fact that a malicious prover is forced to make an oracle that corresponds to
+a well-formed witness encoding leverages a new result in coding theory, which appear in Section~\ref{new_result_coding_theory}. 
 
 \paragraph{Checking Linear and Quadratic Relations} As in other oracle-based protocols~\cite{ligero,aurora}, checking the linear and quadratic relations on the witness reduces to 
  checking identities on the polynomials derived from polynomials encoding the witness. 

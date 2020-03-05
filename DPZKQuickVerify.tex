@@ -169,7 +169,7 @@ $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, the prover obtains $\ewit\gets 
 \enc(\wit)$ and $\pi=\comoracle \gets \ocom(\ewit)$. The prover then sets the oracle 
 $\pi := \comoracle$, which can then be queried by the verifier. The broad
- outline of the protocol given below follows the steps--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and the oracle (c) check if the oracle committed a well-formed codeword. The full protocol appears in the Appendix ~\ref{app:protocolboxes},
+ outline of the protocol given below follows the steps--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and the oracle (c) check if the oracle committed a well-formed codeword. The full protocol appears in the
 Figure \ref{fig:linearcheck}.\smallskip
 
 \noindent {\em Reduction to Inner-product}: To check $A\wit=b$, the verifier 
@@ -536,6 +536,7 @@ there exists an expected polynomial time extractor $\extr$ with rewinding access
 to the transcript oracle $\mc{O}=\innp{P^\ast(\cdot)}{\verifier^{\pi}(\cdot)}$
 such that either $\extr$ breaks the commitment binding, or it outputs a witness
 with overwhelming probability whenever $P^\ast$ succeeds, i.e,
+
 {\footnotesize
 \begin{align*}
 \condprob{
@@ -638,7 +639,7 @@ Now $\Sim$ picks $\pi[\cdot, k]$ such that $\tilde{c}_k = \prod_{i\in[p]}(
 \pi[i,k])^{\rho_i}$ for all $k\notin \{k_u:u\in [t]\}$. $\Sim$ picks $w_{k_u}$
 uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow
 \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the vector consisting
-of the first $2m$ entries
+of the first $2m-1$ entries
 of $P[\cdot,k_u]$ for $ u\in[t]$. Finally $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell-1}$
 in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell-1]}
 ({c}_a)^{\Lambda^T_{n,s+\ell-1}[a,k_u]} \, \forall u\in [t]$
@@ -673,7 +674,7 @@ $\linearcheck$ for $t\leq \bi$.
 
 Similarly, we can construct a simulator for the quadratic check.
 \begin{lemma}\label{lem:simquadcheck}
-There exists an efficient simulator $\simulator$ whose output is perfectly
+There exists an efficient simulator $\Sim$ whose output is perfectly
 indistinguishable from the extended view of the verifier in the honest execution
 of the protocol $\quadcheck$ for $t\leq \bi$.
 \end{lemma}
