@@ -1,10 +1,54 @@
 \appendix
 
-\section{Protocols}\label{app:protocolboxes}
-
+\subsection{Protocols}\label{app:protocolboxes}
+$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+{\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
+%Linear Check of Graphene
+\begin{figure}[h!]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: 			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
+				\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				as in Section ~\ref{sec:lincheck}. 
+				\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^{2m-1}$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+				Computes commitments $c_1,\ldots,c_{s+\ell-1}$ from $P$.
+				\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell-1}$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\prover\rightarrow\verifier$: $\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+					for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell-1}c_a^{\Lambda^T_{n,s+\ell-1}[a,k_u]}$, 
+					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})U[i,j_u,k_u]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell-1}c_k^{\varphi_k}$ (check the condition $r^TAw=r^Tb$).
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				\item $\verifier$ accepts if all the checks succeed.
+			\end{enumerate}
+		\end{framed}
+		\caption{Linear Check Protocol}
+		\label{fig:linearcheck}
+	}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Quadratic Check of Graphene
-\begin{figure}[h]
+\begin{figure}[h!]
 	{\footnotesize
 		%\centering
 		\begin{framed}
@@ -179,7 +223,6 @@
 	}
 \end{figure}
 
-\section{Coding Theory: Missing Parts and Proofs}
 \begin{comment}
 \subsection{Interleaved Codes: Alternative interpretation} \label{app:AltILC}
 For concreteness, let $\FF$ be the finite field $\FF_q$, consisting of $q$
@@ -241,8 +284,8 @@ proof as it is standard.
 \end{comment}
 % removing proof of Lemma bicdecoding
 \begin{comment}
-\subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
-\begin{proof}
+%\subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
+\begin{proof}[Proof of Lemma ~\ref{lem:bicdecoding}]\label{prooflemmaRScode}
 	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
 	Therefore $U^\ast$ differs from $U_1$ in $\beta_1$ many columns, i.e. in the remaining $n-\beta_1$ columns $U^\ast$ and $U_1$ are identical.
 	So, there are columns $S_1 = \{j_{s} : s\in [n - \beta_1] \}$ for which $U^\ast[i,j] = U_1[i,j]$ $\forall j\in S$.
@@ -408,6 +451,77 @@ We consider $\mc{C}$ as $[n,k,d]$ code over $\HH$ and $\mc{C}^p$ as the
 interleaved code of $\mc{C}$ over the field $\HH$. Then by applying Lemma \ref{lem:affinesubspace}
 with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and
 $\mc{C}$, we have the desired bound.
+\end{proof}
+
+\subsection{Proof of soundness of Linear Check}\label{app:linear_soundness}
+\begin{proof}[Proof-Sketch of Lemma ~\ref{lem:linearcheck_sound}]
+Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
+ this $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in
+\mc{W}_2$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
+show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
+$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
+$\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
+ we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
+\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover
+(Step 3 in Figure ~\ref{fig:linearcheck}). Define 
+the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
+$\tilde{C}_k=\prod_{a=1}^\ell (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k]}$ for $k\in [n]$.
+ Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ where
+$\hat{C}_k=\prod_{i=1}^p(\pi[i,k])^{\rho_i}$. Now if
+$\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
+proximity check equation \eqref{eq:proxchecks} with probability at most $(1-e/n)^t$. 
+In the complete
+proof, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
+while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
+Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
+$d(\ewit,\mc{W}_1)>e$.
+
+We now consider the case when $d(\ewit,\mc{W}_1)\leq e$. From Lemma
+~\ref{lem:bicdecoding}, there exists (unique) $\ewit^*\in \mc{W}$
+such that $\Delta_1(\ewit,\ewit^*)\leq e$.
+Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
+probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA \wit \neq
+r^Tb$. Let $P^*$ denote the correctly computed intermediate matrix from $\ewit^*$ and let
+$\hat{P}$ denote the correctly computed intermediate matrix from $\ewit$. We note that
+$\Delta_1(\hat{P},P^*)\leq e$. Let $c_1,\ldots,c_{s+\ell-1}$ be the commitments
+to the intermediate matrix sent by the prover. If these commitments correspond to a
+matrix $P=P^*$, the inner product check
+$\innerproduct(\mathsf{pp},[1^m||0^{m-1}],\mathsf{cm},r^Tb)$ fails when using the
+commitment $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}c_k^{\varphi_k}$ for
+$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^{m-1}}{\overline{P^*}\times
+\varphi}=r^TA\wit\neq r^Tb$, where $\overline{P^*}$ denotes the
+$(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
+as discussed in the protocol. If the
+commitments correspond  to a matrix $P\neq P^*$, we have
+$\Delta_1(P,P^*)\geq n-s-\ell$ by distance property of the code
+$\rsc{\eta}{n, s+\ell-1}$. 
+(We note that a prover implicitly commits to a matrix in
+$\rsc{\eta}{n,s+\ell-1}\otimes \rsc{\alpha}{h,2m-1}$).
+Thus there exists a set $E$ of at least $n-s-\ell-e$ columns, such that for
+$k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq P[\cdot,k]$. The checks
+$\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for $i\in [p]$ and $u\in [t]$ 
+force the prover to provide vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
+overwhelming probability. Then the consistency check succeeds for the 
+uniformly sampled query point $(j_u,k_u)$ when:
+
+{\footnotesize
+\[ P[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
+\hat{P}[j_u,k_u] \]}
+For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
+$P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
+probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
+
+{\footnotesize
+\begin{align*}
+\prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
+\\
+&= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
+\end{align*}
+}
+The above probability is smaller than a constant $\epsilon<1$ for suitable
+choices of parameters. Hence, the overall probability of prover's success is
+$\negl(\secpar)$ for $t=O(\secpar)$.
 \end{proof}
 
 \section{cryptographic preliminaries}
@@ -1424,3 +1538,106 @@ Among the provers one prover is chosen arbitrarily as the aggregator $\Ag$.
 	\end{itemize} 
 \end{enumerate}
 \end{comment}
+
+\section{Graphene for R1CS}\label{sec:graphener1cs}
+We use the linear and quadratic check protocols from Section \ref{sec:graphene}
+to describe an efficient protocol for rank one constraint system (R1CS). Let 
+$A,B$ and $C$ be $M\times N$ matrices. We prove existence of $\wit\in \FF^N$
+satisfying $A\wit\circ B\wit=C\wit$ by showing existence of
+$\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wit=\wit_x$,
+$B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadractic relation
+$\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear
+relations to the linear relation:
+
+{\footnotesize
+\begin{align}\label{eq:comblincheck}
+\begin{bmatrix}
+\gamma_xI\,|\gamma_yI\,|\gamma_zI\,|-(\gamma_xA+\gamma_yB+\gamma_zC)
+\end{bmatrix}\begin{bmatrix}
+\wit_x\\
+\wit_y\\
+\wit_z\\
+\wit
+\end{bmatrix}=\bm{0}
+\end{align}
+}
+for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we
+$\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$
+denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$
+and $\wit$ along ``slices''. The encoding $\ewit\gets\enc(\bwit)$ and commitment to
+the encoding $\comoracle\gets \comm(\ewit)$ are computed as in Sections
+~\ref{sec:witencoding} and ~\ref{sec:construct_oracle}. Note that
+$\comoracle$ is a $4p\times n$ matrix. 
+We now present the high level protocol for R1CS instance $(A,B,C)$.\smallskip
+
+{\small
+\noindent{$\grapheneRCS(\mathsf{pp},A,B,C,[\pi];\wit_x,\wit_y,\wit_z,\wit)$}:\\
+\noindent{\bf Relation}: $A\wit\circ B\wit=C\wit$. \\
+\noindent{\bf Oracle Setup}: Compute $\comoracle$ as described above. Set $\pi
+:= \comoracle$.
+\begin{enumerate}[{\rm 1.}]
+\item $\verifier\rightarrow\prover$: $\gamma_x,\gamma_y,\gamma_z\sample \FF$,
+$r_{lc}\sample \FF^M$, $r_{qd}\sample \FF^{p}$, $\rho\sample \FF^{4p}$.
+\item $\prover\rightarrow\verifier$: $\prover$ computes $\tilde{U}=\sum_{i\in
+[4p]}\rho_i\ewit[i,\cdot,\cdot]$ and sends commitments
+$\tilde{c}_1,\ldots,\tilde{c}_\ell$ to $\tilde{U}$.
+\item $\prover\leftrightarrow\verifier$ compute: $R=r_{lc}^TW$ for
+$W=[\gamma_xI\,||\gamma_yI\,||\gamma_zI\,||-(\gamma_xA+\gamma_yB+\gamma_zC)]$,
+ polynomials $R^i$,$i\in [4p]$ interpolating the slices of $R$ viewed as a
+$4p\times m\times n$ matrix.
+\item $\prover$ computes: 
+\begin{itemize}
+\item Polynomials $Q^i_x,Q^i_y,Q^i_z,Q^i$ for $i\in [p]$,
+where polynomials $Q^i_a$, $i\in [p]$ correspond to $\wit_a$ for $a\in \{x,y,z\}$ and
+polynomials $Q^i$,$i\in [p]$ correspond to $\wit$. 
+\item $h\times n$ matrices $P_{lc}$ and $P_{qd}$ as ``P'' matrices for the linear check and
+quadratic check respectively. Note that $p_j$ polynomial for $P_{lc}$ is given
+by $p_j(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot).Q_x^i(\alpha_j,\cdot)+
+ R^{p+i}(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)+R^{2p+i}(\alpha_j,\cdot)Q^i_z(\alpha_j,\cdot)+
+R^{3p+i}(\alpha_j,\cdot)Q^i(\alpha_j,\cdot))$. The $p_j$ polynomials for the
+matrix $P_{qd}$ are given by
+$p_j(\cdot)=\sum_{i=1}^{p}r_{qd}[i](Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot)-Q^i_z(\alpha_j,\cdot))$.
+\item Blinding vectors $U_{lc},U_{qd}\in \FF^{2m-1}$ for linear and quadratic check protocols
+respectively, and commitments $c_0,d_0$ to vectors $U_{lc}$
+and $U_{qd}$.
+\end{itemize}
+\item $\prover\rightarrow\verifier$: Commitments $c_0,c_1,\ldots,c_{s+\ell-1}$ for
+the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell-1}$ for matrix
+$P_{qd}$. 
+\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$.
+\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+\item $\prover\rightarrow\verifier$: $V_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
+\item $\prover$ and $\verifier$ run the linear and quadratic check protocols in
+parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
+\item Check proximity as: $\prod_{a=1}^\ell
+(\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
+\item $\verifier$ accepts if all the subprotocols accept.
+\end{enumerate}
+}
+
+\subsection{Reducing MPC Overhead for Small Shared Circuits}\label{sec:sharedcircuitopti}
+Let $C$ be a circuit with $N$ wires (we assume a unique incoming wire for each
+input gate), let $\wit=(w_1,\ldots,w_N)$ denote the vector of wire values in a
+satisfying assignment according to some ordering on the wires. We consider the
+case, when each input wire is ``assigned'' to a unique prover. Let $M$ be the
+number of multiplication gates in $C$, and let $A$, $B$, $C$ 
+ be $M\times N$ matrices such that $\wit_x=A\wit$, $\wit_y=B\wit$
+and $\wit_z=C\wit$ are vectors of {\em left}, {\em right} and {\em out} values
+of multiplication gates. For $i\in [m]$, we say that multiplication gate $i$ is
+{\em isolated} if $\wit_x[i],\wit_y[i]$ and $\wit_z[i]$ depend on inputs of only
+one prover. We call the remaining multiplication gates as {\em shared}. Let
+$N_s$ be the number of shared gates. Without loss of generality, we can assume
+that the gates $1,\ldots,N_s$ are shared (rows of  $A$, $B$, $C$ can be permuted
+suitably). Now an additive sharing of the extended witness may be obtained by
+(i) each prover locally computing the wires for isolated gates from their
+inputs, while setting the shares of other parties for these wires to be $0$ and
+(ii) running a secret sharing MPC on the subcircuit containing shared gates.
+Let $p_s=\lceil N_s/ms \rceil$. Then the multiplication MPC $\mathsf{Mult}$ in
+distributed quadratic check can be restricted to obtaining shares
+$\shr{U_x[i,j,k].U_y[i,j,k]}$ for $i\in [p_s]$, as each prover can canonically 
+the shares of other slices of $\ewit_x$ and $\ewit_y$. For slices, which depend
+on the provers inputs, the prover computes randomized encoding of the slice, for
+other slices (where its share is $0$) it computes a deterministic encoding by
+setting the buffer columns to $0$. This gives an MPC of depth 1 on circuit of
+size $O(\max(N_s, mn))$.
