@@ -27,11 +27,10 @@ respectively. Our protocol $\name$ achieves
 following efficiency parameters:
 >>>>>>> 23d366f2e2ed1d9aa1e813a97eaeee4f95db57a1
 \end{comment}
+\begin{comment}
 {\footnotesize
 \begin{align*}
 \begin{array}{llrl}
-\mathrm{alphabet} & \Sigma & = & \FF \\
-& & & \\
 \mathrm{number\ of\ rounds} & \zkrounds & = & O(\log{N}) \\
 & & & \\
 \mathrm{argument\ size} & \zkcomm & = & 4pt\bitsF \\
@@ -45,7 +44,8 @@ following efficiency parameters:
 & & &+ (48tm+32m)\cexp \\
 & & & \\
 \mathrm{verifier\ complexity} & t_\verifier & = &
-O(N)\cfop + 4pm\cfft(s)+(2t+2)\cmexp(2m)\\
+O(N)\cfop + 4pm\cfft(s)\\ 
+& & & +(2t+2)\cmexp(2m)\\
 & & & +2t\cmexp(m)+t\cmexp(4p+\ell) \\
 & & & \\
 \mathrm{soundness\ error} & \kappa_{\rm gr} & = & (1-e/n)^t \\ 
@@ -53,6 +53,21 @@ O(N)\cfop + 4pm\cfft(s)+(2t+2)\cmexp(2m)\\
 \end{array}
 \end{align*}
 }
+\end{comment}
+\begin{itemize}
+\item {\em Number of rounds}: $\zkrounds=O(\log{N})$.
+\item {\em Argument size}: $\zkcomm= 4pt\bitsF$
+$+(4pt+8t\log{m}+4\ell+s+8t+4)\bitsG$.
+\item {\em Prover complexity}: $t_\prover=4p((m+n)\cfft(m)+m\cfft(l)$
+$+n\cfft(h) + 4p\ell\cmexp(m)$
+ $+(n-\ell)\cmexp(\min(\ell,m))$
+ $+(s+3\ell)\cmexp(2m)$ $+ (48tm+32m)\cexp$
+\item {Verifier complexity}:  $t_\verifier=O(N)\cfop + 4pm\cfft(s)$
+ $+(2t+2)\cmexp(2m)$
+ $+2t\cmexp(m)+t\cmexp(4p+\ell)$
+\item{Soundness error} $\kappa_{\rm gr} = (1-e/n)^t$
+ $+2\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t$.
+\end{itemize}
 
 In Appendix ~\ref{sec:performance}, we give similar expressions for Ligero and
 Bulletproofs protocols. 
