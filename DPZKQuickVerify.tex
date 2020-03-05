@@ -80,8 +80,8 @@ Let $\mc{W}_1$ denote the set of matrices
 $U$ in $\mc{M}_{p,h,n}$ such that the $n$-length vector $U[i,j,\cdot]$ is a
 codeword in $\rsc{\eta}{n,\ell}$ for all $i,j$. Similarly let $\mc{W}_2$ denote the set of
 matrices $U$ such that the $h$-length vector $U[i,\cdot,k]$ is a codeword in
-$\rsc{\alpha}{h,m}$ for all $i,k$.  Let $\mc{W}=\mc{W}_1\cap \mc{W}_2$. $\mc{W}$ denotes the set of {\em well-formed} encodings  and consists of $U$ such that each slice $U[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. For $U^\ast\in \mc{M}_{p,h,n}$ define
-$d(U^\ast,\mc{W}_i)=\min\{\Delta_i(U^\ast,U):U\in \mc{W}_i\}$ for $i=1,2$.
+$\rsc{\alpha}{h,m}$ for all $i,k$.  Let $\mc{W}=\mc{W}_1\cap \mc{W}_2$. $\mc{W}$ denotes the set of {\em well-formed} encodings  and consists of $U$ such that each slice $U[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. 
+\commentA{this is unnecessary notation. we have $d_1$ and $d_2$ for it. let's remove this and makes changes accordingly.}For $U^\ast\in \mc{M}_{p,h,n}$ define $d(U^\ast,\mc{W}_i)=\min\{\Delta_i(U^\ast,U):U\in \mc{W}_i\}$ for $i=1,2$.
 
 \begin{comment}
 We now fix the notation for some of the codes that will be
@@ -127,9 +127,7 @@ query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ f
 $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the
 $i^{th}$ slice of $\ewit$.   This is different from  commitment of a product codeword 
 (Section ~\ref{sec:matrixcommitment})  where only 
-$\ell$ columns are committed. This is
-because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns
-as it only has oracle access to $\comoracle$. 
+$\ell$ columns are committed. %This is because the verifier cannot access all $\ell$ commitments to the first $\ell$ columns as it only has oracle access to $\comoracle$. 
 \begin{comment}
 \subsection{Well-formed Encodings}\label{sec:wellformedenc}
 Let $\mc{W}$ denote the subset of $\mc{M}_{p,h,n}$
@@ -166,9 +164,8 @@ witness $\wit\in \FF^N$ satisfying a linear constraint of the form $A\wit = b$
 for some $A\in \FF^{M\times N}$ and $b\in \FF^M$. As before we veiw $\wit$ as
 $p\times m\times s$ matrix where $N=pms$. As desribed previously in Sections
 \ref{sec:witencoding} and \ref{sec:construct_oracle}, the prover obtains $\ewit\gets 
-\enc(\wit)$ and $\pi=\comoracle \gets \ocom(\ewit)$. The prover then sets the oracle 
-$\pi := \comoracle$, which can then be queried by the verifier. The broad
- outline of the protocol given below follows the steps--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and the oracle (c) check if the oracle committed a well-formed codeword. The full protocol appears in the
+\enc(\wit)$ and $\pi=\comoracle \gets \ocom(\ewit)$. %The prover then sets the oracle  $\pi := \comoracle$, which can then be queried by the verifier. 
+The broad  outline of the protocol is--(a) reduce the problem to checking an inner-product argument via a product codeword commitment; (b) check consistency of the product codeword commitment and $\pi$ (c) check if $\pi$ committed to a well-formed codeword. The protocol appears in 
 Figure \ref{fig:linearcheck}.\smallskip
 
 \noindent {\em Reduction to Inner-product}: To check $A\wit=b$, the verifier 
@@ -185,26 +182,26 @@ $k$ run over indices in $[p],[m]$ and $[s]$ respectively.
 For $j\in [h]$, denoting  the polynomial $\sum_{i\in
 [p]}R^i(\alpha_j,\cdot)Q^i(\alpha_j,\cdot)$ as $p_j$ (which will be of degree
 less than $s + \ell$), we can rewrite the expression as
-$\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$.  We define the matrix $P$ by
+$\sum_{k\in[s], j\in[m]}p_j(\zeta_k)=r^Tb$.  We define the matrix $P$ by
 $P[j,k]=p_j(\eta_k)$ for $j\in [h],k\in [n]$ which is a product codeword from
 $\rsc{\eta}{n,s+\ell-1} \otimes \rsc{\alpha}{h,2m-1}$ and fully determined by
 sub-matrix $\overline{P}$ consisting of the first $2m-1$ rows and the first
 $s+\ell-1$ columns of $P$. Now our idea is to commit  $P$ using  commitment for
 product codeword i.e. $(c_1,\ldots,c_{s+\ell-1}) \gets \pccom(P)$ and write the
 above expression as an inner-product argument involving $\overline{P}$ such as
-$\innp{*}{\overline{P}\times\varphi} = r^Tb$, where $*$ is a public vector and
-$\varphi$ is a vector and so the commitment for $\overline{P}\times\varphi$ can
+$\innp{*}{\overline{P}\times\varphi} = r^Tb$, where $*$ and $\varphi$ are public vectors 
+ and so the commitment for $\overline{P}\times\varphi$ can
 be computed given the commitment of the columns of $\overline{P}$.
 
 %Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$, $p(\zetabar) = [p(\zeta_1),\ldots,p(\zeta_s)]$, and $p(\etabar) = [p(\eta_1),\ldots,p(\eta_{s+\ell})]$. \newline
 %\noindent {\em Consistency of $P$ and $p(\zetabar)$} 
 Let $\Phi$ be a $s\times (s+\ell-1)$ matrix such that $[p_j(\zeta_1), \ldots,
 p_j(\zeta_s)]^T = \Phi \times [p_j(\eta_1), \ldots, p_j(\eta_{s+\ell-1})]^T$ for
-$j\in[h]$. Thus we have: %$p(\zetabar)^T = \Phi \times p(\etabar)^T$. \\
+$j\in[h]$. We have: %$p(\zetabar)^T = \Phi \times p(\etabar)^T$. \\
 \begin{align*}
-	&\left[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]}
-p_j(\zeta_s)\right]^T \\
-    &=\Phi \times \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]}
+	&\big[ \sum_{j\in[m]} p_j(\zeta_1), \ldots,  \sum_{\j\in[m]}
+p_j(\zeta_s)\big]^T \\
+    &=\Phi  \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]}
 p_j(\eta_{s+\ell-1})\right]^T\\
 	&= \Phi \times \overline{P}^T \times [1^m||0^m]^T
 	%\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= [1^m||0^m]\times \overline{P} \times \Phi^T\\
