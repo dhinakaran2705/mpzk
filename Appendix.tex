@@ -1,6 +1,6 @@
 \appendix
 
-\section{Protocols}\label{app:protocolboxes}
+\subsection{Protocols}\label{app:protocolboxes}
 %Linear Check of Graphene
 \begin{figure}[h]
 	{\footnotesize
@@ -221,7 +221,7 @@
 	}
 \end{figure}
 
-\section{Proofs}\label{sec:proofs}
+\subsection{Proofs}\label{sec:proofs}
 \begin{comment}
 \subsection{Interleaved Codes: Alternative interpretation} \label{app:AltILC}
 For concreteness, let $\FF$ be the finite field $\FF_q$, consisting of $q$
@@ -283,8 +283,8 @@ proof as it is standard.
 \end{comment}
 % removing proof of Lemma bicdecoding
 \begin{comment}
-\subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
-\begin{proof}
+%\subsection{Proof of Lemma~\ref{lem:bicdecoding} }\label{prooflemmaRScode}
+\begin{proof}[Proof of Lemma ~\ref{lem:bicdecoding}]\label{prooflemmaRScode}
 	Let $U_1 \in \mc{C}_1$  such that $\dham_1(U^\ast, U_1) \leq \dham(U^\ast, U) \forall U\in \mc{C}_1$ and let $\dham_1(U^\ast, U_1) = \beta_1$ with $\beta_1<e_1$
 	Therefore $U^\ast$ differs from $U_1$ in $\beta_1$ many columns, i.e. in the remaining $n-\beta_1$ columns $U^\ast$ and $U_1$ are identical.
 	So, there are columns $S_1 = \{j_{s} : s\in [n - \beta_1] \}$ for which $U^\ast[i,j] = U_1[i,j]$ $\forall j\in S$.
@@ -1613,3 +1613,29 @@ parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 \item $\verifier$ accepts if all the subprotocols accept.
 \end{enumerate}
 }
+
+\subsection{Reducing MPC Overhead for Small Shared Circuits}\label{sec:sharedcircuitopti}
+Let $C$ be a circuit with $N$ wires (we assume a unique incoming wire for each
+input gate), let $\wit=(w_1,\ldots,w_N)$ denote the vector of wire values in a
+satisfying assignment according to some ordering on the wires. We consider the
+case, when each input wire is ``assigned'' to a unique prover. Let $M$ be the
+number of multiplication gates in $C$, and let $A$, $B$, $C$ 
+ be $M\times N$ matrices such that $\wit_x=A\wit$, $\wit_y=B\wit$
+and $\wit_z=C\wit$ are vectors of {\em left}, {\em right} and {\em out} values
+of multiplication gates. For $i\in [m]$, we say that multiplication gate $i$ is
+{\em isolated} if $\wit_x[i],\wit_y[i]$ and $\wit_z[i]$ depend on inputs of only
+one prover. We call the remaining multiplication gates as {\em shared}. Let
+$N_s$ be the number of shared gates. Without loss of generality, we can assume
+that the gates $1,\ldots,N_s$ are shared (rows of  $A$, $B$, $C$ can be permuted
+suitably). Now an additive sharing of the extended witness may be obtained by
+(i) each prover locally computing the wires for isolated gates from their
+inputs, while setting the shares of other parties for these wires to be $0$ and
+(ii) running a secret sharing MPC on the subcircuit containing shared gates.
+Let $p_s=\lceil N_s/ms \rceil$. Then the multiplication MPC $\mathsf{Mult}$ in
+distributed quadratic check can be restricted to obtaining shares
+$\shr{U_x[i,j,k].U_y[i,j,k]}$ for $i\in [p_s]$, as each prover can canonically 
+the shares of other slices of $\ewit_x$ and $\ewit_y$. For slices, which depend
+on the provers inputs, the prover computes randomized encoding of the slice, for
+other slices (where its share is $0$) it computes a deterministic encoding by
+setting the buffer columns to $0$. This gives an MPC of depth 1 on circuit of
+size $O(\max(N_s, mn))$.

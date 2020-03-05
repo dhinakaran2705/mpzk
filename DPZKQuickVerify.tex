@@ -752,7 +752,9 @@ Thereafter, each prover obtains a share of matrix $P$, and the remaining protoco
 the distributed linear check protocol. 
 The complete protocol for
 distributed quadratic check appears in Figure \ref{fig:distquadcheck} in
-Appendix.
+Appendix \ref{app:protocolboxes}. In Appendix ~\ref{sec:sharedcircuitopti}, we
+discuss how to optimize MPC overhead when the size of the shared circuit (see 
+ Section ~\ref{sec:efficiencyparams}) is small.
 
 \begin{figure*}[h!]
 \centering
@@ -899,28 +901,3 @@ the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$.
 Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
 \end{proof}
 
-\subsection{Reducing MPC Overhead for Small Shared Circuits}
-Let $C$ be a circuit with $N$ wires (we assume a unique incoming wire for each
-input gate), let $\wit=(w_1,\ldots,w_N)$ denote the vector of wire values in a
-satisfying assignment according to some ordering on the wires. We consider the
-case, when each input wire is ``assigned'' to a unique prover. Let $M$ be the
-number of multiplication gates in $C$, and let $A$, $B$, $C$ 
- be $M\times N$ matrices such that $\wit_x=A\wit$, $\wit_y=B\wit$
-and $\wit_z=C\wit$ are vectors of {\em left}, {\em right} and {\em out} values
-of multiplication gates. For $i\in [m]$, we say that multiplication gate $i$ is
-{\em isolated} if $\wit_x[i],\wit_y[i]$ and $\wit_z[i]$ depend on inputs of only
-one prover. We call the remaining multiplication gates as {\em shared}. Let
-$N_s$ be the number of shared gates. Without loss of generality, we can assume
-that the gates $1,\ldots,N_s$ are shared (rows of  $A$, $B$, $C$ can be permuted
-suitably). Now an additive sharing of the extended witness may be obtained by
-(i) each prover locally computing the wires for isolated gates from their
-inputs, while setting the shares of other parties for these wires to be $0$ and
-(ii) running a secret sharing MPC on the subcircuit containing shared gates.
-Let $p_s=\lceil N_s/ms \rceil$. Then the multiplication MPC $\mathsf{Mult}$ in
-distributed quadratic check can be restricted to obtaining shares
-$\shr{U_x[i,j,k].U_y[i,j,k]}$ for $i\in [p_s]$, as each prover can canonically 
-the shares of other slices of $\ewit_x$ and $\ewit_y$. For slices, which depend
-on the provers inputs, the prover computes randomized encoding of the slice, for
-other slices (where its share is $0$) it computes a deterministic encoding by
-setting the buffer columns to $0$. This gives an MPC of depth 1 on circuit of
-size $O(\max(N_s, mn))$.
