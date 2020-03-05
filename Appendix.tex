@@ -1639,25 +1639,21 @@ other slices (where its share is $0$) it computes a deterministic encoding by
 setting the buffer columns to $0$. This gives an MPC of depth 1 on circuit of
 size $O(\max(N_s, mn))$.
 
-\subsection{Performance Parameters}\label{sec:performance}
-We summarize the performance parameters for Ligero ~\cite{ligero}, and 
-Bulletproofs ~\cite{bulletproofs} that we use to derive our estimates in 
-Figure ~\ref{fig:standalonecompare}. Let $N$ denote the size of extended
-witness.
+\subsection{Performance Parameters for Ligero and Bulletproofs}\label{sec:performance}
+%We summarize the performance parameters for Ligero ~\cite{ligero}, and 
+%Bulletproofs ~\cite{bulletproofs} that we use to derive our estimates in 
+%Figure ~\ref{fig:standalonecompare}. Let $N$ denote the size of extended
+%witness.
 
 \noindent{\bf Ligero}: Let $m,s$ be such that $N=ms$. Let $t$ be a parameter,
 and let $\ell=s+t$, $n=O(\ell)$ and $e\leq (n-\ell)/4$
 Then the performance parameters for Ligero are then given by:
-argument size $\zkcomm=n+6\ell+4s+4mt+5t-5$, prover complexity
- $t_\prover=O(N)\cfop+4m(\cfft(s)+\cfft(n))$, verifier complexity
-$t_\verifier=O(N)+4m\cfft(s)$, and soundness error
-$\kappa_{lg}=(1-e/n)^t+5((2\ell+e)/n)^t$.\smallskip
+$\zkcomm=n+6\ell+4s+4mt+5t-5$,
+ $t_\prover=O(N)\cfop+4m(\cfft(s)+\cfft(n))$,
+$t_\verifier=O(N)+4m\cfft(s)$,
+$\kappa_{lg}=(1-e/n)^t+5((2\ell+e)/n)^t$.
 
-\noindent{\bf Bulletproofs}: The performance parameters for the Bulletproofs
-protocol for circuit with $N$ wires is given by: argument size
-$\zkcomm=2\log(n)+13$, prover complexity $t_\prover=9N\cexp +
-2\cmexp(2N)+3\cmexp(N)$, verifier complexity $t_\verifier=N\cexp + \cmexp(2n)$,
-and soundness error $\kappa_{bp}=N/|\FF|$.
+\noindent{\bf Bulletproofs}:
+$\zkcomm=2\log(N)+13$, $t_\prover=9N\cexp +
+2\cmexp(2N)+3\cmexp(N)$, $t_\verifier=N\cexp + \cmexp(2N)$, $\kappa_{bp}=N/|\FF|$.
 
-For Ligero, we set $n=8\ell$,  to achieve soundness of $2^{-\secpar}$ with roughly
- $t=5\secpar/2$.
