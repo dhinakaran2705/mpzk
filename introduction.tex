@@ -226,8 +226,10 @@ oracle revealed to the verifier).
 As we will see later, we will be able to regulate the three dimensions such that
 both the communication between the provers and the
 aggregator and that between aggregator and the verifier (argument size) are 
-{\em sub-linear} in circuit-size $N$.  \commentA{can you point out the coding theory result below. it was in the earlier version. seems to get washed out. made a blunt attempt below. refine} Lastly, the fact that a malicious prover is forced to make an oracle that corresponds to
-a well-formed witness encoding leverages a new result in coding theory, which appear in Section~\ref{new_result_coding_theory} and proof is given in Appendix ~\ref{app:ProofofLem3dcompression}. 
+{\em sub-linear} in circuit-size $N$. Lastly, we present a new coding theoretic
+result, which appears in Section~\ref{new_result_coding_theory} and proved in 
+Appendix ~\ref{app:ProofofLem3dcompression}, and leverage it to prove the
+soundness of our two stage ``compression'' as explained in the next paragraph. 
 
 \paragraph{Checking Linear and Quadratic Relations} As in other oracle-based protocols~\cite{ligero,aurora}, checking the linear and quadratic relations on the witness reduces to 
  checking identities on the polynomials derived from polynomials encoding the witness. 
