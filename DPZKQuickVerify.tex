@@ -273,13 +273,13 @@ see, helps reduce interaction among provers in its distributed variant.\smallski
 \noindent{\em Consistency of oracle $\pi$ and $P$}: The verifier additionally
 needs to determine if the committed $P$ and the oracle $\pi$ are consistent or not. The verifier proceeds to check the
 consistency at randomly sampled $t$ positions given by $\{(j_u,k_u): u\in [t]\}$ from
-$\bm{\alpha} \times \bm{\eta}$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
+$[h] \times [n]$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
 $u\in [t]$. Let $X_u$, $u\in [t]$ denote the $p$-length vectors sent by the prover. For an honest prover $X_u=U[\cdot, j_u, k_u]$. For $u\in [t]$, let \commentA{changed this notation. change in other places}$\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the position
 $j_u$. The prover and the verifier run inner-product arguments to establish the following:
 \begin{enumerate}[{\rm 1.}]
-\item \commentA{is this correct? I don't think so. $R^i(j_u,k_u) = X_u[i]$, no? check}\pnote{The identity below is not correct. It's a typo. All the other places we are using $R^i(\alpha_{j_u}, \eta_{k_u})$ but for $U$ we are using $U[i,j_u,k_u]$} $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})\cdot X_u[i]$ for $u\in
+\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}= X_u[i]$ for $u\in
 [t]$. It is readily checked that for $P$ computed as per the protocol, 
-and honest vectors $X_u$ ($=\ewit[\cdot , j_u,k_u]$), the identity holds. The inner-product
+and honest vectors $X_u$, the identity holds. The inner-product
 can be checked as in Section ~\ref{sec:matrixcommitment}.
 
 \item $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for all $u\in [t],i\in
@@ -332,7 +332,7 @@ in Figure ~\ref{fig:linearcheck}, $\mathsf{pp}$ is the public parameter, consist
 				\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^{2m-1}$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
 				Computes commitments $c_1,\ldots,c_{s+\ell-1}$ from $P$.
 				\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell-1}$.
-				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $(j_u,k_u)\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $Q\sample [h]\times [n]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\prover\rightarrow\verifier$: $\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
 				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
