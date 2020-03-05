@@ -205,7 +205,7 @@ p_j(\eta_{s+\ell-1})\right]^T
 	= \Phi  \overline{P}^T  [1^m||0^m]^T
 	%\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= [1^m||0^m]\times \overline{P} \times \Phi^T\\
 $.
-Therefore, the check $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} =r^Tb$ 
+Therefore, the check $\sum_{k\in[s], j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} =r^Tb$ 
 $\Rightarrow \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$.
 Here, $[1^m||0^m]^T$ is the public vector and the vector $\varphi = \Phi^T \times [1^s]^T$. 
 Given commitment of $P$,  $c_1,\ldots,c_{s+\ell-1}$, the
