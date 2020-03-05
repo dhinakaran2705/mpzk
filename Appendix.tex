@@ -1,8 +1,10 @@
 \appendix
 
 \subsection{Protocols}\label{app:protocolboxes}
+$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+{\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
-\begin{figure}[h]
+\begin{figure}[h!]
 	{\footnotesize
 		%\centering
 		\begin{framed}
@@ -46,7 +48,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Quadratic Check of Graphene
-\begin{figure}[h]
+\begin{figure}[h!]
 	{\footnotesize
 		%\centering
 		\begin{framed}
@@ -451,6 +453,7 @@ with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and
 $\mc{C}$, we have the desired bound.
 \end{proof}
 
+\subsection{Proof of soundness of Linear Check}\label{app:linear_soundness}
 \begin{proof}[Proof-Sketch of Lemma ~\ref{lem:linearcheck_sound}]
 Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
  this $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in

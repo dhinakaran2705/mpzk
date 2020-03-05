@@ -153,11 +153,12 @@ Our final goal is to produce arguments/proofs that is non-interactive and public
 
 In summary,  we will prove three properties for our protocols: (a) ZK assuming a
 semi-honest verifier, (b)  SoWE tolerating  malicious provers and (c) WH
-tolerating semi-honest provers and aggregator. We propose an extension of our
-protocol that tolerates malicious provers for WH, yet fails when the aggregator
-is maliciously corrupt. We refer to section \ref{sec:semi-honesttomalicious}
-for the technical roadblock that we face to tackle a malicious aggregator and
-leave overcoming the roadblock as an open question. As for the form of witness
+tolerating semi-honest provers and aggregator. Our protocol can easily be modified to achieve privacy from the maliciously corrupt provers. But we do not can have a provably secure $\DPZK$ when the aggregator is maliciously corrupt. A $\DPZK$ which is provably secure when the provers and the aggregator is corrupt remains open. 
+%We propose an extension of our protocol that tolerates malicious provers for WH, yet fails when the aggregator
+%is maliciously corrupt. We refer to section \pnote{Discussion for malicious case is removed} \ref{sec:semi-honesttomalicious}
+%for the technical roadblock that we face to tackle a malicious aggregator and
+%leave overcoming the roadblock as an open question. 
+As for the form of witness
 partition across the prover's, we assume that the provers jointly hold an
 additive sharing of the witness $\wit$. This is general enough and well
 supported by secret sharing protocols.

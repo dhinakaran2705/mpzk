@@ -278,13 +278,22 @@ see, helps reduce interaction among provers in its distributed variant.\smallski
 \noindent{\em Consistency of oracle $\pi$ and $P$}: The verifier additionally
 needs to determine if the committed $P$ and the oracle $\pi$ are consistent or not. The verifier proceeds to check the
 consistency at randomly sampled $t$ positions given by $\{(j_u,k_u): u\in [t]\}$ from
+$[h] \times [n]$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
+$u\in [t]$. Let $X_u$, $u\in [t]$ denote the $p$-length vectors sent by the prover. For an honest prover $X_u=U[\cdot, j_u, k_u]$. For $u\in [t]$, let %\commentA{changed this notation. change in other places}$
+$\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the position
+$j_u$. The prover and the verifier run inner-product arguments to establish the following:
+\begin{enumerate}[{\rm 1.}]
+\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}= X_u[i]$ for $u\in$
+\begin{comment} 
 $\bm{\alpha} \times \bm{\eta}$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $\ewit[\cdot,j_u,k_u]$ for
 $u\in [t]$. Let $X_u$, $u\in [t]$ denote the $p$-length vectors sent by the prover. For an honest prover $X_u=U[\cdot, j_u, k_u]$. For $u\in [t]$, let $\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the position
 $j_u$. The prover and the verifier run inner-product arguments to establish the following:
 \begin{enumerate}[{\rm 1.}]
 \item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}=\sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})\cdot X_u[i]$ for $u\in
-[t]$. It is readily checked that for $P$ computed as per the protocol, 
-and honest vectors $X_u$ ($=\ewit[\cdot , j_u,k_u]$), the identity holds. The inner-product
+>>>>>>> 4030958531832f4c52b0d0c2ff8b08777c566d5a
+\end{comment}
+$[t]$. It is readily checked that for $P$ computed as per the protocol, 
+and honest vectors $X_u$, the identity holds. The inner-product
 can be checked as in Section ~\ref{sec:matrixcommitment}.
 
 \item $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for all $u\in [t],i\in
@@ -315,7 +324,53 @@ $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u
 %The completeness of the linear check protocol can be easily verified. We sketch the proof for its
 %soundness, leaving the detailed proof to the Appendix.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\begin{comment} 
+in Figure ~\ref{fig:linearcheck}, $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+{\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
+%Linear Check of Graphene
+\begin{figure}[h!]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\linearcheck(\mathsf{pp},A\in \mc{M}_{M,N},b\in \FF^M,[\pi];\ewit)$}: 			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
+				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
+				\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				as in Section ~\ref{sec:lincheck}. 
+				\item $\prover$ computes: Matrix $P$ from $R$ and $\ewit$ as described in Section ~\ref{sec:lincheck}. Samples $P_0\sample \FF^{2m-1}$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
+				Computes commitments $c_1,\ldots,c_{s+\ell-1}$ from $P$.
+				\item $\prover\rightarrow\verifier$: $c_0,c_1,\ldots,c_{s+\ell-1}$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $Q\sample [h]\times [n]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				\item $\prover\rightarrow\verifier$: $\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				\item $\verifier\rightarrow\prover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
+				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\begin{enumerate}
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ 
+					for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{s+\ell-1}c_a^{\Lambda^T_{n,s+\ell-1}[a,k_u]}$, 
+					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})U[i,j_u,k_u]$ (check consistency of $P$ with $\pi$).
+					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}=c_0^{\beta}\cdot \prod_{a=1}^{s+\ell-1}c_k^{\varphi_k}$ (check the condition $r^TAw=r^Tb$).
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
+					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
+				\end{enumerate}
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				\item $\verifier$ accepts if all the checks succeed.
+			\end{enumerate}
+		\end{framed}
+		\caption{Linear Check Protocol}
+		\label{fig:linearcheck}
+	}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{comment}
 
 \begin{lemma}[Soundness]\label{lem:linearcheck_sound}
 For all polynomially bounded provers $P^\ast$ and all $\pi\in \GG^{p\times n}$,
@@ -347,8 +402,9 @@ and starts with fresh randomness for the verifier, it gets the prover message as
 response if the randomness was used as the challenge to the prover, and it gets
 oracle response if the randomness was used as query to the oracle.
 
-We give a proof-sketch of Lemma ~\ref{lem:linearcheck_sound} in Appendix
-~\ref{sec:proofs}.
+We give a proof-sketch of Lemma ~\ref{lem:linearcheck_sound} in Appendix ~\ref{lem:linearcheck_sound}.
+%\pnote{reference missing}
+
  
 \begin{comment}
 \subsection{Quadratic Check Protocol}
@@ -756,7 +812,7 @@ Appendix \ref{app:protocolboxes}. In Appendix ~\ref{sec:sharedcircuitopti}, we
 discuss how to optimize MPC overhead when the size of the shared circuit (see 
  Section ~\ref{sec:efficiencyparams}) is small.
 
-\begin{figure*}[h!]
+\begin{figure*}[htp]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
