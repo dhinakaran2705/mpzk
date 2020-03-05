@@ -151,7 +151,7 @@ k\in [n]\}$. This can be accomplished using
 standard algorithms. The decoded witness $\wit$ is then given by
 $\wit[i,j,k]=Q^i(\alpha_j,\zeta_k)$. We extend the above decoding procedure to
 recover from slightly malformed encodings. Let $\ewit^*\in \mc{M}_{p,h,n}$ be such
-that $d(\ewit^*,\mc{W}_1)<e_1 <(n-\ell)/2 $ and $d(\ewit^*,\mc{W}_2)<e_2
+that $d_1(\ewit^*,\mc{W}_1)<e_1 <(n-\ell)/2 $ and $d_2(\ewit^*,\mc{W}_2)<e_2
 <(h-m)/2$. In this case, from the distance property of the codes $\rsc{\eta}{n,\ell}$
 and $\rsc{\alpha}{h,m}$ it follows that there is at most one $\ewit\in \mc{W}$ such that
 $\Delta_1(\ewit^*,\ewit)<e_1$ and $\Delta_2(\ewit^*,\ewit)<e_2$. Such a $\ewit$
@@ -189,23 +189,22 @@ sub-matrix $\overline{P}$ consisting of the first $2m-1$ rows and the first
 $s+\ell-1$ columns of $P$. Now our idea is to commit  $P$ using  commitment for
 product codeword i.e. $(c_1,\ldots,c_{s+\ell-1}) \gets \pccom(P)$ and write the
 above expression as an inner-product argument involving $\overline{P}$ such as
-$\innp{*}{\overline{P}\times\varphi} = r^Tb$, where $*$ and $\varphi$ are public vectors 
- and so the commitment for $\overline{P}\times\varphi$ can
+$\innp{*}{\overline{P}\varphi} = r^Tb$, where $*$ and $\varphi$ are public vectors 
+ and so the commitment for $\overline{P} \varphi$ can
 be computed given the commitment of the columns of $\overline{P}$.
 
 %Define $p(\cdot) = \sum_{j\in [m]} p_j(\cdot)$, $p(\zetabar) = [p(\zeta_1),\ldots,p(\zeta_s)]$, and $p(\etabar) = [p(\eta_1),\ldots,p(\eta_{s+\ell})]$. \newline
 %\noindent {\em Consistency of $P$ and $p(\zetabar)$} 
 Let $\Phi$ be a $s\times (s+\ell-1)$ matrix such that $[p_j(\zeta_1), \ldots,
-p_j(\zeta_s)]^T = \Phi \times [p_j(\eta_1), \ldots, p_j(\eta_{s+\ell-1})]^T$ for
+p_j(\zeta_s)]^T = \Phi  [p_j(\eta_1), \ldots, p_j(\eta_{s+\ell-1})]^T$ for
 $j\in[h]$. We have: %$p(\zetabar)^T = \Phi \times p(\etabar)^T$. \\
-\begin{align*}
-	&\big[ \sum_{j\in[m]} p_j(\zeta_1), \ldots,  \sum_{\j\in[m]}
-p_j(\zeta_s)\big]^T \\
-    &=\Phi  \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]}
-p_j(\eta_{s+\ell-1})\right]^T\\
-	&= \Phi \times \overline{P}^T \times [1^m||0^m]^T
+$\big[ \sum_{j\in[m]} p_j(\zeta_1), \ldots,  \sum_{j\in[m]}
+p_j(\zeta_s)\big]^T 
+    =\Phi  \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]}
+p_j(\eta_{s+\ell-1})\right]^T
+	= \Phi  \overline{P}^T  [1^m||0^m]^T
 	%\bigg[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)\bigg]^T &= [1^m||0^m]\times \overline{P} \times \Phi^T\\
-\end{align*}
+$.
 Therefore, the check $\sum_{k\in[s]}\sum_{j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to $\innp{[\sum_{j\in[m]} p_j(\zeta_1), \ldots, \sum_{\j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} =r^Tb$ 
 $\Rightarrow \innp{[1^m||0^m]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb$.
 Here, $[1^m||0^m]^T$ is the public vector and the vector $\varphi = \Phi^T \times [1^s]^T$. 
