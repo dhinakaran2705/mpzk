@@ -328,10 +328,10 @@ $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u
 			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
 			
 			\begin{enumerate}[{\rm 1.}]
-				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-				\item $\prover$ computes: $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				\item (i) $\verifier\rightarrow\prover$: $\rho\sample \FF^p$. (ii) 
+			 $\prover$ computes: $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
 				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as $\tilde{c}_k = \prod_{i\in[p]}(\pi[i,k])^{\rho_i}$ $\forall k\in[\ell]$.
-				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				(iii) $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
 				\item $\prover$ and $\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
@@ -504,8 +504,8 @@ arguments, one can show that the above Lemma holds with:
 
 \subsection{Zero Knowledge}
 %\pnote{Change the simulation according to the new protocol}
-We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier
-zero knowledge by designing simulators for them. We will extend the verifier's
+We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest-verifier
+zero-knowledge by designing simulators for them. We will extend the verifier's
 view with commitment openings (committed vector, randomness) for the inner
 product protocols. This has two benefits: (i) the inner product argument need
 not be zero knowledge, and (ii) in the distributed setting, the openings can be

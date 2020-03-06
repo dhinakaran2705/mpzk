@@ -2,8 +2,7 @@
 
 
 \subsection{Protocols}\label{app:protocolboxes}
-In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}), {$\mathsf{pp}$ denotes the public parameters consisting of: \\
-
+In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}), {$\mathsf{pp}$ denotes the public parameters consisting of: 
 {\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
 \begin{comment}
@@ -132,7 +131,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
 				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
-				\item $\distprover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				\item $\distprover \text{ and }\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
 				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{sec:lincheck}. Samples $\shr{P_0}\sample \FF^{2m-1}$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$.
 				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ from $\shr{P}$.
@@ -390,8 +389,8 @@ that $\ell_i=\alpha_i\ell_1+\beta_i\ell_2$ and
 $\eta_i=\alpha_i\eta_1+\beta_i\eta_2$ for
 all $i\in [d+1]$. We have
 \begin{align*}
-\ell_i+\eta_i = x_i &= \alpha_ix_1 + \beta_ix_2 \\
-    &= \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
+\ell_i+\eta_i& = x_i = \alpha_ix_1 + \beta_ix_2 
+    = \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
     &= (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
 \end{align*}
 Rearranging we have,
