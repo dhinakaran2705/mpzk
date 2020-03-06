@@ -130,7 +130,6 @@ prover setting for 80 bits of security}
 \label{fig:standalonecompare}
 \end{figure}
 
-
 In Figure ~\ref{fig:standalonecompare}, we compare
 $\name$ with Ligero ~\cite{ligero} and Bulletproofs ~\cite{bulletproofs} in
 single prover setting based on the expressions in Appendix
@@ -139,12 +138,7 @@ operations, exponentiations and multiexponentiations for different sizes, in a
 single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
 proving time, while those for Ligero were optimized to yield best proof size.
 From the table in Figure ~\ref{fig:standalonecompare}, we see that our protocol offers much more practical argument
-sizes compared to Ligero, while still attaining low verifier complexity. Our
-proofs are two orders of magnitude larger than those in Bulletproofs, but our
-verifier is much more efficient. 
-As such our construction offers a balance
-between prover and verifier efficiency of Ligero, and succinct argument size of
-Bulletproofs. 
+sizes compared to Ligero, while still attaining low verifier complexity. 
 
 %\subsection{Performance Evaluation: Distributed Proof Generation}
 We now illustrate $\dpname$'s performance for a concrete example. We assume two
