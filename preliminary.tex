@@ -5,19 +5,16 @@ paper. We will often recall the notation in appropriate places.
 We use $[n]$ to
 denote the set $\{1,\ldots,n\}$. All the arithmetic circuits and constraint
 systems are assumed to be defined over finite field denoted by $\FF$. For a
-vector $x\in \FF^m$, we implicitly assume $x_i$ represents the $i^{th}$
-component of $x$ for $i\in [m]$. Whenever suitable, we will also use $x[i]$ to
-denote $i^{th}$ entry of a vector $x$. We naturally extend the notation $[\cdot]$ to
-index matrices and three dimensional matrices. For an $m\times n$ matrix over
-$\FF$, we use $A[i,j]$ to denote $(i,j)^{th}$ entry of $A$. We use $A[i,\cdot]$
-to denote the $i^{th}$ row of $A$ and $A[\cdot,j]$ to denote $j^{th}$ column of
-$A$. Similarly, for an $p\times m\times n$  matrix $X$, we use $X[i,j,k]$ to
-denote the $(i,j,k)^{th}$ entry of $X$. The notation $X[i,\cdot,\cdot]$ denotes
-the $m\times n$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$. 
-Analogously,
-$X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ denote $n\times p$ and $p\times m$
-matrices respectively. For three dimensional
-matrix $X$, we will refer to sub-matrices $X[i,\cdot,\cdot]$ as {\em slices} of
+vector $x\in \FF^m$,  $x_i$ and $x[i]$ represent the $i^{th}$
+component of $x$ for $i\in [m]$. % and $x[1\mbox{:}m']$ stands for the the first $m'$ elements of $x$, where $m' \leq m$.
+  For an $m\times n$ matrix over
+$\FF$, we use (a) $A[i,j]$ to denote $(i,j)^{th}$ entry, (b) $A[i,\cdot]$
+to denote the $i^{th}$ row of %, (c) $A[\cdot,j]$ to denote $j^{th}$ column, (d) $A[1\mbox{:}m',1\mbox{:}n']$ to denote the sub-matrix consisting of first $m'$ rows and $n'$ columns
+$A$. Similarly, for an $p\times m\times n$  matrix $X$, we use (a) $X[i,j,k]$ to
+denote the $(i,j,k)^{th}$ entry, (b)  $X[i,\cdot,\cdot]$ to denote
+the $m\times n$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$, 
+(c) and analogously $X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ to denote $n\times p$ and $p\times m$
+matrices respectively.  We will refer to sub-matrices $X[i,\cdot,\cdot]$ as {\em slices} of
 $X$, sub-matrices $X[\cdot,j,\cdot]$ as {\em slabs}  of $X$ and sub-matrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
 $X^T$ denotes transpose of a  two dimensional matrix $X$. Inner-product of two vectors $X,Y$ is denoted as $\langle X,Y\rangle$.
 Inner-product of two three or two dimensional  matrices $X$ and $Y$, denoted as 

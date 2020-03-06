@@ -1,9 +1,12 @@
 \appendix
 
+
 \subsection{Protocols}\label{app:protocolboxes}
-$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+
+$\mathsf{pp}$ is the public parameter, consisted of the following entries: 
 {\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
+\begin{comment}
 \begin{figure}[h!]
 	{\footnotesize
 		%\centering
@@ -14,7 +17,7 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 			
 			\begin{enumerate}[{\rm 1.}]
 				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				\item $\prover$ computes: $=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
 				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
 				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
@@ -45,6 +48,7 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 		\label{fig:linearcheck}
 	}
 \end{figure}
+\end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Quadratic Check of Graphene
@@ -58,9 +62,10 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 			$\wit_x \circ \wit_y = \wit_z$ where  $\wit_a=\dec(\ewit_a)$ for $a\in \{x,y,z\}$.
 			
 			\begin{enumerate}[{\rm 1.}]
-				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-				\item $\prover$ computes: $\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
-				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^{3p}$.
+				\item $\prover$ computes: $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
+				\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$, 
+				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as $\tilde{c}_k = \prod_{i=1}^{p} (\pi_x[i,k])^{\rho_i}\cdot (\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$.
 				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
 				%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
@@ -68,7 +73,7 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 				%\item 
 				$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
 				Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
-				samples $P_0\sample \FF^{2m-1}$ with $P_0[1:m]=0^m$ and computes commitment $c_0$
+				samples $P_0\sample \FF^{2m-1}$ with $P_0[j]=0^m$ for $j\in[m]$ and computes commitment $c_0$
 				to $P_0$. 
 				\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell-1}$.
 				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
@@ -83,7 +88,7 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 				\item $\prover$ computes:
 				$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
 				%$\beta \FF\backslash \{0\}$. 
-				\item $\prover\leftrightarrow\verifier$ compute:
+				\item $\prover \text{ and }\verifier$ compute:
 				$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
 				$T_u=(C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
@@ -93,10 +98,10 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$
-					where $z=\beta P_0 + \overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
+					where $z=\beta P_0 +\overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
 					$\mathsf{cm} =  (c_0)^{\beta}\cdot\prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W_u}])$, where $\overline{W_u}$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
 				and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
@@ -122,8 +127,8 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 			
 			\begin{enumerate}[{\rm 1.}]
 				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^p$.
-				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
-				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\distprover$ computes: $\shr{\tilde{\ewit}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
+				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as $\shr{\tilde{c}}_k = \prod_{i\in[p]}(\shr{\comoracle[i,k]})^{\rho_i}$ $\forall k\in[\ell]$
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
 				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
@@ -171,9 +176,11 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 			\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\shr{\wit_a}=\dec(\shr{\ewit_a})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit_a} = \wit_a$ $\forall a\in \{x,y,z\}$.
 			
 			\begin{enumerate}[{\rm 1.}]
-				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^p$.
-				\item $\distprover$ computes: $\shr{\tilde{U}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
-				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as in Section ~\ref{sec:matrixcommitment}.
+				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^{3p}$.
+				\item $\distprover$ computes: $\shr{\tilde{\ewit}} =\sum_{i=1}^p[\rho_i\shr{\ewit_x}[i,\cdot,\cdot]+
+				\rho_{p+i}\shr{\ewit_y}[i,\cdot,\cdot]+\rho_{2p+i}
+				\shr{\ewit_z}[i,\cdot,\cdot]]$, 
+				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as $\shr{\tilde{c}}_k = \prod_{i=1}^{p} (\shr{\comoracle_x}[i,k])^{\rho_i}\cdot (\shr{\comoracle_y}[i,k])^{\rho_{p+i}}\cdot(\shr{\comoracle_z}[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$.
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
 				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^p$.
@@ -204,7 +211,7 @@ $\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
 				$\shr{W_u}=\sum_{i=1}^p\delta_i\big(\beta_x\shr{\ewit_x}[i,\cdot,k_u]+\beta_y\shr{\ewit_y}[i,\cdot,k_u]+\beta_z\shr{\ewit}[i,\cdot,k_u]\big)$ and $\shr{z} =  \beta\cdot P_0 + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
 				\item $\distprover\rightarrow\Ag$:  sends $\shr{z}, \shr{W_u}$.
 				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $W_u = \sum_{\xi\in[\Num]} \shr{W_u}$.
-				\item $\Ag \leftrightarrow \verifier$: Both compute $V_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
+				\item $\Ag \text{ and } \verifier$: Both compute $V_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:
@@ -461,9 +468,9 @@ Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
 an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
 show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
 $A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
-$\tilde{U}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
- we have $d(\tilde{U},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
-\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{U}$ sent by the prover
+$\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
+ we have $d(\tilde{\ewit},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
+\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{\ewit}$ sent by the prover
 (Step 3 in Figure ~\ref{fig:linearcheck}). Define 
 the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
 $\tilde{C}_k=\prod_{a=1}^\ell (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k]}$ for $k\in [n]$.
@@ -473,7 +480,7 @@ $\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
 proximity check equation \eqref{eq:proxchecks} with probability at most $(1-e/n)^t$. 
 In the complete
 proof, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
-while $d(\tilde{U},\mc{C}_1)>e$, the prover knows two openings to a commitment.
+while $d(\tilde{\ewit},\mc{C}_1)>e$, the prover knows two openings to a commitment.
 Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
 $d(\ewit,\mc{W}_1)>e$.
 
@@ -489,9 +496,8 @@ to the intermediate matrix sent by the prover. If these commitments correspond t
 matrix $P=P^*$, the inner product check
 $\innerproduct(\mathsf{pp},[1^m||0^{m-1}],\mathsf{cm},r^Tb)$ fails when using the
 commitment $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}c_k^{\varphi_k}$ for
-$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^{m-1}}{\overline{P^*}\times
-\varphi}=r^TA\wit\neq r^Tb$, where $\overline{P^*}$ denotes the
-$(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
+$\varphi=\Phi\times [1^s]$. This is because $\innp{1^m||0^{m-1}}{P^*[1:2m-1,1:s+\ell-1]\times
+\varphi}=r^TA\wit\neq r^Tb$, %where $\overline{P^*}$ denotes the $(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
 as discussed in the protocol. If the
 commitments correspond  to a matrix $P\neq P^*$, we have
 $\Delta_1(P,P^*)\geq n-s-\ell$ by distance property of the code
@@ -961,7 +967,8 @@ d_0 + \sum_{a=1}^{s+\ell}\mu_ac_a &= \comm(z,\nu) \nonumber \\
 c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \sum_{a=1}^{s+\ell}T[a,k_u]c_a &= \comm(P[\cdot,k_u],\chi_u) \text{ for } u\in [t] \nonumber \\
 \sum_{a=1}^{\ell}\mc{T}[a,k_u]\tilde{c}_a &= \comm\big(\sum_{i\in
-[p]}\tilde{U}[\cdot,k_u],\tilde{O}[\cdot, k_u]\big) \text{ for } u\in [t] \nonumber \\
+[p]}
+[\cdot,k_u],\tilde{O}[\cdot, k_u]\big) \text{ for } u\in [t] \nonumber \\
 \beta\tilde{d}_0 + \sum_{a=1}^{\ell}\tilde{\mu}_a\tilde{c}_a &=
 \comm(\tilde{z},\tilde{\nu})
 \end{align} 
@@ -1578,9 +1585,9 @@ We now present the high level protocol for R1CS instance $(A,B,C)$.\smallskip
 \begin{enumerate}[{\rm 1.}]
 \item $\verifier\rightarrow\prover$: $\gamma_x,\gamma_y,\gamma_z\sample \FF$,
 $r_{lc}\sample \FF^M$, $r_{qd}\sample \FF^{p}$, $\rho\sample \FF^{4p}$.
-\item $\prover\rightarrow\verifier$: $\prover$ computes $\tilde{U}=\sum_{i\in
+\item $\prover\rightarrow\verifier$: $\prover$ computes $\tilde{\ewit}=\sum_{i\in
 [4p]}\rho_i\ewit[i,\cdot,\cdot]$ and sends commitments
-$\tilde{c}_1,\ldots,\tilde{c}_\ell$ to $\tilde{U}$.
+$\tilde{c}_1,\ldots,\tilde{c}_\ell$ to $\tilde{\ewit}$.
 \item $\prover\leftrightarrow\verifier$ compute: $R=r_{lc}^TW$ for
 $W=[\gamma_xI\,||\gamma_yI\,||\gamma_zI\,||-(\gamma_xA+\gamma_yB+\gamma_zC)]$,
  polynomials $R^i$,$i\in [4p]$ interpolating the slices of $R$ viewed as a

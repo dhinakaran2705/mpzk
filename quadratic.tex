@@ -3,13 +3,13 @@ We now describe the IPCP which allows a prover to prove knowledge of vectors
 $\wit_x$, $\wit_y$ and $\wit_z$ in $\FF^N$, satisfying $\wit_x\circ \wit_y =
 \wit_z$. As before we view $\wit_x, \wit_y$ and $\wit_z$ as $p \times m \times s$ matrices, where $N=pms$. 
 As described previously in Sections ~\ref{sec:witencoding} and ~\ref{sec:construct_oracle}, the prover obtains encodings $\ewit_a \leftarrow \enc(\wit_a)$ and corresponding 
-commitments $\comoracle_a \leftarrow \comm(\ewit_a)$ $\forall a\in \{x,y,z\}$. The prover
+commitments $\comoracle_a \leftarrow \ocom(\ewit_a)$ $\forall a\in \{x,y,z\}$. The prover
 sets up the oracles $\pi_a := \comoracle_a$ for $a\in \{x,y,z\}$. For a query $Q$,
 the verifier is provided the columns $\pi_a[\cdot,k]$ for $a\in \{x,y,z\}$ and $k\in Q$. 
 Here we consider oracle as consisting of three sub-oracles for simplicity of description. For
-concrete efficiency, $\wit_x$, $\wit_y$ and $\wit_z$ can be encoded together, and the oracle
-access can be provided to the combined encoding. We will defer this optimization till the 
-discussion on concrete efficiency. The full protocol appears in Figure ~\ref{fig:quadcheck}. 
+better efficiency, $\wit_x$, $\wit_y$ and $\wit_z$ can be encoded together, and the oracle
+access can be provided to the combined encoding. We defer this optimization till the 
+discussion on concrete efficiency. The protocol appears in Figure~\ref{fig:quadcheck}. 
 
 %Once again, the protocol requires the prover to construct encodings
 %$\ewit_x=\enc(\wit_x)$, $\ewit_y=\enc(\wit_y)$ and $\ewit_z=\enc(\wit_z)$ as
@@ -46,7 +46,7 @@ r_iQ^i(\alpha_j, \cdot)$. We define the matrix $P$ by $P[j,k]= p_j(\eta_k)$ for
 $j\in[h], k\in[n]$. The matrix $P$ is in the product code $\rsc{\eta}{n,2\ell-1}\otimes \rsc{\alpha}{h,2m-1}$. As
 before we commit to $P$ by committing to the submatrix $\overline{P}$
 consisting of the first $2m-1$ rows and the first $2\ell-1$ columns of $P$. Let
-$c_1,\ldots,c_{2\ell-1}$ be the commitments to the columns of $\overline{P}$.
+$(c_1,\ldots,c_{2\ell-1}) \gets \pccom(P)$.
 
 
 \noindent{\em Consistency of $P$ and $p(\overline{\bm{\zeta}})$:} Same as the linear check, only differences are here $p(\cdot) = \sum_{j\in[m]}p_j(\cdot)$ is a polynomial of degree $<2\ell$-1, $\Phi$ is a $s \times 2\ell -1$ matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell-1})]$ and $p(\zetabar) = [p(\zeta_1),\ldots, p(\zeta_{s})]$.  
@@ -88,7 +88,7 @@ prover and the verifier run inner product arguments to establish the following:
 \begin{enumerate}[{\rm 1.}]
 	\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]} = \sum_{i\in[p]} r_i[X_u[i]\cdot Y_u[i]
 - Z_u[i]]$ for $u\in[t]$. It can be seen that the identity holds for honestly
-computed $P$ and honest vectors $X_u,Y_u$ and $Z_u$. The inner product may be 
+computed $P$ and honest vectors $X_u,Y_u$ and $Z_u$. The inner-product may be 
 verified using an inner product protocol as described in Section ~\ref{sec:matrixcommitment}.
 	
 	\item $\innp{\bm{1}_{j_u}}{\ewit_x[i,\cdot,k_u]} = X_u[i]$, $\innp{\bm{1}_{j_u}}{\ewit_y[i,\cdot,k_u]}=Y_u[i]$ and $\innp{\bm{1}_{j_u}}{\ewit_z[i,\cdot,k_u]}=Z_u[i]$. These inner products check the consistency of the vectors sent by the prover with the respective oracles. These can be verified in a similar manner to that in the linear check protocol. 
@@ -97,9 +97,9 @@ verified using an inner product protocol as described in Section ~\ref{sec:matri
 \noindent{\em Proximity Check for Oracle:} We combine the proximity check for the three 
 encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector
 $\rho\sample \FF^{3p}$ and asks the verifier to commit to the matrix
-$\tilde{U}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
+$\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
 \rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$
-by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$. Thereafter, for
+by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$, which are computed as $\tilde{c}_k = \prod_{i=1}^{p} (\pi_x[i,k])^{\rho_i}\cdot (\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$. Thereafter, for
 $u\in [t]$, the verifier checks: %\\~
 
 {\small
