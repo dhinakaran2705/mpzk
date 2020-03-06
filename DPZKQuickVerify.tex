@@ -631,7 +631,7 @@ provers are malicious (barring the one who runs $\Ag$).
 $\distprover$ encodes her share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
 and computes the commitment $\shr{\comoracle}=\ocom(\shr{\ewit})$. The provers
 then share $\shr{\comoracle}$ with the aggregator $\Ag$ which sets the oracle
-$\pi$ as $\pi := \combine(\shr{\comoracle})$.  
+$\pi$ as $\pi := \combine(\shr{\comoracle})$, where $\combine$ simply multiplies the corresponding commitments. The homomorphism and the fact that the witnesses are additively shared ensure that $\pi$ contains commitment to the witness. 
 
 \begin{comment}
 \noindent{\bf Distributed Proximity Test}: The provers jointly prove that 
@@ -727,7 +727,7 @@ We see that given verifier's challenges, each of the messages is linear function
 of the encoding (which itself is a linear function of the witness). Hence, the
 provers compute the respective messages on their shares, which can be trivially
 combined by $\Ag$. In addition to above messages, we also want $\Ag$ to receive
-witnesses to the inner product protocols namely, the vectors
+witnesses to the inner-product protocols namely, the vectors
 $\overline{P}[\cdot,k_u]$, $W_u=\sum_{i\in [p]}\delta_i\ewit[i,\cdot,k_u]$ for
 $u\in [t]$, $z=\beta P_0+\overline{P}\varphi$ and the randomness used to commit
 the vectors. Each of these can again be obtained by combining the respective shares.
@@ -765,7 +765,7 @@ We provide the complete distributed linear protocol in Figure
 %$\Ag$ to obtain witnesses for all the inner product protocols that it runs with
 %the verifier.  
 
-\noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
+\noindent{\bf Distributed Quadratic Check}: Here the distributed variant requires an additional interaction among the provers. Recall that in response to $\verifier$'s challenge $r\in \FF^p$, the provers need to compute $P$ as:
 \begin{align*}
 P[j,k] & =\sum_{i\in
 [p]}r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\    
@@ -888,8 +888,8 @@ distributed linear check protocol. The same for the distributed quadratic check
 may be similarly argued.
 
 \begin{lemma}\label{lem:distlincheckzk}
-	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
-	linear check protocol consisting of messages from the prover $\distprover$ with
+	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of  $\Ag$ in the distributed
+	linear check protocol consisting of messages from \ $\distprover$ with
 	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
 	which outputs a view indistinguishable from the joint view $\langle
 	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ whenever
@@ -915,6 +915,6 @@ can be seen to be the uniform distribution on the set
 $\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}:
 z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$, provided
 the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$. 
-Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
+Thus, the view of $\Ag$ can be perfectly simulated.
 \end{proof}
 

@@ -98,7 +98,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					where $z=\beta P_0 +\overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
 					$\mathsf{cm} =  (c_0)^{\beta}\cdot\prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W_u}])$, where $\overline{W_u}$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u])$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
 				and $\ewit_z$ according to Eqn \eqref{eq:combinedproximity}.
@@ -217,7 +217,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$ where $z=\beta\cdot P_0 + \overline{P}\times \varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u)$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
 			\end{enumerate}
@@ -350,7 +350,7 @@ proved in \cite{ligero} for the case $\HH=\FF$ and $e<d/4$. The authors in
 $e<d/3$ when $\FF$ can be an arbitrary subfield of $\HH$.
 
 \begin{lemma}[Affine Line]\label{lem:affineline}
-Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$ we have:
+Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$:
 \begin{enumerate}[{\rm (i)}]
 \item $d(x,L)\leq e$ for all $x\in \ell_{u,v}$, or
 \item $d(x,L)> e$ for at most $d$ points in $\ell_{u,v}$.
@@ -392,10 +392,10 @@ all $i\in [d+1]$. We have
     &= (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
 \end{align*}
 Rearranging we have,
-\begin{equation*}
+$
 \ell_i - (\alpha_i\ell_1 + \beta_i\ell_2) = \alpha_i\eta_1 +
 \beta_i\eta_2 - \eta_i
-\end{equation*}
+$.
 In the above equation we see that LHS is a vector in $L$. Further
 $\wt{\alpha_i\eta_1 + \beta_i\eta_2 - \eta_i}\leq
 \wt{\eta_1}+\wt{\eta_2}+\wt{\eta_i}\leq 3e < d$. Thus the LHS must be equal to
@@ -507,21 +507,16 @@ $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for $i\in [p]$ and $u\in [t]$
 force the prover to provide vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
 overwhelming probability. Then the consistency check succeeds for the 
 uniformly sampled query point $(j_u,k_u)$ when:
-
-{\footnotesize
 \[ P[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
-\hat{P}[j_u,k_u] \]}
+\hat{P}[j_u,k_u] \]
 For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
 $P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
 probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
-
-{\footnotesize
 \begin{align*}
 \prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
 \\
 &= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
 \end{align*}
-}
 The above probability is smaller than a constant $\epsilon<1$ for suitable
 choices of parameters. Hence, the overall probability of prover's success is
 $\negl(\secpar)$ for $t=O(\secpar)$.
@@ -1551,8 +1546,6 @@ $\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wi
 $B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadractic relation
 $\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear
 relations to the linear relation:
-
-{\footnotesize
 \begin{align}\label{eq:comblincheck}
 \begin{bmatrix}
 \gamma_xI\,|\gamma_yI\,|\gamma_zI\,|-(\gamma_xA+\gamma_yB+\gamma_zC)
@@ -1563,7 +1556,7 @@ relations to the linear relation:
 \wit
 \end{bmatrix}=\bm{0}
 \end{align}
-}
+
 for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we
 $\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$
 denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$
