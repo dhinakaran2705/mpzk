@@ -1,7 +1,7 @@
 \appendix
 
 \subsection{Protocols}\label{app:protocolboxes}
-$\mathsf{pp}$ is the public parameter, consisted of the following entries: \\
+In the protocol listings (Figures \ref{fig:linearcheck} -- \ref{fig:distquadcheck}), {$\mathsf{pp}$ denotes the public parameters consisting of: \\
 {\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
 \begin{figure}[h!]
@@ -1016,7 +1016,7 @@ This proves that the view of the corrupt provers can be simulated, which ensures
 \end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{$\DPZK$ of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
-Following \cite{InnerProductDLS}, \cite{bulletproofs} presented a proof for a Hadamard-product relation. Suppose $\C$ is a R1CS circuit of size $n$. Let $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ be the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and these satisfies the following linear constraints: 
+In \cite{InnerProductDLS}, \cite{bulletproofs}, authors present a proof for a Hadamard-product relation. Suppose $\C$ is a circuit of size $n$. In their formulation,  $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ denote the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and satisfy the following linear constraints: 
 %$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
 %for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
 
