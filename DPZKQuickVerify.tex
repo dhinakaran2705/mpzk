@@ -328,10 +328,10 @@ $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u
 			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\wit=\dec(\ewit)$.
 			
 			\begin{enumerate}[{\rm 1.}]
-				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^p$.
-				\item $\prover$ computes: $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
+				\item (i) $\verifier\rightarrow\prover$: $\rho\sample \FF^p$. (ii) 
+			 $\prover$ computes: $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, 
 				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as $\tilde{c}_k = \prod_{i\in[p]}(\pi[i,k])^{\rho_i}$ $\forall k\in[\ell]$.
-				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				(iii) $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^M$.
 				\item $\prover$ and $\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
@@ -504,23 +504,23 @@ arguments, one can show that the above Lemma holds with:
 
 \subsection{Zero Knowledge}
 %\pnote{Change the simulation according to the new protocol}
-We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest verifier
-zero knowledge by designing simulators for them. We will extend the verifier's
+We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest-verifier
+zero-knowledge by designing simulators for them. We will extend the verifier's
 view with commitment openings (committed vector, randomness) for the inner
-product protocols. This has two benefits: (i) the inner product argument need
-not be zero knowledge, and (ii) in the distributed setting, the openings can be
-shared with the aggregator which can complete the interaction with the verifer
-without further involvement of the provers. The verifier's veiw for
+product protocols. This has two benefits: (i) the inner-product argument need
+not be zero-knowledge, and (ii) in the distributed setting, the openings can be
+shared with the aggregator which can complete the interaction with the verifier
+without further involvement of the provers. The verifier's view for
 the $\linearcheck$ protocol consists of:
 \begin{itemize}[\leftmargin=0pt]
-\item {\em Verifier Randomness}: The verifier's messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
+\item {\em Verifier Randomness}: $\verifier$'s messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
 %Vector $\rho \in \FF^p$ for checking proximity, vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q= \{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF^\ast$ used in randomizing the vector $\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there. Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\item {\em Commitments}: The prover sends following commitments: $c_0, c_1,
+\item {\em Commitments}: $\prover$ sends following commitments: $c_0, c_1,
 \ldots, c_{s+\ell-1}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. The oracle
-response consists of  $\pi[\cdot,k_u]$, for $u\in [t]$. We subsume the oracle
-responses by including the whole oracle $\pi$ in the extended view.
+response consists of  $\pi[\cdot,k_u]$, for $u\in [t]$. The oracle
+responses are subsumed by including the whole oracle $\pi$ in the extended view.
 %Commitment $c_0$ to the first $2m$ entries of the random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the matrix $\tilde{U}$ used for proximity check. Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \pi$, as a part of the extended view of $\verifier$.%$\{\pi[\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Vectors}: The view includes vectors
@@ -531,7 +531,7 @@ can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the
 view consist of: $z,\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Commitment Randomness}: We include randomness corresponding to
-witness vectors in the inner product subprotocols as part of the extended view.
+witness vectors in the inner-product subprotocols as part of the extended view.
 We include randomness $w_u$, $u\in
 [t]$, corresponding to vectors $\overline{P}[\cdot,k_u]$, 
 randomness $w$ for the vector $z=\beta P_0 +
@@ -602,7 +602,7 @@ from the extended view of the verifier in honest execution of the protocol
 $\linearcheck$ for $t\leq \bi$.
 \end{lemma}
 
-Similarly, we can construct a simulator for the quadratic check.
+Similarly, we can construct a simulator for the quadratic check which will appear in the full version.
 %\begin{lemma}\label{lem:simquadcheck}
 %There exists an efficient simulator $\Sim$ whose output is perfectly
 %indistinguishable from the extended view of the verifier in the honest execution
@@ -612,27 +612,26 @@ Similarly, we can construct a simulator for the quadratic check.
 
 \section{$\dpname$: Distributed Prover Variant}\label{sec:dpgraphen}
 We now describe distributed protocol to produce a $\name$ proof for a
-statement, when the witness is shared between several provers. We assume that
-there are $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
+statement, when the witness is shared between $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
 let $\shr{\wit}$ denote the prover $\distprover$'s share of the witness $\wit$.
 We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} =
 \wit$. Recall from Section ~\ref{sec:security model}, that there is an algorithm $\Ag$ 
 which aggregates the messages received
 from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
-sent to the verifier $\verifier$. We assume one of the provers executes $\Ag$.
-The verifier's  messages and messages used by the aggregator algorithm $\Ag$ 
+sent to  $\verifier$. We assume one of the provers executes $\Ag$.
+$\verifier$'s  messages and messages used by $\Ag$ 
 are assumed to be available on an authenticated broadcast
-channel. We specify the algorithm $\Ag$ implicity by describing the construction
-of message to the verifier from the provers' messages for each round.
-We first discuss a protocol which is secure when the provers are semi-honest, then 
+channel. We specify the algorithm $\Ag$ implicitly by describing the construction
+of message to $\verifier$ from the provers' messages for each round.
+We first discuss a protocol secure against semi-honest provers and then 
 briefly discuss how to ensure the privacy of the honest provers when the corrupt 
-provers are malicious. 
+provers are malicious (barring the one who runs $\Ag$). 
 
 \noindent{\bf Distributed Oracle Setup}: In distributed setting, each prover
-$\distprover$ encodes his share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
-and computes the commitment $\shr{\comoracle}=\comm(\shr{\ewit})$. The provers
+$\distprover$ encodes her share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
+and computes the commitment $\shr{\comoracle}=\ocom(\shr{\ewit})$. The provers
 then share $\shr{\comoracle}$ with the aggregator $\Ag$ which sets the oracle
-$\pi$ as $\pi := \combine(\shr{\comoracle})$.  
+$\pi$ as $\pi := \combine(\shr{\comoracle})$, where $\combine$ simply multiplies the corresponding commitments. The homomorphism and the fact that the witnesses are additively shared ensure that $\pi$ contains commitment to the witness. 
 
 \begin{comment}
 \noindent{\bf Distributed Proximity Test}: The provers jointly prove that 
@@ -728,7 +727,7 @@ We see that given verifier's challenges, each of the messages is linear function
 of the encoding (which itself is a linear function of the witness). Hence, the
 provers compute the respective messages on their shares, which can be trivially
 combined by $\Ag$. In addition to above messages, we also want $\Ag$ to receive
-witnesses to the inner product protocols namely, the vectors
+witnesses to the inner-product protocols namely, the vectors
 $\overline{P}[\cdot,k_u]$, $W_u=\sum_{i\in [p]}\delta_i\ewit[i,\cdot,k_u]$ for
 $u\in [t]$, $z=\beta P_0+\overline{P}\varphi$ and the randomness used to commit
 the vectors. Each of these can again be obtained by combining the respective shares.
@@ -766,15 +765,13 @@ We provide the complete distributed linear protocol in Figure
 %$\Ag$ to obtain witnesses for all the inner product protocols that it runs with
 %the verifier.  
 
-\noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
-
-{\footnotesize 
+\noindent{\bf Distributed Quadratic Check}: Here the distributed variant requires an additional interaction among the provers. Recall that in response to $\verifier$'s challenge $r\in \FF^p$, the provers need to compute $P$ as:
 \begin{align*}
 P[j,k] & =\sum_{i\in
 [p]}r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\    
 & = \sum_{i\in [p]}r_i(\ewit_x[i,j,k].\ewit_y[i,j,k] - \ewit_z[i,j,k])
 \end{align*}    
-}
+
 where $\ewit_x$, $\ewit_y$ and $\ewit_z$ are the encodings of the witness
 vectors $\wit_x$, $\wit_y$ and $\wit_z$ respectively. 
 Since the matrix $P$ above is completely determined by it's first $2m-1$ rows
@@ -891,8 +888,8 @@ distributed linear check protocol. The same for the distributed quadratic check
 may be similarly argued.
 
 \begin{lemma}\label{lem:distlincheckzk}
-	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of the aggregator $\Ag$ in the distributed
-	linear check protocol consisting of messages from the prover $\distprover$ with
+	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of  $\Ag$ in the distributed
+	linear check protocol consisting of messages from \ $\distprover$ with
 	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
 	which outputs a view indistinguishable from the joint view $\langle
 	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ whenever
@@ -918,6 +915,6 @@ can be seen to be the uniform distribution on the set
 $\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}:
 z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$, provided
 the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$. 
-Thus, the view of the aggregator $\Ag$ can be perfectly simulated.
+Thus, the view of $\Ag$ can be perfectly simulated.
 \end{proof}
 

@@ -2,8 +2,7 @@
 
 
 \subsection{Protocols}\label{app:protocolboxes}
-In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}), {$\mathsf{pp}$ denotes the public parameters consisting of: \\
-
+In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}), {$\mathsf{pp}$ denotes the public parameters consisting of: 
 {\small$\mathsf{pp} = (\FF, \GG, \rsc{\eta}{n,\ell}, \rsc{\alpha}{h,m},\rsc{\eta}{n,s+\ell-1},\rsc{\eta}{n,2\ell-1}, \rsc{\alpha}{h,2m-1}, \bm{g},h)$}
 %Linear Check of Graphene
 \begin{comment}
@@ -63,21 +62,19 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 			
 			\begin{enumerate}[{\rm 1.}]
 				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^{3p}$.
-				\item $\prover$ computes: $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
-				\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$, 
+				\item $\prover$ computes: (a) $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
+				\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$, (b)
 				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as $\tilde{c}_k = \prod_{i=1}^{p} (\pi_x[i,k])^{\rho_i}\cdot (\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$.
 				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
 				%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
-				\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
-				%\item 
-				$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
-				Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
+				\item $\prover$ computes: (a) $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
+				(b) matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}, (c)
+				computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. $\prover$ also
 				samples $P_0\sample \FF^{2m-1}$ with $P_0[j]=0^m$ for $j\in[m]$ and computes commitment $c_0$
 				to $P_0$. 
 				\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell-1}$.
-				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
-				$Q\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for 	$Q\sample [h]\times [n]$, $u\in [t]$ and $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
 				
@@ -93,7 +90,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				$T_u=(C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
-				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\item $\prover$ and $\verifier$ run inner-product arguments to check:
 				\begin{enumerate}
 					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
@@ -101,10 +98,10 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					where $z=\beta P_0 +\overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
 					$\mathsf{cm} =  (c_0)^{\beta}\cdot\prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W_u}])$, where $\overline{W_u}$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u])$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
-				and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
+				and $\ewit_z$ according to Eqn \eqref{eq:combinedproximity}.
 				\item $\verifier$ accepts if all the checks succeed.
 			\end{enumerate}
 		\end{framed}
@@ -132,7 +129,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
 				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
-				\item $\distprover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
+				\item $\distprover \text{ and }\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
 				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{sec:lincheck}. Samples $\shr{P_0}\sample \FF^{2m-1}$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$.
 				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ from $\shr{P}$.
@@ -220,7 +217,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$ where $z=\beta\cdot P_0 + \overline{P}\times \varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};W_u[1:m])$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u)$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
 			\end{enumerate}
@@ -353,7 +350,7 @@ proved in \cite{ligero} for the case $\HH=\FF$ and $e<d/4$. The authors in
 $e<d/3$ when $\FF$ can be an arbitrary subfield of $\HH$.
 
 \begin{lemma}[Affine Line]\label{lem:affineline}
-Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$ we have:
+Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$:
 \begin{enumerate}[{\rm (i)}]
 \item $d(x,L)\leq e$ for all $x\in \ell_{u,v}$, or
 \item $d(x,L)> e$ for at most $d$ points in $\ell_{u,v}$.
@@ -390,15 +387,15 @@ that $\ell_i=\alpha_i\ell_1+\beta_i\ell_2$ and
 $\eta_i=\alpha_i\eta_1+\beta_i\eta_2$ for
 all $i\in [d+1]$. We have
 \begin{align*}
-\ell_i+\eta_i = x_i &= \alpha_ix_1 + \beta_ix_2 \\
-    &= \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
+\ell_i+\eta_i& = x_i = \alpha_ix_1 + \beta_ix_2 
+    = \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
     &= (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
 \end{align*}
 Rearranging we have,
-\begin{equation*}
+$
 \ell_i - (\alpha_i\ell_1 + \beta_i\ell_2) = \alpha_i\eta_1 +
 \beta_i\eta_2 - \eta_i
-\end{equation*}
+$.
 In the above equation we see that LHS is a vector in $L$. Further
 $\wt{\alpha_i\eta_1 + \beta_i\eta_2 - \eta_i}\leq
 \wt{\eta_1}+\wt{\eta_2}+\wt{\eta_i}\leq 3e < d$. Thus the LHS must be equal to
@@ -510,21 +507,16 @@ $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]}=X_u[i]$ for $i\in [p]$ and $u\in [t]$
 force the prover to provide vectors $X_u=\ewit[\cdot,j_u,k_u]$ with
 overwhelming probability. Then the consistency check succeeds for the 
 uniformly sampled query point $(j_u,k_u)$ when:
-
-{\footnotesize
 \[ P[j_u,k_u] = \sum_{i\in [p]}R^i(\alpha_{j_u},\eta_{k_u})X_u[i] =
-\hat{P}[j_u,k_u] \]}
+\hat{P}[j_u,k_u] \]
 For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
 $P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
 probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
-
-{\footnotesize
 \begin{align*}
 \prob{\mc{E}_u}&\leq \frac{s+\ell+e}{n} + \frac{n-s-\ell-e}{n}\cdot\frac{2m}{h}
 \\
 &= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{s+\ell+e}{n}\right)
 \end{align*}
-}
 The above probability is smaller than a constant $\epsilon<1$ for suitable
 choices of parameters. Hence, the overall probability of prover's success is
 $\negl(\secpar)$ for $t=O(\secpar)$.
@@ -1022,12 +1014,11 @@ This proves that the view of the corrupt provers can be simulated, which ensures
 %\end{enumerate}
 \end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{$\DPZK$ of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
+\subsection{$\DPZK$ of Bulletproof for R1CS}\label{app:BulletproofsDPZK}
 In \cite{InnerProductDLS}, \cite{bulletproofs}, authors present a proof for a Hadamard-product relation. Suppose $\C$ is a circuit of size $n$. In their formulation,  $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ denote the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and satisfy the following linear constraints: 
 %$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
 %for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
-
-{\small$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$}
+$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$
 with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
 Consider
 $W_A = [\bm{w}_{A,1}, \ldots, \bm{w}_{A,Q}]^T$, for $A\in \{L,R,O\}$%\vspace{10pt} 
@@ -1555,8 +1546,6 @@ $\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wi
 $B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadractic relation
 $\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear
 relations to the linear relation:
-
-{\footnotesize
 \begin{align}\label{eq:comblincheck}
 \begin{bmatrix}
 \gamma_xI\,|\gamma_yI\,|\gamma_zI\,|-(\gamma_xA+\gamma_yB+\gamma_zC)
@@ -1567,7 +1556,7 @@ relations to the linear relation:
 \wit
 \end{bmatrix}=\bm{0}
 \end{align}
-}
+
 for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we
 $\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$
 denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$
