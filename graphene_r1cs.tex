@@ -146,9 +146,9 @@ As such our construction offers a balance
 between prover and verifier efficiency of Ligero, and succinct argument size of
 Bulletproofs. 
 
-\subsection{Performance Evaluation: Distributed Proof Generation}
+%\subsection{Performance Evaluation: Distributed Proof Generation}
 We now illustrate $\dpname$'s performance for a concrete example. We assume two
-provers $P_1$ and $P_2$, wish to produce a proof of holding private coins
+provers $P_1$ and $P_2$ who wish to produce a proof of holding private coins
 $\bm{c}_1$ and $\bm{c}_2$ with serial
 numbers $\mathsf{sn}_1$ and $\mathsf{sn}_2$ on the $\zcash$ blockchain, which
 are unspent and have combined value above some threshold $v$. The verification
@@ -166,8 +166,8 @@ For the above circuit, we consider $N\approx 4.0\times 10^6$. For different
 values of parameters of our protocol, we set $N_s=\max(66,4m\ell)$.
 For Bulletproofs, we take $N_s=66$. Optimizing for total prover communication, our
 protocol achieves a total communication of $83.64$ MB, with a proof size of
-$4.2$ MB and prover and verification time of $9100$ sec and $30$ sec
-respectively. The distributed variant of Bulletproofs yeilds total prover
+$4.2$ MB. Prover and verification time for our protocol is  $9100$ sec and $30$ sec
+respectively. The distributed variant of Bulletproofs yields total prover
 communication of $168$ MB, with proof size of $0.001$ MB, proving and
 verification time of $5297$ sec and $713$ sec respectively. We took standard
 costs for the MPC communication among the provers. 
