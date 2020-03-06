@@ -531,7 +531,7 @@ can be derived from $\ewit[\cdot,\cdot,k_u]$ and $r$. Thus, the vectors in the
 view consist of: $z,\{\ewit[\cdot,\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Commitment Randomness}: We include randomness corresponding to
-witness vectors in the inner product subprotocols as part of the extended view.
+witness vectors in the inner-product subprotocols as part of the extended view.
 We include randomness $w_u$, $u\in
 [t]$, corresponding to vectors $\overline{P}[\cdot,k_u]$, 
 randomness $w$ for the vector $z=\beta P_0 +
@@ -612,25 +612,24 @@ Similarly, we can construct a simulator for the quadratic check which will appea
 
 \section{$\dpname$: Distributed Prover Variant}\label{sec:dpgraphen}
 We now describe distributed protocol to produce a $\name$ proof for a
-statement, when the witness is shared between several provers. We assume that
-there are $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
+statement, when the witness is shared between $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
 let $\shr{\wit}$ denote the prover $\distprover$'s share of the witness $\wit$.
 We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} =
 \wit$. Recall from Section ~\ref{sec:security model}, that there is an algorithm $\Ag$ 
 which aggregates the messages received
 from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
-sent to the verifier $\verifier$. We assume one of the provers executes $\Ag$.
-The verifier's  messages and messages used by the aggregator algorithm $\Ag$ 
+sent to  $\verifier$. We assume one of the provers executes $\Ag$.
+$\verifier$'s  messages and messages used by $\Ag$ 
 are assumed to be available on an authenticated broadcast
-channel. We specify the algorithm $\Ag$ implicity by describing the construction
-of message to the verifier from the provers' messages for each round.
-We first discuss a protocol which is secure when the provers are semi-honest, then 
+channel. We specify the algorithm $\Ag$ implicitly by describing the construction
+of message to $\verifier$ from the provers' messages for each round.
+We first discuss a protocol secure against semi-honest provers and then 
 briefly discuss how to ensure the privacy of the honest provers when the corrupt 
-provers are malicious. 
+provers are malicious (barring the one who runs $\Ag$). 
 
 \noindent{\bf Distributed Oracle Setup}: In distributed setting, each prover
-$\distprover$ encodes his share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
-and computes the commitment $\shr{\comoracle}=\comm(\shr{\ewit})$. The provers
+$\distprover$ encodes her share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
+and computes the commitment $\shr{\comoracle}=\ocom(\shr{\ewit})$. The provers
 then share $\shr{\comoracle}$ with the aggregator $\Ag$ which sets the oracle
 $\pi$ as $\pi := \combine(\shr{\comoracle})$.  
 
@@ -767,14 +766,12 @@ We provide the complete distributed linear protocol in Figure
 %the verifier.  
 
 \noindent{\bf Distributed Quadratic Check}: This is the only protocol whose distributed variant requires an additional interaction among the provers. Recall that in response to the verifier’s challenge $r\in \FF^p$, the provers need to compute the matrix $P$ given by:
-
-{\footnotesize 
 \begin{align*}
 P[j,k] & =\sum_{i\in
 [p]}r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\    
 & = \sum_{i\in [p]}r_i(\ewit_x[i,j,k].\ewit_y[i,j,k] - \ewit_z[i,j,k])
 \end{align*}    
-}
+
 where $\ewit_x$, $\ewit_y$ and $\ewit_z$ are the encodings of the witness
 vectors $\wit_x$, $\wit_y$ and $\wit_z$ respectively. 
 Since the matrix $P$ above is completely determined by it's first $2m-1$ rows

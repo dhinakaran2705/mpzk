@@ -62,21 +62,19 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 			
 			\begin{enumerate}[{\rm 1.}]
 				\item $\verifier\rightarrow\prover$: $\rho\sample \FF^{3p}$.
-				\item $\prover$ computes: $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
-				\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$, 
+				\item $\prover$ computes: (a) $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot]+
+				\rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$, (b)
 				commitments $\tilde{c}_1,\ldots,\tilde{c}_\ell$ as $\tilde{c}_k = \prod_{i=1}^{p} (\pi_x[i,k])^{\rho_i}\cdot (\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$.
 				\item $\prover\rightarrow\verifier$: $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\prover$: $r\sample \FF^p$.
 				%\item $\prover\leftrightarrow\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$ as in Section ~\ref{sec:quadcheck}. 
-				\item $\prover$ computes: $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
-				%\item 
-				$\prover$ computes Matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}. %Samples $P_0\sample \FF^m$, $\omega_0\sample \FF$ and $c_0\gets \comm(P_0,\omega_0)$.
-				Computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. Prover also
+				\item $\prover$ computes: (a) $p_j(\cdot) = \sum_{i\in[p]} r_i[Q^i_x(\alpha_j,\cdot)Q^i_y(\alpha_j,\cdot) - Q^i_z(\alpha_j,\cdot)]$ $\forall j\in [h]$
+				(b) matrix $P$ such that $P[j,k] = p_j(\eta_k)$ as described in Section ~\ref{sec:quadcheck}, (c)
+				computes commitments $c_1,\ldots,c_{2\ell}$ from $P$. $\prover$ also
 				samples $P_0\sample \FF^{2m-1}$ with $P_0[j]=0^m$ for $j\in[m]$ and computes commitment $c_0$
 				to $P_0$. 
 				\item $\prover\rightarrow\verifier$: $c_0$, $c_1,\ldots,c_{2\ell-1}$.
-				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for %$(j_u,k_u)
-				$Q\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
+				\item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$ for 	$Q\sample [h]\times [n]$, $u\in [t]$ and $\tau \sample \FF^s$, $\gamma \sample \FF^m$.
 				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
 				\item $\prover\rightarrow\verifier$: $X_u=\ewit_x[\cdot,j_u,k_u]$ , $Y_u=\ewit_y[\cdot,j_u,k_u]$ and $Z_u=\ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$.
 				
@@ -92,7 +90,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				$T_u=(C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
-				\item $\prover$ and $\verifier$ run inner product arguments to check:
+				\item $\prover$ and $\verifier$ run inner-product arguments to check:
 				\begin{enumerate}
 					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u}=\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, 
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
@@ -103,7 +101,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W_u}])$, where $\overline{W_u}$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
-				and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
+				and $\ewit_z$ according to Eqn \eqref{eq:combinedproximity}.
 				\item $\verifier$ accepts if all the checks succeed.
 			\end{enumerate}
 		\end{framed}
@@ -1021,12 +1019,11 @@ This proves that the view of the corrupt provers can be simulated, which ensures
 %\end{enumerate}
 \end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{$\DPZK$ of Bulletproof for R1CS from their direct construction:}\label{app:BulletproofsDPZK}
+\subsection{$\DPZK$ of Bulletproof for R1CS}\label{app:BulletproofsDPZK}
 In \cite{InnerProductDLS}, \cite{bulletproofs}, authors present a proof for a Hadamard-product relation. Suppose $\C$ is a circuit of size $n$. In their formulation,  $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ denote the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and satisfy the following linear constraints: 
 %$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
 %for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
-
-{\small$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$}
+$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$
 with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^n_p$ and $c_q \in \ZZ_p$.
 Consider
 $W_A = [\bm{w}_{A,1}, \ldots, \bm{w}_{A,Q}]^T$, for $A\in \{L,R,O\}$%\vspace{10pt} 
