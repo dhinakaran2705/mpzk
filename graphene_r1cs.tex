@@ -1,7 +1,7 @@
 \section{Performance Evaluation}\label{sec:performancecompare} 
 In Appendix ~\ref{sec:graphener1cs}, we present complete protocol for an R1CS
 instance. Here we summarize several performance parameters attained by our protocol for 
-R1CS with $N$ variables. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multiexponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
+R1CS. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multi-exponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
 
 %<<<<<<< HEAD
 %We now summarize several performance parameters attained by our protocol for circuit
@@ -20,7 +20,7 @@ We now summarize several performance parameters attained by our protocol for cir
 size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
 previous sections. Let $\cfop$ denote the time taken for a field operation,
 $\cfft(x)$ denote the time to compute $\fft$ of a length $x$ vector, $\cmexp(x)$
-denote the time taken for a multiexponentiation of length $x$, and $\cexp$
+denote the time taken for a multi-exponentiation of length $x$, and $\cexp$
 denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote
 the number of bits required to represent an element of $\FF$ and $\GG$
 respectively. Our protocol $\name$ achieves
@@ -140,6 +140,8 @@ proving time, while those for Ligero were optimized to yield best proof size.
 From the table in Figure ~\ref{fig:standalonecompare}, we see that our protocol offers much more practical argument
 sizes compared to Ligero, while still attaining low verifier complexity. 
 
+
+{\em Performance Evaluation of \dpname.}
 %\subsection{Performance Evaluation: Distributed Proof Generation}
 We now illustrate $\dpname$'s performance for a concrete example. We assume two
 provers $P_1$ and $P_2$ who wish to produce a proof of holding private coins
