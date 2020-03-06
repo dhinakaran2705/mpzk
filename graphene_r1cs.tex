@@ -117,12 +117,11 @@ $N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
    \textsf{G} & \textsf{L} & \textsf{B} &
    \textsf{G} & \textsf{L} & \textsf{B} \\
 \hline
-$2^{19}$ & 0.728 & 3.5 & 0.001 & 43.0 & 3.0 & 89.1 & 802 & 137 & 662 \\
-$2^{20}$ & 0.759 & 4.9 & 0.001 & 45.2 & 6.5 & 178.2 & 1514 & 291 & 1324 \\
-$2^{21}$ & 0.884 & 6.95 & 0.001 & 46.7 & 13.1 & 356.5 & 2877 & 582 & 2648 \\
-$2^{22}$ & 1.28  & 9.8 & 0.001 & 88.5 & 28.3 & 713 & 5558 & 1258 & 5297 \\
-$2^{23}$ & 1.31  & 13.8 & 0.001 & 97.4 & 56.6 & 1426 & 10757 & 2516 & 10595 \\
-$2^{24}$ & 1.34  & 19.5 & 0.001 & 115 & 120 & 2852 & 20878 & 5044 & 21190 \\
+$2^{19}$ & 0.728 & 3.5 & 0.001 & 45.4 & 55.2 & 89.1 & 802 & 137 & 662 \\
+$2^{20}$ & 0.759 & 4.9 & 0.001 & 49.8 & 205.57 & 178.2 & 1514 & 291 & 1324 \\
+$2^{21}$ & 0.884 & 6.95 & 0.001 & 55.97 & 212.17 & 356.5 & 2877 & 582 & 2648 \\
+$2^{22}$ & 1.28  & 9.8 & 0.001 & 108.306 & 805.3 & 713 & 5558 & 1258 & 5297 \\
+$2^{23}$ & 1.31  & 13.8 & 0.001 & 137.072 & 833.66 & 1426 & 10757 & 2516 & 10595 \\
 \hline
 \end{tabular}
 }
@@ -142,8 +141,33 @@ proving time, while those for Ligero were optimized to yield best proof size.
 From the table in Figure ~\ref{fig:standalonecompare}, we see that our protocol offers much more practical argument
 sizes compared to Ligero, while still attaining low verifier complexity. Our
 proofs are two orders of magnitude larger than those in Bulletproofs, but our
-verifier is much more efficient. As such our construction offers a balance
+verifier is much more efficient. 
+As such our construction offers a balance
 between prover and verifier efficiency of Ligero, and succinct argument size of
-Bulletproofs. Moreover, as discussed in the paper, our construction allows
-efficient distributed proof generation, with sublinear communication between the
-provers and the aggregator. 
+Bulletproofs. 
+
+\subsection{Performance Evaluation: Distributed Proof Generation}
+We now illustrate $\dpname$'s performance for a concrete example. We assume two
+provers $P_1$ and $P_2$, wish to produce a proof of holding private coins
+$\bm{c}_1$ and $\bm{c}_2$ with serial
+numbers $\mathsf{sn}_1$ and $\mathsf{sn}_2$ on the $\zcash$ blockchain, which
+are unspent and have combined value above some threshold $v$. The verification
+circuit consists of following major components:
+\begin{enumerate}
+\item Ensure the coins $\bm{c}_1$ and $\bm{c}_2$ are in the Merkle tree of
+coins. Each coin authentication takes around $1.8\times 10^5$ gates (see
+~\cite[Section 5.2.2]{zerocashext}).
+\item Check that $\mathsf{sn}_1$ and $\mathsf{sn}_2$ are correctly computed from 
+$\bm{c}_1$ and $\bm{c}_2$. This take around $54,000$ gates.
+\item Check that $v_1+v_2>v$ and $v_1+v_2 < 2^{64}$, where $v_1$ and $v_2$ are
+values of the coins. This takes around 66 constraints.
+\end{enumerate}
+For the above circuit, we consider $N\approx 4.0\times 10^6$. For different
+values of parameters of our protocol, we set $N_s=\max(66,4m\ell)$.
+For Bulletproofs, we take $N_s=66$. Optimizing for total prover communication, our
+protocol achieves a total communication of $83.64$ MB, with a proof size of
+$4.2$ MB and prover and verification time of $9100$ sec and $30$ sec
+respectively. The distributed variant of Bulletproofs yeilds total prover
+communication of $168$ MB, with proof size of $0.001$ MB, proving and
+verification time of $5297$ sec and $713$ sec respectively. We took standard
+costs for the MPC communication among the provers. 

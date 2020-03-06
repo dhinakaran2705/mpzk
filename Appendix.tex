@@ -1660,7 +1660,7 @@ and let $\ell=s+t$, $n=O(\ell)$ and $e\leq (n-\ell)/4$
 Then the performance parameters for Ligero are then given by:
 $\zkcomm=n+6\ell+4s+4mt+5t-5$,
  $t_\prover=O(N)\cfop+4m(\cfft(s)+\cfft(n))$,
-$t_\verifier=O(N)+4m\cfft(s)$,
+$t_\verifier=O(N)\cfop+n(n-\ell)\cfop+4m\cfft(s)$,
 $\kappa_{lg}=(1-e/n)^t+5((2\ell+e)/n)^t$.
 
 \noindent{\bf Bulletproofs}:
