@@ -507,20 +507,20 @@ arguments, one can show that the above Lemma holds with:
 We now prove protocols $\linearcheck$ and $\quadcheck$ to be honest-verifier
 zero-knowledge by designing simulators for them. We will extend the verifier's
 view with commitment openings (committed vector, randomness) for the inner
-product protocols. This has two benefits: (i) the inner product argument need
-not be zero knowledge, and (ii) in the distributed setting, the openings can be
-shared with the aggregator which can complete the interaction with the verifer
-without further involvement of the provers. The verifier's veiw for
+product protocols. This has two benefits: (i) the inner-product argument need
+not be zero-knowledge, and (ii) in the distributed setting, the openings can be
+shared with the aggregator which can complete the interaction with the verifier
+without further involvement of the provers. The verifier's view for
 the $\linearcheck$ protocol consists of:
 \begin{itemize}[\leftmargin=0pt]
-\item {\em Verifier Randomness}: The verifier's messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
+\item {\em Verifier Randomness}: $\verifier$'s messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
 %Vector $\rho \in \FF^p$ for checking proximity, vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q= \{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF^\ast$ used in randomizing the vector $\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there. Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
 
-\item {\em Commitments}: The prover sends following commitments: $c_0, c_1,
+\item {\em Commitments}: $\prover$ sends following commitments: $c_0, c_1,
 \ldots, c_{s+\ell-1}$ and $\tilde{c}_1, \ldots, \tilde{c}_{\ell}$. The oracle
-response consists of  $\pi[\cdot,k_u]$, for $u\in [t]$. We subsume the oracle
-responses by including the whole oracle $\pi$ in the extended view.
+response consists of  $\pi[\cdot,k_u]$, for $u\in [t]$. The oracle
+responses are subsumed by including the whole oracle $\pi$ in the extended view.
 %Commitment $c_0$ to the first $2m$ entries of the random codeword $P_0$ sampled in Step 6, commitments $c_1,\ldots,c_{s+\ell}$ to commit to matrix $P$, commitments $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ to the matrix $\tilde{U}$ used for proximity check. Additionally, the view contains commitments $\pi[\cdot,k_u]$ for $u\in [t]$ as part of oracle query response. Summarizing, the view consists of commitments $c_0,c_1,\ldots,c_{s+\ell}$, $\tilde{c}_1, \ldots, \tilde{c}_{\ell} , \pi$, as a part of the extended view of $\verifier$.%$\{\pi[\cdot,k_u]\}_{u\in [t]}$.
 
 \item {\em Vectors}: The view includes vectors
@@ -602,7 +602,7 @@ from the extended view of the verifier in honest execution of the protocol
 $\linearcheck$ for $t\leq \bi$.
 \end{lemma}
 
-Similarly, we can construct a simulator for the quadratic check.
+Similarly, we can construct a simulator for the quadratic check which will appear in the full version.
 %\begin{lemma}\label{lem:simquadcheck}
 %There exists an efficient simulator $\Sim$ whose output is perfectly
 %indistinguishable from the extended view of the verifier in the honest execution
