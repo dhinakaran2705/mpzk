@@ -509,7 +509,7 @@ not be zero-knowledge, and (ii) in the distributed setting, the openings can be
 shared with the aggregator which can complete the interaction with the verifier
 without further involvement of the provers. The verifier's view for
 the $\linearcheck$ protocol consists of:
-\begin{itemize}[\leftmargin=0pt]
+\begin{itemize} %[\leftmargin=0pt]
 \item {\em Verifier Randomness}: $\verifier$'s messages consist of $\rho, r, Q = \{(j_u,k_u)\}_{u\in [t]}, \beta, \delta$.
 %Vector $\rho \in \FF^p$ for checking proximity, vector $r\in \FF^M$ as part of the reduction $r^TA\wit=r^Tb$, query position $Q= \{(j_u,k_u)\}_{u\in [t]}$ ,$\beta\in \FF^\ast$ used in randomizing the vector $\overline{P}\varphi$ and $\delta \in \FF^p$ to aggregate inner product checks.
 %$\tau,\delta$ as part of $\proximityTwoD$ subprotocol in Step 10, $\rho\sample \FF^p$ as the random vector for compressing in subprotocol $\proximityThreeD$ in Step 15, $\tilde{\tau},\tilde{\delta}$ for the second invocation of $\proximityTwoD$ from within $\proximityThreeD$. We do not include the query positions as part of the subprotocol $\proximityThreeD$ as we assume that the same query positions sampled in Step 5 are used there. Summarizing, the verifier randomness consists of $\rho, r, Q, \beta, \delta$. %$\tau,\delta,\rho,\tilde{\tau},\tilde{\delta}$.
