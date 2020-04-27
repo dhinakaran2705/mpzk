@@ -628,7 +628,7 @@ emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
 \end{comment}
 
-\begin{comment}
+
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
 Let $(\setup,\prover,\verifier)$ be a $(2\mu+1)$-round public coin interactive
 protocol. Let $\chi$ be a $\ppt$ witness extraction algorithm that outputs a
@@ -638,10 +638,10 @@ polynomial in security parameter $\secpar$, the protocol
 $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
 \commentA{change 'move' to 'round' in all the above text.}
-\end{comment}
-\begin{comment}
+
+
 \section{Proofs}
-\begin{proof}
+\begin{proof}[Proximity 2D]
 The extractor $\extr$ starts by emulating the verifier in the protocol
 $\proximityTwoD$. At the step 5, it uses the extractor $\extr_{ip}$ for the
 inner product protocol to extract the witness $z$ for the $\innerproduct$
@@ -703,7 +703,8 @@ $\kappa_{2d}(\secpar):=\ell.\kappa_{ip}(\secpar) + 3/|\FF|$.
 \end{proof}
 
 %%% proximity 3d proof
-\begin{proof}
+
+\begin{proof}[Proximity 3D]
 As before the extractor $\extr$ emulates the verifier in the protocol
 $\proximityThreeD$. In case the first transcript is accepting, the extractor
 rewinds the prover sufficiently many times to obtain a tree of accepting transcripts with $p$ distinct
@@ -827,7 +828,7 @@ statement of the Lemma holds for
 \end{proof}
 
 
-\begin{proof}
+\begin{proof}[Linear Check]
 We describe an extractor $\extr$ which outputs $\ewit$ such that $\open(\pi)=\ewit$ and $A\wit = b$ 
 for $\wit=\dec(\ewit)$. The extractor $\extr$ uses the extractor $\extr_{3d}$ for
 the protocol $\proximityThreeD$ to extract the witness $\ewit$ which opens to
@@ -917,7 +918,7 @@ Thus the statement of the lemma holds for $\kappa_{lc}(\secpar) := (1-e/n)^t +
 \end{proof}
 
 
-\begin{proof}
+\begin{proof}[Simulation]
 We consider the simulator as discussed. Let $\bm{r}=(r,\{j_u,k_u\}_{u\in
 [t]},\beta,\tau,\delta,\rho,\tilde{\tau},\tilde{\delta})$ denote the vector
 consisting of verifier's randomness, which is chosen exactly in the honest
@@ -966,7 +967,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \end{align} 
 
 \end{proof}
-\end{comment}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \subsection{Semi-honest to Malicious Security: }\label{app:semi-honesttomalicious} 
