@@ -83,10 +83,10 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				\FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
 				$\beta\sample \FF\backslash \{0\}$.
 				\item $\prover$ computes:
-				$W_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
+				$V_u=\sum_{i=1}^p\delta_i\big(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit[i,\cdot,k_u]\big)$.
 				%$\beta \FF\backslash \{0\}$. 
 				\item $\prover \text{ and }\verifier$ compute:
-				$V_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
+				$W_u=\beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in [t]$.
 				$T_u=(C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
@@ -98,7 +98,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					where $z=\beta P_0 +\overline{P}\varphi$, $\varphi = \Phi^T\tau$ and
 					$\mathsf{cm} =  (c_0)^{\beta}\cdot\prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u])$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,w_u;\overline{V}_u])$, where $\overline{V}_u$ stands for first $m$ entries of $V_u$ and $w_u = \innp{\delta}{W_u}$ (consistency of $X_u, Y_u, Z_u$ with $\pi$). 
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$
 				and $\ewit_z$ according to Eqn \eqref{eq:combinedproximity}.
@@ -117,7 +117,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 	{\footnotesize
 		%\centering
 		\begin{framed}
-			\noindent{$\distlinearcheck(\mathsf{pp}, \, A\in \mc{M}_{M,N}, \, b\in \FF^M, \, [\pi];\, \shr{\ewit}, \, \shr{0^{2m}})$}:
+			\noindent{$\distlinearcheck(\mathsf{pp}, \, A\in \mc{M}_{M,N}, \, b\in \FF^M, \, [\pi];\, \shr{\ewit}, \, \shr{0^{2m-1}})$}:
 			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
 			
 			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\shr{\wit}=\dec(\shr{\ewit})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit} = \wit$.
@@ -127,7 +127,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				\item $\distprover$ computes: $\shr{\tilde{\ewit}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, 
 				commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as $\shr{\tilde{c}}_k = \prod_{i\in[p]}(\shr{\comoracle[i,k]})^{\rho_i}$ $\forall k\in[\ell]$
 				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
-				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}}$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
 				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
 				\item $\distprover \text{ and }\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$
 				as in Section ~\ref{sec:lincheck}. 
@@ -142,8 +142,8 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				\item  {$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
 				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
 				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$. 
-				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$ and sends $\shr{z}$.
-				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$}.
+				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$, $\shr{V_u} = \sum_{i\in[p]} \delta_i \shr{\ewit}[i,\cdot,k_u]$ and sends $\shr{z}$, $\shr{V_u}$.
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$, $V_u=\sum_{\xi\in[\Num]} \shr{V_u}$}.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:
 				\begin{enumerate}
 					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ 
@@ -151,10 +151,10 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					for $u\in [t]$ where $\mathsf{cm}_u=\prod_{a=1}^{s+\ell-1}(c_a)^{\Lambda_{n,s+\ell-1}[a,k_u]}$, 
 					$v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}= (c_0)^{\beta}\cdot\prod_{a=1}^{s+\ell-1}(c_a)^{\varphi_a}$ (check the condition $r^TAw=r^Tb$).
-					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,\innp{\delta}{X_u})$ for $u\in [t]$ 
-					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ (consistency of $X_u$ with $\pi$). 
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,w_u;V_u)$ for $u\in [t]$ 
+					where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ and $w_u= \sum_{i\in[p]} \delta_i X_u[i]$(consistency of $X_u$ with $\pi$). 
 				\end{enumerate}
-				\item $\verifier$ checks: $\sum_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
 			\end{enumerate}
 		\end{framed}
 		\caption{Distributed Linear Check Protocol}
@@ -205,10 +205,10 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 				$\beta\sample \FF\backslash \{0\}$. 
 				
 				\item $\distprover$ computes:
-				$\shr{W_u}=\sum_{i=1}^p\delta_i\big(\beta_x\shr{\ewit_x}[i,\cdot,k_u]+\beta_y\shr{\ewit_y}[i,\cdot,k_u]+\beta_z\shr{\ewit}[i,\cdot,k_u]\big)$ and $\shr{z} =  \beta\cdot P_0 + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
-				\item $\distprover\rightarrow\Ag$:  sends $\shr{z}, \shr{W_u}$.
-				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $W_u = \sum_{\xi\in[\Num]} \shr{W_u}$.
-				\item $\Ag \text{ and } \verifier$: Both compute $V_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
+				$\shr{V_u}=\sum_{i=1}^p\delta_i\big(\beta_x\shr{\ewit_x}[i,\cdot,k_u]+\beta_y\shr{\ewit_y}[i,\cdot,k_u]+\beta_z\shr{\ewit}[i,\cdot,k_u]\big)$ and $\shr{z} =  \beta\cdot P_0 + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
+				\item $\distprover\rightarrow\Ag$:  sends $\shr{z}, \shr{V_u}$.
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $V_u = \sum_{\xi\in[\Num]} \shr{V_u}$.
+				\item $\Ag \text{ and } \verifier$: Both compute $W_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x}\cdot(D_u)^{\beta_y}\cdot(E_u)^{\beta_z}$, for $u\in [t]$ where
 				$C_u=\prod_{i=1}^{p}(\pi_x[i,k_u])^{\delta_i}$, $D_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$
 				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
 				\item $\Ag$ and $\verifier$ run inner product arguments to check:
@@ -217,7 +217,7 @@ In the protocol listings (Figures \ref{fig:quadcheck} -- \ref{fig:distquadcheck}
 					$v_u=\sum_{i=1}^p r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
 					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$ where $z=\beta\cdot P_0 + \overline{P}\times \varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$ %(check the condition $r^TAw = r^Tb$).
 					\item
-					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,\innp{\delta}{T_u};\overline{W}_u)$, where $\overline{W}_u$ stands for first $m$ entries of $W_u$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
+					$\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,w_u;\overline{V}_u)$, where $\overline{V}_u$ stands for first $m$ entries of $V_u$ and $w_u = \innp{\delta}{W_u}$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
 				\end{enumerate}
 				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
 			\end{enumerate}
@@ -461,10 +461,10 @@ $\mc{C}$, we have the desired bound.
 \begin{proof}[Proof-Sketch of Lemma ~\ref{lem:linearcheck_sound}]
 Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
  this $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in
-\mc{W}_2$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
-an adversarial prover succeeds with negligible probability if $d(\ewit,\mc{W}_1)>e$. Second, we
-show that for $d(\ewit,\mc{W}_1)\leq e$, the prover succeeds with negligible probability when
-$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,\mc{W}_1)>e$. Then for
+(\mc{W}_2)^p$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+an adversarial prover succeeds with negligible probability if $d(\ewit,(\mc{W}_1)^p)>e$. Second, we
+show that for $d(\ewit,(\mc{W}_1)^p)\leq e$, the prover succeeds with negligible probability when
+$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,(\mc{W}_1)^p)>e$. Then for
 $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
  we have $d(\tilde{\ewit},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
 \ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{\ewit}$ sent by the prover
@@ -479,10 +479,10 @@ In the complete
 proof, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
 while $d(\tilde{\ewit},\mc{C}_1)>e$, the prover knows two openings to a commitment.
 Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
-$d(\ewit,\mc{W}_1)>e$.
+$d(\ewit,(\mc{W}_1)^p)>e$.
 
-We now consider the case when $d(\ewit,\mc{W}_1)\leq e$. From Lemma
-~\ref{lem:bicdecoding}, there exists (unique) $\ewit^*\in \mc{W}$
+We now consider the case when $d(\ewit,(\mc{W}_1)^p)\leq e$. From Lemma
+~\ref{lem:bicdecoding}, there exists (unique) $\ewit^*\in (\mc{W})^p$
 such that $\Delta_1(\ewit,\ewit^*)\leq e$.
 Let $\wit=\dec(\ewit)=\dec(\ewit^*)$. We consider the prover's success
 probability when $A\wit\neq b$, and thus with overwhelming probability $r^TA \wit \neq
@@ -521,6 +521,122 @@ The above probability is smaller than a constant $\epsilon<1$ for suitable
 choices of parameters. Hence, the overall probability of prover's success is
 $\negl(\secpar)$ for $t=O(\secpar)$.
 \end{proof}
+
+\subsection{Proof of soundness of Quadratic Check }\label{app:linear_soundness}
+\begin{proof}[Proof-Sketch of Lemma ~\ref{lem:quadcheck_sound}]
+	Suppose the oracle $\pi$ commits to $\ewit_x, \ewit_y, \ewit_z$. In full version, we show how
+	this $\ewit_x, \ewit_y, \ewit_z$ can be ``extracted'' by the appropriate extractor. Note that $\ewit_x||\ewit_y||\ewit_z\in
+	(\mc{W}_2)^{3p}$, where $\ewit = \ewit_x||\ewit_y||\ewit_z$ is the juxtaposing along $p$ direction, as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
+	an adversarial prover succeeds with negligible probability if $d(\ewit,(\mc{W}_1)^{3p})>e$. Second, we
+	show that for $d(\ewit,(\mc{W}_1)^{3p})\leq e$, the prover succeeds with negligible probability when
+	$\wit_x\circ\wit_y\neq\wit_z$ where $\wit_a=\dec(\ewit_a)$ for $a\in\{x,y,z\}$. Consider the case when $d(\ewit,(\mc{W}_1)^{3p})>e$. Then for
+	$\tilde{\ewit}=\sum_{i\in [3p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
+	we have $d(\tilde{\ewit},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
+	\ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{\ewit}$ sent by the prover
+	(Step 3 in Figure ~\ref{fig:quadcheck}). Define 
+	the vector $\tilde{\bm{C}}=(\tilde{C}_1,\ldots,\tilde{C}_n)$ where
+	$\tilde{C}_k=\prod_{a=1}^\ell (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k]}$ for $k\in [n]$.
+	Let $\hat{\bm{C}}=(\hat{C}_1,\ldots,\hat{C}_n)$ where
+	$\hat{C}_k=\prod_{i=1}^{3p}(\pi[i,k])^{\rho_i}$. Now if
+	$\Delta(\tilde{\bm{C}},\hat{\bm{C}})>e$, we see that the prover succeeds in the
+	proximity check equation \eqref{eq:proxchecks} with probability at most $(1-e/n)^t$. 
+	In the complete
+	proof, we show that when $\Delta(\tilde{\bm{C}},\hat{\bm{C}})\leq e$, 
+	while $d(\tilde{\ewit},\mc{C}_1)>e$, the prover knows two openings to a commitment.
+	Thus an adversarial prover succeeds with probability at most $(1-e/n)^t$ when
+	$d(\ewit,(\mc{W}_1)^{3p})>e$.
+	
+	We now consider the case when $d(\ewit,(\mc{W}_1)^{3p})\leq e$. From Lemma
+	~\ref{lem:bicdecoding}, there exists (unique) $\ewit^*\in (\mc{W})^{3p}$
+	such that $\Delta_1(\ewit,\ewit^*)\leq e$.
+	Let $\wit_a=\dec(\ewit_a)=\dec(\ewit^*_a)$. We consider the prover's success
+	probability when $\wit_x\circ \wit_y = \wit_z$, and thus with overwhelming probability $\sum_{i\in[p]} r_i\cdot(\wit_x[i,\cdot,\cdot]\cdot\wit_y[i,\cdot,\cdot]-\wit_z[i,\cdot,\cdot]) = [\bm{0}]^{ms}$. Let $P^*$ denote the correctly computed intermediate matrix from $\ewit^*$ and let
+	$\hat{P}$ denote the correctly computed intermediate matrix from $\ewit$. We note that
+	$\Delta_1(\hat{P},P^*)\leq e$. Let $c_1,\ldots,c_{2\ell-1}$ be the commitments
+	to the intermediate matrix sent by the prover. If these commitments correspond to a
+	matrix $P=P^*$, the inner product check
+	$\innerproduct(\mathsf{pp},[\gamma||0^{m-1}],\mathsf{cm},0)$ fails when using the
+	commitment $\mathsf{cm}=\prod_{k=1}^{2\ell-1}c_k^{\varphi_k}$ for
+	$\varphi=\Phi\times \tau$. This is because $\innp{\gamma||0^{m-1}}{P^*[1:2m-1,1:2\ell-1]\times
+		\varphi}=\sum_{j\in[m]} \gamma_j\sum_{k\in[s]} \tau_k\sum_{i\in[p]}r_i[\wit_x[i,j,k]\cdot\wit_y[i,j,k]-\wit_z[i,j,k]] \neq 0$, %where $\overline{P^*}$ denotes the $(2m-1)\times (s+\ell-1)$ submatrix of $P^*$,
+	as discussed in the protocol. If the
+	commitments correspond  to a matrix $P\neq P^*$, we have
+	$\Delta_1(P,P^*)\geq n-2\ell$ by distance property of the code
+	$\rsc{\eta}{n, 2\ell-1}$. 
+	(We note that a prover implicitly commits to a matrix in
+	$\rsc{\eta}{n,2\ell-1}\otimes \rsc{\alpha}{h,2m-1}$).
+	Thus there exists a set $E$ of at least $n-2\ell-e$ columns, such that for
+	$k\in E$, $\hat{P}[\cdot,k]=P^*[\cdot,k]\neq P[\cdot,k]$. The checks
+	$\innp{\bm{1}_{j_u}}{W_u}=\sum_{i\in[p]}\delta_i(\beta_x X_u + \beta_y Y_u + \beta_z Z_u)$ for $i\in [p]$ and $u\in [t]$ 
+	force the prover to provide vectors $X_u=\ewit_x[\cdot,j_u,k_u], Y_u=\ewit_y[\cdot,j_u,k_u],
+	Z_u=\ewit_z[\cdot,j_u,k_u]$ with
+	overwhelming probability. Then the consistency check succeeds for the 
+	uniformly sampled query point $(j_u,k_u)$ when:
+	\[ P[j_u,k_u] = \sum_{i\in [p]}r_i(X_u[i]\cdot Y_u[i]-Z_u[i]) =
+	\hat{P}[j_u,k_u] \]
+	For $k_u\in E$, the above holds when the distinct codewords $P^*[\cdot,k_u]$ and
+	$P[\cdot,k_u]$ in $\rsc{\alpha}{h,2m-1}$ agree on the position $j_u$, which happens with 
+	probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query succeeds is bounded by:
+	\begin{align*}
+	\prob{\mc{E}_u}&\leq \frac{2\ell+e}{n} + \frac{n-2\ell-e}{n}\cdot\frac{2m}{h}
+	\\
+	&= \frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)
+	\end{align*}
+	The above probability is smaller than a constant $\epsilon<1$ for suitable
+	choices of parameters. Hence, the overall probability of prover's success is
+	$\negl(\secpar)$ for $t=O(\secpar)$.
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proof of soundness of Distributed Linear Check}
+\begin{lemma}[Soundness with Extraction]\label{lem:distlinearcheck_sound}
+	For all polynomially bounded adversary $\Adv$ controlling all the provers $\prover_1, \ldots, \prover_{\Num}$ and all $\pi\in\GG^{p\times n}$, $A\in\FF^{M\times N}, b\in\FF^M$, there exists an polynomial time extractor $\extrac$ with rewinding access to the transcript $\tr$ between the aggregator $\Ag$ and the verifier $\verifier$ such that $\extrac$ either breaks the commitment binding or outputs a witness with overwhelming probability whenever $\Adv$ succeeds, i.e.,
+	
+	{\small
+		\begin{align*}
+		\condprob{\begin{array}{c}
+			\ewit=\open(\pi)\wedge \\
+			A\wit=b
+			\end{array}
+		}{
+			\begin{array}{c}
+			\sigma\gets \gen(\secparam) \\
+			\ewit\gets \extr^{\mathsf{tr}}(\bm{x},\sigma) \\
+			\wit\gets \dec(\ewit)
+			\end{array}}\geq
+		\epsilon(\Adv)-\kappa_{lc}(\secpar)
+		\end{align*} 
+	}
+where $\epsilon(\Adv):= \condprob{\langle \Adv(\bm{x},\sigma),\verifier^\pi(\bm{x},\sigma)\rangle=1}{\sigma\gets \gen(\secparam)}$ denotes the success probability of $\Adv$, $\kappa_{lc}$ denotes a negligible function, and $\bm{x}$ denotes the tuple $(A,b,M,N)$.
+\end{lemma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proof of soundness of Distributed Quadratic Check}
+\begin{lemma}[soundness with extraction]\label{lem:distquadcheck_sound}
+	For all polynomoially bounded adversary $\Adv$, controlling all the provers $\prover_1, \ldots, \prover_{\Num}$ and $\pi\in\GG^{3p\times n}$, there exists an expected polynomial time extractor $\extrac$ with rewinding access to the transcript $\tr$ between the aggregator $\Ag$ and the verifier $\verifier$ such that $\extrac$ either breaks the commitment binding, or it outputs a witness with overwhelming probability whenever $\Adv$ succeeds, i.e.,
+	
+	{\footnotesize
+		\begin{align*}
+		\condprob{
+			\begin{array}{c}
+			{[}\ewit_x||\ewit_y||\ewit_z{]}=\open(\pi)\wedge \\
+			\wit_z=\wit_x\circ\wit_y
+			\end{array}
+		}{
+			\begin{array}{c}
+			\sigma %\sample \gen(\secparam) \\
+			\leftarrow \gen(\secparam) \\
+			{[}\ewit_x||\ewit_y||\ewit_z{]}%\sample \extr^{\mc{O}}(\sigma)\\
+			\leftarrow \extr^{\mathsf{tr}}(\sigma) \\ 
+			\wit_a=\dec(\ewit_a), a\in \{x,y,z\}
+			\end{array}
+		}\\
+		\geq \epsilon(\Adv) - \kappa_{\rm qd}(\secpar)
+		\end{align*}
+	}
+	for some negligible function $\kappa_{qd}$. In the above, $\epsilon(P^\ast)$
+	denotes the success probability of the prover $P^\ast$ as before.
+\end{lemma}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{cryptographic preliminaries}
 \begin{comment}
@@ -1036,7 +1152,7 @@ Then $\prover$ computes vector polynomials $l(X)$ and $r(X)$ using $\bm{a}_L, \b
 $\distprover$ computes the commitment $\shr{A_I}, \shr{A_O}, \shr{S}$ and sends these values to $\Ag$. $\Ag$ combines and sends $A_I$, $A_O$ and $S$ to $\verifier$.
 The verifier broadcasts the random challenge $y,z \sample \ZZ^\ast_p$.
 Then each prover computes $\shr{l}(X)$ and $\shr{r}(X)$.
-All the provers interact securely to compute shares of $t(x) = \innp{\sum_{\xi\in [\Num]} \shr{l}(X)}{\sum_{\xi\in [\Num]} \shr{r}(X)}$, i.e., output for $\distprover$ is $\shr{t}(X)$ such that $\sum_{\xi\in [\Num]} \shr{t}(X) = t(X)$.
+All the provers interact securely to compute shares of $t(x) = \innp{l(X)}{r(X)}$, where $l(X)= \sum_{\xi\in [\Num]} \shr{l}(X)$ and $r(X) = \sum_{\xi\in [\Num]} \shr{r}(X)$, i.e., output for $\distprover$ is $\shr{t}(X)$ such that $\sum_{\xi\in [\Num]} \shr{t}(X) = t(X)$.
 $\distprover$ commits to all the coefficients of $\shr{t}(X)$ other than the coefficient of $X^2$. Sends these committed values to $\Ag$. $\Ag$ combines and sends them to $\verifier$.
 $\verifier$ sends a random $x$. $\distprover$ evaluates $\shr{l}(x) = \shr{\bm{l}}$ and $\shr{r}(x) = \shr{\bm{r}}$ and sends these values to $\Ag$. $\Ag$ computes $\bm{l} = \sum_{\xi\in [\Num]} \shr{\bm{l}}$ and $\bm{r} = \sum_{\xi\in [\Num]} \shr{\bm{r}}$.
 Finally, $\Ag$ and $\verifier$ run the inner product protocol, same as the single prover protocol, where the witness is $\bm{l}$ and $\bm{r}$.
@@ -1566,7 +1682,9 @@ the encoding $\comoracle\gets \comm(\ewit)$ are computed as in Sections
 $\comoracle$ is a $4p\times n$ matrix. 
 We now present the high level protocol for R1CS instance $(A,B,C)$.\smallskip
 
-{\small
+\begin{figure}[h]
+	{\footnotesize
+		\begin{framed}
 \noindent{$\grapheneRCS(\mathsf{pp},A,B,C,[\pi];\wit_x,\wit_y,\wit_z,\wit)$}:\\
 \noindent{\bf Relation}: $A\wit\circ B\wit=C\wit$. \\
 \noindent{\bf Oracle Setup}: Compute $\comoracle$ as described above. Set $\pi
@@ -1602,15 +1720,77 @@ the matrix $P_{lc}$ and commitments $d_0,d_1,\ldots,d_{2\ell-1}$ for matrix
 $P_{qd}$. 
 \item $\verifier\rightarrow\prover$: $Q=\{(j_u,k_u):u\in [t]\}$.
 \item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
-\item $\prover\rightarrow\verifier$: $V_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
+\item $\prover\rightarrow\verifier$: $S_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$.
 \item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
 \item $\prover$ and $\verifier$ run the linear and quadratic check protocols in
-parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
+parallel, parsing the vectors $S_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 \item Check proximity as: $\prod_{a=1}^\ell
 (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
 \item $\verifier$ accepts if all the subprotocols accept.
 \end{enumerate}
+\end{framed}
 }
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[h]
+	{\footnotesize
+		\begin{framed}
+	\noindent{$DP-\grapheneRCS(\mathsf{pp},A,B,C,[\pi];\wit_x,\wit_y,\wit_z,\wit)$}:\\
+	\noindent{\bf Relation}: $A\wit\circ B\wit=C\wit$. \\
+	\noindent{\bf Oracle Setup}: Compute $\comoracle$ as described above. Set $\pi
+	:= \comoracle$.
+	\begin{enumerate}[{\rm 1.}]
+		\item $\verifier\rightarrow\distprover$: $\gamma_x,\gamma_y,\gamma_z\sample \FF$,
+		$r_{lc}\sample \FF^M$, $r_{qd}\sample \FF^{p}$, $\rho\sample \FF^{4p}$.
+		\item $\distprover\rightarrow\Ag$: $\distprover$ computes $\shr{\tilde{\ewit}}=\sum_{i\in
+			[4p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$ and sends commitments
+		$\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ to $\shr{\tilde{\ewit}}$.
+		\item $\Ag \rightarrow \verifier$: $\Ag$ computes $\tilde{c}_k=\prod_{\xi \in [\Num]} \shr{\tilde{c}_k}$ and sends $\tilde{c}_1,\ldots, \tilde{c}_{\ell}$.
+		\item $\distprover\leftrightarrow\verifier$ compute: $R=r_{lc}^TW$ for
+		$W=[\gamma_xI\,||\gamma_yI\,||\gamma_zI\,||-(\gamma_xA+\gamma_yB+\gamma_zC)]$,
+		polynomials $R^i$,$i\in [4p]$ interpolating the slices of $R$ viewed as a
+		$4p\times m\times n$ matrix.
+		\item $\distprover$ computes: 
+		\begin{itemize}
+			\item Polynomials $\shr{Q^i_x},\shr{Q^i_y},\shr{Q^i_z},\shr{Q^i}$ for $i\in [p]$,
+			where polynomials $\shr{Q^i_a}$, $i\in [p]$ correspond to $\shr{\wit_a}$ for $a\in \{x,y,z\}$ and
+			polynomials $\shr{Q^i}$,$i\in [p]$ correspond to $\shr{\wit}$. 
+			\item \textbf{MPC}: provers interact to compute $\mathsf{Mult}(\shr{Q^i_x},\shr{Q^i_y})$ and $\distprover$ gets $\shr{Q^i_{xy}}$, share of the polynomial $Q^i_{xy}$.
+			\item $h\times n$ matrices $\shr{P_{lc}}$ and $\shr{P_{qd}}$ as ``P'' matrices for the linear check and
+			quadratic check respectively. Note that $\shr{p_j}$ polynomial for $\shr{P_{lc}}$ is given
+			by $\shr{p_j}(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot).\shr{Q_x^i}(\alpha_j,\cdot)+
+			R^{p+i}(\alpha_j,\cdot)\shr{Q^i_y}(\alpha_j,\cdot)+R^{2p+i}(\alpha_j,\cdot)\shr{Q^i_z}(\alpha_j,\cdot)+
+			R^{3p+i}(\alpha_j,\cdot)\shr{Q^i}(\alpha_j,\cdot))$. The $\shr{p_j}$ polynomials for the
+			matrix $\shr{P_{qd}}$ are given by
+			$\shr{p_j}(\cdot)=\sum_{i=1}^{p}r_{qd}[i](\shr{Q^i_{xy}}(\alpha_j,\cdot)-\shr{Q^i_z}(\alpha_j,\cdot))$.
+			\item Blinding vectors $\shr{U_{lc}},\shr{U_{qd}}\in \FF^{2m-1}$ for linear and quadratic check protocols
+			respectively, and commitments $\shr{c_0},\shr{d_0}$ to vectors $\shr{U_{lc}}$
+			and $\shr{U_{qd}}$.
+		\end{itemize}
+		\item $\distprover\rightarrow\Ag$: Commitments $\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ for
+		the matrix $\shr{P_{lc}}$ and commitments $\shr{d_0},\shr{d_1},\ldots,\shr{d_{2\ell-1}}$ for matrix
+		$\shr{P_{qd}}$. 
+		\item $\Ag \rightarrow \verifier$: $\Ag$ computes $c_k = \prod_{\xi \in [\Num]} \shr{c_k}$ $\forall k\in \{0,\ldots, s+\ell-1\}$ and $d_k = \prod_{\xi \in [\Num]} \shr{d_k}$ $\forall k\in \{0,\ldots,2\ell-1\}$ and sends $c_0,c_1,\ldots, c_{s+\ell-1}, d_0,d_1,\ldots,d_{2\ell-1}$.
+		\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$.
+		\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+		\item $\distprover\rightarrow\Ag$: $\shr{S_u}=\shr{\ewit}[\cdot,j_u,k_u], \shr{Plc_{u}}=\shr{P_{lc}}[\cdot,k_u], \shr{Pqd_{u}}=\shr{P_{qd}}[\cdot,k_u]$ for $u\in [t]$.
+		\item $\Ag$ computes $S_u=\sum_{\xi\in [\Num]} \shr{S_u}$, $Plc_{u}=\sum_{\xi\in [\Num]}\shr{Plc_{u}}$ and $Pqd_{u}=\sum_{\xi\in [\Num]}\shr{Pqd_{u}}$ for $u\in [t]$.
+		\item $\Ag \rightarrow \verifier$: $S_u$ for $u\in[t]$
+		\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
+		\item $\verifier \rightarrow \distprover$: $\delta_{lc}\sample \FF^{4p}, \delta_{qd}\sample \FF^p, \beta_{lc}, \beta_{qd} \sample \FF^\ast, \beta_x, \beta_y, \beta_z \sample \FF$
+		\item $\distprover \rightarrow \Ag$: $\shr{Vlc_u} = \innp{\delta_{lc}}{\shr{U[\cdot,j_u,k_u]}}$,\\ $\shr{Vqd_u} = \innp{\delta_{qd}}{(\beta_x U_x[\cdot,j_u,k_u] + \beta_y U_y[\cdot,j_u,k_u]  + \beta_z U_z[\cdot,j_u,k_u])}$
+		\item $\Ag$ computes $Vlc_{u} = \sum_{\xi\in [\Num]} Vlc_u$ and $Vqd_{u} = \sum_{\xi\in [\Num]} Vqd_u$
+		\item $\Ag$ and $\verifier$ run the linear and quadratic check protocols in
+		parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed. And compute $A_u = \beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in[t]$ and corresponding commitment.
+		
+		\item Check proximity as: $\prod_{a=1}^\ell
+		(\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
+		\item $\verifier$ accepts if all the subprotocols accept.
+	\end{enumerate}
+	\end{framed}
+}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Reducing MPC Overhead for Small Shared Circuits}\label{sec:sharedcircuitopti}
 Let $C$ be a circuit with $N$ wires (we assume a unique incoming wire for each
@@ -1663,3 +1843,4 @@ $\prcomm=MPC(\Num,N_s,1)+\Num\times [8\bitsG + N\bitsF]$ for Bulletproofs. Here
 $MPC(\Num,N_s,1)$ denotes communication in an $\Num$ party MPC with circuit size
 $N_s$ and depth as 1.
  
+\input{2D.tex}
