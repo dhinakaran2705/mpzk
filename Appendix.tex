@@ -520,9 +520,32 @@ probability at most $2m/h$. Thus probability $\prob{\mc{E}_u}$ that above query 
 The above probability is smaller than a constant $\epsilon<1$ for suitable
 choices of parameters. Hence, the overall probability of prover's success is
 $\negl(\secpar)$ for $t=O(\secpar)$.
+
+\smallskip
+\paragraph{Extraction}: Let $\extrac_{ip}$ be the extractor of the inner product argument which takes, in expectation, $\Pip(n)$ amount of time, where $\Pip(\cdot)$ is polynomial, to output the private vector of length or breaking the binding of the commitment scheme. We will design an extractor $\extrac$ for $\linearcheck$, which uses $\extrac_{ip}$.
+
+\smallskip
+If $\prover^\ast$ fails in the proximity check (step 12) then $\verifier$ outputs reject, and so the extractor $\extrac$ terminates with $\abort$.
+If $\prover^\ast$ succeeds in the proximity check (step 12) then $\ewit\in \mc{W}_1$ and $\extrac$ proceeds in the following way:
+
+\smallskip
+$\extrac$ plays the role of the verifier and rewinds the provers polynomially many times if required.
+
+\smallskip
+$\extrac$ runs the protocol till step 8, sends $Q$ and receives $\ewit[\cdot, j_u,k_u]$. %Then it rewinds $\prover^\ast$ and sends new random $Q$. $\extrac$ keeps rewinding till $k_u$'s of all the $Q$s covered $[n]$. In expectation it takes $O(n\log(n))$ rewinds.
+
+$\extrac$ picks random $\delta\in \FF^p$ and $\beta\in\FF^\ast$ and proceeds to run the inner product arguments. $\extrac$ uses $\extrac_{ip}$ and gets:
+\begin{itemize}
+	\item  $\overline{P}[\cdot,k_u]$ in expected time $\Pip(m)$, $\forall u\in[t]$
+	\item $z=\beta P_0 + \overline{P}\varphi$ in expected time $\Pip(m)$
+	\item $V_u = \sum_{i\in[p]} \delta_i\ewit[i,\cdot,k_u]$ in expected time $\Pip(m)$, $\forall u\in[t]$
+\end{itemize}
+Then $\extrac$ rewinds $\delta, \beta$ $O(p\log(p))$ times and gets $P_0$ from $z$ and from $V_u$, $\extrac$ gets $\ewit[\cdot,\cdot,k_u]$. $\extrac$ checks $\ewit[\cdot,j_u,k_u]$ received in step 8, matches with the extracted $\ewit[\cdot,\cdot,k_u]$'s $j_u$ position or not. If does not, then $\extrac$ gets two opening of $\pi[\cdot,k_u]$ and outputs $\abort$, otherwise $\extrac$ proceeds in the following way: $\extrac$ rewinds $\prover^\ast$ and sends uniformly random $Q$ and keeps repeating untill all the $Q$'s together cover all the columns. It takes $n\log(n)$ rewindings in expectation. Then $\extrac$ extracts the whole $\ewit$ and checks if all the vectors are consistent or not. If not, that gives the break for the binding of the commitment scheme and if consistent, then it decodes $\ewit$ and outputs correct witness $\wit$. 
+\smallskip
+Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + \Pip(m) + \Pip(m))) $, which is polynomial in the size of the circuit.
 \end{proof}
 
-\subsection{Proof of soundness of Quadratic Check }\label{app:linear_soundness}
+\subsection{Proof of soundness of Quadratic Check }\label{app:quad_soundness}
 \begin{proof}[Proof-Sketch of Lemma ~\ref{lem:quadcheck_sound}]
 	Suppose the oracle $\pi$ commits to $\ewit_x, \ewit_y, \ewit_z$. In full version, we show how
 	this $\ewit_x, \ewit_y, \ewit_z$ can be ``extracted'' by the appropriate extractor. Note that $\ewit_x||\ewit_y||\ewit_z\in
@@ -585,6 +608,29 @@ $\negl(\secpar)$ for $t=O(\secpar)$.
 	The above probability is smaller than a constant $\epsilon<1$ for suitable
 	choices of parameters. Hence, the overall probability of prover's success is
 	$\negl(\secpar)$ for $t=O(\secpar)$.
+	
+	\smallskip
+	\paragraph{Extraction}: Let $\extrac_{ip}$ be the extractor of the inner product argument which takes, in expectation, $\Pip(n)$ amount of time, where $\Pip(\cdot)$ is polynomial, to output the private vector of length or breaking the binding of the commitment scheme. We will design an extractor $\extrac$ for $\quadcheck$, which uses $\extrac_{ip}$.
+	
+	\smallskip
+	If $\prover^\ast$ fails in the proximity check (step 15) then $\verifier$ outputs reject, and so the extractor $\extrac$ terminates with $\abort$.
+	If $\prover^\ast$ succeeds in the proximity check (step 15) then $\ewit\in \mc{W}_1$ and $\extrac$ proceeds in the following way:
+	
+	\smallskip
+	$\extrac$ plays the role of the verifier and rewinds the provers polynomially many times if required.
+	
+	\smallskip
+	$\extrac$ runs the protocol till step 7, sends $Q,\gamma, \tau$ and receives $\ewit_x[\cdot, j_u,k_u], \ewit_y[\cdot, j_u,k_u], \ewit_z[\cdot,j_u,k_u]$. %Then it rewinds $\prover^\ast$ and sends new random $Q$. $\extrac$ keeps rewinding till $k_u$'s of all the $Q$s covered $[n]$. In expectation it takes $O(n\log(n))$ rewinds.
+	
+	$\extrac$ picks random $\delta\in \FF^p$, $\beta_x,\beta_y,\beta_z\in\FF$ and $\beta\in\FF^\ast$ and proceeds to run the inner product arguments. $\extrac$ uses $\extrac_{ip}$ and gets:
+	\begin{itemize}
+		\item  $\overline{P}[\cdot,k_u]$ in expected time $\Pip(m)$, $\forall u\in[t]$
+		\item $z=\beta P_0 + \overline{P}\varphi$ in expected time $\Pip(m)$
+		\item $V_u = \sum_{i\in[p]} \delta_i(\beta_x\ewit_x[i,\cdot,k_u]+\beta_y\ewit_y[i,\cdot,k_u]+\beta_z\ewit_z[i,\cdot,k_u])$ in expected time $\Pip(m)$, $\forall u\in[t]$
+	\end{itemize}
+	Then $\extrac$ rewinds $\delta, \beta_x,\beta_y,\beta_z,\beta$ $O(p\log(p))$ times and gets $V_u$, $\extrac$ gets $\ewit_x[\cdot,\cdot,k_u], \ewit_y[\cdot,\cdot,k_u], \ewit_z[\cdot,\cdot,k_u]$ by solving a system of equation with $3p$ unknowns. $\extrac$ checks $\ewit_a[\cdot,j_u,k_u]$ received in step 7, matches with the extracted $\ewit_a[\cdot,\cdot,k_u]$'s $j_u$ position or not, for $a\in\{x,y,z\}$. If does not, then $\extrac$ gets two opening of $\pi_a[\cdot,k_u]$, for some $a\in\{x,y,z\}$ and outputs $\abort$, otherwise $\extrac$ proceeds in the following way: $\extrac$ rewinds $\prover^\ast$ and sends uniformly random $Q$ and keeps repeating untill all the $Q$'s together cover all the columns. It takes $n\log(n)$ rewindings in expectation. Then $\extrac$ extracts the whole $\ewit_x,\ewit_y,\ewit_z$ and checks if all the vectors are consistent or not. If not, that gives the break for the binding of the commitment scheme and if consistent, then it decodes $\ewit_a$ and outputs correct witness $\wit_a$ for $a\in\{x,y,z\}$. 
+	\smallskip
+	Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + \Pip(m) + \Pip(m))) $, which is polynomial in the size of the circuit.
 \end{proof}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Proof of soundness of Distributed Linear Check}
@@ -633,7 +679,7 @@ where $\epsilon(\Adv):= \condprob{\langle \Adv(\bm{x},\sigma),\verifier^\pi(\bm{
 		\geq \epsilon(\Adv) - \kappa_{\rm qd}(\secpar)
 		\end{align*}
 	}
-	for some negligible function $\kappa_{qd}$. In the above, $\epsilon(P^\ast)$
+	for some negligible function $\kappa_{qd}$. In the above, $\epsilon(\Adv)$
 	denotes the success probability of the prover $P^\ast$ as before.
 \end{lemma}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -969,7 +1015,7 @@ $i\in [p],j\in [h], k\in [n]$. Observe that we have $d_1(\ewit,\ewit_{\rm
 hon})<e$. Let $\mc{S}$ denote the event that the
 first transcript succeeds. As before, the key step to ensure soundness is to
 upper bound the probability $\prob{\mc{S}\cap (A\wit\neq b)}\leq
-\condprob{\mc{S}}{A\wit\neq b}\leq \condprob{\mc{S}}{r^TA\neq r^Tb}+1/|\FF|$
+\condprob{\mc{S}}{A\wit\neq b}\leq \condprob{\mc{S}}{r^TA\wit\neq r^Tb}+1/|\FF|$
 where $r\sample \FF^N$ denotes the message sent by $\verifier$ in Step 1. Let
 $P_{\rm hon}$ denote the matrix $P$ which is correctly computed from $\ewit_{\rm
 hon}$ in
@@ -1733,6 +1779,36 @@ parallel, parsing the vectors $S_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 }
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proof of knowledge of $\name$}
+\begin{lemma}
+	For all polynomially bounded provers $P^\ast$ and all $\pi\in\GG^{4p\times n}$, there exists an expected polynomial time extractor $\extrac$ with rewinding access to the transcript oracle $\tr = \innp{P^{\ast}}{\verifier^{\pi}}$ such that either $\extrac$ breaks the commitment binding, or it outputs a witness with overwhelming probability whenever $P^\ast$ succeeds, i.e.,
+	
+	{\footnotesize
+		\begin{align*}
+		\condprob{
+			\begin{array}{c}
+			{[}\ewit_x||\ewit_y||\ewit_z||\ewit{]}=\open(\pi)\wedge \\
+			\wit_z=\wit_x\circ\wit_y\wedge \wit_x=A\wit\\
+			\wit_y=B\wit \wedge \wit_z=C\wit
+			\end{array}
+		}{
+			\begin{array}{c}
+			\sigma %\sample \gen(\secparam) \\
+			\leftarrow \gen(\secparam) \\
+			{[}\ewit_x||\ewit_y||\ewit_z||\ewit{]}%\sample \extr^{\mc{O}}(\sigma)\\
+			\leftarrow \extr^{\mathsf{tr}}(\sigma) \\ 
+			\wit_a=\dec(\ewit_a), a\in \{x,y,z\}\\
+			\wit=\dec(\ewit)
+			\end{array}
+		}\\
+		\geq \epsilon(P^\ast) - \kappa_{\rm qd}(\secpar) -\kappa_{\rm lc}(\secpar)
+		\end{align*}
+	}
+Where $\kappa_{\rm lc}(\secpar)$ and $\kappa_{\rm qd}(\secpar)$ are the negligible soundness error of $\linearcheck$ and $\quadcheck$ respectively. And $\epsilon(P^\ast)$ is the success probability of the prover.
+\end{lemma}
+\begin{proof}
+	We will design an extractor $\extrac$ using the extractors $\extrac_{lc}$ and $\extrac_{qd}$ of $\linearcheck$ and $\quadcheck$ described in ~\ref{app:linear_soundness} and ~\ref{app:quad_soundness} respectively. $\extrac$ plays the role of the verifier and $\extrac_{lc}$, $\extrac_{qd}$ use the queries generated by $\extrac$.
+\end{proof}
 \begin{figure}[h]
 	{\footnotesize
 		\begin{framed}
