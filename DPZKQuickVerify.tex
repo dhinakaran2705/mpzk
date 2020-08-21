@@ -539,9 +539,13 @@ randomness for the inner product protocols establishing consistency of vectors
 $X_u$, $u\in [t]$ with the oracle.
  %$\nu=\nu_0+\sum_{a\in [s+\ell]}\mu_a\omega_a$ for the vector $z$ in the subprotocol $\proximityTwoD$ in Step 10 (here $\mu=\mc{T}\tau$), $\omega=\beta\omega_0+\sum_{a\in [s+\ell]}\varphi_ac_a$ for inner product in Step 11, $\chi_u=\sum_{a\in [s+\ell]}T[a,k_u]c_a$ for $u\in [t]$ for the inner products in Step 13, $\{O[\cdot,k_u]\}_{u\in [t]}$ for aggregate inner product arguments in Step 14, $\tilde{\nu}=\tilde{\nu}_0+\sum_{a\in [\ell]}\tilde{\mu}_a\tilde{c}_a$ for the vector $\tilde{z}$ in the $\proximityTwoD$ protocol called as part of $\proximityThreeD$ protocol in Step 15. Summarizing, the view includes $\nu,\omega,\{\chi_u\}_{u\in [t]},\{O[\cdot,k_u]\}_{u\in [t]},\tilde{\nu}$.
 \end{itemize}
-Next, we describe a simulator that outputs a view indistinguishable from the
-above view.
+\begin{lemma}\label{lem:simlincheck}
+	There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view
+	from the extended view of the verifier in honest execution of the protocol
+	$\linearcheck$ for $t\leq \bi$.
+\end{lemma}
 
+\begin{proof}
 \noindent{\bf Simulator}: 
 %\begin{itemize}
  $\Sim$ picks $\{\rho, r, Q, \delta, \beta \}$ uniformly at random from their
@@ -552,10 +556,13 @@ unifromly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} z[j] = r^Tb$.
 Subsequently,
 $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$, $\cm \leftarrow \comm(z,w)$
 where $P_0\sample \FF^{2m-1}$ is such that $\innp{1^m||0^{m-1}}{P_0}=0$ and $w_0,w\sample
-\FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes $\tilde{\ewit}[\cdot,
-k_u] = \sum_{i\in[p]} \rho_i \ewit[i,\cdot, k_u]$, $\tilde{O}[k_u]= \sum_{i\in[p]}
-\rho_i O[i,u]$, and $\tilde{c}_{k_u}  \leftarrow\\ \comm(\tilde{\ewit}'[\cdot, k_u] ,
-\tilde{O}[k_u] )$ for all $u\in[t]$ and $\pi[i,k_u] \leftarrow \comm(\ewit'[i,\cdot,k_u],
+\FF$. $\Sim$ picks $O\sample \FF^{p\times t}$, and computes
+\begin{align*}
+	\tilde{\ewit}[\cdot,k_u] &= \sum_{i\in[p]} \rho_i \ewit[i,\cdot, k_u],\\
+	\tilde{O}[k_u] &= \sum_{i\in[p]} \rho_i O[i,u],\\
+	\tilde{c}_{k_u} &\leftarrow \comm(\tilde{\ewit}'[\cdot, k_u],\tilde{O}[k_u] )
+\end{align*}
+ for all $u\in[t]$ and $\pi[i,k_u] \leftarrow \comm(\ewit'[i,\cdot,k_u],
 O[i,u])$, where $\ewit'[i,\cdot,k_u]$ consists of first $m$ entries of
 $\ewit[i,\cdot,k_u]$ and $\tilde{\ewit}'[\cdot,k_u]$ consists of first $m$ entries of
 $\tilde{\ewit}[\cdot,k_u]$, where $i\in[p]$ and $u\in [t]$. Next, $\Sim$ picks
@@ -568,10 +575,13 @@ Now $\Sim$ picks $\pi[\cdot, k]$ such that $\tilde{c}_k = \prod_{i\in[p]}(
 uniformly at random for all $u\in [t]$ and computes $c_{k_u} \leftarrow
 \comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the vector consisting
 of the first $2m-1$ entries
-of $P[\cdot,k_u]$ for $ u\in[t]$. Finally $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell-1}$
+of $P[\cdot,k_u]$ for $ u\in[t]$ and $P[j,k_u] = \sum_{i\in[p]}R^i(\alpha_j,\eta_{k_u})\cdot X_u[i,j]$. Finally $\Sim$ picks ${c}_1, \ldots, {c}_{s+\ell-1}$
 in such a way that ${c}_{k_u} = \prod_{a\in[s+\ell-1]}
 ({c}_a)^{\Lambda^T_{n,s+\ell-1}[a,k_u]} \, \forall u\in [t]$
 and $\cm =  c_0^{\beta} \cdot \prod_{a\in[s+\ell-1]} (c_a)^{\varphi_a}$. Picking such ${c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
+
+The output of the simulator $\Sim$ is indistinguishable from honest execution of the protocol.
+\end{proof}
 %\end{itemize}
 \begin{comment}
 The simulator outputs $r$, $\{j_u,k_u\}_{u\in [t]}$,
@@ -594,11 +604,7 @@ $\sum_{a=1}^{\ell}\mc{T}[a,k_u]\tilde{c}_a = \comm\big(\sum_{i\in
 $\beta\tilde{d}_0 + \sum_{a=1}^{\ell}\tilde{\mu}_a\tilde{c}_a =
 \comm(\tilde{z},\tilde{\nu})$. 
 \end{comment}
-\begin{lemma}\label{lem:simlincheck}
-The output of the above simulator is perfectly indistinguishable
-from the extended view of the verifier in honest execution of the protocol
-$\linearcheck$ for $t\leq \bi$.
-\end{lemma}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Zero knowledge for Quadratic check
 The verifier's view for the $\quadcheck$ protocol consists  of:
@@ -609,13 +615,92 @@ The verifier's view for the $\quadcheck$ protocol consists  of:
 	\item {\em Commitment Randomness}: We include randomness corresponding to the witness vectors in the inner product subprotocols as part of the extended view. We include randomness $w_u, u\in[t]$, corresponding to the vectors $\overline{P}[\cdot,k_u]$, randomness $w$ for the vector $z$, randomness $O_a[\cdot,k_u], u\in[t]$ corresponding to the commitments $\pi_a[\cdot,k_u]$ for $a\in \{x,y,z\}$. This can be used to compute randomness for the inner product subprotocols establishing consistency of vectors $X_u, Y_u, Z_u$ $ u\in[t]$ with the oracle.
 	\pnote{change the randomness notation, see if $\omega$ works} 
 \end{itemize}
-Next, we describe a simulator $\Sim$ that outputs a view indistinguishable from the above view.
 
-\noindent{\bf Simulator}: $\Sim$ picks $\{\rho, r, Q, \tau, \gamma, \beta, \beta_x, \beta_y, \beta_z\}$ uniformly at random from their respective domains. Then it picks $\ewit_a[\cdot, \cdot, k_u]$, for $a\in \{x,y,z\}$, uniformly such that $\ewit_a[i,\cdot,k_u] \in \rsc{\alpha}{h,2m-1}$ for all $a\in\{x,y,z\}, i\in[p], u\in[t]$. $\Sim$ picks $z$ uniformly at random from $\FF^{2m-1}$ satisfying $\innp{\gamma||0^{m-1}}{z} = 0$. Subsequently, $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$, $\cm\leftarrow\comm(z,w)$ where $P_0\sample\FF^{2m-1}$ is such that $P_0[j]=0$ for $j\in[m]$ and $w_0, w\sample \FF$. $\Sim$ picks $O_a\sample \FF^{p\times t}$, for $a\in\{x,y,z\}$, and computes $\tilde{\ewit}[\cdot,k_u] = \sum_{i\in[p]}[\rho_i \ewit_x[i,\cdot,k_u]+\rho_{p+i}\ewit_y[i,\cdot,k_u]+\rho_{2p+i}\ewit[i,\cdot,k_u]]$, $\tilde{O}[k_u] = \sum_{i\in[p]}[\rho_i O_x[i, k_u]+\rho_{p+i}O_y[i,k_u]+\rho_{2p+i}O_z[i,\cdot,k_u]]$, and $\tilde{c}_{k_u} \leftarrow \comm(\tilde{\ewit}'[\cdot,k_u], \tilde{O}[k_u])$ for all $u\in[t]$ and $\pi_x[i,k_u] \leftarrow \comm(\ewit_a'[i,\cdot,k_u],O_a[i,k_u])$, for $a\in\{x,y,z\}$ where $\ewit_a'[i,\cdot,k_u]$ consists of first $m$ entries of $\ewit_a[i,\cdot,k_u]$, for $a\in\{x,y,z\}$ and $\tilde{\ewit}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{\ewit}[\cdot,k_u]$, where $i\in[p]$ and $u\in[t]$. Next, $\Sim$ picks $\tilde{c}_1,\ldots, \tilde{c}_{\ell}$ such that $\tilde{c}_{k_u} = \prod_{a\in [\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}$ $\forall u\in[t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank. Now $\Sim$ picks $\pi[\cdot,k]$ such that $\tilde{c}_k = \prod_{i\in[p]} (\pi_x[i,k])^{\rho_i}\cdot(\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ for all $k\notin\{k_u:u\in[t]\}$. $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in[t]$ and computes $c_{k_u}\comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the vector consisting of the first $2m-1$ entries $P[\cdot,k_u]$ for $u\in[t]$. Finally $\Sim$ picks $c_1,\ldots,c_{2\ell-1}$ in such a way that $c_{k_u} = \prod_{a\in[2\ell-1]} (c_a)^{\Lambda^T_{n,2\ell-1}[a,k_u]}$ $\forall u\in[t]$ and $\cm = c_0^{\beta}\cdot\prod_{a\in[2\ell-1]}(c_a)^{\varphi_a}$. Picking such $c$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
 \begin{lemma}\label{lem:simquadcheck}
-	The output of the above simulator is perfectly indistinguishable from the extended view of the verifier in honest execution of the protocol $\quadcheck$ for $t\leq b$.
+		There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view of the verifier in honest execution of the protocol $\quadcheck$ for $t\leq b$.
 \end{lemma}
-Similarly, we can construct a simulator for the quadratic check which will appear in the full version.
+
+\begin{proof}
+We will describe a simulator $\Sim$ that outputs a view indistinguishable from the above view.
+
+\noindent{\bf Simulator}: $\Sim$ picks $\{\rho, r, Q, \tau, \gamma, \beta, \beta_x, \beta_y, \beta_z\}$ uniformly at random from their respective domains. Then it picks $\ewit_a[\cdot, \cdot, k_u]$, for $a\in \{x,y,z\}$, uniformly such that $\ewit_a[i,\cdot,k_u] \in \rsc{\alpha}{h,2m-1}$ for all $a\in\{x,y,z\}, i\in[p], u\in[t]$. $\Sim$ picks $z$ uniformly at random from $\FF^{2m-1}$ satisfying $\innp{\gamma||0^{m-1}}{z} = 0$. Subsequently, $\Sim$ computes $c_0 \leftarrow \comm(P_0,w_0)$, $\cm\leftarrow\comm(z,w)$ where $P_0\sample\FF^{2m-1}$ is such that $P_0[j]=0$ for $j\in[m]$ and $w_0, w\sample \FF$. $\Sim$ picks $O_a\sample \FF^{p\times t}$, for $a\in\{x,y,z\}$, and computes $\tilde{\ewit}[\cdot,k_u] = \sum_{i\in[p]}[\rho_i \ewit_x[i,\cdot,k_u]+\rho_{p+i}\ewit_y[i,\cdot,k_u]+\rho_{2p+i}\ewit_z[i,\cdot,k_u]]$, $\tilde{O}[k_u] = \sum_{i\in[p]}[\rho_i O_x[i, k_u]+\rho_{p+i}O_y[i,k_u]+\rho_{2p+i}O_z[i,\cdot,k_u]]$, and $\tilde{c}_{k_u} \leftarrow \comm(\tilde{\ewit}'[\cdot,k_u], \tilde{O}[k_u])$ for all $u\in[t]$ and $\pi_a[i,k_u] \leftarrow \comm(\ewit_a'[i,\cdot,k_u],O_a[i,k_u])$, for $a\in\{x,y,z\}$ where $\ewit_a'[i,\cdot,k_u]$ consists of first $m$ entries of $\ewit_a[i,\cdot,k_u]$, for $a\in\{x,y,z\}$ and $\tilde{\ewit}'[\cdot,k_u]$ consists of first $m$ entries of $\tilde{\ewit}[\cdot,k_u]$, where $i\in[p]$ and $u\in[t]$. Next, $\Sim$ picks $\tilde{c}_1,\ldots, \tilde{c}_{\ell}$ such that $\tilde{c}_{k_u} = \prod_{a\in [\ell]} (\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}$ $\forall u\in[t]$. Picking such $\tilde{c}$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank. Now $\Sim$ picks $\pi[\cdot,k]$ such that $\tilde{c}_k = \prod_{i\in[p]} (\pi_x[i,k])^{\rho_i}\cdot(\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ for all $k\notin\{k_u:u\in[t]\}$. $\Sim$ picks $w_{k_u}$ uniformly at random for all $u\in[t]$ and computes $c_{k_u}\comm(P'[\cdot,k_u], w_{k_u})$, where $P'[\cdot,k_u]$ is the vector consisting of the first $2m-1$ entries $P[\cdot,k_u]$ for $u\in[t]$. Finally $\Sim$ picks $c_1,\ldots,c_{2\ell-1}$ in such a way that $c_{k_u} = \prod_{a\in[2\ell-1]} (c_a)^{\Lambda^T_{n,2\ell-1}[a,k_u]}$ $\forall u\in[t]$ and $\cm = c_0^{\beta}\cdot\prod_{a\in[2\ell-1]}(c_a)^{\varphi_a}$. Picking such $c$ is efficient since the number of unknowns is more than the number of constraints, and the coefficient matrix has full row rank.
+
+The output of the simulator $\Sim$ is indistinguishable from honest execution of the protocol.
+\end{proof} 
+
+\noindent Now we will discuss the zero knowledge property of $\grapheneRCS$, which has the similar idea of Linear Check and Quadratic Check.
+The verifier's extended view for the $\name$ protocol consists of:
+\begin{itemize}
+	\item {\em Verifier Randomness:} $\verifier$'s messages consist of:
+	
+	$\{\gamma_x, \gamma_y, \gamma_z, r_{lc}, r_{qd}, \rho, Q=\{(j_u,k_u)\}_{u\in[t]},\\ \delta_{lc}, \delta_{qd}, \beta_{lc}, \beta_x, \beta_y, \beta_z, \beta_{qd}, \tau_{qd}, \gamma_{qd}\}$
+	
+	\item {\em Commitments:} $\prover$ sends the following commitments to $\verifier$:
+	\begin{align*}
+		&\tilde{c}_1, \ldots, \tilde{c}_{\ell}\\
+		&c_0, c_1, \ldots, c_{s+\ell-1}\\
+		&d_0, d_1, \ldots, d_{2\ell-1}
+	\end{align*}
+	and oracle responses:
+	$$\pi[\cdot,k_u],\; \pi_x[\cdot,k_u],\; \pi_y[\cdot, k_u],\; \pi_z[\cdot,k_u] $$
+	for all $u\in[t]$
+	
+	\item {\em Vectors: } $\prover$ sends the following vectors to $\verifier$:
+	\begin{align*}
+	&z_{lc}=\beta_{lc} U_{lc}+\overline{P}_{lc}\varphi_{lc}\\
+	&z_{qd}=\beta_{qd} U_{qd}+\overline{P}_{qd}\varphi_{qd}\\
+	&\ewit[\cdot,\cdot,k_u],\; \ewit_x[\cdot,\cdot,k_u],\; \ewit_y[\cdot, \cdot,k_u],\; \ewit_z[\cdot,\cdot,k_u] 
+	\end{align*}
+	for all $u\in[t]$
+	\item {\em Commitment Randomness: }
+	\begin{itemize}
+		\item $w_{u_{lc}}$ for $\overline{P}_{lc}[\cdot,k_u]$
+		\item $w_{u_{qd}}$ for $\overline{P}_{qd}[\cdot,k_u]$
+		\item $w_{lc}$ for $z_{lc}$
+		\item $w_{qd}$ for $z_{qd}$
+		\item $O[\cdot, k_u]$ for $\ewit[\cdot,\cdot,k_u]$
+		\item $O_x[\cdot, k_u]$ for $\ewit_x[\cdot,\cdot,k_u]$
+		\item $O_y[\cdot, k_u]$ for $\ewit_y[\cdot,\cdot,k_u]$
+		\item $O_z[\cdot, k_u]$ for $\ewit_z[\cdot,\cdot,k_u]$
+	\end{itemize}
+\end{itemize}
+\begin{lemma}\label{lem:simgraphene}
+	There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view of the verifier in honest execution of the protocol $\grapheneRCS$ for $t\leq b$.
+\end{lemma}
+
+\begin{proof}
+	\noindent {\bf Simulator:} $\Sim$ picks 
+	
+		$\{\gamma_x, \gamma_y, \gamma_z, r_{lc}, r_{qd}, \rho, Q=\{(j_u,k_u)\}_{u\in[t]}, \delta_{lc}, \delta_{qd}, \beta_{lc},\\ \beta_x, \beta_y, \beta_z, \beta_{qd}, \tau_{qd}, \gamma_{qd}\}$ uniformly at random from their respective domains. Then it picks $\ewit[\cdot,\cdot, k_u]$ and $\ewit_a[\cdot,\cdot,k_u]$ for $a\in\{x,y,z\}, \; i\in[p],\; u\in[t]$ uniformly such that $\ewit[i,\cdot, k_u] \in \rsc{\alpha}{h,2m-1}, \; \ewit_a[i,\cdot,k_u]\in \rsc{\alpha}{h,2m-1}\; \forall i\in[p], a\in\{x,y,z\}$.
+		$\Sim$ picks uniform $z_{lc}, z_{qd}$ from $\FF^{2m-1}$ such that $\sum_{j\in[m]} z_{lc}[j] = r_{lc}^Tb$ and $\innp{\gamma_{qd}||0^{m-1}}{z_{qd}} = 0$.
+		$\Sim$ picks uniform $U_{lc}$ and $U_{qd}$ from $\FF^{2m-1}$ such that $\innp{1^m||0^{m-1}}{U_{lc}} = 0$ and $U_{qd}[j]=0 \; \forall j\in[m]$. $\Sim$ picks $w_{lc},\;w_{0_{lc}}, \;w_{qd},w_{0_{qd}}$ and computes the following commitments: 
+		$$c_0\leftarrow \comm(U_{lc},w_{0_{lc}}), \; d_0\leftarrow \comm(U_{qd},w_{0_{qd}})$$ 
+		$$\cm_{lc} \leftarrow \comm(z_{lc},w_{lc}), \; \cm_{qd} \leftarrow \comm(z_{qd},w_{qd})$$
+		$\Sim$ picks $O, O_x, O_y, O_z$ uniformly at random. $\Sim$ computes for all $u\in[t]$:
+		\begin{align*}
+			\tilde{\ewit}[\cdot,k_u]= \sum_{i\in[p]} \rho_i\ewit[i,\cdot, k_u]+ &\rho_{p+i} \ewit_x[i,\cdot,k_u] + \rho_{2p+i} \ewit_y[i,\cdot,k_u]\\ + \rho_{3p+i} \ewit_z[i,\cdot,k_u]\\
+			\tilde{O}[k_u]= \sum_{i\in[p]} \rho_i O[i, k_u]+ &\rho_{p+i} O_x[i,k_u] + \rho_{2p+i} O_y[i,k_u]\\ + \rho_{3p+i} O_z[i,k_u]\\
+			\tilde{c}_{k_u} \leftarrow \comm(&\tilde{\ewit}'[\cdot,k_u], \tilde{O}[k_u])\\
+			\pi[i,k_u]\leftarrow \comm(&\ewit'[i,\cdot,k_u], O[k_u])\\
+			\pi_a[i,k_u]\leftarrow \comm(&\ewit_a'[i,\cdot,k_u], O[k_u])\; \forall a\in\{x,y,z\}
+		\end{align*}
+		$\Sim$ picks $w_{u_{lc}}, w_{u_{qd}}$ uniformly at random for all $u\in[t]$ and computes $c_{k_u}\leftarrow \comm(\overline{P}_{lc}[\cdot, k_u], w_{u_{lc}})$ and $d_{k_u}\leftarrow \comm(\overline{P}_{qd}[\cdot, k_u], w_{u_{qd}})$.
+		$\Sim$ picks $\tilde{c}_1,\ldots,\tilde{c}_{\ell}$ such that $\tilde{c}_{k_u} = \prod_{a\in [\ell]} (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}\; \forall u\in[t]$, it can be done efficiently due to the same reason given in \ref{lem:simlincheck} and \ref{lem:simquadcheck}.
+		$\Sim$ picks $\pi[\cdot,k]$ such that 
+		$$\tilde{c}_k = \prod_{i\in[p]}(\pi[i,k])^{\rho_i}\cdot (\pi_x[i,k])^{\rho_{p+i}}\cdot(\pi_y[i,k])^{\rho_{2p+i}}\cdot(\pi_z[i,k])^{\rho_{3p+i}}$$
+		for all $k\notin\{k_u:u\in[t]\}$.
+		Finally $\Sim$ picks $c_1,c_2,\ldots, c_{s+\ell-1}$ and $d_1, d_2, \ldots, d_{2\ell-1}$ subject to the following constraints:
+		\begin{align*}
+			c_{k_u} &= \prod_{a\in[s+\ell-1]} (c_a)^{\Lambda_{n,s+\ell-1}^T[a,k_u]} \; \forall u\in[t]\\  
+			\cm_{lc} &= c_0^{\beta_{lc}}\cdot\prod_{a\in[s+\ell-1]}(c_a)^{\varphi_{lc_a}}, \\
+			d_{k_u} &= \prod_{a\in[2\ell-1]} (d_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]} \; \forall u\in[t]\\
+			\cm_{qd} &= d_0^{\beta_{qd}}\cdot\prod_{a\in[2\ell-1]}(c_a)^{\varphi_{qd_a}}
+		\end{align*}
+		$\Sim$ can efficiently pick such $c_1, \ldots, c_{s+\ell-1}$ and $d_1, \ldots, d_{2\ell-1}$. 
+		
+		The output of $\Sim$ is perfectly indistinguishable from the extended view of an honest execution of the protocol.
+\end{proof}
+
 %\begin{lemma}\label{lem:simquadcheck}
 %There exists an efficient simulator $\Sim$ whose output is perfectly
 %indistinguishable from the extended view of the verifier in the honest execution
@@ -634,7 +719,7 @@ from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
 sent to  $\verifier$. We assume one of the provers executes $\Ag$.
 $\verifier$'s  messages and messages used by $\Ag$ 
 are assumed to be available on an authenticated broadcast
-channel. We specify the algorithm $\Ag$ implicitly by describing the construction
+channel\pnote{messages to $\Ag$ does not require broadcast channel}. We specify the algorithm $\Ag$ implicitly by describing the construction
 of message to $\verifier$ from the provers' messages for each round.
 We first discuss a protocol secure against semi-honest provers and then 
 briefly discuss how to ensure the privacy of the honest provers when the corrupt 
@@ -731,7 +816,7 @@ verifier in the linear check protocol include:
 \sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$ for verifier's challenge $\rho\sample
 \FF^p$.
 \item Commitments $c_0,\ldots,c_{s+\ell-1}$ where $c_0$ is a commitment to random
-vector $P_0\in \FF^{2m-1}$ satisfying $\innp{1^m||0^{m-1}}{P_0}=0$ and
+vector $P_0\in \FF^{2m-1}$ satisfying\\ $\innp{1^m||0^{m-1}}{P_0}=0$ and
 $c_1,\ldots,c_{s+\ell-1}$ are commitments to the $h\times n$ matrix $P$.
 \item The vectors $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, for verifier's
 query $Q=\{(j_u,k_u):u\in [t]\}$.
@@ -900,34 +985,4 @@ protocol and jointly possess a valid witness. We present a proof for the
 distributed linear check protocol. The same for the distributed quadratic check
 may be similarly argued.
 
-\begin{lemma}\label{lem:distlincheckzk}
-	For $\xi\in [\Num]$, let $\View^\xi_\Ag$ denote the view of  $\Ag$ in the distributed
-	linear check protocol consisting of messages from \ $\distprover$ with
-	witness $\shr{\wit}$. Then there exists an efficient simulator $\simulator$
-	which outputs a view indistinguishable from the joint view $\langle
-	\View^1_\Ag,\ldots,\View^{\Num}_\Ag\rangle$ whenever
-$\wit=\combine(\shr{\wit})$ is valid.
-\end{lemma}
-\begin{proof}
-	
-	Let  $\rho, \, r, \, \{(j_u,k_u)\}_{u\in[t]}, \, \delta, \, \beta$ denote the verifier
-	randomness, which is shared by each view. Consider other messages in
-	$\View^\xi_\Ag$. Let $\shr{\comoracle}, \shr{\bm{\tilde{c}}}, \shr{c_0}, \shr{c_1}, \ldots, \shr{c_{s+\ell-1}}, \shr{d_0}$ 
-	%$c_0^\xi,c_1^\xi,\ldots,c_{s+\ell}^\xi,d_0^\xi,\tilde{c}_1^\xi,\ldots,\tilde{c}_\ell^\xi,\tilde{d}_0^\xi,\{\pi^\xi[\cdot,k_u]\}_{u\in[t]}$ 
-	denote the commitments sent by $\distprover$. Also, $\Ag$ gets the openings
-of commitments $\shr{\comoracle[\cdot,k_u]}, \shr{c_{k_u}}$.
-	Finally, $\Ag$ gets the vector $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
-	%Similarly let $\nu^\xi,\omega^\xi,\{\chi^\xi_u\}_{u\in [t]},\{O^\xi[\cdot,k_u]\}_{u\in [t]})$ denote the commitment randomness sent by the $\distprover$. 
-	%Finally, the (extended) view also includes $\ewit^\xi[\cdot,\cdot,k_u]$ for $u\in [t]$, $z^\xi=u_0^\xi+P^\xi\mu$, $\tilde{z}^\xi=\tilde{u}^\xi_0+\tilde{U}^\xi\tilde{\mu}$ and ${z'}^\xi=\beta P^\xi_0 + \overline{P}^\xi\varphi + \shr{0^h}$. 
-	Note that other than $\shr{z}$, the other random variables in the views are
-independent of the witness shares $\shr{\wit}$ and $\shr{z}$. Thus these
-variables in each of the views are distributed independently and identically,
-and are simulated as in the single prover case. By the properties of shares
-$\shr{0^{2m}}$, the joint distribution of $\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num}$ 
-can be seen to be the uniform distribution on the set
-$\{(\langle{z}\rangle^1,\ldots,\langle{z}\rangle^{\Num})\in (\FF^{2m-1})^{\Num}:
-z=\sum_{\xi\in[\Num]}\shr{z} \text{ and } \sum_{j\in[m]} z[j]=0 \}$, provided
-the combined witness $\wit=\combine(\shr{\wit})$ satisfies $A\wit=b$. 
-Thus, the view of $\Ag$ can be perfectly simulated.
-\end{proof}
 

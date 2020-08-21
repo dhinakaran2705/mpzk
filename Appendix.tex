@@ -457,7 +457,7 @@ with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and
 $\mc{C}$, we have the desired bound.
 \end{proof}
 
-\subsection{Proof of soundness of Linear Check}\label{app:linear_soundness}
+\subsection{Proof of knowledge for Linear Check}\label{app:linear_soundness}
 \begin{proof}[Proof-Sketch of Lemma ~\ref{lem:linearcheck_sound}]
 Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
  this $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in
@@ -545,7 +545,7 @@ Then $\extrac$ rewinds $\delta, \beta$ $O(p\log(p))$ times and gets $P_0$ from $
 Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + \Pip(m) + \Pip(m))) $, which is polynomial in the size of the circuit.
 \end{proof}
 
-\subsection{Proof of soundness of Quadratic Check }\label{app:quad_soundness}
+\subsection{Proof of knowledge of Quadratic Check }\label{app:quad_soundness}
 \begin{proof}[Proof-Sketch of Lemma ~\ref{lem:quadcheck_sound}]
 	Suppose the oracle $\pi$ commits to $\ewit_x, \ewit_y, \ewit_z$. In full version, we show how
 	this $\ewit_x, \ewit_y, \ewit_z$ can be ``extracted'' by the appropriate extractor. Note that $\ewit_x||\ewit_y||\ewit_z\in
@@ -1777,10 +1777,12 @@ parallel, parsing the vectors $S_u$ into $X_u,Y_u,Z_u,W_u$ as needed.
 \end{enumerate}
 \end{framed}
 }
+\caption{$\grapheneRCS$ Protocol}
+\label{fig:graphene}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Proof of knowledge of $\name$}
-\begin{lemma}
+\begin{lemma}\label{app:POKgraphene}
 	For all polynomially bounded provers $P^\ast$ and all $\pi\in\GG^{4p\times n}$, there exists an expected polynomial time extractor $\extrac$ with rewinding access to the transcript oracle $\tr = \innp{P^{\ast}}{\verifier^{\pi}}$ such that either $\extrac$ breaks the commitment binding, or it outputs a witness with overwhelming probability whenever $P^\ast$ succeeds, i.e.,
 	
 	{\footnotesize
@@ -1866,6 +1868,8 @@ Where $\kappa_{\rm lc}(\secpar)$ and $\kappa_{\rm qd}(\secpar)$ are the negligib
 	\end{enumerate}
 	\end{framed}
 }
+\caption{Distributed $\grapheneRCS$ Protocol}
+\label{fig:dpgraphene}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
