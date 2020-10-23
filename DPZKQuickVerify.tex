@@ -717,9 +717,8 @@ We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} =
 which aggregates the messages received
 from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
 sent to  $\verifier$. We assume one of the provers executes $\Ag$.
-$\verifier$'s  messages and messages used by $\Ag$ 
-are assumed to be available on an authenticated broadcast
-channel\pnote{messages to $\Ag$ does not require broadcast channel}. We specify the algorithm $\Ag$ implicitly by describing the construction
+%$\verifier$'s  messages and messages used by $\Ag$ are assumed to be available on an authenticated broadcast channel\pnote{messages to $\Ag$ does not require broadcast channel}. 
+We specify the algorithm $\Ag$ implicitly by describing the construction
 of message to $\verifier$ from the provers' messages for each round.
 We first discuss a protocol secure against semi-honest provers and then 
 briefly discuss how to ensure the privacy of the honest provers when the corrupt 

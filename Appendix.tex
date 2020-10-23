@@ -458,13 +458,9 @@ $\mc{C}$, we have the desired bound.
 \end{proof}
 
 \subsection{Proof of knowledge for Linear Check}\label{app:linear_soundness}
-\begin{proof}[Proof-Sketch of Lemma ~\ref{lem:linearcheck_sound}]
-Suppose the oracle $\pi$ commits to $\ewit$. In full version, we show how
- this $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in
-(\mc{W}_2)^p$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
-an adversarial prover succeeds with negligible probability if $d(\ewit,(\mc{W}_1)^p)>e$. Second, we
-show that for $d(\ewit,(\mc{W}_1)^p)\leq e$, the prover succeeds with negligible probability when
-$A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,(\mc{W}_1)^p)>e$. Then for
+\begin{proof}[{\bf Proof of Lemma ~\ref{lem:linearcheck_sound}:}]
+Suppose the oracle $\pi$ commits to $\ewit$. $\ewit$ can be ``extracted'' by the appropriate extractor. Note that $\ewit\in (\mc{W}_2)^p$ as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that an adversarial prover succeeds with negligible probability if $d(\ewit,(\mc{W}_1)^p)>e$. Second, we
+show that for $d(\ewit,(\mc{W}_1)^p)\leq e$, the prover succeeds with negligible probability when $A\wit\neq b$ where $\wit=\dec(\ewit)$. Consider the case when $d(\ewit,(\mc{W}_1)^p)>e$. Then for
 $\tilde{\ewit}=\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$, by Proposition ~\ref{lem:3dcompression},
  we have $d(\tilde{\ewit},\mc{C}_1)>e$ with probability $1-o(1)$. Let $\tilde{\bm{c}}=(\tilde{c}_1,
 \ldots,\tilde{c}_\ell)$ be the commitments to $\tilde{\ewit}$ sent by the prover
@@ -546,9 +542,9 @@ Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + 
 \end{proof}
 
 \subsection{Proof of knowledge of Quadratic Check }\label{app:quad_soundness}
-\begin{proof}[Proof-Sketch of Lemma ~\ref{lem:quadcheck_sound}]
-	Suppose the oracle $\pi$ commits to $\ewit_x, \ewit_y, \ewit_z$. In full version, we show how
-	this $\ewit_x, \ewit_y, \ewit_z$ can be ``extracted'' by the appropriate extractor. Note that $\ewit_x||\ewit_y||\ewit_z\in
+\begin{proof}[{\bf Proof of Lemma ~\ref{lem:quadcheck_sound}:}]
+	Suppose the oracle $\pi$ commits to $\ewit_x, \ewit_y, \ewit_z$. %In full version, we show how this 
+	$\ewit_x, \ewit_y, \ewit_z$ can be ``extracted'' by the appropriate extractor. Note that $\ewit_x||\ewit_y||\ewit_z\in
 	(\mc{W}_2)^{3p}$, where $\ewit = \ewit_x||\ewit_y||\ewit_z$ is the juxtaposing along $p$ direction, as a commitment implicitly corresponds to such a matrix. Let $e<(n-\ell)/3$ be a parameter. First we show that 
 	an adversarial prover succeeds with negligible probability if $d(\ewit,(\mc{W}_1)^{3p})>e$. Second, we
 	show that for $d(\ewit,(\mc{W}_1)^{3p})\leq e$, the prover succeeds with negligible probability when
@@ -633,6 +629,7 @@ Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + 
 	Therefore, expected Run time of $\extrac$ is $O(n\log(n)(O(p\log(p))(\Pip(m)) + \Pip(m) + \Pip(m))) $, which is polynomial in the size of the circuit.
 \end{proof}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
 \subsection{Proof of soundness of Distributed Linear Check}
 \begin{lemma}[Soundness with Extraction]\label{lem:distlinearcheck_sound}
 	For all polynomially bounded adversary $\Adv$ controlling all the provers $\prover_1, \ldots, \prover_{\Num}$ and all $\pi\in\GG^{p\times n}$, $A\in\FF^{M\times N}, b\in\FF^M$, there exists an polynomial time extractor $\extrac$ with rewinding access to the transcript $\tr$ between the aggregator $\Ag$ and the verifier $\verifier$ such that $\extrac$ either breaks the commitment binding or outputs a witness with overwhelming probability whenever $\Adv$ succeeds, i.e.,
@@ -682,8 +679,9 @@ where $\epsilon(\Adv):= \condprob{\langle \Adv(\bm{x},\sigma),\verifier^\pi(\bm{
 	for some negligible function $\kappa_{qd}$. In the above, $\epsilon(\Adv)$
 	denotes the success probability of the prover $P^\ast$ as before.
 \end{lemma}
+\end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\begin{comment}
 \section{cryptographic preliminaries}
 \begin{comment}
 \subsection{Commitment scheme} \label{app:DefCommitment}
@@ -775,7 +773,7 @@ w\gets \extr^{\mc{O}}(x,\sigma)
 P^\ast(x,\sigma),\verifier(x,\sigma)\rangle=1}{\sigma\gets \setup(\secparam)} -
 \negl(\lambda)
 \end{align*}}
-%\end{comment}
+%
 %\begin{align}
 %&\prob{(x,w)\in\mc{L}| \sigma \sample \setup(\secparam); w\sample \extr^{\mc{O}}(x,\sigma)}\\
 %\geq & \prob{\innp{P^*(x,\sigma)}{\verifier(x, \sigma)} = 1|\sigma\sample \setup(\secparam)} - \kappa(\lambda)
@@ -788,7 +786,7 @@ Our argument of knowledge proofs rely on the following result from \cite{bulletp
 While the result is originally stated and proved for showing witness-extended
 emulation, we restate it for the case of argument of knowledge. The proof in
 \cite{InnerProductDLS} also applies to this restricted case.
-\end{comment}
+
 
 
 \begin{lemma}[Forking Lemma,\cite{bulletproofs}]\label{lem:forkinglemma}
@@ -799,8 +797,6 @@ of accepting transcripts. Assuming that $\prod_{i=1}^\mu n_i$ is bounded by a
 polynomial in security parameter $\secpar$, the protocol
 $(\setup,\prover,\verifier)$ is an argument of knowledge.
 \end{lemma}
-\commentA{change 'move' to 'round' in all the above text.}
-
 
 \section{Proofs}
 \begin{proof}[Proximity 2D]
@@ -1129,7 +1125,7 @@ c_0 + \sum_{a=1}^{s+\ell}\varphi_ac_a &= \comm(z',\omega) \nonumber \\
 \end{align} 
 
 \end{proof}
-
+\end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \subsection{Semi-honest to Malicious Security: }\label{app:semi-honesttomalicious} 
@@ -1207,52 +1203,19 @@ Since, $\bm{l}$ and $\bm{r}$ afre vectors of length $N$, MPC is required for $N$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{$\DPZK$ of Spartan for R1CS}\label{app:SpartanDPZK}
-We will describe the possible distributed prover version of Spartan, given in \cite{spartan} as an Interactive Proof system. Zero knowledge and privacy among the provers may achieve in the similar way but we do not have a proof for that. 
+We will describe the distributed version of the interactive proof given in Spartan \cite{spartan}. We do not have a proof of privacy of the distributed version of the protocol.
 
-Let $C$ be an R1CS circuit. In their formulation, an instance of an R1CS circuit was represented by a tuple $(\FF, A, B, C, io, m, n)$, where the circuit is defined by the matrices $A, B, C\in \FF^{m\times m}$, $io$ denotes the public input and output of the instance, and $m\geq |io|+1$ and there are at most $n$ non-zero entries in each matrix, $n=O(m)$. The size of the instance is $O(n)$.
-An R1CS instance $(\FF, A, B, C, io, m, n)$ is said to be satisfiable if $\exists$ a witness $\wit\in \FF^{m-|io|-1}$ such that $(A\cdot z)\circ (B\cdot z) = (C \cdot z)$ where $z=(io, 1, \wit)$, $\cdot$ is the matrix vector product and $\circ$ is the Hadamard product of two vectors.
-\paragraph{Low degree polynomial:} A multivariate polynomial $\calG$ over a finite field $\FF$ is called low degree polynomial if the degree of $\calG$ in each variable is exponentially smaller than $|\FF|$.
-\paragraph{Low degree extension:} Suppose $g:\{0,1\}^m\rightarrow\FF$ is a function that maps $m$-bits elements into an element of $\FF$. A polynomial extension of $g$ is a low degree $m$-variate polynomial $\tilde{g}(\cdot)$ such that $\tilde{g}(x)=g(x)\; \forall x\in\{0,1\}^m$.
-\paragraph{Sum-check:} Let $\calG$ be a low degree $\mu$-variate polynomial, $\calG:\FF^{\mu}\rightarrow\FF$ and degree of $\calG$ for each variable is at most $\ell$. Let $\prover_{SC}$ be a prover that claims 
-$$\sum_{x_1\in\{0,1\}}\sum_{x_2\in\{0,1\}}\ldots\sum_{x_{\mu}\in\{0,1\}}\calG(x_1,\ldots,x_{\mu}) =T$$
-i.e. the prover convinces the verifier that the polynomial sums up to $T$, if the sum is taken over all bit strings of length $\mu$.
-There is a probabilistic reduction given in Spartan \cite{spartan}, where the verification is much more efficient, instead of evaluating at all the bit strings of length $\mu$, it can be done by evaluating in $O(\mu)$ many points.
+Let $\C$ be an R1CS circuit of size $N$. For every R1CS circuit $\exists$ matrices $A,\;B,\;C$ and public input $io$ which defines the circuit. If the instance is true, then $\exists$ a witness $\wit\in\FF^N$ such that $A z \circ B z = C z$ where $z = (io,1,\wit)$ is the extended witness of $\C$.
 
-Here we will discuss the idea given in Spartan \cite{spartan} which does not have zero-knowledge property. Let $PC$ is a polynomial commitment scheme. The verifier $\verifier$ needs to check that $(A\cdot Z)\circ (B\cdot Z) = C\cdot Z$ holds, where $Z = (io, 1, \wit)$.
-
-The prover $\prover$ proceeds in the following way:
-$\prover$ obtains a low degree extension polynomial $\tilde{\wit}$ of the witness $\wit$. Then prover commits to $\tilde{\wit}$ using $PC$. $(C,S)\leftarrow PC\cdot Commit(\pubp,\tilde{\wit})$ where $C$ is the commitment and $S$ is the opening hint, and sends $C$ to $\verifier$.
-Define: $F_{io} = (A\cdot Z)\circ (B\cdot Z) - (C\cdot Z)$. Then $\verifier$ needs to check that whether $F_{io}$ is a zero vector or not. This can be viewed as a function over the bit strings by representing indices as strings, i.e. 
+Now, the prover wants to convince the verifier that the prover knows $z$ such that $A z \circ B z =C z$ holds. To that the prover defines a polynomial 
 \begin{align*}
-F_{io}(x) &= \left(\sum_{y\in\{0,1\}^s}A(x,y)Z(y)\right)\cdot \left(\sum_{y\in\{0,1\}^s}B(x,y)Z(y)\right)\\ &- \left(\sum_{y\in\{0,1\}^s}C(x,y)Z(y)\right) \; \ldots \; (1) 
+\tilde{F}_{io}(x)=\left(\sum_{y\in\{0,1\}^s}\tilde{A}(x,y)\tilde{Z}(y)\right)\left(\sum_{y\in\{0,1\}^s}\tilde{B}(x,y)\tilde{Z}(y)\right)-\\ \left(\sum_{y\in\{0,1\}^s}\tilde{C}(x,y)\tilde{Z}(y)\right)
 \end{align*}
+Where $\tilde{A}(x,y) = A(x,y)\;\forall  x,y$. $A(\cdot, \cdot)$ is defined as a function such that $A(x,y)$ is the $(x,y)th$ entry of the matrix $A$. Similarly, $B(\cdot, \cdot)$ and $C(\cdot, \cdot)$. And $\tilde{A},\;\tilde{B},\;\tilde{C}$ are the low-degree polynomial extensions of $A, B, C$ respectively, defined in Spartan\cite{spartan}. And $\tilde{Z}(y) = Z(y)\;\forall  x$. $Z(\cdot)$ is defined as a function such that $Z(y)$ is the $yth$ entry of the vector $z$, and $\tilde{Z}$ is the low-degree polynomial extensions of $Z$, defined in Spartan\cite{spartan}.
+If $Az\circ Bz =Cz$ holds then $\tilde{F}_{io}(x)=0\;\forall x\in\{0,1\}^s$. That means the verifier needs to check for all $x\in\{0,1\}^s$ $\tilde{F}_{io}(x)=0$. To get rid of such check a new polynomial $Q_{io}(t) = \sum_{x\in\{0,1\}^s}\tilde{F}_{io}(x) \cdot eq(t,x)$ where $eq(t,x) = \prod_{i\in[s]}[t_i\cdot x_i+(1-t_i)(1-x_i)]$. Note that if $\tilde{F}_{io}(x)=0\;\forall x\in\{0,1\}^s$ then $Q_{io}$ is a zero polynomial i.e. $Q_{io}(\tau)=0$ for any random $\tau$. 
 
-Then $\verifier$ needs to check $F_{io}(x)=0\; \forall x\in\{0,1\}^s$. But to use the sum-check protocol $F_{io}$ should be polynomial, and $F_{io}$ in equation (1) is not a polynomial. Consider the polynomial extension $\tilde{F}_{io}:\FF^s \rightarrow \FF$ defined in the following way:
-\begin{align*}
-\tilde{F}_{io}(x) &= \left(\sum_{y\in\{0,1\}^s}\tilde{A}(x,y)\tilde{Z}(y)\right)\cdot \left(\sum_{y\in\{0,1\}^s}\tilde{B}(x,y)\tilde{Z}(y)\right)\\ &- \left(\sum_{y\in\{0,1\}^s}\tilde{C}(x,y)\tilde{Z}(y)\right) \; \ldots \; (2) 
-\end{align*}
-The instance is satisfiable if and only if $\tilde{F}_{io}(x) = 0 \; \forall x\in\{0,1\}^s$. 
-Instead of checking at all the bit strings of length $s$, this can be reduced further to check only at a random point on a different polynomial $Q_{io}(t)$, defined in the following way:
+Define $\calG_{io,\tau}(x)=\tilde{F}_{io}(x)\cdot eq(\tau,x)$. Then $\sum_{x\in\{0,1\}^s} \calG_{io,\tau}(x) = Q_{io}(\tau)$. Therefore, it is enough to check that $\sum_{x\in\{0,1\}^s} \calG_{io,\tau}(x) = 0$. This check is done using the sum-check protocol described in Spartan \cite{spartan}.
 
-$Q_{io}(t)=\sum_{x\in\{0,1\}^s}\tilde{F}_{io}(x)\prod_{i\in[s]}eq(t,x)$ where $eq(t,x) = (t_ix_i+(1-t_i)(1-x_i))$
-Note that, if $\tilde{F}_{io}(x)=0 \; \forall x\in\{0,1\}^s$ if and only if $Q_{io}$ is a zero polynomial. Then $Q_{io}$ evaluated at any random point should give 0. To check this $\verifier$ picks random $\tau$ and sends this to $\prover$.
-
-Define: $Q_{io}(\tau)=\sum_{s\in\{0,1\}^s}\calG_{io,\tau}(x)$, where\\ 
-$\calG_{io,\tau}(x)=\tilde{F}_{io}(x)\cdot eq(\tau,x)$.
-Prover proves $\sum_{x\in\{0,1\}^s}\calG_{io,\tau}(x)=0$ using sum-check protocol. In the sum-check, it reduces to checking the evaluation at a random point, $r_x$, $\calG_{io,\tau}(r_x)=e_x$ or not, where $e_x$ is known to $\verifier$ and $\verifier$ picks $r_x$ uniformly at random. To do that $\verifier$ needs evaluation of $\tilde{F}_{io}(r_x)$ and $eq(\tau,r_x)$.
-$\verifier$ can evaluate of $eq(\tau,r_x)$ locally and for $\tilde{F}_{io}(r_x)$, $\prover$ computes 
-\begin{align*}
-\overline{A}(x) = \sum_{y\in\{0,1\}^s}\tilde{A}(x,y)\tilde{Z}(y), \; \; \; &\nu_A = \overline{A}(r_x)\\
-\overline{B}(x) = \sum_{y\in\{0,1\}^s}\tilde{B}(x,y)\tilde{Z}(y),\; \; \; &\nu_B = \overline{B}(r_x)\\
-\overline{C}(x) = \sum_{y\in\{0,1\}^s}\tilde{C}(x,y)\tilde{Z}(y),\; \; \; &\nu_C = \overline{C}(r_x)
-\end{align*}
-and sends $\nu_A,\; \nu_B,\; \nu_C$ to $\verifier$. Using these values $\verifier$ can check $\calG_{io,\tau}(r_x) = e_x$ or not. Now $\verifier$ needs to check 
-\begin{align*}
-	\nu_A = \overline{A}(r_x)\\
-	\nu_B = \overline{B}(r_x)\\
-	\nu_C = \overline{C}_(r_x)
-\end{align*}
-These three checks can be combined together in the following way: $\verifier$ picks random $r_A,\; r_B,\; r_C$ and computes $c=r_A\nu_A+r_B\nu_B+r_C\nu_C$ and $\verifier$ uses sum-check protocol with $\prover$ to verify $\sum_{y\in\{0,1\}^s}M_{r_x}(y) = c$, where $M_{r_x}(y) = r_A\tilde{A}(r_x,y)\tilde{Z}(y)+r_B\tilde{B}(r_x,y)\tilde{Z}(y)+r_C\tilde{C}(r_x,y)\tilde{Z}(y)$.
 
  In the $\DPZK$ version of Spartan \cite{spartan} each prover holds a share of the witness $\wit$, say $\distprover$ has $\shr{\wit}$. In other words, $Z$ is distributedly shared among the provers. So, in the above protocol described in Spartan \cite{spartan} only $\calG_{io,\tau}$ generation is required interaction among the provers. Remaining all the messages can be generated by each prover locally and an aggregator can combine the messages to obtain corresponding message. Note that, $\calG_{io,\tau}(x)$ computation requires $O(n^2)$ multiplications which are shared across the provers.  
 

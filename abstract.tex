@@ -17,7 +17,7 @@ Probabilistically Checkable Proofs (IPCP) paradigm which admits $O(N^{1/c})$
 proof size. And, building on it, our $\DPZK$ protocol \dpname{}, with $\Num$
 provers, generate the same proof size with a communication complexity $\prcomm$
 of $O(\Num \cdot N^{1-2/c}+ \Num^2\cdot \max(N_s,N^{1-1/c}))$  and  a round complexity $\prrounds $ of 2, where $N_s$ denotes the number of multiplication gates that takes witnesses of more than one provers,  in the arithmetic circuit representing the prover's computation in \name{}. 
-
+\end{abstract}
 %=======
 %Traditional zero-knowledge protocols have been studied and optimized for the setting where a single prover holds the complete witness and trying to convince a verifier about a predicate on the witness, without revealing any additional information to the verifier. This work initiates the study of distributed proof generation where the witness is shared among multiple mutually distrusting provers and they want to convince a verifier that their shares together satisfies the predicate. We start by defining a new MPC-style security definition to capture the possible adversarial settings, and proposing new efficiency parameters for distributed proof generation on the number of rounds $\prrounds$ and the amount of communication $\prcomm$ among the provers. We then propose a new zero-knowledge protocol \name{} in the IPCP paradigm which admits $O(N^{1/c})$ proof size. The provers in \name{} have a total communication complexity $O(\Num \cdot N^{1-2/c}+ N)$ when the proof is generated distributively among $\Num$ provers.
 %\end{comment}
@@ -26,4 +26,4 @@ of $O(\Num \cdot N^{1-2/c}+ \Num^2\cdot \max(N_s,N^{1-1/c}))$  and  a round comp
 
 %\mycomment{Adding a version below.}
 %The work of Ligero[citation] proposed ... In Ligero, a witness $x$ is encoded into a matrix $U$ of dimension $m \times n$, where $m$ and $n$ denote - and - respectively. Our idea is similar to theirs apart from the witness being encoded to a {\em box}. A box is a 3-dimensional matrix ($m \times n \times p$) where --(add technical details of box here). This ensures linearity of (what?) along both rows and columns. We hope that the aforementioned encoding along with homomorphic commitments lead to a ZK proof, whose size will be $O(|C|^{\frac{1}{3}})$.
-\end{abstract}
+
