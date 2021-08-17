@@ -1,0 +1,195 @@
+\subsection{Coding Theory Results}\label{subsec:coding_theory}
+%------------
+\paragraph*{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
+%-------
+We need several observations to prove the proposition, which we present next.
+Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space as:
+{
+	\begin{equation}\label{eq:affspace}
+	\aff{u_0}{U} := \{u_0+r^TU: r\in \FF^m\}
+	\end{equation}}
+Note that in the above, the scalars in the linear combination come from $\FF$.
+
+The following result was proved in \cite{ligero} for the setting $\HH=\FF$.
+For completeness, we present an adaptation of the proof to the setting where
+$\FF$ is a subfield of $\HH$.
+\begin{lemma}\label{lem:farpoint}
+	Let $L$ and $\mc{C}$ be codes as defined, and let $e$ be a positive integer such that $e+2\leq |\FF|$. Then for any $u_0\in \HH^n$ and any $U^\ast\in \HH^{m\times n}$ such that $d(U^\ast,\mc{C})>e$, there exists $v\in \aff{u_0}{U^\ast}$ such that $d(v,L)>e$.
+\end{lemma} 
+\begin{proof}
+	For sake of contradiction, assume that $d(u,L)\leq e$ for all $u\in
+	\aff{u_0}{U^\ast}$. Let $x$ be the point in $\aff{u_0}{U^\ast}$ such that
+	$d(x,L)$ is maximum. By assumption $d(x,L)\leq e$. Let $v\in L$ be such that
+	$\Delta(x,v)=d(x,L)$. Let $E\subseteq [n]$ be the set of positions where $x$ and
+	$v$ differ. Since $d(U^\ast,\mc{C})>e$, there exists row $R$ of $U^\ast$ and there is some 
+	position $j\in [n]\backslash E$ 
+	such that $R_j\neq 0$. Let
+	$\alpha_1,\ldots,\alpha_{e+1}$ be distinct non zero elements in $\FF$. Let $E_k$
+	for $k=1,\ldots,e+1$ denote the set of positions where $x+\alpha_kR$ and $v$
+	differ. Fix a position $i\in E$. Then there exists at most one $k\in [e+1]$ such
+	that $i\not\in E_k$. By pigeon hole principle, there exists $k\in [e+1]$ such
+	that $E\subseteq E_k$. We also observe that since $\alpha_k\neq 0$, $j\in E_k$.
+	Thus $d(x+\alpha_k,v)>d(x,v)$, contradicting the choice of $x$. This proves the
+	lemma.   
+\end{proof}
+%------------------------------
+
+Next we prove a result about lines with respect to linear codes. The result was proved in \cite{ligero} for the case $\HH=\FF$ and $e<d/4$. The authors in \cite{ligero} conjectured the result for $e<d/3$. Here we prove the result for $e<d/3$ when $\FF$ can be an arbitrary subfield of $\HH$.
+%------------------------------
+\begin{lemma}[Affine Line]\label{lem:affineline}
+	Let $L$ be the linear code as defined. Define an affine line $\ell_{u,v}$ in $\HH^n$ as $\ell_{u,v} := \{u + \alpha v:\alpha\in \FF\}$ for $u,v\in \HH^n$. Then for $e < d/3$ and any affine line $\ell_{u,v}$:
+	%-----
+	\begin{enumerate}[{\rm (i)}]
+		%-----
+		\item $d(x,L)\leq e$ for all $x\in \ell_{u,v}$, or
+		%-----
+		\item $d(x,L)> e$ for at most $d$ points in $\ell_{u,v}$.
+		%-----
+	\end{enumerate}
+	%-----
+\end{lemma}
+%-----------
+\begin{proof}
+	%\nnote{Candidate for Appendix: Putting it here just to have all content for the moment}
+	In this proof, let $\delta(x,y)$ denote the set of positions where the vectors
+	$x$ and $y$ differ, and let $\wt{x}$ denote $|\delta(x,\bm{0})|$. The above is equivalent to
+	proving that if there exist $d+1$ distinct points $X =
+	\{x_1,\ldots,x_{d+1}\}\subseteq \ell_{u,v}$ such
+	that $d(x_i,L)\leq e$ for all $i\in [d+1]$, then $d(x,L)\leq e$ for all $x\in
+	\ell_{u,v}$. Assume that there exists such a set $X$ of $d+1$ points. Let $\ell_i$ denote the point in $L$ closest to $x_i$ for $i\in
+	[d+1]$. Set $\eta_i=x_i-l_i$ for all $i$ and let
+	$\bm{\eta}=\{\eta_1,\ldots,\eta_{d+1}\}$. By assumption we have
+	$\wt{\eta_i}\leq e$ for all $i\in [d+1]$. Since $\ell_{u,v}$ is contained in affine
+	span of any two distinct points on it, we have tuples
+	$\{(\alpha_i,\beta_i)\}_{i\in [d+1]}d$ such that $\alpha_i + \beta_i=1$ and $x_i=\alpha_ix_1 +
+	\beta_ix_2$ for $i\in [d+1]$. Note that $(\alpha_1,\beta_1)=(1,0)$ and
+	$(\alpha_2,\beta_2)=(0,1)$. Observe that $\alpha_i$'s and $\beta_i$'s must be
+	distinct for all $i\in [d+1]$. We call $X$ as {\em degenerate} if there exist
+	$i\neq j$ satisfying $\alpha_j=\gamma\alpha_i$ and $\beta_j=\gamma\beta_j$ for
+	some $\gamma\in \FF\backslash {0}$. We consider two cases:
+	
+	\noindent{\em $X$ is degenerate}: Degeneracy implies there exist $i\neq j$ such that $x_i=\gamma x_j$ for
+	some $\gamma\in \FF\backslash\{0\}$. In this case we have $0 =
+	\frac{1}{1-\gamma}x_i -\frac{\gamma}{1-\gamma}x_j\in \ell_{u,v}$. This implies
+	$\ell_{u,v}=\{\alpha x_i: \alpha\in \FF\}$
+	and hence $d(x,L)=d(x_i,L)\leq e$ for all $x\in \ell_{u,v}$. Thus the statement
+	of the Lemma holds in this case.\smallskip 
+	
+	\noindent{\em X is not degenerate}: We first prove
+	that $\ell_i=\alpha_i\ell_1+\beta_i\ell_2$ and
+	$\eta_i=\alpha_i\eta_1+\beta_i\eta_2$ for
+	all $i\in [d+1]$. We have
+	%--------
+	\begin{align*}
+		\ell_i+\eta_i& = x_i = \alpha_ix_1 + \beta_ix_2 = \alpha_i(\ell_1+\eta_1) + \beta_i(\ell_2 + \eta_2) \\
+					 & = (\alpha_i\ell_1 + \beta_i\ell_2) + (\alpha_i\eta_1 + \beta_i\eta_2)
+	\end{align*}
+	%--------
+	Rearranging we have,
+	$
+	\ell_i - (\alpha_i\ell_1 + \beta_i\ell_2) = \alpha_i\eta_1 +
+	\beta_i\eta_2 - \eta_i
+	$.
+	%-------
+	In the above equation we see that LHS is a vector in $L$. Further $\wt{\alpha_i\eta_1 + \beta_i\eta_2 - \eta_i}\leq \wt{\eta_1}+\wt{\eta_2}+\wt{\eta_i}\leq 3e < d$. Thus the LHS must be equal to $0$ and hence $\ell_i = \alpha_i\ell_1 + \beta_i\ell_2$ and $\eta_i=\alpha_i\eta_1+\beta_i\eta_2$. Observe that any $x^\ast\in \ell_{u,v}$ can
+	be written as $x^\ast=\alpha^\ast x_1+\beta^\ast x_2$. Thus $d(x^\ast,L)=d(\alpha^\ast x_1+\beta^\ast x_2,L)\leq \wt{\alpha^\ast \eta_1+\beta^\ast \eta_2}\leq |E|$ where $E$ denotes the set $\delta(\eta_1,0)\cup \delta(\eta_2,0)$. Our final effort will be to show that $|E|\leq e$.
+	%-------
+	
+	\noindent{\it Claim}: $|E|\leq e$ where $E = \delta(\eta_1,0)\cup
+	\delta(\eta_2,0)$. We consider the partition of $E$ into sets
+	$E_0=\delta(\eta_1,0)\backslash \delta(\eta_2,0)$,
+	$E_1=\delta(\eta_2,0)\backslash \delta(\eta_1,0)$ and
+	$E_{01}=\delta(\eta_1,0)\cap \delta(\eta_2,0)$. Let $t=|E|$. Consider a $t\times (d+1)$ matrix $M=(m_{ij})$
+	where $m_{ij}=0$ if $j^{th}$ coordinate ($\eta_i^j$) of $\eta_i$ is zero, and $m_{ij}=1$
+	otherwise. We will show that each row of $M$ has at most one $0$. Assume that
+	there exists $i$ such that $m_{ip}=0$ and $m_{iq}=0$ for $p\neq q$. We consider
+	three cases:
+	%------
+	\begin{itemize}
+		%-----
+		\item[--] If $i\in E_0$, the above condition implies $\alpha_p\eta_1^i = \alpha_q\eta_1^i=0$, or $\alpha_p=\alpha_q=0$ as $\eta_1^i\neq 0$ for $i\in E_0$.
+		This contradicts the fact that $X$ is not degenerate.
+		%-----
+		\item[--] The case $i\in E_1$ is similar to above.
+		%-----
+		\item[--] If $i\in E_{01}$ we have $\alpha_p\eta_1^i+\beta_p\eta_2^i=\alpha_q\eta_1^i+\beta_q\eta_2^i=0$ which implies $\alpha_p/\beta_p = \alpha_q/\beta_q = -\eta_2^i/\eta_1^i $, or $\alpha_p/\alpha_q = \beta_p/\beta_q$ which contradicts the fact that $X$ is not degenerate. Note that all denominators can be argued to be non-zero for $i\in E_{01}$.
+		%-----
+	\end{itemize}
+	%-----
+	
+	From the above, we conclude that each row has at least $d$ entries as $1$.
+	Counting by columns, we have that each column has at most $e$ entries as $1$
+	(since $\wt{\eta_i}\leq e$ for all $i\in [d]$. Comparing the lower and upper
+	bounds on the number of $1$ entries in the matrix we have $td \leq e(d+1)$
+	which implies $t \leq e + e/d < e + 1$. Thus $t\leq e$, as we wanted to show.
+	This completes the proof.
+	%-----
+\end{proof}
+%------------------------------------------------------
+The following result underlies proximity protocols in our work and in
+\cite{ligero}. Intuitively the result states that if a matrix is far away from the code $\mc{C}$, a random linear combination of its rows is far away from a codeword in $L$, and thus the proximity of the matrix to $\mc{C}$ may be tested by testing the proximity of a random linear combination of its rows to $L$.
+%-------
+\begin{lemma}[Affine Subspace]\label{lem:affinesubspace}
+	Let the codes $L$ and $\mc{C}$ be as defined and $e<d/3$ be an integer. Let $U\in \HH^{m\times n}$ be a matrix such that $d(U,\mc{C})>e$. Then for any $u_0\in \HH^n$, $\prob{d(u_0+r^TU,L)\leq e}\leq d/|\FF|$ for uniformly sampled $r\sample \FF^m$.
+\end{lemma}
+%-------
+\begin{proof}
+	From Lemma \ref{lem:farpoint}, there exists $u\in \aff{u_0}{U}$ such that $d(u,L)>e$. Now we can write $\aff{u_0}{U}$ as union of affine lines passing through $u$. Applying lemma \ref{lem:affineline} to each line, we see that at most $d$ points $x$ on each affine line satisfy $d(x,L)\leq e$. Thus, a randomly sampled point $x$ in $\aff{u_0}{U}$, equivalently obtained as $u_0+r^TU$ for a randomly sampled vector $r\in \FF^m$ satisfies $d(x,L)$ with probability at most $d/|\FF|$.
+\end{proof}
+%---------
+We are now in a position to prove Proposition \ref{lem:3dcompression}.
+%--------
+\begin{proof}[Proof of Proposition \ref{lem:3dcompression}]
+	Let $\HH$ denote the field $\FF^m$. Then $u_0$ can be viewed as a point in
+	$\HH^n$. Similarly $U$ can be viewed as $p\times n$ matrix over $\HH$.
+	We consider $\mc{C}$ as $[n,k,d]$ code over $\HH$ and $\mc{C}^p$ as the
+	interleaved code of $\mc{C}$ over the field $\HH$. Then by applying Lemma \ref{lem:affinesubspace}
+	with $\HH=\FF^m$ and codes $\mc{C}$ and $\mc{C}^p$ in place of codes $L$ and	$\mc{C}$, we have the desired bound.
+\end{proof}
+%---------
+
+\paragraph*{Commitment and Inner-Product Argument}
+As described in Section~\ref{sec:prelim}, in our work we are using Pedersen vector commitment scheme, $\comm$ with message space $\FF^m$, commitment space $\GG$ and randomness space $\FF$. For a set of generators $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment randomness $r\in \FF$ is given by $\comm(x,r)=h^r \prod_{i=1}^m (g_i)^{x_i} $. This commitment is homomorphic with $\calC=\GG$ as the commitment space. This is a non-interactive perfectly hiding and computationally binding commitment scheme.
+
+\begin{definition}[Inner-product Argument \cite{InnerProductDLS,bulletproofs} ]\label{defn:innerproductarg} 
+	We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
+	\begin{enumerate}[{\rm (i)}]
+		%--------
+		\item {\bf Completeness}: For all $\adv$, the following should be $1$
+		
+		\footnotesize %\\~
+		\begin{align*}
+		\condprob{
+			\begin{array}{l}
+			(\stmt,\wit)\in \calR \wedge \\ \langle \pip(\mathsf{pp},\stmt,\wit),\vip(\mathsf{pp},\stmt)\rangle=1
+			\end{array}}{
+			\begin{array}{l}
+			\mathsf{pp}\gets \gen(\secparam);\\
+			(\stmt,\wit)\gets \adv(\secparam,\mathsf{pp})
+			\end{array}
+		}
+		\end{align*}
+		\normalsize
+		%------------
+		\item{\bf Soundness}: For all deterministic polynomial time $\prover^*$ and $\ppt$  $\adv$, the following should be at most $\negl(\lambda)$.
+		
+		{\footnotesize %\\~
+			
+			\begin{align*}
+			\condprob{
+				\begin{array}{c}
+				\stmt\not\in \calL \wedge \\
+				\langle
+				\prover^*(\mathsf{pp},\stmt,s),\vip(\mathsf{pp},u)\rangle=1
+				\end{array}}{
+				\begin{array}{l}
+				\sigma\gets \gen(\secparam);\\
+				(\stmt,s)\gets \adv(\secparam,\mathsf{pp})
+				\end{array}
+			} 
+			\end{align*}
+		}
+		%--------------
+	\end{enumerate}
+	
+\end{definition}

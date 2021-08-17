@@ -1,0 +1,174 @@
+In Section~\ref{subsec:graphene}, we present protocol for an R1CS instance. Here we summarize several performance parameters attained by our protocol for R1CS. Let $N= pms$, $\ell = s+t$ and $h$ be as in the previous sections. Let $\cfop$ denote the time taken for a field operation, $\cfft(x)$ denote the time to compute $\fft$ of a $x$ length vector, $\cmexp(x)$ denote the time taken for a multi-exponentiation of length $x$, and $\cexp$ denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote the number of bits required to represent an element of $\FF$ and $\GG$ respectively. Our protocol $\name$ achieves following efficiency parameters: 
+
+
+%We now summarize several performance parameters attained by our protocol for circuit
+%size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
+%previous sections. Let $\cfop$ denote the time taken for a field operation,
+%$\cfft(x)$ denote the time to compute $\fft$ of a length $x$ vector, $\cmexp(x)$
+%denote the time taken for a multiexponentiation of length $x$, and $\cexp$
+%denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote
+%the number of bits required to represent an element of $\FF$ and $\GG$
+%respectively. Our protocol $\name$ achieves
+%following efficiency parameters:
+
+\begin{comment}
+\section{Performance Evaluation}\label{sec:performancecompare}
+We now summarize several performance parameters attained by our protocol for circuit
+size $N$ and soundness $2^{-\secpar}$. Let $N=pms$, $\ell=s+t$ and $h$ be as in
+previous sections. Let $\cfop$ denote the time taken for a field operation,
+$\cfft(x)$ denote the time to compute $\fft$ of a length $x$ vector, $\cmexp(x)$
+denote the time taken for a multi-exponentiation of length $x$, and $\cexp$
+denote the time required for an exponentiation. Let $\bitsF$ and $\bitsG$ denote
+the number of bits required to represent an element of $\FF$ and $\GG$
+respectively. Our protocol $\name$ achieves
+following efficiency parameters:
+\end{comment}
+\begin{comment}
+{\footnotesize
+\begin{align*}
+\begin{array}{llrl}
+\mathrm{number\ of\ rounds} & \zkrounds & = & O(\log{N}) \\
+& & & \\
+\mathrm{argument\ size} & \zkcomm & = & 4pt\bitsF \\
+& & & +(4pt+8t\log{m}+4\ell+s+8t+4)\bitsG \\
+& & & \\
+\mathrm{prover\ complexity} & t_\prover & = &
+4p((m+n)\cfft(m)+m\cfft(l) \\
+& & &+n\cfft(h) + 4p\ell\cmexp(m)\\
+& & &+(n-\ell)\cmexp(\min(\ell,m))\\
+& & & +(s+3\ell)\cmexp(2m)\\
+& & &+ (48tm+32m)\cexp \\
+& & & \\
+\mathrm{verifier\ complexity} & t_\verifier & = &
+O(N)\cfop + 4pm\cfft(s)\\ 
+& & & +(2t+2)\cmexp(2m)\\
+& & & +2t\cmexp(m)+t\cmexp(4p+\ell) \\
+& & & \\
+\mathrm{soundness\ error} & \kappa_{\rm gr} & = & (1-e/n)^t \\ 
+& & & +2\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t 
+\end{array}
+\end{align*}
+}
+\end{comment}
+\begin{itemize}
+\item {\em Number of rounds}: $\zkrounds=O(\log{N})$.
+\item {\em Argument size}: $\zkcomm= 4pt\bitsF$
+$+(4pt+8t\log{m}+4\ell+s+8t+4)\bitsG$.
+\item {\em Prover complexity}: $t_\prover=4p((m+n)\cfft(m)+m\cfft(l)$
+$+n\cfft(h) + 4p\ell\cmexp(m)$
+ $+(n-\ell)\cmexp(\min(\ell,m))$
+ $+(s+3\ell)\cmexp(2m)$ $+ (48tm+32m)\cexp$
+\item {Verifier complexity}:  $t_\verifier=O(N)\cfop + 4pm\cfft(s)$
+ $+(2t+2)\cmexp(2m)$
+ $+2t\cmexp(m)+t\cmexp(4p+\ell)$
+\item{Soundness error} $\kappa_{\rm gr} = (1-e/n)^t$
+ $+2\big(2m/h+(1-2m/h)(2\ell+e)/n\big)^t$.
+\end{itemize}
+
+In Appendix ~\ref{sec:performance}, we give similar expressions for Ligero and
+Bulletproofs protocols. 
+%\item {\bf Argument Size}: $8pt+8t\log{m}+4\ell+s+8t+4\log{m}+4$, where $4pt$ comes as part
+%of oracle openings, another $4pt$ from opening $t$ vectors
+%$W_u=\ewit[\cdot,j_u,k_u]$, $u\in [t]$ of size $4p$ each, $(4t+2)(2\log{m}+2)$ from
+%the $4t+2$ inner product subprotocols ($2t+1$ in linear and quadratic check
+%each), $\ell+(s+\ell)+2\ell$ from the commitments sent for proximity check,
+%linear check and quadratic check.
+%\item {\bf Verifier Complexity}:
+%$O(N)+(2t+2)\mexp(2m)+2t\mexp(m)+t(\mexp(4p+\ell))$. The first
+%term comes from computing $r_{lc}^TW$ and the second term comes from
+%verification in inner product subprotocols, and the last term comes from
+%checking the proximity check equations.
+%\item {\bf Prover Complexity}: Encoding the witness involves
+%$4p\big(m(\cfft(\ell)+\cfft(m))+n(\cfft(m)+\cfft(h))\big)$ operations in $\FF$ , 
+%constructing the oracle takes
+%$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)$, commiting ``P'' matrices
+%take a further $(s+\ell)\mexp(2m)+2\ell\mexp(2m)$, the inner product
+%subprotocols account for $(2t+2).16m + 2t.8m$ exponentiations. This gives a
+%total of $O(N\log{N})$ field ops +
+%$4p\big(\ell\mexp(m)+(n-\ell)\mexp(\min(\ell,m))\big)+(s+3\ell)\mexp(2m)$ +
+%$(48tm+32m)$ exps.
+
+%\item {\bf Soundness}: The soundness is given by:
+%\begin{equation*}
+%\kappa_{gr} :=
+%\left(1-\frac{e}{n}\right)^t+2\left(\frac{2m}{h}+\left(1-\frac{2m}{h}\right)\left(\frac{2\ell+e}{n}\right)\right)^t
+%\end{equation*}
+%\end{enumerate}
+
+\noindent For $c\geq 2$, setting $p=s=O(N^{1/c})$, $m=O(N^{1-2/c})$, $t=O(\secpar)$,
+$n=O(\ell)$ and $h=O(m)$, we get $\kappa_{gr}=\negl(\secpar)$ with argument size
+$O(N^{1/c})$, verifier's complexity as $O(N)$ field operations and
+$O(N^{1-2/c})$ exponentiations. 
+
+\begin{figure}[h]
+\centering
+\resizebox{.5\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$N$ & \multicolumn{3}{|c|}{Arg. Size($\zkcomm$) MB} &
+        \multicolumn{3}{|c|}{Verifier Time($t_\verifier$) sec} &
+        \multicolumn{3}{|c|}{Prover Time($t_\prover$) sec} \\
+\hline
+ & \textsf{G} & \textsf{L} & \textsf{B} &
+   \textsf{G} & \textsf{L} & \textsf{B} &
+   \textsf{G} & \textsf{L} & \textsf{B} \\
+\hline
+$2^{19}$ & 0.728 & 3.5 & 0.001 & 45.4 & 55.2 & 89.1 & 802 & 137 & 662 \\
+$2^{20}$ & 0.759 & 4.9 & 0.001 & 49.8 & 205.57 & 178.2 & 1514 & 291 & 1324 \\
+$2^{21}$ & 0.884 & 6.95 & 0.001 & 55.97 & 212.17 & 356.5 & 2877 & 582 & 2648 \\
+$2^{22}$ & 1.28  & 9.8 & 0.001 & 108.306 & 805.3 & 713 & 5558 & 1258 & 5297 \\
+$2^{23}$ & 1.31  & 13.8 & 0.001 & 137.072 & 833.66 & 1426 & 10757 & 2516 & 10595 \\
+\hline
+\end{tabular}
+}
+\caption{Comparison of Graphene(G), Ligero(L) and Bulletproofs(B) in single
+prover setting for 80 bits of security}
+\label{fig:standalonecompare}
+\end{figure}
+
+\noindent In Figure~\ref{fig:standalonecompare}, we compare
+$\name$ with Ligero~\cite{ligero} and Bulletproofs~\cite{bulletproofs} in
+single prover setting based on the expressions in Appendix~\ref{sec:performance}. The concrete estimates were obtained by timing the $\fft$
+operations, exponentiations and multiexponentiations for different sizes, in a
+single threaded setting using $\mathsf{libff}$ library. Parameters for $\name$ were optimized to yield best
+proving time, while those for Ligero were optimized to yield best proof size.
+From the table in Figure~\ref{fig:standalonecompare}, we see that our protocol offers much more practical argument
+sizes compared to Ligero, while still attaining low verifier complexity. 
+
+
+{\em Performance Evaluation of \dpname.}
+%\subsection{Performance Evaluation: Distributed Proof Generation}
+We now illustrate $\dpname$'s performance for a concrete example. We assume two
+provers $P_1$ and $P_2$ who wish to produce a proof of holding private coins
+$\bm{c}_1$ and $\bm{c}_2$ with serial
+numbers $\mathsf{sn}_1$ and $\mathsf{sn}_2$ on the $\zcash$ blockchain, which
+are unspent and have combined value above some threshold $v$. The verification
+circuit consists of following major components:
+%\begin{enumerate}
+%---------
+%\item 
+
+Ensure the coins $\bm{c}_1$ and $\bm{c}_2$ are in the Merkle tree of
+coins. Each coin authentication takes around $1.8\times 10^6$ gates (see
+~\cite[Section 5.2.2]{zerocashext}).
+%---------
+%\item 
+
+Check that $\mathsf{sn}_1$ and $\mathsf{sn}_2$ are correctly computed from $\bm{c}_1$ and $\bm{c}_2$. This take around $54,000$ gates.
+%---------
+%\item 
+
+Check that $v_1+v_2>v$ and $v_1+v_2 < 2^{64}$, where $v_1$ and $v_2$ are values of the coins. This takes around 66 constraints.
+%---------
+%\end{enumerate}
+
+For the above circuit, we consider $N\approx 4.0\times 10^6$. For different
+values of parameters of our protocol, we set $N_s=\max(66,4m\ell)$.
+For Bulletproofs, we take $N_s=66$. Optimizing for total prover communication, our
+protocol achieves a total communication of $83.64$ MB, with a proof size of
+$4.2$ MB. Prover and verification time for our protocol is  $9100$ sec and $30$ sec
+respectively. The distributed variant of Bulletproofs yields total prover
+communication of $168$ MB, with proof size of $0.001$ MB, proving and
+verification time of $5297$ sec and $713$ sec respectively. 
+%------
+We used state-of-the-art dishonest majority semi-honest protocol (Oblivious Transfer based) MASCOT~\cite{KOS16} for the MPC communication among the provers. All the experiments were done on 8-core Ubuntu Linux 18.04 Machine with 2 GHz processor and 32GB memory. We used libff and libqfft libraries for finite field and elliptic curve implementation, and also for the FFT and multi-exp algorithms. The elliptic curve used was 181-bit Edwards curve. 

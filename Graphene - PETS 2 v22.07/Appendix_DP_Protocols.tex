@@ -1,0 +1,236 @@
+%----DISTRIBUTED LINEAR CHECK PROTOCOL BOX----------------
+%\subsection{Distributed Linear Check}
+\begin{figure*}[h!]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\distlinearcheck(\mathsf{pp}, \, A\in \mc{M}_{M,N}, \, b\in \FF^M, \, [\pi];\, \shr{\ewit}, \, \shr{0^{2m-1}})$}:
+			%\pnote{why $\wit$ is not part of the witness of linear check protocol?}
+			%----------
+			
+			\noindent{\bf Relation}: $\ewit=\open(\pi)\wedge A\wit=b$ for $\shr{\wit}=\dec(\shr{\ewit})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit} = \wit$.
+			%----------
+			
+			\begin{enumerate}[{\rm 1.}]
+				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^p$.
+				%----------
+				\item $\distprover$ computes: $\shr{\tilde{\ewit}} = \sum_{i\in [p]}\rho_i\shr{\ewit}[i,\cdot,\cdot]$, commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as $\shr{\tilde{c}}_k = \prod_{i\in[p]}(\shr{\comoracle[i,k]})^{\rho_i}$ $\forall k\in[\ell]$.
+				%----------
+				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
+				%----------
+				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}}$.} %(\tilde{c}_1,\ldots,\tilde{c}_\ell)$.
+				%----------
+				\item $\verifier\rightarrow\distprover$: $r\sample \FF^M$.
+				%----------
+				\item $\distprover \text{ and }\verifier$ compute: Polynomials $R^i$, $i\in [p]$ interpolating $R=r^TA$	as in Section~\ref{subsec:lincheck}.
+				%----------
+				\item $\distprover$ computes: Matrix $\shr{P}$ from $R$ and $\shr{\ewit}$ as described in Section ~\ref{subsec:lincheck}. Samples $\shr{P_0}\sample \FF^{2m-1}$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and $\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$.
+				Computes commitments $\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ from $\shr{P}$.
+				%----------
+				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{s+\ell-1}}, \shr{d_0}$.
+				%----------
+				\item  {$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [s+\ell-1]$ and sends $c_0,c_1,\ldots,c_{s+\ell-1}$.}
+				%----------
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $Q\sample [h]\times [n]$ for $u\in [t]$.
+				%----------
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				%----------
+				\item $\distprover\rightarrow\Ag$: $\shr{X_u}=\shr{\ewit}[\cdot,j_u,k_u],  \shr{P_u} = \shr{P}[\cdot,k_u]$ for $u\in [t]$.
+				%----------
+				\item  {$\Ag\rightarrow\verifier$: $X_u = \sum_{\xi\in[\Num]} \shr{X_u}, P_u= \sum_{\xi\in [\Num]} \shr{P_u}$ and sends ${X_u}$ for $u\in [t]$.}
+				%----------
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				%----------
+				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta\sample \FF\backslash \{0\}$.
+				%----------
+				\item $\distprover\rightarrow\Ag$: $\shr{z} = \beta\shr{P_0} + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$, $\shr{V_u} = \sum_{i\in[p]} \delta_i \shr{\ewit}[i,\cdot,k_u]$ and sends $\shr{z}$, $\shr{V_u}$.
+				%----------
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$, $V_u=\sum_{\xi\in[\Num]} \shr{V_u}$}.
+				%----------
+				\item $\Ag$ and $\verifier$ run inner product arguments to check:
+				%----------
+				\begin{enumerate}
+					%----------
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_u,v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_u=\prod_{a=1}^{s+\ell-1}(c_a)^{\Lambda_{n,s+\ell-1}[a,k_u]}$, $v_u=\sum_{i=1}^pR^i(\alpha_{j_u},\eta_{k_u})X_u[i]$ (check consistency of $P$ with $\pi$).
+					%----------
+					\item $\innerproduct(\mathsf{pp},1^m||0^{m-1},\mathsf{cm},r^Tb;z)$ where $z=\beta P_0+\overline{P}\varphi$ and $\mathsf{cm}= (c_0)^{\beta}\cdot\prod_{a=1}^{s+\ell-1}(c_a)^{\varphi_a}$ (check the condition $r^TAw=r^Tb$).
+					%----------
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},C_u,w_u;V_u)$ for $u\in [t]$ where $C_u=\prod_{i=1}^p(\pi[i,k_u])^{\delta_i}$ and $w_u= \sum_{i\in[p]} \delta_i X_u[i]$(consistency of $X_u$ with $\pi$).
+					%---------- 
+				\end{enumerate}
+				%----------
+				\item $\verifier$ checks: $\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$ (check proximity of $\ewit$ to $\mc{W}_1$).
+				%----------
+			\end{enumerate}
+		\end{framed}
+		\caption{Distributed Linear Check Protocol}
+		\label{fig:distlincheck}
+	}
+\end{figure*}
+%--------------------------------------------------------
+
+%--------------------------------------------------------
+%----DISTRIBUTED QUADRATIC CHECK PROTOCOL BOX------------
+%\subsection{Distributed Quadratic Check}
+\begin{figure*}[h]
+	{\footnotesize
+		%\centering
+		\begin{framed}
+			\noindent{$\distquadcheck(\mathsf{pp}, [\pi_x], [\pi_y], [\pi_z];\, \shr{\ewit_x}, \shr{\ewit_y}, \shr{\ewit_z}\, \shr{0^{2m}})$}:
+			%---------------------
+			
+			\noindent{\bf Relation}: $[\ewit_x||\ewit_y||\ewit_z]=\open(\pi)\wedge \wit_x \circ \wit_y = \wit_z$ for $\shr{\wit_a}=\dec(\shr{\ewit_a})$ for all $\xi \in [\Num]$ and $\sum_{\xi\in[\Num]} \shr{\wit_a} = \wit_a$ $\forall a\in \{x,y,z\}$.
+			%---------------------
+			
+			\begin{enumerate}[{\rm 1.}]
+				%---------------------
+				\item $\verifier\rightarrow\distprover$: $\rho\sample \FF^{3p}$.
+				%---------------------
+				\item $\distprover$ computes: $\shr{\tilde{\ewit}} =\sum_{i=1}^p[\rho_i\shr{\ewit_x}[i,\cdot,\cdot] + \rho_{p+i}\shr{\ewit_y}[i,\cdot,\cdot]+\rho_{2p+i} \shr{\ewit_z}[i,\cdot,\cdot]]$, commitments $\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ as $\shr{\tilde{c}}_k = \prod_{i=1}^{p} ( \shr{\comoracle_x} [i,k] )^{\rho_i} \cdot (\shr{\comoracle_y}[i,k])^{\rho_{p+i}} \cdot (\shr{\comoracle_z}[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$.
+				%---------------------
+				\item $\distprover\rightarrow\Ag$: $\shr{\tilde{\bm{c}}} = (\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell})$.
+				%---------------------
+				\item  {$\Ag\rightarrow\verifier$: $\tilde{\bm{c}}=\combine(\shr{\tilde{\bm{c}}})$.} 
+				%---------------------
+				\item $\verifier\rightarrow\distprover$: $r\sample \FF^p$.
+				%---------------------
+				\item Provers invoke $\FMult$: $\shr{\ewit_x.\ewit_y} \leftarrow \mathsf{Mult}(\shr{\ewit_x},\shr{\ewit_y})$ to obtain shares of the hadamard product of the encodings.
+				%---------------------
+				\item $\distprover$ computes: Matrix $\shr{P}$ from $r$ and $\shr{\ewit_x.\ewit_y}, \, \shr{\ewit_z}$ as described in Section ~\ref{subsec:quadcheck}. Samples $\shr{P_0}\sample \FF^{2m-1}$ such that $P_0[j]=0 \forall j\in[m]$, $\shr{\omega_0} \sample \FF$ and $\shr{c_0}\gets \comm(\shr{P_0},\shr{\omega_0})$,  and 
+				$\shr{d_0}\gets \comm(\shr{0^{2m-1}},\shr{o})$ where $\shr{o} \sample \FF$. Computes commitments $\shr{c_1},\ldots,\shr{c_{2\ell-1}}$ from $\shr{P}$.
+				%---------------------
+				\item $\distprover\rightarrow\Ag$: $\shr{c_0} ,\shr{c_1} ,\ldots, \shr{c_{2\ell-1}}, \shr{d_0}$.
+				%---------------------
+				\item  {$\Ag\rightarrow\verifier$: $c_k = \combine(\shr{c_k}) \, \forall k\in [2\ell-1]$ and sends $c_0,c_1,\ldots,c_{2\ell-1}$.}
+				%---------------------
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$ for $Q\sample [h]\times [n]$ for $u\in [t]$. And $\tau \sample \FF^s, \, \gamma \sample \FF^m, \beta\sample \FF^\ast$.
+				%---------------------
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				%---------------------
+				\item $\distprover\rightarrow\Ag$:
+				%--------------------- 
+				%\begin{itemize}
+				$\shr{X_u}=\shr{\ewit_x}[\cdot,j_u,k_u]$,
+				%--------
+				$\shr{Y_u}=\shr{\ewit_y}[\cdot,j_u,k_u]$,
+				%--------
+				$\shr{Z_u}=\shr{\ewit_z}[\cdot,j_u,k_u]$,
+				%--------
+				$\shr{P_u} = \shr{P}[\cdot,k_u]$
+				%--------
+				%\end{itemize} 
+				for $u\in [t]$.
+				%---------------------
+				\item  {$\Ag\rightarrow\verifier$: $A_u = \sum_{\xi\in[\Num]} \shr{A_u}$ where $A\in \{X, Y, Z, P\}$ and sends ${X_u, Y_u, Z_u}$ for $u\in [t]$.}
+				%---------------------
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$ for $u\in [t]$.
+				%---------------------
+				\item $\verifier\rightarrow\distprover$: $\delta\sample \FF^p$, $\beta_x\sample \FF$, $\beta_y\sample \FF$, $\beta_z\sample \FF$,
+				$\beta\sample \FF\backslash \{0\}$. 
+				%---------------------
+				\item $\distprover$ computes:$\shr{V_u} = \sum_{i=1}^p \delta_i \big( \beta_x \shr{\ewit_x} [i,\cdot,k_u] + \beta_y \shr{\ewit_y} [i,\cdot,k_u] + \beta_z \shr{\ewit}[i,\cdot,k_u] \big)$ and $\shr{z} =  \beta\cdot P_0 + \shr{\overline{P}}\varphi + \shr{0^{2m-1}}$.
+				%---------------------
+				\item $\distprover\rightarrow\Ag$:  sends $\shr{z}, \shr{V_u}$.
+				%---------------------
+				\item  {$\Ag$ computes $z=\sum_{\xi\in[\Num]} \shr{z}$} and $V_u = \sum_{\xi\in[\Num]} \shr{V_u}$.
+				%---------------------
+				\item $\Ag \text{ and } \verifier$: Both compute $W_u = \beta_x X_u + \beta_y Y_u + \beta_z Z_u$ for $u\in[t]$. $T_u = (C_u)^{\beta_x} \cdot(D_u)^{\beta_y} \cdot (E_u)^{\beta_z}$, for $u\in [t]$ where $C_u = \prod_{i=1}^{p} (\pi_x[i,k_u])^{\delta_i}$, $D_u = \prod_{i=1}^{p} (\pi_y[i,k_u])^{\delta_i}$
+				and $E_u=\prod_{i=1}^{p}(\pi_y[i,k_u])^{\delta_i}$.
+				%---------------------
+				\item $\Ag$ and $\verifier$ run inner product arguments to check:
+				%---------------------
+				\begin{enumerate}
+					%---------------------
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,2m-1},\mathsf{cm}_{k_u},v_u;\overline{P}[\cdot,k_u])$ for $u\in [t]$ where $\mathsf{cm}_{k_u} = c_0^{\beta}\prod_{a=1}^{2\ell-1}(c_a)^{\Lambda_{n,2\ell-1}^T[a,k_u]}$, $v_u=\sum_{i=1}^p r_i[X_u[i] \cdot Y_u[i] - Z_u[i]]$ (check consistency of $P$ with $\pi$).
+					%---------------------
+					\item $\innerproduct(\mathsf{pp},\gamma||0^{m-1},\mathsf{cm},0;z)$ where $z=\beta\cdot P_0 + \overline{P}\times \varphi$ and $\varphi = \Phi^T\tau$ and $\mathsf{cm} = \prod_{a=1}^{2\ell-1} (c_a)^{\varphi_a}$.
+					%---------------------
+					\item $\innerproduct(\mathsf{pp},\bm{1}_{j_u}^T\Lambda_{h,m},T_u,w_u;\overline{V}_u)$, where $\overline{V}_u$ stands for first $m$ entries of $V_u$ and $w_u = \innp{\delta}{W_u}$ (consistency of $X_u, Y_u, Z_u$ with $\pi$).
+					%---------------------
+				\end{enumerate}
+				%---------------------
+				\item $\verifier$ checks proximity of $\ewit_x,\ewit_y$ and $\ewit_z$ according to the Equation \eqref{eq:combinedproximity}.
+				%---------------------
+			\end{enumerate}
+		\end{framed}
+		\caption{Distributed Quadratic Check Protocol}
+		\label{fig:distquadcheck}
+	}
+\end{figure*}
+%-------------------------------------------------------------
+
+%-------------------------------------------------------------
+%---DISTRIBUTED PROVER GRAPHENE PROTOCOL BOX--------------------
+%\subsection{Distributed Prover \name Protocol}
+\begin{figure*}[h]
+	{\footnotesize
+		\begin{framed}
+			\noindent{$DP-\grapheneRCS(\mathsf{pp},A,B,C,[\pi];\wit_x,\wit_y,\wit_z,\wit)$}:
+			%------
+			
+			\noindent{\bf Relation}: $A\wit\circ B\wit=C\wit$. 
+			%------
+			
+			\noindent{\bf Oracle Setup}: Compute $\comoracle$ as described above. Set $\pi := \comoracle$.
+			%------
+			\begin{enumerate}[{\rm 1.}]
+				%------
+				\item $\verifier\rightarrow\distprover$: $\gamma_x,\gamma_y,\gamma_z\sample \FF$, $r_{lc}\sample \FF^M$, $r_{qd}\sample \FF^{p}$, $\rho\sample \FF^{4p}$.
+				%------
+				\item $\distprover\rightarrow\Ag$: $\distprover$ computes $\shr{\tilde{\ewit}} = \sum_{i\in[4p]} \rho_i \shr{\ewit}[i,\cdot,\cdot]$ and sends commitments
+				$\shr{\tilde{c}_1},\ldots,\shr{\tilde{c}_\ell}$ to $\shr{\tilde{\ewit}}$.
+				%------
+				\item $\Ag \rightarrow \verifier$: $\Ag$ computes $\tilde{c}_k = \prod_{\xi \in [\Num]} \shr{\tilde{c}_k}$ and sends $\tilde{c}_1,\ldots, \tilde{c}_{\ell}$.
+				%------
+				\item $\distprover\leftrightarrow\verifier$ compute: $R=r_{lc}^TW$ for $W=[\gamma_xI\,||\gamma_yI\,||\gamma_zI\,||-(\gamma_xA+\gamma_yB+\gamma_zC)]$, polynomials $R^i$,$i\in [4p]$ interpolating the slices of $R$ viewed as a $4p\times m\times n$ matrix.
+				%------
+				\item $\distprover$ computes: 
+				%------
+				\begin{itemize}
+					%------
+					\item[--] Polynomials $\shr{Q^i_x},\shr{Q^i_y},\shr{Q^i_z},\shr{Q^i}$ for $i\in [p]$, where polynomials $\shr{Q^i_a}$, $i\in [p]$ correspond to $\shr{\wit_a}$ for $a\in \{x,y,z\}$ and polynomials $\shr{Q^i}$,$i\in [p]$ correspond to $\shr{\wit}$. 
+					%------
+					\item[--] Provers invoke $\FMult$ on inputs $\shr{Q^i_x}, \shr{Q^i_y}$ and $\distprover$ gets $\shr{Q^i_{xy}}$, share of the polynomial $Q^i_{xy}$.
+					%\textbf{MPC}: provers interact to compute $\mathsf{Mult}(\shr{Q^i_x},\shr{Q^i_y})$ and $\distprover$ gets $\shr{Q^i_{xy}}$, share of the polynomial $Q^i_{xy}$.
+					%------
+					\item[--] $h\times n$ matrices $\shr{P_{lc}}$ and $\shr{P_{qd}}$ as ``P'' matrices for the linear check and quadratic check respectively. Note that $\shr{p_j}$ polynomial for $\shr{P_{lc}}$ is given by $\shr{p_j}(\cdot)=\sum_{i=1}^p(R^i(\alpha_j,\cdot) \cdot \shr{Q_x^i}(\alpha_j,\cdot) + R^{p+i}( \alpha_j, \cdot ) \shr{Q^i_y}( \alpha_j , \cdot ) + R^{2p+i}( \alpha_j , \cdot ) \shr{Q^i_z} ( \alpha_j , \cdot ) + R^{3p+i}( \alpha_j , \cdot ) \shr{Q^i}( \alpha_j , \cdot ))$. The $\shr{p_j}$ polynomials for the matrix $\shr{P_{qd}}$ are given by $\shr{p_j}( \cdot ) = \sum_{i=1}^{p} r_{qd}[i] ( \shr{Q^i_{xy}} ( \alpha_j , \cdot ) - \shr{Q^i_z} ( \alpha_j , \cdot ))$.
+					%------
+					\item[--] Blinding vectors $\shr{U_{lc}},\shr{U_{qd}}\in \FF^{2m-1}$ for linear and quadratic check protocols respectively, and commitments $\shr{c_0},\shr{d_0}$ to vectors $\shr{U_{lc}}$ and $\shr{U_{qd}}$.
+					%------
+				\end{itemize}
+				%------
+				\item $\distprover\rightarrow\Ag$: Commitments $\shr{c_0},\shr{c_1},\ldots,\shr{c_{s+\ell-1}}$ for the matrix $\shr{P_{lc}}$ and commitments $ \shr{d_0} , \shr{d_1} , \ldots , \shr{d_{2\ell-1}} $ for matrix $\shr{P_{qd}}$.
+				%------ 
+				\item $\Ag \rightarrow \verifier$: $\Ag$ computes $c_k = \prod_{\xi \in [\Num]} \shr{c_k}$ $\forall k\in \{0,\ldots, s+\ell-1\}$ and $d_k = \prod_{\xi \in [\Num]} \shr{d_k}$ $\forall k\in \{0,\ldots,2\ell-1\}$ and sends $c_0,c_1,\ldots, c_{s+\ell-1}, d_0,d_1,\ldots,d_{2\ell-1}$.
+				%------
+				\item $\verifier\rightarrow\distprover$: $Q=\{(j_u,k_u):u\in [t]\}$.
+				%------
+				\item $\verifier\rightarrow\pi$: $\{k_u:u\in [t]\}$.
+				%------
+				\item $\distprover\rightarrow\Ag$: $\shr{S_u}=\shr{\ewit}[\cdot,j_u,k_u], \shr{Plc_{u}}=\shr{P_{lc}}[\cdot,k_u], \shr{Pqd_{u}}=\shr{P_{qd}}[\cdot,k_u]$ for $u\in [t]$.
+				%------
+				\item $\Ag$ computes $S_u=\sum_{\xi\in [\Num]} \shr{S_u}$, $Plc_{u}=\sum_{\xi\in [\Num]}\shr{Plc_{u}}$ and $Pqd_{u}=\sum_{\xi\in [\Num]}\shr{Pqd_{u}}$ for $u\in [t]$.
+				%------
+				\item $\Ag \rightarrow \verifier$: $S_u$ for $u\in[t]$.
+				%------
+				\item $\pi\rightarrow\verifier$: $\pi[\cdot,k_u]$, $u\in [t]$.
+				%------
+				\item $\verifier \rightarrow \distprover$: $\delta_{lc}\sample \FF^{4p}, \delta_{qd}\sample \FF^p, \beta_{lc}, \beta_{qd} \sample \FF^\ast, \beta_x, \beta_y, \beta_z \sample \FF$.
+				%------
+				\item $\distprover \rightarrow \Ag$: $\shr{Vlc_u} = \innp{\delta_{lc}}{\shr{U[\cdot,j_u,k_u]}}$,\\ $\shr{Vqd_u} = \innp{\delta_{qd}}{(\beta_x U_x[\cdot,j_u,k_u] + \beta_y U_y[\cdot,j_u,k_u]  + \beta_z U_z[\cdot,j_u,k_u])}$.
+				%------
+				\item $\Ag$ computes $Vlc_{u} = \sum_{\xi\in [\Num]} Vlc_u$ and $Vqd_{u} = \sum_{\xi\in [\Num]} Vqd_u$.
+				%------
+				\item $\Ag$ and $\verifier$ run the linear and quadratic check protocols in parallel, parsing the vectors $V_u$ into $X_u,Y_u,Z_u,W_u$ as needed. And compute $A_u = \beta_xX_u+\beta_yY_u+\beta_zZ_u$ for $u\in[t]$ and corresponding commitment.
+				%------
+				\item Check proximity as: $\prod_{a=1}^\ell (\tilde{c}_a)^{\Lambda_{n,\ell}^T[a,k_u]}=\prod_{i=1}^{4p}(\pi[i,k_u])^{\rho_i}$ for $u\in [t]$.
+				%------
+				\item $\verifier$ accepts if all the subprotocols accept.
+				%------
+			\end{enumerate}
+		\end{framed}
+	}
+	\caption{Distributed $\grapheneRCS$ Protocol}
+	\label{fig:dpgraphene}
+\end{figure*}
+%--------------------------------------------------------

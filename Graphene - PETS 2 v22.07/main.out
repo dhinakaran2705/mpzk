@@ -1,0 +1,48 @@
+\BOOKMARK [0][-]{section*.1}{How to prove a statement jointly? Distributed-prover Zero-Knowledge Protocols}{}% 1
+\BOOKMARK [1][-]{section.1}{1 Introduction}{section*.1}% 2
+\BOOKMARK [1][-]{section.2}{2 Overview of our work}{section*.1}% 3
+\BOOKMARK [2][-]{subsection.2.1}{2.1 Efficiency parameters for DPZK}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.2}{2.2 On the formal Definition of DPZK}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.3}{2.3 Graphene: an MPC-friendly zero-knowledge protocol}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.4}{2.4 DP-Graphene: A new DPZK protocol}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.5}{2.5 Related Work}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{3 Notations and Preliminaries}{section*.1}% 9
+\BOOKMARK [2][-]{subsection.3.1}{3.1 Basic Notations}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.2}{3.2 Linear Codes}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.3}{3.3 Coding Theory Results for our Constructions}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.4}{3.4 Vector Commitment Schemes and Inner-product Arguments}{section.3}% 13
+\BOOKMARK [1][-]{section.4}{4 Definition for Distributed Proof Zero-Knowledge}{section*.1}% 14
+\BOOKMARK [2][-]{subsection.4.1}{4.1 Real-Ideal world definition for DPZK}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.2}{4.2 Our setting for DPZK}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.3}{4.3 Related Notions}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{5 DPZK Compiler}{section*.1}% 18
+\BOOKMARK [1][-]{section.6}{6 Primitives for Graphene}{section*.1}% 19
+\BOOKMARK [2][-]{subsection.6.1}{6.1 Witness Encoding}{section.6}% 20
+\BOOKMARK [2][-]{subsection.6.2}{6.2 Codes and Matrices}{section.6}% 21
+\BOOKMARK [2][-]{subsection.6.3}{6.3 Commitment of product codewords}{section.6}% 22
+\BOOKMARK [2][-]{subsection.6.4}{6.4 Oracle Construction}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.5}{6.5 Witness Decoding}{section.6}% 24
+\BOOKMARK [1][-]{section.7}{7 Graphene}{section*.1}% 25
+\BOOKMARK [2][-]{subsection.7.1}{7.1 Linear Check}{section.7}% 26
+\BOOKMARK [2][-]{subsection.7.2}{7.2 Quadratic Check}{section.7}% 27
+\BOOKMARK [2][-]{subsection.7.3}{7.3 Graphene}{section.7}% 28
+\BOOKMARK [1][-]{section.8}{8 DP-Graphene: Distributed Prover Variant}{section*.1}% 29
+\BOOKMARK [2][-]{subsection.8.1}{8.1 Distributed Oracle Setup:}{section.8}% 30
+\BOOKMARK [2][-]{subsection.8.2}{8.2 Distributed Linear Check:}{section.8}% 31
+\BOOKMARK [2][-]{subsection.8.3}{8.3 Distributed Quadratic Check:}{section.8}% 32
+\BOOKMARK [1][-]{section.9}{9 Performance Evaluation}{section*.1}% 33
+\BOOKMARK [1][-]{appendix.A}{A Preliminaries}{section*.1}% 34
+\BOOKMARK [2][-]{subsection.A.1}{A.1 Coding Theory Results}{appendix.A}% 35
+\BOOKMARK [1][-]{appendix.B}{B Graphene Protocol and Security Proofs}{section*.1}% 36
+\BOOKMARK [2][-]{subsection.B.1}{B.1 Linear Check Protocol}{appendix.B}% 37
+\BOOKMARK [2][-]{subsection.B.2}{B.2 Quadratic Check Protocol}{appendix.B}% 38
+\BOOKMARK [2][-]{subsection.B.3}{B.3 Graphene Protocol}{appendix.B}% 39
+\BOOKMARK [2][-]{subsection.B.4}{B.4 Zero-knowledge}{appendix.B}% 40
+\BOOKMARK [1][-]{appendix.C}{C DP-Graphene Security Proofs}{section*.1}% 41
+\BOOKMARK [1][-]{appendix.D}{D DPZK from existing protocols}{section*.1}% 42
+\BOOKMARK [2][-]{subsection.D.1}{D.1 DPZK of Bulletproof for R1CS}{appendix.D}% 43
+\BOOKMARK [2][-]{subsection.D.2}{D.2 DPZK of Spartan for R1CS}{appendix.D}% 44
+\BOOKMARK [1][-]{appendix.E}{E Shared circuit complexity}{section*.1}% 45
+\BOOKMARK [2][-]{subsection.E.1}{E.1 Reducing MPC Overhead for Small Shared Circuits}{appendix.E}% 46
+\BOOKMARK [1][-]{appendix.F}{F Parameters}{section*.1}% 47
+\BOOKMARK [2][-]{subsection.F.1}{F.1 Performance Parameters for Ligero and Bulletproofs}{appendix.F}% 48

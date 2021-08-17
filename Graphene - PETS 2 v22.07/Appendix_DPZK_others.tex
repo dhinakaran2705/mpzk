@@ -1,0 +1,44 @@
+%---------------------------------------
+\subsection{$\DPZK$ of Bulletproof for R1CS}\label{app:BulletproofsDPZK}
+In \cite{InnerProductDLS}, \cite{bulletproofs}, authors present a proof for a Hadamard-product relation. Suppose $\C$ is a circuit of size $N$. In their formulation,  $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ denote the vectors corresponding to the left wire, right wire and output wire respectively. Then, $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds and satisfy the following linear constraints: 
+%$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q$ where $1\leq q \leq Q \leq 2n$ with .
+%for a multiplication $g$ gate in a circuit $\C$ has $\bm{a}_L$, $\bm{a}_R$ and $\bm{a}_O$ as left input, right input and output wire values respectively, then $\bm{a}_L \circ \bm{a}_R = \bm{a}_O$ holds. Other than this, these vectors are supposed to satisfy additional $Q\leq 2n$ linear constraints, which is of the following form:
+$$\innp{\bm{w}_{L,q}}{\bm{a}_L} + \innp{\bm{w}_{R,q}}{\bm{a}_R} + \innp{\bm{w}_{O,q}}{\bm{a}_O} = c_q \, \forall q\in [Q]$$
+with $\bm{w}_{L,q}, \bm{w}_{R,q}, \bm{w}_{O,q} \in \ZZ^N_p$ and $c_q \in \ZZ_p$.
+Consider
+$W_A = [\bm{w}_{A,1}, \ldots, \bm{w}_{A,Q}]^T$, for $A\in \{L,R,O\}$  
+and $\bm{c} = [c_1, \ldots, c_q]^T$
+%---------------------------
+
+\noindent In \cite{bulletproofs}, these above checks are reduced to a single inner product argument. $\prover$ commits to the input vectors $\bm{a}_L, \bm{a}_R$, output vector $\bm{a}_O$ and sends the commitment values $A_I$ and $A_O$ to $\verifier$. $\prover$ picks $s_L$ and $s_R$ uniformly at random and computes the commitment $S$ and sends to $\verifier$.
+$\verifier$ gives random challenges $y, z$ from $\ZZ^\ast_p$ to the prover.
+Then $\prover$ computes vector polynomials $l(X)$ and $r(X)$ using $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R, y, z$ and other public vectors, and computes a polynomial $t(X) = \innp{l(X)}{r(X)}$. The construction of $l(X)$ and $r(X)$ is such that the co-efficient of $X^2$ in $t(X)$ is independent of $\bm{a}_L, \bm{a}_R, \bm{a}_O, s_L, s_R$, which can be computed by $\verifier$, if $\bm{a}_L, \bm{a}_R, \bm{a}_O$ satisfy the Hadamard-product relation and linear constraints. To prove this, $\prover$ commits to all the co-efficients of $t(X)$ other than the co-efficient of $X^2$, and verifier gives a random point $x$ to evaluate $\bm{l} = l(x)$ and $\bm{r} = r(x)$. Which reduces to an inner product check whose witness is $\bm{l}$ and $\bm{r}$, where $\bm{l}$ and $\bm{r}$ are vectors of length $N$. 
+\smallskip
+
+We give a $\DPZK$ version of Bulletproofs, where $\distprover$ starts the protocol with $\shr{\bm{a}_L}, \shr{\bm{a}_R}, \shr{\bm{a}_O}$ $\forall \xi \in [\Num]$ such that $\sum_{\xi\in [\Num]} \shr{\bm{a}_A} = \bm{a}_A$ $\forall A\in \{L,R,O\} $. $\Ag$ is an aggregator.
+$\distprover$ computes the commitment $\shr{A_I}, \shr{A_O}, \shr{S}$ and sends these values to $\Ag$. $\Ag$ combines and sends $A_I$, $A_O$ and $S$ to $\verifier$.
+The verifier broadcasts the random challenge $y,z \sample \ZZ^\ast_p$.
+Then each prover computes $\shr{l}(X)$ and $\shr{r}(X)$.
+All the provers interact securely to compute shares of $t(x) = \innp{l(X)}{r(X)}$, where $l(X)= \sum_{\xi\in [\Num]} \shr{l}(X)$ and $r(X) = \sum_{\xi\in [\Num]} \shr{r}(X)$, i.e., output for $\distprover$ is $\shr{t}(X)$ such that $\sum_{\xi\in [\Num]} \shr{t}(X) = t(X)$.
+$\distprover$ commits to all the coefficients of $\shr{t}(X)$ other than the coefficient of $X^2$. Sends these committed values to $\Ag$. $\Ag$ combines and sends them to $\verifier$.
+$\verifier$ sends a random $x$. $\distprover$ evaluates $\shr{l}(x) = \shr{\bm{l}}$ and $\shr{r}(x) = \shr{\bm{r}}$ and sends these values to $\Ag$. $\Ag$ computes $\bm{l} = \sum_{\xi\in [\Num]} \shr{\bm{l}}$ and $\bm{r} = \sum_{\xi\in [\Num]} \shr{\bm{r}}$.
+Finally, $\Ag$ and $\verifier$ run the inner product protocol, same as the single prover protocol, where the witness is $\bm{l}$ and $\bm{r}$.
+Since, $\bm{l}$ and $\bm{r}$ are vectors of length $N$, MPC is required for $N$ multiplications or in other words, a MPC for a depth 1 circuit of size $N$.
+
+%----------------------------------------------------------------------
+\subsection{$\DPZK$ of Spartan for R1CS}\label{app:SpartanDPZK}
+We will describe the distributed version of the interactive proof given in Spartan \cite{spartan}. We do not have a proof of privacy of the distributed version of the protocol.
+
+Let $\C$ be an R1CS circuit of size $N$. For every R1CS circuit $\exists$ matrices $A,\;B,\;C$ and public input $io$ which defines the circuit. If the instance is true, then $\exists$ a witness $\wit\in\FF^N$ such that $A z \circ B z = C z$ where $z = (io,1,\wit)$ is the extended witness of $\C$.
+
+Now, the prover wants to convince the verifier that the prover knows $z$ such that $A z \circ B z =C z$ holds. To that the prover defines a polynomial 
+\begin{align*}
+\tilde{F}_{io}(x)=\left(\sum_{y\in\{0,1\}^s}\tilde{A}(x,y)\tilde{Z}(y)\right)\left(\sum_{y\in\{0,1\}^s}\tilde{B}(x,y)\tilde{Z}(y)\right)-\\ \left(\sum_{y\in\{0,1\}^s}\tilde{C}(x,y)\tilde{Z}(y)\right)
+\end{align*}
+Where $\tilde{A}(x,y) = A(x,y)\;\forall  x,y$. $A(\cdot, \cdot)$ is defined as a function such that $A(x,y)$ is the $(x,y)th$ entry of the matrix $A$. Similarly, $B(\cdot, \cdot)$ and $C(\cdot, \cdot)$. And $\tilde{A},\;\tilde{B},\;\tilde{C}$ are the low-degree polynomial extensions of $A, B, C$ respectively, defined in Spartan\cite{spartan}. And $\tilde{Z}(y) = Z(y)\;\forall  x$. $Z(\cdot)$ is defined as a function such that $Z(y)$ is the $yth$ entry of the vector $z$, and $\tilde{Z}$ is the low-degree polynomial extensions of $Z$, defined in Spartan\cite{spartan}.
+If $Az\circ Bz =Cz$ holds then $\tilde{F}_{io}(x)=0\;\forall x\in\{0,1\}^s$. That means the verifier needs to check for all $x\in\{0,1\}^s$ $\tilde{F}_{io}(x)=0$. To get rid of such check a new polynomial $Q_{io}(t) = \sum_{x\in\{0,1\}^s}\tilde{F}_{io}(x) \cdot eq(t,x)$ where $eq(t,x) = \prod_{i\in[s]}[t_i\cdot x_i+(1-t_i)(1-x_i)]$. Note that if $\tilde{F}_{io}(x)=0\;\forall x\in\{0,1\}^s$ then $Q_{io}$ is a zero polynomial i.e. $Q_{io}(\tau)=0$ for any random $\tau$. 
+
+Define $\calG_{io,\tau}(x)=\tilde{F}_{io}(x)\cdot eq(\tau,x)$. Then $\sum_{x\in\{0,1\}^s} \calG_{io,\tau}(x) = Q_{io}(\tau)$. Therefore, it is enough to check that $\sum_{x\in\{0,1\}^s} \calG_{io,\tau}(x) = 0$. This check is done using the sum-check protocol described in Spartan \cite{spartan}.
+
+
+In the $\DPZK$ version of Spartan \cite{spartan} each prover holds a share of the witness $\wit$, say $\distprover$ has $\shr{\wit}$. In other words, $Z$ is distributedly shared among the provers. In the above protocol described in Spartan \cite{spartan} only $\calG_{io,\tau}$ generation is required interaction among the provers. Remaining all the messages can be generated by each prover locally, and an aggregator can combine the messages to obtain the corresponding message. Note that, $\calG_{io,\tau}(x)$ computation requires $O(n^2)$ multiplications which are shared across the provers.

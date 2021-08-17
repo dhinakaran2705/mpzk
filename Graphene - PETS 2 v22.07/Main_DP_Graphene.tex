@@ -1,0 +1,90 @@
+We now describe distributed protocol to produce a $\name$ proof for a
+statement, when the witness is shared between $\Num$ provers $\prover_1,\ldots,\prover_{\Num}$. For $\xi\in [\Num]$,
+let $\shr{\wit}$ denote the prover $\distprover$'s share of the witness $\wit$.
+We assume that the sharing is additive, i.e, $\sum_{\xi\in [\Num]} \shr{\wit} =
+\wit$. Recall from Section~\ref{sec:security model}, that there is an algorithm $\Ag$ 
+which aggregates the messages received
+from provers $\prover_1,\ldots,\prover_\Num$ and constructs the message to be
+sent to  $\verifier$. We assume one of the provers executes $\Ag$.
+%$\verifier$'s  messages and messages used by $\Ag$ are assumed to be available on an authenticated broadcast channel\pnote{messages to $\Ag$ does not require broadcast channel}. 
+We specify the algorithm $\Ag$ implicitly by describing the construction
+of message to $\verifier$ from the provers' messages for each round.
+We first discuss a protocol secure against semi-honest provers and then 
+briefly discuss how to ensure the privacy of the honest provers when the corrupt 
+provers are malicious (barring the one who runs $\Ag$). 
+
+\subsection{Distributed Oracle Setup:} In distributed setting, each prover
+$\distprover$ encodes her share $\shr{\wit}$ as $\shr{\ewit}=\enc(\shr{\wit})$
+and computes the commitment $\shr{\comoracle}=\ocom(\shr{\ewit})$. The provers
+then share $\shr{\comoracle}$ with the aggregator $\Ag$ which sets the oracle
+$\pi$ as $\pi := \combine(\shr{\comoracle})$, where $\combine$ simply multiplies the corresponding commitments. The homomorphism and the fact that the witnesses are additively shared ensure that $\pi$ contains commitment to the witness.
+%------------------------------------------------------------------
+
+\subsection{Distributed Linear Check:} The messages sent by the prover to the
+verifier in the linear check protocol include:
+\begin{itemize}
+	\item Commitments $\tilde{\bm{c}} = (\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to the matrix $\tilde{\ewit}=
+	\sum_{i\in [p]}\rho_i\ewit[i,\cdot,\cdot]$ for verifier's challenge $\rho\sample
+	\FF^p$.
+	\item Commitments $c_0,\ldots,c_{s+\ell-1}$ where $c_0$ is a commitment to random
+	vector $P_0\in \FF^{2m-1}$ satisfying\\ $\innp{1^m||0^{m-1}}{P_0}=0$ and
+	$c_1,\ldots,c_{s+\ell-1}$ are commitments to the $h\times n$ matrix $P$.
+	\item The vectors $X_u=\ewit[\cdot,j_u,k_u]$ for $u\in [t]$, for verifier's
+	query $Q=\{(j_u,k_u):u\in [t]\}$.
+\end{itemize}
+We see that given verifier's challenges, each of the messages is linear function
+of the encoding (which itself is a linear function of the witness). Hence, the
+provers compute the respective messages on their shares, which can be trivially
+combined by $\Ag$. In addition to above messages, we also want $\Ag$ to receive
+witnesses to the inner-product protocols namely, the vectors
+$\overline{P}[\cdot,k_u]$, $W_u=\sum_{i\in [p]}\delta_i\ewit[i,\cdot,k_u]$ for
+$u\in [t]$, $z=\beta P_0+\overline{P}\varphi$ and the randomness used to commit
+the vectors. Each of these can again be obtained by combining the respective shares.
+Note that the share $\shr{z}$ leaks $r^TA\shr{\wit}=\innp{1^m||0^{m-1}}{\shr{z}}$, which
+is non-trivial knowledge about an individual witness share. Thus provers use a
+random share $\shr{0^{2m-1}}$ to randomize their share of $z$, and send
+$\shr{z}=\beta\shr{P_0}+\shr{\overline{P}}\varphi+\shr{0^{2m-1}}$. 
+We provide the complete distributed linear protocol in Figure
+\ref{fig:distlincheck}.% in Appendix ~\ref{app:protocolboxes}. 
+%---------------------------------------------------------
+%--------------------------------------------------------
+
+
+\subsection{Distributed Quadratic Check:} Here the distributed variant requires an additional interaction among the provers. Recall that in response to $\verifier$'s challenge $r\in \FF^p$, the provers need to compute $P$ as:
+%--------------------------------------------------------
+\begin{align*}
+	P[j,k] & =\sum_{i\in [p]} r_i\big(Q_x^i(\alpha_j,\eta_k).Q_y^i(\alpha_j,\eta_k)-Q_z^i(\alpha_j,\eta_k)\big)\\ 
+	& = \sum_{i\in [p]}r_i(\ewit_x[i,j,k].\ewit_y[i,j,k] - \ewit_z[i,j,k])
+\end{align*}    
+%--------------
+where $\ewit_x$, $\ewit_y$ and $\ewit_z$ are the encodings of the witness
+vectors $\wit_x$, $\wit_y$ and $\wit_z$ respectively. 
+Since the matrix $P$ above is completely determined by it's first $2m-1$ rows
+and first $2\ell-1$ columns, the provers need to obtain the shares
+$\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}$ for $i\in [p],j\in [2m-1],k\in [2\ell-1]$.
+From the shares of witness $\shr{\wit_x},\shr{\wit_y}$ and $\shr{\wit_z}$ the
+provers can locally compute shares $\shr{\ewit_x},\shr{\ewit_y},\shr{\ewit_z}$
+of $\ewit_x,\ewit_y$ and $\ewit_z$. Now, the provers call $\FMult$ on inputs $\shr{\ewit_x},\; \shr{\ewit_y}$ and obtain $\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}$.
+We can instantiate $\FMult$ with any state-of-the-art dishonest majority protocol for arithmetic circuits.
+%can perform an MPC with
+This requires evaluation of $p.(2m-1).(2\ell-1)\approx 4N$ multiplication gates, and depth 1, to obtain the
+shares $\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}$ for $i\in [p],j\in [2m-1],k\in [2\ell-1]$.
+%Concretely, we assume an MPC $\mathsf{Mult}$ with following input/output for
+%a prover $\distprover$:     
+%%\begin{align*}    
+%$\shr{\ewit_x[i,j,k].\ewit_y[i,j,k]}\leftarrow
+%\mathsf{Mult}(\shr{\ewit_x[i,j,k]},\shr{\ewit_y[i,j,k]})$    
+%%\end{align*}    
+Thereafter, each prover obtains a share of matrix $P$, and the remaining protocol proceeds as
+the distributed linear check protocol. 
+The complete protocol for
+distributed quadratic check appears in Figure \ref{fig:distquadcheck} %in Appendix \ref{app:protocolboxes}. 
+%In Appendix ~\ref{sec:sharedcircuitopti}
+, we discuss how to optimize MPC overhead when the size of the shared circuit (see Section~\ref{sec:efficiencyparams}) is small.
+%--------------------------------------------------------
+
+%--------------------------------------------------------
+We show that the messages received by the aggregator in both the distributed protocols can be efficiently simulated, independent of
+their views in the preceding MPC protocols, provided the parties follow the
+protocol and jointly possess a valid witness. We present the proofs of (i) Soundness with Witness Extraction (SoWE), (ii) Zero-Knowledge (Zk), and (iii) Witness-Hiding with Collusion (WHwC), which is the same as the plain Witness Hiding in our setting, in Appendix~\ref{app:dp_grapehene_securityproofs}. 
+%---------------------------------------------------------------

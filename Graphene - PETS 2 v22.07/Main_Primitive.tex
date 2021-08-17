@@ -1,0 +1,105 @@
+%--------------
+%In this section, we describe a sub-linear interactive zero-knowledge argument as a public-coin IPCP. The IPCPs are special cases of more general Interactive Oracle Proofs (IOP) ~\cite{BCS16}. In ~\cite{BCS16}, the authors present a transformation (commonly referred to as ``BCS'' after the authors) to compile a public-coin IOP into a non-interactive argument in the Random Oracle Model. The transformation can be applied to our protocol to obtain a publicly-verifiable non-interactive argument. Moreover, in distributed setting, the aggregator $\Ag$ can apply the transformation on provers' messages to output a non-interactive argument. 
+%-------
+This section provides the main primitives that we use extensively to construct $\name$ and its components, such as $\linearcheck$ and $\quadcheck$. The primitives are i) Witness Encoding, ii) Codes and matrices, iii) Commitment of product codewords, iv) Oracle construction, and v) Witness decoding.
+%------
+
+Our protocol proves membership in the $\npol$-complete language specified by {\em rank one constraint system} (R1CS). An R1CS over a field $\FF$ is specified by $M\times N$ matrices $A,B$ and $C$, where the associated language $\mc{L}(A,B,C)$ consists of $\wit\in \FF^N$ such that $A\wit\circ B\wit=C\wit$, where $\circ$ defines element-wise product. Several
+recent zero knowledge constructions ~\cite{Groth16,aurora,marlin}, and circuit compilers such as ~\cite{zokrates} naively support the R1CS formulation. 
+%------------
+The arithmetic circuit representation can be expressed as an R1CS by introducing a constraint for each multiplication gate. We follow the broad outline of the interactive PCP
+construction in \cite{ligero} which includes: (i) extending the witness, denoted as extended witness, to the concatenation of values over all the wires in topological order of an arithmetic circuit representing the statement, (ii) encoding the extended witness via suitable error-correcting code, (iii) checking linear relations on the extended witness%(for the values concerning the wires going into and coming out from the addition gates)
+, and (iv) checking quadratic relations on the extended witness  (for the values concerning the wires going into and coming out from the multiplication gates). Both the linear and quadratic checks require sub-linear (oracle) access to the witness encoding.
+However, one runs into challenges in converting the IPCP to a non-interactive argument when the witness is distributed across several provers. The naive approach of provers sharing their encoded witnesses with an aggregator, which constructs the oracle breaches privacy among the provers, as these encodings only support {\em bounded independence}, i.e, they maintain privacy only when a bounded part of the witness is revealed. We overcome this, and several other technical challenges in our construction. The core techniques behind our
+construction are summarized below:
+%--------------
+\begin{itemize}
+	%-----
+	\item[--] We use homomorphic commitment over witness encoding and provide oracle access to the commitment. This facilitates oracle realization through aggregation.
+	%-----
+	\item[--] We design protocols for checking linear and quadratic constraints with oracle access to the commitment.
+	%-----
+	\item[--] We come up with new witness encoding scheme, to facilitate smaller argument size, and reduce communication amongst the provers during distributed proof generation and verification time.
+	%-----
+\end{itemize}
+%--------------
+While our use of homomorphic commitments introduces expensive cryptographic operations, we keep their usage strictly sub-linear. In particular, for an argument size of $O(N^{1/c})$, the verifier incurs $O(N^{1-2/c})$ exponentiations. The prover incurs $O(N/\log N)$ exponentiations essentially while setting up the oracle. We report the concrete performance of our new zero-knowledge argument $\name$ in Section:\ref{sec:performancecompare}.
+%----------------------------------------
+
+\subsection{Witness Encoding}\label{subsec:witencoding}
+%----------
+We start by describing a randomized encoding of the prover's extended witness $\wit\in \FF^N$ (henceforth referred as witness), where $N$ denotes the number of wires in the arithmetic circuit representing the $\npol$ relation. Let $p,m$ and $s$ be integers such that $N=pms$. We canonically view the witness $\wit$ as $p\times m\times s$ matrix with entries $\wit[i,j,k]$ for $i\in [p]$, $j\in [m]$ and $k\in [s]$. The encoding is specified by an independence parameter $\bi$, integers $\ell := s+\bi$, $h>2m$, $n>2\ell$, and sequences $\bm{\zeta},\bm{\eta},\bm{\alpha}$ of distinct points in $\FF$ with cardinality $\ell,n,h$ respectively. We write $\bm{\zeta}=(\zeta_1,\ldots,\zeta_\ell)$, $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $\bm{\alpha}=(\alpha_1,\ldots,\alpha_h)$. 
+%----------
+Next we define the interpolation domain $G$ as $G=\{(\alpha_j,\zeta_k): j\in[m], k\in [\ell]\}$ and evaluation domain $H$ as $H=\{(\alpha_j,\eta_k): j\in [h],
+k\in [n]\}$. Finally, we encode $\wit$ as follows and denote the below randomized computation as $\ewit\gets \enc(\wit)$, where  $\enc(\wit)$ is the random variable denoting the encodings of $\wit$:
+%----------
+\begin{enumerate}[{\rm (i)}]
+	%------
+	\item First we embed $\wit$ into a $p\times m\times \ell$ matrix $\hat{\wit}$ where $\hat{\wit}[i,j,k]=\wit[i,j,k]$ for $k\leq s$, while the entries $\hat{\wit}[i,j,k]$ for $k>s$ are sampled from $\FF$ uniformly at random.
+	%------
+	\item We construct bivariate polynomials $Q^i(x,y)$ with $deg_x(Q)<m$ and $deg_y(Q) $ $<\ell$ such that $Q^i$ interpolates the slice $\hat{\wit}[i,\cdot,\cdot]$ on $G$, i.e,
+	$Q^i(\alpha_j,\zeta_k)=\hat{\wit}[i,j,k]$.
+	%------ 
+	\item Let $\ewit$ denote the $p\times h\times n$ matrix, where the slice $\ewit[i,\cdot,\cdot]$ consists of evaluations of $Q^i$ on $H$, i.e, $\ewit[i,j,k]=Q^i(\alpha_j,\eta_k)$ for $i\in [p], j\in [h]$ and $k\in [n]$. Then $\ewit$ is a randomized encoding of $\wit$.
+	%------
+\end{enumerate}
+%----------
+It is easily seen that $\ewit[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. We remark that the above encoding can be computed using $O(N\log N)$ field operations by applying $\fft$ along the rows and columns of the slices.
+%----------
+
+The encoding $\enc$ satisfies the following {\em bounded independence} property. The proof is elementary and it will be presented in the full version.% proved in Appendix \commentA{appendix number is missing}:
+\begin{lemma}[Bounded Independence]\label{lem:boundedindependence}
+	Let $B\subseteq [n]$ be a set of size $\bi$. Let $\mc{U}(p,h,b)$ denote the set of $p\times h\times b$ matrices $\matx$ such that $\matx[i,\cdot,k]$ is a codeword in $\rsc{\alpha}{h,m}$ for all $i\in [p],k\in [\bi]$. Then for any $p\times m\times s$ matrix $\wit$, the random variable $\ewit_B := \{\ewit[\cdot,\cdot,B]: \ewit\sample \enc(\wit)\}$ is distributed uniformly on $\mc{U}(p,h,b)$.
+\end{lemma}
+%----------------------------------------
+
+\begin{proof}
+	It is sufficient to prove that an arbitrary element from $\mc{U}(p,h,b)$ is in $\ewit_B$ suffices the lemma.
+	
+	Let $U\in\mc{U}(p,h,b)$. Set $\ewit$ such that $\ewit[\cdot, \cdot, k] = U[\cdot, \cdot, k]$ for all $k\in B$.
+	
+	For $i=1$ to $p$,
+	\begin{itemize}
+		\item[--] Construct a bivariate polynomial $Q^i(x,y)$ such that $Q^i(\alpha_j, \zeta_k) = \wit[i,j,k]$, $\forall j\in[m], k\in[s]$, and $Q^i(\alpha_j, \eta_k) = \ewit[i,j,k]$, $\forall j\in[m], k\in B$. 
+		%-----
+		\item[--] $Q^i(x,y)$ is a polynomial such that $deg_x(Q^i) < m$ and $deg_y(Q^i) < \ell$, where $\ell = s + b$.
+		%-----
+		\item[--] Since, $\ewit[i,\cdot,k] \in \rsc{\alpha}{h,m}$, therefore $Q^i(\alpha_j,\eta_k) = \ewit[i,j,k]$, forall $j\in[h], k\in B$.
+		%-----
+		\item[--] Set $\ewit[i,j,k] = Q^i(\alpha_j, \eta_k)$, forall $j\in[m], k\in [n]\setminus B$. 
+	\end{itemize}
+	Note that, $\dec(\ewit) = \wit$, therefore $\ewit[\cdot, \cdot, B]\in \ewit_B$.
+	This completes the proof.
+\end{proof}
+%---------
+
+\subsection{Codes and Matrices}\label{subsec:codesandmatrices}
+%---------
+For code $\rsc{\eta}{n,\ell}$, let $\Lambda_{n,\ell}$ denote the $n\times \ell$ matrix for the linear transformation that maps a vector $x\in \FF^\ell$ to the unique codeword $y$ in  $\rsc{\eta}{n,\ell}$ such that $y_i=x_i$ for $i\in [\ell]$. For codes  $\rsc{\alpha}{h,m}$, $\rsc{\eta}{n,s+\ell-1}$, $\rsc{\eta}{n,2\ell-1}$, and $\rsc{\alpha}{h,2m-1}$, let
+$\Lambda_{h,m},\Lambda_{n,s+\ell-1},\Lambda_{n,2\ell-1}$ and $\Lambda_{h,2m-1}$ be similar matrices. We denote the corresponding parity-check matrices as $\mc{H}_{n,\ell},\mc{H}_{h,m},\mc{H}_{n,s+\ell-1},\mc{H}_{n,2\ell-1}$. 
+%---------
+
+We notate the set of three dimensional $p\times h\times n$ matrices as $\mc{M}_{p,h,n}$ and the set of two dimensional $h\times n$ matrices as $\mc{M}_{h, n}$. We assume standard distance metrics on the sets $\mc{M}_{p,h,n}$ and $\mc{M}_{h,n}$. Let $\mc{W}_1$ denote the set of matrices $U$ in $\mc{M}_{p,h,n}$ such that the $n$-length vector $U[i,j,\cdot]$ is a
+codeword in $\rsc{\eta}{n,\ell}$ for all $i,j$. Similarly let $\mc{W}_2$ denote the set of matrices $U$ such that the $h$-length vector $U[i,\cdot,k]$ is a codeword in
+$\rsc{\alpha}{h,m}$ for all $i,k$.  Let $\mc{W}=\mc{W}_1\cap \mc{W}_2$. $\mc{W}$ denotes the set of {\em well-formed} encodings  and consists of $U$ such that each slice $U[i,\cdot,\cdot]\in \rsc{\eta}{n,\ell}\otimes \rsc{\alpha}{h,m}$. 
+%-----------------------------------------------
+
+\subsection{Commitment of product codewords}\label{subsec:matrixcommitment}
+%----------
+We now discuss the commitment scheme for matrices in $\rsc{\eta}{n,\ell} \otimes \rsc{\alpha}{h,m}$. Similar scheme works for other product codes also. A matrix $U$ in the above product code is completely determined by the sub-matrix $\overline{U}=\{U[j,k]: j\in [m], k\in [\ell]\}$ and can be expressed as $U=\Lambda_{h,m}\overline{U}\Lambda_{n,\ell}^T$. 
+A commitment to $U$ is defined as  a vector of commitments $\bm{c}=(c_1,\ldots,c_\ell)$ where $c_k=\comm(\overline{U}[\cdot,k])$ is the vector commitment for $k^{th}$ column of $\overline{U}$ for $k\in [\ell]$. We use the notation $\bm{c} = (c_1,\ldots,c_\ell) \gets \pccom(U)$. Given $\bm{c}$, commitment to $k$th column of $U$ for $k > \ell$ 
+can be computed as  $c_k=\prod_{a\in [\ell]}(c_a)^{\Lambda_{n,\ell}^T[a,k]}$, thanks to the homomorphicity. 
+%-----------------------------------------------
+
+\subsection{Oracle Construction}\label{subsec:construct_oracle}
+%-----------
+Unlike prior IOP constructions such as \cite{ligero, aurora}, we additionally obtain a homomorphic commitment on the encoded witness $\enc(\wit)$ and provide oracle access to the commitment. For all $(i,k)\in [p]\times [n]$, we compute the commitment $c_{ik}=\comm(V_{ik})$ for the vector $V_{ik}=(\ewit[i,1,k],\ldots,\ewit[i,m,k])\in \FF^m$. Note that we commit to the $m$-length vector (and not the $h$-length one)  to save on the number of exponentiations. 
+%-----------
+Finally we define $p\times n$ matrix $\comoracle$ as $\comoracle[i,k]=c_{ik}$. We write this as $\comoracle \gets \ocom(\ewit)$. We provide oracle access to $\comoracle$ where for a
+query $Q\subseteq [n]$, the oracle responds with columns $\comoracle[\cdot,k]$ for $k\in Q$. Note that $i^{th}$ row of the matrix $\comoracle$ commits to the $i^{th}$ slice of $\ewit$. This is different from  commitment of a product codeword where only $\ell$ columns are committed.
+%----------------------------------------------
+
+\subsection{Witness Decoding}\label{sec:witdecoding}
+%-----------
+We describe a decoding procedure $\dec$ for obtaining a witness $\wit$ from an encoding $\ewit$. Let $\ewit\in \mc{W}$ be a well-formed encoding. Such an encoding can be decoded slice by slice, i.e, for each $i\in [p]$, we interpolate bivariate polynomial $Q^i\in \FF[x,y]$ with $deg_x(Q^i)<m$ and $deg_y(Q^i)<\ell$ such that $Q^i$ interpolates $\ewit[i,\cdot,\cdot]$ on evaluation domain $H=\{(\alpha_j,\eta_k): j\in [h], k\in [n]\}$. This can be accomplished using standard algorithms. The decoded witness $\wit$ is then given by $\wit[i,j,k]=Q^i(\alpha_j,\zeta_k)$. We extend the above decoding procedure to recover from slightly malformed encodings. Let $\ewit^*\in \mc{M}_{p,h,n}$ be such that $d_1(\ewit^*,\mc{W}_1)<e_1 <(n-\ell)/2 $ and $d_2(\ewit^*,\mc{W}_2)<e_2 <(h-m)/2$. In this case, from the distance property of the codes $\rsc{\eta}{n,\ell}$ and $\rsc{\alpha}{h,m}$ it follows that there is at most one $\ewit\in \mc{W}$ such that $\Delta_1(\ewit^*,\ewit)<e_1$ and $\Delta_2(\ewit^*,\ewit)<e_2$. Such a $\ewit$ may be efficiently ``recovered'' from $\ewit^*$ using algorithms for Reed-Solomon decoding (c.f. ~\cite{CodingTheory}). We then define $\dec(\ewit^*)$ as $\dec(\ewit)$. 
+%-----------------------------------------------

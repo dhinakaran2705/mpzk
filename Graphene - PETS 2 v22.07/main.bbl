@@ -1,0 +1,288 @@
+\begin{thebibliography}{10}
+
+\bibitem{ligero}
+S.~Ames, C.~Hazay, Y.~Ishai, and M.~Venkitasubramaniam.
+\newblock Ligero: Lightweight sublinear arguments without a trusted setup.
+\newblock In {\em {CCS}}, pages 2087--2104, 2017.
+
+\bibitem{ben2019multi}
+M.~Ben-Or, S.~Goldwasser, J.~Kilian, and A.~Wigderson.
+\newblock Multi-prover interactive proofs: How to remove intractability
+  assumptions.
+\newblock In {\em Providing Sound Foundations for Cryptography: On the Work of
+  Shafi Goldwasser and Silvio Micali}, pages 373--410. 2019.
+
+\bibitem{BGW88}
+M.~Ben{-}Or, S.~Goldwasser, and A.~Wigderson.
+\newblock Completeness theorems for non-cryptographic fault-tolerant
+  distributed computation (extended abstract).
+\newblock In {\em {STOC}}, pages 1--10, 1988.
+
+\bibitem{zerocashext}
+E.~Ben-Sasson, A.~Chiesa, C.~Garman, M.~Green, I.~Miers, E.~Tromer, and
+  M.~Virza.
+\newblock Zerocash: Decentralized anonymous payments from bitcoin.
+\newblock Cryptology ePrint Archive, Report 2014/349, 2014.
+
+\bibitem{aurora}
+E.~Ben{-}Sasson, A.~Chiesa, M.~Riabzev, N.~Spooner, M.~Virza, and N.~P. Ward.
+\newblock Aurora: Transparent succinct arguments for {R1CS}.
+\newblock In {\em {EUROCRYPT} Part {I}}, pages 103--128, 2019.
+
+\bibitem{BCS16}
+E.~Ben{-}Sasson, A.~Chiesa, and N.~Spooner.
+\newblock Interactive oracle proofs.
+\newblock In {\em {TCC} 2016-B Part {II}}, pages 31--60, 2016.
+
+\bibitem{ligero++}
+R.~Bhadauria, Z.~Fang, C.~Hazay, M.~Venkitasubramaniam, T.~Xie, and Y.~Zhang.
+\newblock Ligero++: A new optimized sublinear iop.
+\newblock In {\em Proceedings of the 2020 ACM SIGSAC Conference on Computer and
+  Communications Security}, pages 2025--2038, 2020.
+
+\bibitem{blumberg2014}
+A.~J. Blumberg, J.~Thaler, V.~Vu, and M.~Walfish.
+\newblock Verifiable computation using multiple provers.
+\newblock {\em IACR Cryptol. ePrint Arch.}, 2014:846, 2014.
+
+\bibitem{InnerProductDLS}
+J.~Bootle, A.~Cerulli, P.~Chaidos, J.~Groth, and C.~Petit.
+\newblock Efficient zero-knowledge arguments for arithmetic circuits in the
+  discrete log setting.
+\newblock In {\em {EUROCRYPT} Part {II}}, pages 327--357, 2016.
+
+\bibitem{bootle2020linear}
+J.~Bootle, A.~Chiesa, and J.~Groth.
+\newblock Linear-time arguments with sublinear verification from tensor codes.
+\newblock In {\em Theory of Cryptography Conference}, pages 19--46. Springer,
+  2020.
+
+\bibitem{bootle2020zero}
+J.~Bootle, A.~Chiesa, and S.~Liu.
+\newblock Zero-knowledge succinct arguments with a linear-time prover.
+\newblock 2020.
+
+\bibitem{bulletproofs}
+B.~B{\"{u}}nz, J.~Bootle, D.~Boneh, A.~Poelstra, P.~Wuille, and G.~Maxwell.
+\newblock Bulletproofs: Short proofs for confidential transactions and more.
+\newblock In {\em {IEEE SP}}, pages 315--334, 2018.
+
+\bibitem{ethereum}
+V.~Buterin.
+\newblock Ethereum, 2013.
+
+\bibitem{Canetti00}
+R.~Canetti.
+\newblock Security and composition of multiparty cryptographic protocols.
+\newblock {\em J. Cryptology}, 13(1):143--202, 2000.
+
+\bibitem{marlin}
+A.~Chiesa, Y.~Hu, M.~Maller, P.~Mishra, N.~Vesely, and N.~P. Ward.
+\newblock Marlin: Preprocessing zksnarks with universal and updatable {SRS}.
+\newblock {\em {IACR} Cryptology ePrint Archive}, 2019:1047, 2019.
+
+\bibitem{CohenL14}
+R.~Cohen and Y.~Lindell.
+\newblock Fairness versus guaranteed output delivery in secure multiparty
+  computation.
+\newblock In {\em {ASIACRYPT} Part {II}}, pages 466--485, 2014.
+
+\bibitem{prio}
+H.~Corrigan-Gibbs and D.~Boneh.
+\newblock Prio: Private, robust, and scalable computation of aggregate
+  statistics.
+\newblock In {\em 14th $\{$USENIX$\}$ Symposium on Networked Systems Design and
+  Implementation ($\{$NSDI$\}$ 17)}, pages 259--282, 2017.
+
+\bibitem{SPDZ}
+I.~Damg{\aa}rd, V.~Pastro, N.~P. Smart, and S.~Zakarias.
+\newblock Multiparty computation from somewhat homomorphic encryption.
+\newblock In {\em {CRYPTO}}, pages 643--662, 2012.
+
+\bibitem{Desmedt2011}
+Y.~Desmedt.
+\newblock {\em Threshold Cryptography}, pages 1288--1293.
+\newblock 2011.
+
+\bibitem{DDB94}
+Y.~Desmedt, G.~D. Crescenzo, and M.~Burmester.
+\newblock Multiplicative non-abelian sharing schemes and their application to
+  threshold cryptography.
+\newblock In {\em {ASIACRYPT}}, pages 21--32, 1994.
+
+\bibitem{druk2014linear}
+E.~Druk and Y.~Ishai.
+\newblock Linear-time encodable codes meeting the gilbert-varshamov bound and
+  their cryptographic applications.
+\newblock In {\em Proceedings of the 5th conference on Innovations in
+  theoretical computer science}, pages 169--182, 2014.
+
+\bibitem{e2open}
+E2open.
+\newblock Strategic digital supply chain.
+\newblock \url{https://www.e2open.com/}.
+
+\bibitem{zokrates}
+J.~Eberhardt and S.~Tai.
+\newblock Zokrates - scalable privacy-preserving off-chain computations.
+\newblock In {\em {IEEE} International Conference on Internet of Things
+  (iThings)}, pages 1084--1091, 2018.
+
+\bibitem{MozillaPrio}
+S.~Englehardt.
+\newblock Privacy-preserving mozilla telemetry with prio.
+\newblock
+  \url{https://blog.mozilla.org/security/2019/06/06/next-steps-in-privacy-preserving-telemetry-with-prio/}.
+
+\bibitem{FS86}
+A.~Fiat and A.~Shamir.
+\newblock How to prove yourself: Practical solutions to identification and
+  signature problems.
+\newblock In {\em {CRYPTO}}, pages 186--194, 1986.
+
+\bibitem{Goldreich2001}
+O.~Goldreich.
+\newblock {\em The Foundations of Cryptography - Volume 1: Basic Techniques}.
+\newblock Cambridge University Press, 2001.
+
+\bibitem{GMW87}
+O.~Goldreich, S.~Micali, and A.~Wigderson.
+\newblock How to play any mental game or {A} completeness theorem for protocols
+  with honest majority.
+\newblock In {\em {STOC}}, pages 218--229, 1987.
+
+\bibitem{GIMS10}
+V.~Goyal, Y.~Ishai, M.~Mahmoody, and A.~Sahai.
+\newblock Interactive locking, zero-knowledge pcps, and unconditional
+  cryptography.
+\newblock In {\em {CRYPTO}}, pages 173--190, 2010.
+
+\bibitem{Groth16}
+J.~Groth.
+\newblock On the size of pairing-based non-interactive arguments.
+\newblock In {\em {EUROCRYPT}}, pages 305--326, 2016.
+
+\bibitem{hubavcek2018efficiency}
+P.~Hub{\'a}{\v{c}}ek, A.~Rosen, and M.~Vald.
+\newblock An efficiency-preserving transformation from honest-verifier
+  statistical zero-knowledge to statistical zero-knowledge.
+\newblock In {\em Annual International Conference on the Theory and
+  Applications of Cryptographic Techniques}, pages 66--87. Springer, 2018.
+
+\bibitem{scbn}
+IBM.
+\newblock Sterling supply chain business network.
+\newblock
+  \url{https://www.ibm.com/in-en/products/supply-chain-business-network}.
+
+\bibitem{MPCinthehead}
+Y.~Ishai, E.~Kushilevitz, R.~Ostrovsky, and A.~Sahai.
+\newblock Zero-knowledge from secure multiparty computation.
+\newblock In {\em Proceedings of the thirty-ninth annual ACM symposium on
+  Theory of computing}, pages 21--30, 2007.
+
+\bibitem{IshaiMS12}
+Y.~Ishai, M.~Mahmoody, and A.~Sahai.
+\newblock On efficient zero-knowledge pcps.
+\newblock In {\em TCC}, pages 151--168, 2012.
+
+\bibitem{IshaiW14}
+Y.~Ishai and M.~Weiss.
+\newblock Probabilistically checkable proofs of proximity with zero-knowledge.
+\newblock In {\em {TCC}}, volume 8349, pages 121--145. Springer, 2014.
+
+\bibitem{KR08}
+Y.~T. Kalai and R.~Raz.
+\newblock Interactive {PCP}.
+\newblock In {\em ICALP}, pages 536--547, 2008.
+
+\bibitem{KR09}
+Y.~T. Kalai and R.~Raz.
+\newblock Probabilistically checkable arguments.
+\newblock In {\em {CRYPTO}}, pages 143--159, 2009.
+
+\bibitem{EfficientTZ}
+M.~Keller, G.~L. Mikkelsen, and A.~Rupp.
+\newblock Efficient threshold zero-knowledge with applications to user-centric
+  protocols.
+\newblock In {\em {ICITS}}, pages 147--166, 2012.
+
+\bibitem{KOS16}
+M.~Keller, E.~Orsini, and P.~Scholl.
+\newblock {MASCOT:} faster malicious arithmetic secure computation with
+  oblivious transfer.
+\newblock In {\em {ACM CCS}}, pages 830--842, 2016.
+
+\bibitem{King05}
+B.~King.
+\newblock An efficient implementation of a threshold {RSA} signature scheme.
+\newblock In {\em {ACISP}}, pages 382--393, 2005.
+
+\bibitem{Lindell17}
+Y.~Lindell.
+\newblock How to simulate it - {A} tutorial on the simulation proof technique.
+\newblock In {\em Tutorials on the Foundations of Cryptography}, pages
+  277--346. 2017.
+
+\bibitem{CodingTheory}
+F.~J. MacWilliams and N.~J.~A. Sloane.
+\newblock {\em {The Theory of Error Correcting Codes}}.
+\newblock North-Holland Publishing Company, 1978.
+
+\bibitem{bitcoin}
+S.~Nakamoto.
+\newblock Bitcoin: A peer-to-peer electronic cash system, 2008.
+
+\bibitem{pinnochio_PHGR}
+B.~Parno, J.~Howell, C.~Gentry, and M.~Raykova.
+\newblock Pinocchio: Nearly practical verifiable computation.
+\newblock In {\em {IEEE SP}}, pages 238--252. IEEE, 2013.
+
+\bibitem{DDS}
+T.~P. Pedersen.
+\newblock Distributed provers with applications to undeniable signatures.
+\newblock In {\em {EUROCRYPT}}, pages 221--242, 1991.
+
+\bibitem{Ped92}
+T.~P. Pedersen.
+\newblock Distributed provers and verifiable secret sharing based on the
+  discrete logarithm problem.
+\newblock {\em DAIMI Report Series}, 21(388), 1992.
+\newblock PhD Thesis.
+
+\bibitem{zerocash}
+E.~B. Sasson, A.~Chiesa, C.~Garman, M.~Green, I.~Miers, E.~Tromer, and
+  M.~Virza.
+\newblock Zerocash: Decentralized anonymous payments from bitcoin.
+\newblock In {\em {IEEE SP}}, pages 459--474, 2014.
+
+\bibitem{trinocchio}
+B.~Schoenmakers, M.~Veeningen, and N.~de~Vreede.
+\newblock Trinocchio: Privacy-preserving outsourcing by distributed verifiable
+  computation.
+\newblock In M.~Manulis, A.-R. Sadeghi, and S.~Schneider, editors, {\em ACNS},
+  pages 346--366, 2016.
+
+\bibitem{spartan}
+S.~Setty.
+\newblock Spartan: Efficient and general-purpose zksnarks without trusted
+  setup.
+\newblock Cryptology ePrint Archive, Report 2019/550, 2019.
+\newblock \url{https://eprint.iacr.org/2019/550}.
+
+\bibitem{tradelens}
+Tradelens.
+\newblock Digitizing global supply chains.
+\newblock \url{https://www.tradelens.com/}.
+
+\bibitem{dizk}
+H.~Wu, W.~Zheng, A.~Chiesa, R.~A. Popa, and I.~Stoica.
+\newblock {DIZK:} {A} distributed zero knowledge proof system.
+\newblock {\em {IACR} Cryptology ePrint Archive}, 2018:691, 2018.
+
+\bibitem{Virgo}
+J.~Zhang and T.~Xie.
+\newblock Virgo: Zero knowledge proofs system without trusted setup.
+\newblock 2019.
+
+\end{thebibliography}

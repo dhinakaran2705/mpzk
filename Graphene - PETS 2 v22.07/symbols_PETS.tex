@@ -1,0 +1,361 @@
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
+%------------------------------------
+%------NAME--------------------------
+\newcommand{\name}{\textsf{Graphene}} %A lightweight robust material: In our case a lightweight protocol which withstand malicious provers % Give a good name
+% \newcommand{\dpname}{\textsf{DPZK}-\name{}}
+\newcommand{\dpname}{\text{DP-Graphene}}
+%\newcommand{\npol}{\ensuremath{\msthsf{NP}}}
+%------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+%------------------------------------
+%\newcommand{\FF}{\ensuremath{\mathbb{F}}}
+\newcommand{\RS}[2]{\mathsf{RS}[#1,#2]}
+\newcommand{\RSC}[3]{\mathsf{RS}[#1,#2,{\bm{#3}}]}
+\newcommand{\rsc}[2]{\mathsf{RS}_{\bm{#1}}[#2]}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\comm}{\mathsf{Com}}
+\newcommand{\csetup}{\mathsf{Gen}}
+\newcommand{\pip}{\mathsf{P}_\mathrm{ip}}
+\newcommand{\vip}{\mathsf{V}_\mathrm{ip}}
+\newcommand{\piplog}{\mathsf{P}_\mathrm{log}}
+\newcommand{\viplog}{\mathsf{V}_\mathrm{log}}
+\newcommand{\pipsq}{\mathsf{P}_\mathrm{sq}}
+\newcommand{\vipsq}{\mathsf{V}_\mathrm{sq}}
+\newcommand{\ip}{\mathrm{ip}}
+\newcommand{\wit}{\mathsf{w}}
+\newcommand{\ewit}{\mathsf{U}}
+\newcommand{\setup}{\mathsf{SetUp}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\innp}[2]{\langle #1,#2\rangle}
+\newcommand{\innph}[2]{\bm{\langle\langle} #1,#2\bm{\rangle\rangle}} % hetero inner product
+\newcommand{\matx}{\mathsf{X}}
+\newcommand{\maty}{\mathsf{Y}}
+\newcommand{\matz}{\mathsf{Z}}
+\newcommand{\bi}{\mathsf{b}}
+\newcommand{\wt}[1]{\mathbf{wt}({#1})}
+\newcommand{\zcash}{\mathrm{Zcash}}
+%\newcommand{\dec}{\mathsf{Dec}}
+
+
+\newcommand{\rsoracle}{\mathcal{U}^{\mathsf{RS}}}
+\newcommand{\comoracle}{\mathcal{O}} %^{\mathsf{Com}
+\newcommand{\decode}{\mathsf{Dec}}
+\newcommand{\dham}{\Delta}
+\newcommand{\ric}[2]{\mathsf{RIC}(#1,#2)}
+\newcommand{\cic}[2]{\mathsf{CIC}(#1,#2)}
+\newcommand{\cbar}{\bar{\bm{c}}}
+\newcommand{\aff}[2]{{\rm Aff}({#1},{#2})}
+\newcommand{\bwit}{\overline{\mathsf{w}}}
+
+\newcommand{\proximityTwoD}{\mathsf{Membership2D}}
+\newcommand{\proximityThreeD}{\mathsf{Proximity3D}}
+\newcommand{\rowInterleaved}{\mathsf{RowInterleavedTest}}
+\newcommand{\colInterleaved}{\mathsf{ColumnInterleavedTest}}
+\newcommand{\innerproduct}{\mathsf{InnerProduct}}
+\newcommand{\linearcheck}{\mathsf{LinearCheck}}
+\newcommand{\quadcheck}{\mathsf{QuadraticCheck}}
+\newcommand{\grapheneRCS}{\mathsf{GrapheneR1CS}}
+\newcommand{\agginnerproduct}{\mathsf{AggInnerProduct}}
+\newcommand{\distproxTwoD}{\mathsf{DistMembership2D}}
+\newcommand{\distproxThreeD}{\mathsf{DistProximity3D}}
+\newcommand{\distlinearcheck}{\mathsf{DistLinearCheck}}
+\newcommand{\distquadcheck}{\mathsf{DistQuadraticCheck}}
+\newcommand{\dashL}{L^{+}}
+\newcommand{\dashD}{d^{+}}
+\newcommand{\linearcheckTwoD}{\mathsf{LinearCheck2D}}
+\newcommand{\quadcheckTwoD}{\mathsf{QuadraticCheck2D}}
+\newcommand{\proxcheckTwoD}{\mathsf{ProximityCheck2D}}
+\newcommand{\fft}{\mathsf{FFT}}
+\newcommand{\ifft}{\mathsf{IFFT}}
+\newcommand{\cfft}{\mathsf{C}_\mathsf{FFT}}
+\newcommand{\cmexp}{\mathsf{C}_\mathsf{MXP}}
+\newcommand{\cexp}{\mathsf{C}_\mathsf{EXP}}
+\newcommand{\cfop}{\mathsf{C}_\mathbb{F}}
+\newcommand{\bitsF}{\mathsf{B}_\mathbb{F}}
+\newcommand{\bitsG}{\mathsf{B}_\mathbb{G}}
+\newcommand{\open}{\mathsf{Open}}
+\newcommand{\w}{\omega}
+\newcommand{\IF}[1]{\calF_{#1}}
+\newcommand{\zetabar}{\overline{\bm{\zeta}}}
+\newcommand{\etabar}{\overline{\bm{\eta}}}
+
+
+% 		Notations for DPZK
+
+\newcommand{\prrounds}{r_\mathsf{pr}}
+\newcommand{\prcomm}{c_\mathsf{pr}}
+\newcommand{\zkrounds}{r_\mathsf{zk}}
+\newcommand{\zkcomm}{c_\mathsf{zk}}
+
+
+
+% 		Calligraphic and blackboard type letters.
+
+\def\cA{{\calA}}
+\def\cB{{\calB}}
+\def\cC{{\calC}}
+\def\cD{{\calD}}
+\def\cE{{\calE}}
+\def\cF{{\calF}}
+\def\cG{{\calG}}
+\def\cH{{\calH}}
+\def\cI{{\calI}}
+\def\cJ{{\calJ}}
+\def\cK{{\calK}}
+\def\cL{{\calL}}
+\def\cM{{\calM}}
+\def\cN{{\calN}}
+\def\cO{{\calO}}
+\def\cP{{\calP}}
+\def\cQ{{\calQ}}
+\def\cR{{\calR}}
+\def\cS{{\calS}}
+\def\cT{{\calT}}
+\def\cU{{\calU}}
+\def\cV{{\calV}}
+\def\cW{{\calW}}
+\def\cX{{\calX}}
+\def\cY{{\calY}}
+\def\cZ{{\calZ}}
+\def\cq{{\calq}}
+%%%%%%%%%%%%%%%%%
+\def\bbC{{\mathbb C}}
+\def\bbE{{\mathbb E}}
+\def\bbF{{\mathbb F}}
+\def\bbG{{\mathbb G}}
+\def\bbM{{\mathbb M}}
+\def\bbN{{\mathbb N}}
+\def\bbQ{{\mathbb Q}}
+\def\bbR{{\mathbb R}}
+\def\bbV{{\mathbb V}}
+\def\bbZ{{\mathbb Z}}
+
+\def\Zq{\bbZ_q}
+
+%%%%%%%%%%%%%%%%%
+
+\def\calA{\mathcal{A}}
+\def\calB{\mathcal{B}}
+\def\calC{\mathcal{C}}
+\def\calD{\mathcal{D}}
+\def\calE{\mathcal{E}}
+\def\calF{\mathcal{F}}
+\def\calG{\mathcal{G}}
+\def\calH{\mathcal{H}}
+\def\calI{\mathcal{I}}
+\def\calJ{\mathcal{J}}
+\def\calK{\mathcal{K}}
+\def\calL{\mathcal{L}}
+\def\calM{\mathcal{M}}
+\def\calN{\mathcal{N}}
+\def\calO{\mathcal{O}}
+\def\calP{\mathcal{P}}
+\def\calQ{\mathcal{Q}}
+\def\calR{\mathcal{R}}
+\def\calS{\mathcal{S}}
+\def\calT{\mathcal{T}}
+\def\calU{\mathcal{U}}
+\def\calV{\mathcal{V}}
+\def\calW{\mathcal{W}}
+\def\calX{\mathcal{X}}
+\def\calY{\mathcal{Y}}
+\def\calZ{\mathcal{Z}}
+\def\calq{\mathcal{q}}
+
+\def\bbA{\mathbb{A}}
+\def\bbB{\mathbb{B}}
+\def\bbC{\mathbb{C}}
+\def\bbD{\mathbb{D}}
+\def\bbE{\mathbb{E}}
+\def\bbF{\mathbb{F}}
+\def\bbG{\mathbb{G}}
+\def\bbH{\mathbb{H}}
+\def\bbI{\mathbb{I}}
+\def\bbJ{\mathbb{J}}
+\def\bbK{\mathbb{K}}
+\def\bbL{\mathbb{L}}
+\def\bbM{\mathbb{M}}
+\def\bbN{\mathbb{N}}
+\def\bbO{\mathbb{O}}
+\def\bbP{\mathbb{P}}
+\def\bbQ{\mathbb{Q}}
+\def\bbR{\mathbb{R}}
+\def\bbS{\mathbb{S}}
+\def\bbT{\mathbb{T}}
+\def\bbU{\mathbb{U}}
+\def\bbV{\mathbb{V}}
+\def\bbW{\mathbb{W}}
+\def\bbX{\mathbb{X}}
+\def\bbY{\mathbb{Y}}
+\def\bbZ{\mathbb{Z}}
+
+\def\sfR{\mathsf{R}}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 		Rounding commands
+
+%\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+%\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\round}[1]{\left\lfloor #1 \right\rceil}
+
+%%%%%%%%%%%%%%%%%
+
+% 		Algorithms
+\def\dpzk{\mathsf{DPZK}}
+%\def\dfzk{\mathsf{dfzk}}
+\def\Exec{\mathsf{Exec}}
+\def\Setup{\mathsf{Setup}}
+\def\View{\mathsf{View}}
+\def\Num{\mathsf{N}} % number of provers
+\def\wit{\mathsf{w}} %Witness
+\def\extwit{{w}} %Extended witness
+\def\stmt{{x}} %Statement
+\def\prover{\mathcal{P}} %Prover
+\def\verifier{\mathcal{V}} %Verifier
+\def\distinguisher{\mathcal{D}} %Distinguisher
+\def\ppt{\mathsf{PPT}}
+\def\extr{\mathcal{E}} %Extractor
+\def\extrac{\extr} %Extractor
+\def\DPZK{\text{DPZK}}
+\def\Sim{\mathcal{S}} %Simulator
+\def\bitset{\{0,1\}} %{0,1}
+\def\intpartofC{\mathsf{M}} %Interactive part of the circuit
+\def\gen{\mathsf{Gen}} %Gen
+\def\com{\mathsf{Com}} %commitment
+\def\pccom{\mathsf{pcCom}} %product codeword commitment
+\def\ocom{\mathsf{oCom}} %oracle commitment
+\def\NP{\mathsf{NP}} %NP class
+\def\C{\mathsf{C}} %Circuit
+\def\round{\mathsf{R}} %Round
+\def\tr{\mathsf{tr}} %Transcript
+\def\RS{\mathsf{RS}}
+\def\oracle{\mathcal{U}^{\RS}} %Oracle
+\def\cm{\mathsf{cm}} %Commitment vector
+%\def\Real{\mathsf{Real}} % Real world
+\def\circsize{\mathsf{|C|}}
+\def\Ag{\mathsf{A}} %Aggregator
+\newcommand{\distprover}{\prover_\xi}
+\newcommand{\combine}{\mathsf{Combine}}
+\newcommand{\shr}[1]{\langle{#1}\rangle^\xi}
+\newcommand{\honshr}[1]{\langle{#1}\rangle^H}
+\newcommand{\corshr}[1]{\langle{#1}\rangle^C}
+\newcommand{\Pip}{\mathsf{p}_{ip}}
+%\newcommand{\pp}{\mathsf{pp}}
+\newcommand{\pubp}{\mathsf{pp}}
+% 		Notions
+\def\ZKUC{\mathsf{ZKUC}}
+
+\def\negl{\mathrm{negl}}
+\def\abort{\texttt{abort}}
+\def\continue{\texttt{continue}}
+
+\def\inp{\mathsf{in}}
+\def\st{\mathsf{st}}
+\def\secp{{\lambda}}
+
+\newcommand{\pr}{\text{\em Pr}}
+\newcommand{\Defn}[1]{\textbf{{\textit{#1}}}}
+\newcommand{\Adv}{\mathcal{A}}
+
+%\newcommand{\com}{\mathsf{com}}
+\newcommand{\vc}[1]{\textbf{{#1}}}
+%\newcommand{\bb}[1]{\mathbb{#1}}
+%\newcommand{\poly}[1][2]{#1(#2)}
+%\newcommand*{\poly}[1][2]{#1(#2)}
+\newcommand{\qb}{q_{blind}}
+\newcommand{\qbj}{q_{{blind}_j}}
+\newcommand{\boldm}[1]{\mathversion{bold}#1\mathversion{normal}}
+%\newcommand{\trans}[1]{\textbf{\tau_{#1}}}
+\def\T{T} % Matrix T
+\def\A{A} % Matrix A
+\def\B{B} % Block B
+\def\AT{A\cdot T} %Matrix A.T
+\def\tc{\tilde{c}}
+\def\tU{\widetilde{U}} 
+\def\tv{\tilde{v}}
+\def\vecx{\textbf{x}}
+\def\oQ{\overline{Q}}
+\def\oq{\overline{q}}
+\def\oU{\overline{U}}
+\def\q1b{q_{1_{blind}}}
+\def\q1bj{q_{1_{blind_j}}}
+\def\P{\textit{P}} %Prover
+\def\V{\textit{V}} %Verifier
+\def\vecx{$\textbf{\x}$}
+\def\ctsize{N}
+
+
+%----------Comments-----------
+% Author notes
+\def\ShowAuthNotes{1}
+\ifnum\ShowAuthNotes=1
+%\newcommand{\authnote}[2]{{\textbf{$\mathbf{\big[}$~#1's note:}} \textbf{\em\small #2}~{$\mathbf{\big]}$}}
+\newcommand{\authnote}[2]{\\ \textcolor{red}{\parbox{0.9\linewidth}{[{\footnotesize {\bf #1:} { {#2}}}]}}\\}
+\newcommand{\pnote}[1] {\textcolor{red}  {[PKP:{\sl{#1}}]}}
+\newcommand{\commentA}[1]{\textcolor{cyan}{{\sf (Arpita's Note:} {\sl{#1}} {\sf EON)}}}
+\else
+\newcommand{\authnote}[2]{}
+\newcommand{\pnote}[1] {}
+\newcommand{\commentA}[1]{}
+\fi
+
+\newcommand{\dnote}[1]{\authnote{VD}{#1}}
+%\newcommand{\pnote}[1]{\authnote{PKP}{#1}}
+\newcommand{\nnote}[1]{\authnote{NS}{#1}}
+\newcommand{\pdnote}[1]{\authnote{PD}{#1}}
+
+
+
+	\newcommand{\Func}{\mathcal{F}}
+%	\newcommand{\Env}{\mathcal{Z}}
+	\newcommand{\Ideal}{\ensuremath{\textsc{ideal}}}
+	\newcommand{\Real}{\ensuremath{\textsc{real}}}
+	\newcommand{\Hyb}{\ensuremath{{\textsc{hyb}}}}
+%	\newcommand{\NN}{\mathbb{N}}
+	\newcommand{\FSA}{\ensuremath{\mathcal{F}_{\mathsf{sa}}}}
+	\newcommand{\FDPZK}{\ensuremath{\mathcal{F}_{\mathsf{dpzk}}}}
+%	\newcommand{\FF}{\ensuremath{\mathcal{F}_{\mathsf{fair}}}}
+	\newcommand{\FG}{\ensuremath{\mathcal{F}_{\mathsf{god}}}}
+	\newcommand{\FA}{\ensuremath{\mathcal{F}_{\mathsf{ua}}}}
+	\newcommand{\Partyset}{\mathcal{P}}
+	\newcommand{\bit}{\{0,1\}}
+\newenvironment{boxfig}[2]{% {#1}{#2} = {Caption}{label}
+     \begin{figure}[htb!]
+     \newcommand{\FigCaption}{#1}
+     \newcommand{\FigLabel}{#2}
+       \vspace{-.15cm}
+     \begin{center}
+       \begin{small}
+         \begin{tabular}{@{}|@{~~}l@{~~}|@{}}
+           \hline
+           %\rule[-1ex]{0pt}{1ex}\begin{minipage}[!htb]{\textwidth}   
+            \rule[-1.5ex]{0pt}{1ex}\begin{minipage}[b]{\linewidth}
+             \vspace{1ex}
+             \smallskip
+             }{%
+           \end{minipage}\\
+           \hline
+         \end{tabular}
+       \end{small}
+        \vspace{-0.3cm}
+       \caption{\FigCaption}
+       \figlab{\FigLabel}
+     \end{center}
+     \vspace{-.5cm}
+   \end{figure}
+}
+
+\newcommand{\FMult}{\ensuremath{\calF_{\sf Mult}}}
+\newcommand{\shareA}[1]{\ensuremath{\langle #1 \rangle}}
+\newcommand{\shareM}[1]{\ensuremath{[#1]}}
+\newcommand{\SimV}{\ensuremath{\mathsf{S View}}}
+\newcommand{\RealV}{\ensuremath{\mathsf{R View}}}

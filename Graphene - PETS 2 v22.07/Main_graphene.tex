@@ -1,0 +1,154 @@
+%-------
+\subsection{Linear Check}\label{subsec:lincheck}
+In this section, we will give an overview of the working of the linear check protocol that is used to construct the \name. In the linear check protocol a prover proves knowledge of a witness $\wit$ satisfying a linear constraint of the form $A \wit = b$ for some \textit{public} $A \in \FF^{M \times N}$ and $b \in \FF^M$. 
+The verifier needs to check that $A \wit = b$ holds, this check can be probabilistically reduced to check $r^T A \wit = r^T b$, for a randomly chosen $r$. To do that, the verifier $\verifier$ picks a random $r\sample \FF^M$ and sends to the prover $\prover$ as a challenge. Now $\prover$ needs to show that $\innp{r^T A}{\wit} = r^T b$. Lets call $R = r^T A$.
+%-----
+Further, this check is reduced to check inner product arguments. To facilitate such checks, $\prover$ encodes and commits to its witness $\wit$, using the encoding and commitment described in Section~\ref{subsec:witencoding}, and Section~\ref{subsec:matrixcommitment} respectively. $\prover$ constructs an oracle as described in Section~\ref{subsec:construct_oracle}.
+%-----
+As $\prover$ receives $r$ from $\verifier$, both $\prover$ and $\verifier$ computes $R$, and view it as a cube of dimension $p \times m \times s$. Then interpolate and obtain bivariate polynomials $R^i(x,y)$ for $i \in [p]$ with $deg_x(R^i) < m$ and $deg_y(R^i) < s$ satisfying $R^i(\alpha_j, \zeta_k) = R[i,j,k]$. Let $Q^i$, $i \in [p]$ denote the polynomials used in interpolating (and encoding) witness $\wit$. Then $\wit[i,j,k] = Q^i (\alpha_j, \zeta_k)$. Therefore the check $\innp{R}{\wit} = r^T b$ reduces to $\sum_{i,j,k}R^i(\alpha_j,\zeta_k)Q^i(\alpha_j,\zeta_k)=r^Tb$ where $i,j$ and $k$ run over indices in $[p],[m]$ and $[s]$ respectively. $\prover$ computes $p_j(y) = \sum_{i \in [p]} R^i(\alpha_j, y) \cdot Q^i(\alpha_j, y)$, for $j \in [h]$. Here all these polynomials are of degree less than $s+\ell-1$. To reduce the communication instead of sending all $p_j(y)$ polynomials, $\prover$ constructs an intermediate matrix $P$ of dimension $h \times n$ such that $P[j,k] = p_j(\eta_k)$ for $j\in[h], k\in[n]$. Note that $P$ is a product codeword from $\rsc{\eta}{n,s+\ell-1} \otimes \rsc{\alpha}{h,2m-1}$ and fully determined by sub-matrix $\overline{P}$ consisting of the first $2m-1$ rows and the first $s+\ell-1$ columns of $P$.
+%------
+
+\smallskip  
+
+\noindent{\em Reduction to inner product argument}:Now $\prover$ commits to the matrix $P$ using commitment for product codeword, described in Section~\ref{subsec:matrixcommitment} that is, $(c_1, \ldots, c_{s+\ell -1}) \leftarrow \pccom(P)$, and sends $(c_1, \ldots, c_{s+\ell-1})$ to $\verifier$, which they use later in the inner product argument. 
+The check $\innp{R}{\wit} = r^T b$ can be viewed as a following inner product $\innp{*}{\overline{P}\varphi} = r^T b$, where $*$ and $\varphi$ are public vectors and so the commitment for $\overline{P}\varphi$ can be computed given the commitment of $\overline{P}$. Let $\Phi$ be a $s \times (s + \ell - 1)$ matrix such that $[p_j(\zeta_1), \ldots, p_j(\zeta_s)]^T = \Phi[p_j(\eta_1), \ldots, p_j(\eta_{s+\ell-1})]^T$ for $j\in [h]$. We have:
+%------
+\begin{align*}
+&\big[ \sum_{j\in[m]} p_j(\zeta_1), \ldots,  \sum_{j\in[m]} p_j(\zeta_s)\big]^T
+%&=\Phi  \left[\sum_{j\in[m]} p_j(\eta_1), \ldots, \sum_{j\in[m]} p_j(\eta_{s+\ell-1})\right]^T
+ = \Phi  \overline{P}^T  [1^m||0^{m-1}]^T
+\end{align*}
+%------
+So the check reduces to $\sum_{k\in[s], j\in[m]}p_j(\zeta_k)=r^Tb$ reduces to 
+\begin{align*}
+&\innp{[ \sum_{j\in[m]}  p_j(\zeta_1), \ldots, \sum_{j\in[m]} p_j(\zeta_s)]^T}{[1^s]^T} = r^Tb\\
+& \Rightarrow \innp{[1^m||0^{m-1}]^T}{\overline{P}\times \Phi^T \times [1^s]^T} = r^Tb
+\end{align*}
+%------
+Here, $* = [1^m||0^{m-1}]^T$ and $\varphi = \Phi^T \times [1^s]^T$ are public vectors. Given commitment of $P$,  $c_1,\ldots,c_{s+\ell-1}$, the commitment to $\overline{P}\varphi$ can be computed as $\mathsf{cm}=\prod_{k=1}^{s+\ell-1}(c_k)^{\varphi_k}$. In the protocol, the prover initially commits to a random $P_0\in \FF^{2m-1}$ subject to $\innp{1^{m}|| 0^{m-1}}{P_0}=0$, and uses $\beta P_0 + \overline{P} \varphi$ as witness in the inner product protocol. Here $\beta\sample \FF\backslash \{0\}$ is randomly chosen by the verifier. This randomization precludes the need for the inner-product argument to be zero-knowledge, and as we will later see, helps reduce interaction among provers in its distributed variant.
+%---------
+
+\smallskip  
+
+\noindent{\em Consistency of oracle $\pi$ and $P$ via $\ewit$}: The verifier additionally needs to determine if the committed $P$ and the oracle $\pi$ are consistent or not. The verifier proceeds to check the consistency at randomly sampled $t$ positions given by $\{(j_u,k_u): u\in [t]\}$ from $[h] \times [n]$ for a $t=O(\secpar)$. It queries the oracle for the columns $\pi[\cdot,k_u]$ and the prover for vectors $X_u = \ewit[\cdot,j_u,k_u]$ for $u\in [t]$.  For $u\in [t]$, let %\commentA{changed this notation. change in other places}$
+$\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the position $j_u$. The prover and the verifier run inner-product arguments to establish the following:
+%------------------
+\begin{enumerate}[{\rm 1.}]
+	%-------
+	\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]}= \sum_{i \in [p]} R^i(\alpha_{j_u},\eta_{k_u}) X_u[i]$  for $u\in$ $[t]$, with $c_{k_u}$ (which can be computed from $c_1,\ldots,c_{s+\ell-1}$, as in Section~\ref{subsec:matrixcommitment})  as the commitment of  $P[\cdot,k_u]$. 
+	%-------
+	\item $\innp{\bm{1}_{j_u}}{\ewit[i,\cdot,k_u]} = X_u[i]$ with $\pi[i,k_u]$ as the commitment for $\ewit[i,\cdot,k_u]$. A minor technicality arises since the commitment is for $V_{ik_u} = [\ewit[i,1,k_u], \ldots, \ewit[i,m,k_u]]$ and not for  $\ewit[i,\cdot,k_u]$. Since $\ewit[i,\cdot,k_u] = \Lambda_{h,m}V_{ik_u}$,  the above inner-product reduces to 
+	$ \innp{\bm{1}^T_{j_u}\Lambda_{h,m}}{ V_{ik_u}} = X_u[i]$. 	
+	%-------
+\end{enumerate}
+The checks for each $u\in [t]$ can be aggregated, leading to one inner-product check for each $u\in [t]$.
+%------------
+
+\smallskip
+
+\noindent{\em Proximity Check for Oracle}: This check forces a prover to commit to an encoding which is ``close'' to well-formed encoding $\mc{W}$. To check proximity, the verifier initially  sends a vector $\rho\sample \FF^p$ and asks the prover to send commitments $\tilde{\bm{c}} = (\tilde{c}_1,\ldots,\tilde{c}_\ell)$ to $\tilde{\ewit}=\sum_{i\in 	[p]}\rho_i\ewit[i,\cdot,\cdot]$ computed as $\tilde{c}_k = \prod_{i\in[p]}(\pi[i,k])^{\rho_i}$ $\forall k\in[\ell]$. It then checks:
+%------
+\begin{equation}\label{eq:proxchecks}
+%---
+\prod_{a=1}^\ell(\tilde{c}_a)^{\Lambda^T_{n,\ell}[a,k_u]}=\prod_{i=1}^p(\pi[i,k_u])^{\rho_i} \text{ for } u\in [t].
+%---
+\end{equation} 
+%------
+It can be seen that for an honest computation, both the commitments open to the vector $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
+%--------------
+%-------
+\subsection{Quadratic Check}\label{subsec:quadcheck}
+Here we will describe the quadratic check protocol, which aids in validating the honest evaluation of the circuit's multiplication gates. $\prover$ proves the knowledge of $\wit_x, \; \wit_y$ and $\wit_z$ in $\FF^N$ satisfying $\wit_x \circ \wit_y = \wit_z$. This protocol is similar to the linear check protocol, described in Section~\ref{subsec:lincheck}. Here also it has 3 stages, i) Reduction to inner product argument, ii) Consistency of the oracle and the intermediate matrix $P$, and iii) Proximity check.
+Here $\verifier$ checks if the polynomials $Q^i = Q^i_x \cdot Q^i_y - Q^i_z$ interpolate to ${\bm 0}^{m \times s}$ on the set $\{(\alpha_j, \zeta_k): j \in [m], k \in [s] \}$ for all $i \in [p]$. In three simple steps, we derive a simple probabilistic check below compressing in all the three dimensions. 
+%-----
+First, the above check reduces to   checking  that the polynomial $F := \sum_{i\in [p]}r_iQ^i$ interpolates $\bm{0}^{m\times s}$ on the same set for a randomly sampled $r\in \FF^p$. 
+%-----
+Second, this further reduces to checking $p(\cdot) := \sum_{j\in [m]}\gamma_jF(\alpha_j,\cdot)$ interpolates $\bm{0}^s$ on $\overline{\bm{\zeta}}$ for randomly sampled $\gamma=(\gamma_1,\ldots,\gamma_m)\in \FF^m$.
+%-----
+Third, this further reduces to checking $\innp{\tau}{p(\overline{\bm{\zeta}})}=0$ for a random $\tau\in \FF^s$. 
+%-------
+Similar to the linear check protocol, $\prover$ constructs the intermediate matrix $P$, which is in the product code $\rsc{\eta}{n,2\ell-1}\otimes \rsc{\alpha}{h,2m-1}$, and commits to it similarly. Let $(c_1, \ldots, c_{2\ell-1}) \leftarrow \pccom(P)$. Similar to the linear check, quadratic check reduces to $\innp{[\gamma || 0^{m-1}]^T}{z} = 0$, where $z = \beta P_0 + \overline{P} \varphi$ and $P_0$ is a random vector such that $P_0[j] = 0$ for $j \in [m]$, and $\varphi = \Phi \times \tau$. The differences are: (a) $p(\cdot) = \sum_{j\in[m]}\gamma_j F_j(\alpha_j,\cdot)$ is a polynomial of degree $<2\ell-1$, (b) $\Phi$ is a $s \times 2\ell -1$ matrix that takes $p(\etabar)$ to $p(\zetabar)$, where $p(\etabar) = [p(\eta_1),\ldots, p(\eta_{2\ell-1})]$ and $p(\zetabar) = [p(\zeta_1),\ldots, p(\zeta_{s})]$. Commitment $c_0$ of $P_0$ is sent to the verifier a-priori. Therefore, commitment to $z$ is $\cm = c_0^{\beta} \prod_{k=1}^{2\ell-1} (c_k)^{\varphi_k}$.
+
+\smallskip
+
+\noindent{\em Consistency of the oracles and  $P$:} Similar to linear check, the verifier checks the consistency at randomly sampled positions $Q=\{(j_u,k_u) : u\in[t] \}
+\subset [h]\times[n]$. It queries the oracles for the columns $\pi_a[\cdot, k_u]$ for $a\in \{x,y,z\}$ and $u\in [t]$. Then it queries the prover for vectors $X_u = \ewit_x[\cdot,j_u,k_u], Y_u = \ewit_y[\cdot, j_u,k_u], Z_u = \ewit_z[\cdot,j_u,k_u]$ for $u\in [t]$. Let $\bm{1}_{j_u}$ denote the unit vector in $\FF^h$ with $1$ in the $j_u^{th}$ position. The prover and verifier run inner-product arguments to establish: 
+%------
+\begin{enumerate}[{\rm 1.}]
+	%-----
+	\item $\innp{\bm{1}_{j_u}}{P[\cdot,k_u]} = \sum_{i\in[p]} r_i[X_u[i]\cdot Y_u[i] - Z_u[i]]$ for $u\in[t]$ with $c_{k_u}$ which can be computed from $c_1,\ldots,c_{2\ell-1}$, as in Section~\ref{subsec:matrixcommitment})  as the commitment of  $P[\cdot,k_u]$.
+	%-----
+	\item $\innp{\bm{1}_{j_u}}{\ewit_x[i,\cdot,k_u]} = X_u[i]$, $\innp{\bm{1}_{j_u}}{\ewit_y[i,\cdot,k_u]}=Y_u[i]$ and $\innp{\bm{1}_{j_u}}{\ewit_z[i,\cdot,k_u]}=Z_u[i]$. These inner-products check the consistency of the vectors sent by the prover with the respective oracles. These can be verified in a similar manner to that in the linear check protocol.
+	%-----
+\end{enumerate}
+%--------------
+\smallskip
+\noindent{\em Proximity Check for Oracle:} We combine the proximity check for the three encodings $\ewit_x,\ewit_y$ and $\ewit_z$. The verifier sends a vector $\rho\sample \FF^{3p}$ and asks the prover to commit to the matrix $\tilde{\ewit}=\sum_{i=1}^p[\rho_i\ewit_x[i,\cdot,\cdot] + \rho_{p+i}\ewit_y[i,\cdot,\cdot]+\rho_{2p+i}\ewit_z[i,\cdot,\cdot]]$
+by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$, which are computed as $\tilde{c}_k = \prod_{i=1}^{p} (\pi_x[i,k])^{\rho_i} \cdot (\pi_y[i,k])^{\rho_{p+i}}\cdot(\pi_z[i,k])^{\rho_{2p+i}}$ $\forall k\in[\ell]$. Thereafter, for $u\in [t]$, the verifier checks: %\\~
+%-----
+\begin{align}\label{eq:combinedproximity}
+%------
+\prod_{a\in[\ell]} \tilde{c}_a^{\Lambda_{n,\ell}^T[a,k_u]} = \prod_{i=1}^{p} (\pi_x[i,k_u])^{\rho_i} (\pi_y[i,k_u])^{\rho_{p+i}}(\pi_z[i,k_u])^{\rho_{2p+i}}
+%------
+\end{align}
+%----------
+\subsection{Graphene}\label{subsec:graphene}
+We use the linear and quadratic check protocols from Section~\ref{subsec:lincheck} and Section~\ref{subsec:quadcheck} respectively to describe an efficient protocol for rank one constraint system (R1CS). Let $A,B$ and $C$ be $M\times N$ matrices. We prove existence of $\wit\in \FF^N$ satisfying $A\wit\circ B\wit=C\wit$ by showing existence of $\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wit=\wit_x$, $B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadratic relation $\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear relations to the linear relation:
+%---------
+\begin{align}\label{eq:comblincheck}
+%------
+\begin{bmatrix}
+%------
+\gamma_xI\,|\gamma_yI\,|\gamma_zI\,|-(\gamma_xA+\gamma_yB+\gamma_zC)
+%------
+\end{bmatrix}\begin{bmatrix}
+%------
+\wit_x\\
+\wit_y\\
+\wit_z\\
+\wit
+\end{bmatrix}=\bm{0}
+\end{align}
+%---------
+for $\gamma_x,\gamma_y,\gamma_z\sample \FF$. As before, we view $\wit_x,\wit_y,\wit_z$ and $\wit$ as $p\times m\times s$ matrices. Let $\bwit$ denote the $4p\times m\times s$ matrix formed by stacking $\wit_x,\wit_y,\wit_z$ and $\wit$ along ``slices''. The encoding $\ewit\gets\enc(\bwit)$ and commitment to the encoding $\comoracle\gets \comm(\ewit)$ are computed as in Sections~\ref{subsec:witencoding} and ~\ref{subsec:construct_oracle}. Note that $\comoracle$ is a $4p\times n$ matrix. 
+Let $D$ be the $M \times 4N$ sized matrix given in Equation~\ref{eq:comblincheck}. For the R1CS instance $(A,B,C)$, $\prover$ and $\verifier$ run Linear Check protocol~\ref{subsec:lincheck} for $D \bwit = \bm{0}$ and run Quadratic Check protocol for $\wit_x \circ \wit_y = \wit_z$.
+%----------
+Here the following lemmas ensure the soundness and zero-knowledge property of \name. Details of proof of the protocol is given in Appendix~\ref{app:grapehene_securityproofs}.
+
+\begin{lemma}[Soundness]\label{lem:graphene_sound}
+	For all polynomially bounded provers $P^\ast$ and all $\pi\in\GG^{4p\times n}$, there exists an expected polynomial time extractor $\extrac$ with rewinding access to the transcript oracle $\tr = \innp{P^{\ast}}{\verifier^{\pi}}$ such that either $\extrac$ breaks the commitment binding, or it outputs a witness with overwhelming probability whenever $P^\ast$ succeeds, i.e.,
+	%----------
+	{\footnotesize
+		\begin{align*}
+		\condprob{
+			\begin{array}{c}
+			{[}\ewit_x||\ewit_y||\ewit_z||\ewit{]}=\open(\pi)\wedge \\
+			\wit_z=\wit_x\circ\wit_y\wedge \wit_x=A\wit\\
+			\wit_y=B\wit \wedge \wit_z=C\wit
+			\end{array}
+		}{
+			\begin{array}{c}
+			\sigma %\sample \gen(\secparam) \\
+			\leftarrow \gen(\secparam) \\
+			{[}\ewit_x||\ewit_y||\ewit_z||\ewit{]}%\sample \extr^{\mc{O}}(\sigma)\\
+			\leftarrow \extr^{\mathsf{tr}}(\sigma) \\ 
+			\wit_a=\dec(\ewit_a), a\in \{x,y,z\}\\
+			\wit=\dec(\ewit)
+			\end{array}
+		}\\
+		\geq \epsilon(P^\ast) - \kappa_{\rm qd}(\secpar) -\kappa_{\rm lc}(\secpar)
+		\end{align*}
+	}
+	%---------
+	Where $\kappa_{\rm lc}(\secpar)$ and $\kappa_{\rm qd}(\secpar)$ are the negligible soundness error of $\linearcheck$ and $\quadcheck$ respectively. And $\epsilon(P^\ast)$ is the success probability of the prover.
+\end{lemma}
+%------------------------------------------------------ 
+%-------
+%\subsection{Zero-Knowledge:}\label{subsec:graphene_zk}
+%----GRAPHENE ZERO-KNOWLEDGE LEMMA----------
+%-------------------------------------------
+
+\begin{lemma}[Zero-knowledge]\label{lem:simgraphene}
+	There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view of the verifier in honest execution of the protocol $\grapheneRCS$ for $t\leq b$.
+\end{lemma}
+%-------------------------------------------

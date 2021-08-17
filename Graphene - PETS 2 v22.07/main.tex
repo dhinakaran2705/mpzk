@@ -1,0 +1,158 @@
+\documentclass[USenglish,oneside,twocolumn]{article}
+ 
+\usepackage[utf8]{inputenc}%(only for the pdftex engine)
+%\RequirePackage[no-math]{fontspec}%(only for the luatex or the xetex engine)
+\usepackage[big]{dgruyter_NEW}
+
+ %------------
+ %----------Packages-----------
+ \input{packages_PETS}
+%----------Symbols------------
+\input{symbols_PETS}
+ %-----------------------------
+ \usepackage{filecontents}
+ %-----------------------------
+%\DOI{foobar}
+
+\cclogo{\includegraphics{by-nc-nd.pdf}}
+  
+\begin{document}
+ 
+
+%  \author*[1]{Corresponding Author}
+%
+%  \author[2]{Second Author}
+%
+%  \author[3]{Third Author}
+%
+%  \author[4]{Fourth Author}
+%
+%  \affil[1]{Affil, E-mail: email@email.edu}
+%
+%  \affil[2]{Affil, E-mail: email@email.edu}
+%
+%  \affil[3]{Affil, E-mail: email@email.edu}
+%
+%  \affil[4]{Affil, E-mail: email@email.edu}
+
+  \title{\huge How to prove a statement jointly?  Distributed-prover Zero-Knowledge Protocols}
+
+  \runningtitle{Distributed-prover Zero-Knowledge Protocols}
+
+  %\subtitle{...}
+
+%  \begin{abstract}
+%{Please put abstract here.}
+%\end{abstract}
+\input{abstract}
+%  \keywords{keywords, keywords}
+%  \classification[PACS]{}
+ % \communicated{...}
+ % \dedication{...}
+
+  \journalname{Proceedings on Privacy Enhancing Technologies}
+%\DOI{Editor to enter DOI}
+%  \startpage{1}
+%  \received{..}
+%  \revised{..}
+%  \accepted{..}
+%
+%  \journalyear{..}
+%  \journalvolume{..}
+%  \journalissue{..}
+ 
+
+\maketitle
+%-----------------------------------------------------------------------------
+\begin{itemize}
+	\item Implementation or de-emphasize the protocol.
+	\item Why this work is relevant to PETS.
+	{\color{blue} Added another application -- Correctness in secure SOC.}
+	\item Add related work that clearly differentiates from prior works.
+	\item Add a paragraph regarding  UCZK.
+	\item {\color{blue}Add details in simulator.}
+	\item Check if the indistinguishability requires anything in the Ideal Functionality.
+	\item {\color{blue}Add details for the malicious setting.}
+	\item {\color{blue}Length of inputs for provers.}
+	\item {\color{blue}Comparison with Ligero and Graphene. (Soundness, performance, encoding)} soundness is yet to be added.
+	\item Motivate Honest verifier and add compiler reference to obtain malicious verifier from honest verifier.
+	\item {\color{blue}Update contribution.}
+	\item {\color{blue}Add the proof of Bounded Independence.}
+	\item {\color{blue}Update proofs in Appendix:C.}
+	\item {\color{blue}Compiler from arbitrary IOP-based protocol to DPZK from. Updated the comparison table.}
+\end{itemize}
+\section{Introduction}
+\label{sec:intro}
+\input{Main_Introduction}
+%------------------------------------------------------- ----------------------
+\section{Overview of our work}
+\label{sec:overview}
+\input{Main_Overview}
+%-----------------------------------------------------------------------------
+\section{Notations and Preliminaries}
+\label{sec:prelim}
+\input{Main_Preliminaries}
+%-----------------------------------------------------------------------------
+\section{Definition for Distributed Proof Zero-Knowledge}
+\label{sec:security model}
+\input{Main_DPZK}
+%-----------------------------------------------------------------------------
+\section{DPZK Compiler}
+\label{sec:compiler}
+\input{Main_Compiler}
+%-----------------------------------------------------------------------------
+\section{Primitives for \name}
+\label{sec:primitive}
+\input{Main_Primitive}
+%-----------------------------------------------------------------------------
+\section{Graphene}
+\label{sec:graphenec}
+\input{Main_graphene}
+%-----------------------------------------------------------------------------
+\section{DP-\name: Distributed Prover Variant}
+\label{sec:DPgraphene}
+\input{Main_DP_Graphene}
+%-----------------------------------------------------------------------------
+\section{Performance Evaluation}
+\label{sec:performancecompare}
+\input{Main_Implementation}
+%%-----------------------------------------------------------------------------
+
+\bibliographystyle{abbrv}
+\bibliography{main}
+
+%
+\appendix
+\section*{Appendix}
+\textit{$\ast$We got approval from the chairs on relaxing the page limit for the appendices, hence we have added some more details on the protocol and the proofs here using extra pages. If accepted, we will remove these details from the proceedings version and will add the citation to the full version.}
+%
+%%-----------------------------------------------------------------------------
+\section{Preliminaries}
+\label{app:securitydef}
+\input{Appendix_Primitives}
+%-----------------------------------------------------------------------------
+\section{Graphene Protocol and Security Proofs}
+\label{app:grapehene_securityproofs}
+\input{Appendix_SP_Graphene}
+%-----------------------------------------------------------------------------
+\section{DP-$\name$ Security Proofs}
+\label{app:dp_grapehene_securityproofs}
+\input{Appendix_DP_security_Proofs}
+%-----------------------------------------------------------------------------
+\section{DPZK from existing protocols}
+\label{app:dpzk_others}
+\input{Appendix_DPZK_others}
+%-----------------------------------------------------------------------------
+\section{Shared circuit complexity}
+\label{app:shared_ciruit}
+\input{Appendix_Shared_Circuit}
+%-----------------------------------------------------------------------------
+\section{Parameters}
+\label{app:Parameters}
+\input{Appendix_Parameters}
+%-----------------------------------------------------------------------------
+\section*{ }
+\label{app:DP_Protocols}
+\input{Appendix_DP_Protocols}
+%-----------------------------------------------------------------------------
+\end{document}

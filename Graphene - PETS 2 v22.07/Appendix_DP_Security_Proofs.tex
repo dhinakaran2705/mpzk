@@ -1,0 +1,477 @@
+%---------------------------------------------------------
+In the definition of $\DPZK$, in Section~\ref{sec:security model}, we discussed that according to the corrupted parties, there are 4 possible corruptions:
+%-------
+\begin{itemize}
+	\item All the provers are corrupt and do not have a valid witness. Together they try to cheat so that the verifier accepts the proof. If a $\DPZK$ protocol withstands this corruption model, then we call it has {\em Soundness with Witness Extraction (SoWE)} property.
+	%-------
+	\item The verifier tries to learn about the provers' secrets. A protocol that prevents such an adversary has {\em Zero-Knowledge (ZK)} property.
+	%-------
+	\item Among all the provers, t are corrupted and try to learn about the honest provers' secrets. Security against such adversary is called {\em Witness Hiding (WH)} property.
+	%-------
+	\item Along with t provers, the verifier colludes and tries to learn honest provers' secrets. Security against this adversary is called {\em Witness Hiding with Collusion (WHwC)} property.
+	%-------
+\end{itemize}
+%-------
+\noindent\textit{\textbf{Soundness with Witness Extraction:}} A $\DPZK$ protocol has {SoWE} property if there exists an (expected) polynomial-time extractor $\extrac$ that interacts with the prover. If the interaction is accepting, $\extrac$ outputs a valid witness with a very high probability corresponding to the statement. 
+%-------
+The proof of knowledge property of the single prover version suffices the {SoWE} property of the $\DPZK$ protocol. The following lemma ensures the above claim.
+%-----------------
+\begin{lemma}\label{lem:SoWE}
+	Let $\innp{\prover}{\verifier}$ be a zero-knowledge protocol and if exists, let $\Pi$ be the distributed version of $\innp{\prover}{\verifier}$. Then $\Pi$ has SoWE property if and only if $\innp{\prover}{\verifier}$ has proof of knowledge property.
+\end{lemma} 
+%-------
+\begin{proof}
+	Note that, if $\Pi$ has SoWE property, then $\innp{\prover}{\verifier}$ has proof of knowledge property, as $\innp{\prover}{\verifier}$ is a special case of $\Pi$, where $\Num=1$.
+	%\smallskip
+	%-------
+	
+	Let $\innp{\prover}{\verifier}$ has proof of knowledge property, that is, there exists an extractor $\extrac_{POK}$ for $\innp{\prover}{\verifier}$ such that it can extract a witness with very high probability. 
+	We will use this to build an extractor $\extrac_{SoWE}$ for $\Pi$.
+	$\extrac_{SoWE}$ interacts with the provers as a verifier and interacts with $\extrac_{POK}$ as a prover.
+	Suppose the aggregator $\Ag$ sends $m$ to $\extrac_{SoWE}$, it forwards the same $m$ to $\extrac_{POK}$. If $\extrac_{POK}$ sends a challenge $c$, $\extrac_{SoWE}$ publishes the same challenge to all the provers. Furthermore, if $\extrac_{POK}$ asks to rewind the prover, $\extrac_{SoWE}$ does the same. Finally, if the interaction is accepting, $\extrac_{POK}$ outputs a valid witness with a very high probability. Therefore, $\extrac_{SoWE}$ returns $\extrac_{POK}$'s output. Hence, $\extrac_{SoWE}$ outputs a valid witness with a very high probability.
+\end{proof}
+%-------
+In Figure~\ref{fig:distlincheck}, Figure~\ref{fig:distquadcheck}, we described Distributed Linear Check and Distributed Quadratic Check respectively. The single prover versions of the above checks are described in Figure~\ref{fig:linearcheck} and Figure~\ref{fig:quadcheck} respectively. We proved that Linear check and Quadratic Check have proof of knowledge property, see Lemma~\ref{lem:linearcheck_sound} and Lemma~\ref{lem:quadcheck_sound}. Then by Lemma~\ref{lem:SoWE}, Distributed Linear Check and Distributed Quadratic Check has Soundness with Witness Extraction property (SoWE). Our protocol $\name$, Figure~\ref{fig:graphene}, has the distributed version, DP-$\name$, Figure~\ref{fig:dpgraphene}, for R1CS circuits. We proved in Lemma~\ref{lem:graphene_sound} that $\name$ has Proof of Knowledge property, then by Lemma~\ref{lem:SoWE}, DP-$\name$ has Soundness with Witness Extraction property. 
+%------------------
+\begin{lemma}
+	For the protocol DP-$\name$ given in Figure: \ref{fig:dpgraphene}, there exists an (expected) polynomial-time extractor $\extrac$, if $\verifier$ accepts the proof given by a set of provers, then $\extrac$ can output a witness with overwhelming probability.
+\end{lemma}
+%-------
+\begin{proof}
+Proof of the above Lemma is evident from Lemma~\ref{lem:SoWE} and Lemma~\ref{lem:graphene_sound}.
+\end{proof}
+%----------------------------------
+
+\noindent\textit{\textbf{Zero Knowledge:}} 
+If a verifier in a $\DPZK$ protocol learns nothing but the statement is true, it has the zero-knowledge (ZK) property.
+In other words, there exists a simulator $\Sim_{DP}$ that generates a transcript $\tau$, without having a witness such that $\tau$ is indistinguishable from a real execution of the protocol. $\tau$ consists of the verifier's messages and the provers' messages. The following lemma ensures that the single prover protocol's zero-knowledge property is equivalent to its distributed version's zero-knowledge property.
+%-------
+\begin{lemma}\label{lem:ZK}
+	Let $\innp{\prover}{\verifier}$ be a single prover zero-knowledge protocol and $\Pi$ be the distributed version of $\innp{\prover}{\verifier}$. Then $\Pi$ has zero-knowledge property if and only if $\innp{\prover}{\verifier}$ has zero-knowledge property.
+\end{lemma}
+%-------
+\begin{proof}
+	Note that, if $\Pi$ has ZK property, then $\innp{\prover}{\verifier}$ has zero knowledge property, as $\innp{\prover}{\verifier}$ is a special case of $\Pi$, where $\Num=1$. 
+	%-------
+	
+	Let $\innp{\prover}{\verifier}$ has zero-knowledge property, that is, there is a polynomial-time simulator $\Sim_{SP}$ which, without knowing the witness, can generate a transcript that is indistinguishable from a transcript of the protocol execution. 
+	
+	Since the verifier's view in the $\DPZK$ protocol is the same as the view in the single prover protocol. Therefore the simulator for the single prover version works for the $\DPZK$ version as well.
+%	Let at the $i$th round of the protocol, $\xi$th prover's message is $\shr{m_i}$. In the $\DPZK$ protocol two things can happen at this stage: a) the verifier receives $\shr{m_i}$ and combines using some deterministic function $f_i(\cdot)$ and obtain $m_i$ or b) provers interact in a secure way so that an aggregator $\Ag$ obtains $m_i$ and sends $m_i$ to the verifier.
+%	Simulator outputs accordingly. 
+%	%-------
+%	
+%	Now suppose $\Pi$ does not have zero-knowledge property. Then we will prove that $\innp{\prover}{\verifier}$ does not have zero knowledge either. There is a $\ppt$ distinguisher $\distinguisher_{D}$, which can distinguish between an original transcript and a simulated transcript. Using $\distinguisher_{D}$, we will design a distinguisher $\distinguisher_{S}$ for $\innp{\prover}{\verifier}$.
+%	%-------
+%	
+%	Let $\distinguisher_{S}$ receives $\tau$ as a challenge transcript. In the transcript say the $i$th message from the prover to the verifier be $m_i$, and if in $\Pi$ all the provers send $\shr{m_i}$ to the verifier, where the verifier obtains $m_i=f_i(\{\shr{m_i}\}_{\xi\in[\Num]})$, then $\distinguisher_{S}$ randomly picks $\shr{m_i}$ such that $m_i=f_i(\{\shr{m_i}\}_{\xi\in[\Num]})$, then $\distinguisher_{S}$ replaces $m_i$ by $\{\shr{m_i}\}_{\xi\in[\Num]}$. And if in $\Pi$ the verifier receives $m_i$, then $\distinguisher_{S}$ does not make any changes there. 
+%	After proceeding above for all $i$, $\distinguisher_{S}$ sends the modified $\tau$ say $\tau'$ to $\distinguisher_{D}$. Finally, $\distinguisher_{S}$ sends the same response of $\distinguisher_{D}$.
+%	%-------
+%	
+%	Hence If $\distinguisher_{D}$ can distinguish with non-negligible probability, so does $\distinguisher_{S}$. The above statement contradicts that $\innp{\prover}{\verifier}$ is zero-knowledge.
+%	%-------
+\end{proof}
+%-------
+%%---------------------------------------------------------
+%In the definition of $\DPZK$, in Section~\ref{sec:security model}, we discussed that according to the corrupted parties there are 4 possible corruptions:
+%%-------
+%\begin{itemize}
+%	\item All the provers are corrupt and try to cheat so that the verifier accepts the proof. If a $\DPZK$ protocol withstand this corruption model then we call it has {\em Soundness with Witness Extraction (SoWE)} property.
+%	%-------
+%	\item The verifier tries to learn about the provers' secrets. A protocol that prevents from such adversary has {\em Zero-Knowledge (ZK)} property.
+%	%-------
+%	\item Among all the provers, t are corrupted and try to learn about the honest provers' secrets. Security against such adversary is called {\em Witness Hiding (WH)} property.
+%	%-------
+%	\item Along with t provers, the verifier colludes and tries to learn honest provers' secrets. Security against this adversary is called {\em Witness Hiding with Collusion (WHwC)} property.
+%	%-------
+%\end{itemize}
+%%-------
+%\noindent\textit{\textbf{Soundness with Witness Extraction:}} A $\DPZK$ protocol has {SoWE} property if, for an accepting instance, there exists a probabilistic (expected) polynomial-time extractor $\extrac$, that outputs a witness, which is shared among the provers, with very high probability.
+%%-------
+%To show that a $\DPZK$ protocol has {SoWE} property, it is good enough to show that the single prover version of the protocol has knowledge extraction property. The following lemma ensures that both are equivalent.
+%%-----------------
+%\begin{lemma}\label{lem:SoWE}
+%	Let $\innp{\prover}{\verifier}$ be a zero-knowledge protocol and if exists, let $\Pi$ be the distributed version of $\innp{\prover}{\verifier}$. Then $\Pi$ has SoWE property if and only if $\innp{\prover}{\verifier}$ has proof of knowledge property.
+%\end{lemma} 
+%%-------
+%\begin{proof}
+%	Note that, if $\Pi$ has SoWE property, then $\innp{\prover}{\verifier}$ has proof of knowledge property, as $\innp{\prover}{\verifier}$ is a special case of $\Pi$, where $\Num=1$.
+%	%\smallskip
+%	%-------
+%	
+%	Let $\innp{\prover}{\verifier}$ has proof of knowledge property, that is, there exists an extractor $\extrac_{POK}$ for $\innp{\prover}{\verifier}$ for which it can extracts a witness with very high probability. $\extrac_{SoWE}$ which interacts with the provers as a verifier, executes $\extrac_{POK}$ and outputs whatever $\extrac_{POK}$ outputs. Therefore, $\extrac_{SoWE}$ outputs a witness with a very high probability.
+%\end{proof}
+%%-------
+%We described Distributed Linear Check in Figure~\ref{fig:distlincheck} and Distributed Quadratic Check in Figure~\ref{fig:distquadcheck}. The single prover version of the above checks are described in Figure~\ref{fig:linearcheck} and in Figure~\ref{fig:quadcheck} respectively. We proved that Linear check and Quadratic Check has proof of knowledge property, see Lemma~\ref{lem:linearcheck_sound} and Lemma~\ref{lem:quadcheck_sound}. Then by Lemma~\ref{lem:SoWE}, Distributed Linear Check and Distributed Quadratic Check has Soundness with Witness Extraction property (SoWE). Our protocol $\name$, Figure~\ref{fig:graphene}, has the distributed version, DP-$\name$, Figure~\ref{fig:dpgraphene}, for R1CS circuits. We proved in Lemma~\ref{lem:graphene_sound} that $\name$ has Proof of Knowledge property, then by Lemma~\ref{lem:SoWE}, DP-$\name$ has Soundness with Witness Extraction property. 
+%%------------------
+%\begin{lemma}
+%	For the protocol DP-$\name$ given in Figure: \ref{fig:dpgraphene}, there exists an (expected) polynomial-time extractor $\extrac$, if $\verifier$ accepts the proof given by a set of provers then $\extrac$ can output a witness with overwhelming probability.
+%\end{lemma}
+%%-------
+%Proof of the above Lemma is evident from Lemma~\ref{lem:SoWE} and proof of knowledge property of \name.
+%%----------------------------------
+%
+%\noindent\textit{\textbf{Zero Knowledge:}} In a $\DPZK$ protocol with ZK property, the verifier with the prior knowledge of the number of provers can not learn any information about the witness. In other words, there exists a simulator $\Sim_{DP}$, which without having a witness, generates a transcript $\tau$. $\tau$ consists of the verifier's messages and the provers' messages such that it is indistinguishable from a transcript of actual execution of the protocol. 
+%The following lemma ensures that the single prover protocol's zero-knowledge property is equivalent to its distributed version's zero-knowledge property.
+%%-------
+%\begin{lemma}\label{lem:ZK}
+%	Let $\innp{\prover}{\verifier}$ be a single prover zero-knowledge protocol and $\Pi$ be the distributed version of $\innp{\prover}{\verifier}$. Then $\Pi$ has zero-knowledge property if and only if $\innp{\prover}{\verifier}$ has zero-knowledge property.
+%\end{lemma}
+%%-------
+%\begin{proof}
+%	Note that, if $\Pi$ has ZK property, then $\innp{\prover}{\verifier}$ has zero knowledge property, as $\innp{\prover}{\verifier}$ is a special case of $\Pi$, where $\Num=1$. 
+%	%-------
+%	
+%	Let $\innp{\prover}{\verifier}$ has zero-knowledge property, i.e. there is a polynomial-time simulator $\Sim_{SP}$ which without knowing the witness can generate a transcript which is indistinguishable from a transcript of the protocol execution. 
+%	Let at the $i$th round of the protocol, $\xi$th prover's message is $\shr{m_i}$. In the $\DPZK$ protocol two things can happen at this stage: a) the verifier receives $\shr{m_i}$ and combines using some deterministic function $f_i(\cdot)$ and obtain $m_i$ or b) provers interact in a secure way so that an aggregator $\Ag$ obtains $m_i$ and sends $m_i$ to the verifier.
+%	Simulator outputs accordingly. 
+%	%-------
+%	
+%	Now suppose $\Pi$ does not have zero-knowledge property. Then we will prove that $\innp{\prover}{\verifier}$ does not have zero-knowledge either. That is there is a $\ppt$ distinguisher $\distinguisher_{D}$, which can distinguish between an original transcript and a simulated transcript. Using $\distinguisher_{D}$, we will design a distinguisher $\distinguisher_{S}$ for $\innp{\prover}{\verifier}$.
+%	%-------
+%	
+%	Let $\distinguisher_{S}$ receives $\tau$ as a challenge transcript. In the transcript say the $i$th message from the prover to the verifier be $m_i$, and if in $\Pi$ all the provers send $\shr{m_i}$ to the verifier, where the verifier obtains $m_i=f_i(\{\shr{m_i}\}_{\xi\in[\Num]})$, then $\distinguisher_{S}$ randomly picks $\shr{m_i}$ such that $m_i=f_i(\{\shr{m_i}\}_{\xi\in[\Num]})$, then $\distinguisher_{S}$ replaces $m_i$ by $\{\shr{m_i}\}_{\xi\in[\Num]}$. And if in $\Pi$ the verifier receives $m_i$, then $\distinguisher_{S}$ does not make any changes there. 
+%	After proceeding above for all $i$, $\distinguisher_{S}$ sends the modified $\tau$ say $\tau'$ to $\distinguisher_{D}$. Finally, $\distinguisher_{S}$ sends the same response of $\distinguisher_{D}$.
+%	%-------
+%	
+%	So, If $\distinguisher_{D}$ can distinguish with non-negligible probability then so does $\distinguisher_{S}$, which is a contradiction to the fact that $\innp{\prover}{\verifier}$ is zero-knowledge.
+%	%-------
+%\end{proof}
+%%-------
+
+%In Section~\ref{app:graphene_zk}, we proved that the single prover protocol $\name$ described in Figure~\ref{fig:graphene} has zero-knowledge property, see Lemma~\ref{lem:simgraphene}.
+%%, and each component of $\name$, Linear Check and Quadratic Check has zero-knowledge property, see Lemma~\ref{lem:simlincheck} and ~\ref{lem:simlincheck} respectively. Then by Lemma~\ref{lem:ZK}, DP-$\name$ has zero-knowledge property.
+%%-------
+%
+%\begin{lemma}\label{lem:simdpgraphene}
+%	There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view of the verifier in an honest execution of the protocol DP-$\grapheneRCS$ for $t\leq b$.
+%\end{lemma}
+%%-------
+%
+%Proof of the Lemma is obvious from Lemma~\ref{lem:ZK} and zero-knowledge property of \name.
+%%-------
+%%-------------------------
+%
+%\noindent\textit{\textbf{Witness Hiding and Witness Hiding with Collusion:}} In our work, we are mainly concern to build a public coin proof system, more specifically NIZK. Anybody can verify the proofs so any prover can play the role of a verifier and he should learn nothing. Therefore Witness Hiding and Witness Hiding with Collusion are the same in this setting. 
+%%-------
+%
+%We will separate the set of prover into 2 classes: honest($H$) and corrupt($C$). Note that $|H|+|C|=\Num$ and $|C|<t$, for some $t<\Num$. In Linear Check, since there is no interaction among the provers other than the aggregator, it suffices to generate the view of the aggregator. For Quadratic check, we need that the multiplications among the provers are executed securely. 
+%%-------
+%\begin{lemma}\label{lem:WHlin}
+%	The Distributed Linear Check protocol, described in Figure: \ref{fig:distlincheck}, has witness hiding property i.e. Let among $\Num$ provers there are $t$-provers are controlled by a semi-honest adversary. Then $\exists$ a polynomial time simulator $\Sim$ which takes encoded witness shares of the corrupt parties and output of the protocol as input and outputs a view of the adversary which is perfectly indistinguishable from a view in the honest execution of the protocol.
+%\end{lemma}
+%%-------
+%\begin{proof}
+%	Let $C$ be the set of all corrupt provers and $H$ be the set of all honest provers. 
+%	%-------
+%	Case:1 Let the output of the protocol is ``reject'', then $\Sim$ picks all the components of the view of the corrupt parties uniformly at random from the appropriate domains, which is indistinguishable from an honest execution.
+%	%-------
+%	
+%	Case 2: Let the output of the protocol is ``accept''. Then input for $\Sim$ consists of $\shr{\ewit} \; \forall \xi\in C$ and shares of $0^{2m-1}$. Without loss of generality we can assume that in the protocol there are 2 parties $C$ and $H$. Also assume that the aggregator is controlled by the adversary. The view of the adversary consists of:
+%	%-------
+%	
+%	verifier's randomness: $\{\rho, r, Q=\{(j_u,k_u):u\in[t]\}, \delta, \beta\}$
+%	%-------
+%	
+%	commitments: $\honshr{\comoracle}$, $\honshr{\tilde{c}_1},\ldots,\honshr{\tilde{c}_{\ell}},$ $\honshr{c_0}, \honshr{c_1}, \ldots,$ $\honshr{c_{s+\ell-1}}, \honshr{d_0}$
+%	%-------
+%	
+%	vectors: $\honshr{\ewit}[\cdot,j_u,k_u], \honshr{P}[\cdot,k_u], \honshr{z} \text{ and } \honshr{V_u}$. 
+%	%-------
+%	
+%	$\Sim$ does the following: 
+%	%-------
+%	\begin{itemize}
+%		%-------
+%		\item[--] $\Sim$ picks uniformly at random the challenges from the verifier i.e. $\{\rho, r, Q=\{(j_u,k_u):u\in[t]\}, \delta, \beta\}$.
+%		%-------
+%		\item[--] Then $\Sim$ picks $\ewit[\cdot,\cdot,k_u]$ such that $\ewit[i,\cdot, k_u] \in \rsc{\alpha}{h,2m-1}$ and computes $\honshr{\ewit}[\cdot, \cdot, k_u] = \ewit[\cdot,\cdot, k_u] - \corshr{\ewit}[\cdot, \cdot,k_u]$.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{\comoracle}[\cdot,k_u]$ which is commitment of $\honshr{\ewit}[\cdot, \cdot, k_u]$.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{\tilde{\ewit}}[\cdot,k_u] = \sum_{i \in [p]} \rho_i\honshr{\ewit}[i,\cdot,k_u]$ and $\honshr{\tilde{c}_{k_u}}$ which is commiment of $\honshr{\tilde{\ewit}}[\cdot,k_u]$, for all $u\in[t]$.
+%		%-------
+%		\item[--] $\Sim$ picks $\honshr{\tilde{c}_1},\ldots,\honshr{\tilde{c}_{\ell}}$ such that\\
+%		$\honshr{\tilde{c}_{k_u}} = \prod_{a\in[\ell]} (\honshr{\tilde{c}_{a}})^{\Lambda_{n,\ell}^T[a,k_u]} \; \forall u\in[t]$ 
+%		%-------
+%		\item[--] $\Sim$ picks $\honshr{\comoracle}[\cdot,k]$ such that\\
+%		$\honshr{\tilde{c}_k} = \prod_{i\in[p]} (\honshr{\comoracle}[i,k])^{\rho_i} \; \forall k\notin \{k_u:u\in[t]\}$
+%		%-------
+%		\item[--] $\Sim$ sends $\honshr{\comoracle}, \honshr{\tilde{c}_{1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ to the aggregator.
+%		%-------
+%		\item[--] $\Sim$ computes\\
+%		$\honshr{P}[j,k_u] = \sum_{i\in[p]} R^i(\alpha_j, \eta_{k_u})\cdot \honshr{U}[i,j,k_u] \; \forall u\in[t]$ and $\honshr{c_{k_u}}$ which is commitment of $\honshr{P}[\cdot,k_u]$.
+%		%-------
+%		\item[--] $\Sim$ picks $\honshr{c_0},\;\honshr{d_0}$ uniformly at random and picks $\honshr{c_1}, \ldots, \honshr{c_{s+\ell-1}}$ subject to the following constraints:\\
+%		$\honshr{c_{k_u}} = \prod_{a\in[s+\ell-1]}(\honshr{c_a})^{\Lambda_{n,s+\ell-1}^T[a,k_u]} \; \forall u\in[t]\\
+%		\honshr{\cm} = (\honshr{c_0})^{\beta}\prod_{a\in[s+\ell-1]} (\honshr{c_a})^{\varphi_a}$
+%		%-------
+%		\item[--] $\Sim$ sends $\honshr{c_0}, \honshr{c_1},\ldots, \honshr{c_{s+\ell-1}}, \honshr{d_0}$ to the aggregator.
+%		%-------
+%		\item[--] According to the challenge $Q$, $\Sim$ sends $\honshr{\ewit}[\cdot, j_u,k_u]$, $\honshr{P}[\cdot,k_u]$ to the aggregator.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{z}$ in the following way:
+%		$\Sim$ computes \\
+%		%\begin{align*}
+%		$\sum_{j\in[m]}\corshr{z}[j] 
+%		=\sum_{j\in[m]} (\beta \corshr{P_0}+\corshr{\overline{P}}\varphi + \corshr{0})[j]$
+%		%\end{align*} 
+%		$\Sim$ knows $\corshr{0}$ and from $\corshr{\ewit}$ and $r$, $\Sim$ can obtain $\corshr{P}$ completely. Only unknown term is $\corshr{P_0}$, but note that $\sum_{j\in[m]}\corshr{P_0}[j] = 0$, hence $\Sim$ can compute $\sum_{j\in[m]}\corshr{z}[j] = L$ (say).
+%		$\Sim$ picks $\honshr{z}$ uniformly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} \honshr{z}[j]= r^Tb-L$.
+%		%-------
+%		\item[--] Corresponding to the challenge $\delta$, $\Sim$ computes $\honshr{V_u} = \sum_{i\in[p]} \delta_i\cdot \honshr{\ewit}[i,\cdot, k_u]$.
+%		%-------
+%		\item[--] Finally, $\Sim$ sends $\honshr{z}, \honshr{V_u}$ to the aggregator.
+%		%-------
+%	\end{itemize}
+%%-------
+%	The transcript generated by $\Sim$ is perfectly indistinguishable from an honest execution of the protocol. Hence the linear check described in Figure: \ref{fig:distlincheck} has witness hiding property.
+%\end{proof}
+%%-------
+%
+%The distributed quadratic check protocol described in Figure: \ref{fig:distquadcheck} has witness hiding property if the multiplication of the secrets held by the provers is done in a secure way. Let $\Pi_{\sf Mult}$ is a secure $\FMult$ protocol which is used there, which can withstand $t$ corrupted parties, then distributed quadratic has witness hiding property against $t$ corrupted provers. The following lemma ensures the claim. 
+%%-------
+%\begin{lemma}\label{lem:WHquad}
+%	Let $\Pi_{Mult}$ be a $\Num$-party secure protocol where the inputs for the $\xi$th party are $\shr{\bf a}, \shr{\bf b}$ and the protocol outputs $\shr{(\sum_{\xi\in[\Num]}\shr{\bf a})\cdot(\sum_{\xi\in[\Num]}\shr{\bf b})}$ to $\distprover$, where ${\bf a}, {\bf b}$ are vectors of length $2m-1$. If $\Pi$ can withstand against $t$-corrupted parties then $\exists$ a simulator $\Sim$ which takes $\corshr{\ewit_x}, \corshr{\ewit_y}, \corshr{\ewit_z}$ and sharing of zero and outputs a view of the adversary which is indistinguishable from a view in the honest execution of the protocol.
+%\end{lemma}
+%%-------
+%\begin{proof}
+%	Since, $\Pi_{Mult}$ is a secure protocol, then there exists a simulator $\Sim_{M}$ which can generate a view which is indistinguishable from an honest execution of the protocol. $\Sim$ takes inputs of the corrupt parties and output of the protocol to simulate the view. Similar to Lemma: \ref{lem:WHlin}, we will consider $C$ as the set of corrupt parties and $H$ as the set of honest parties, we will follow the same notations. 
+%	
+%	The view of the distributed quadratic check consists of :
+%	
+%	Verifier's Randomness: $\rho, r, Q, \tau, \gamma, \beta, \delta, \beta_x, \beta_y, \beta_z$
+%	
+%	Commitments: $\honshr{\comoracle_a}\; \forall a\in \{x,y,z\}$ $\honshr{\tilde{c_1}}, \ldots, \honshr{\tilde{c}_{\ell}}$, $\honshr{c_0}$, $\ldots, \honshr{c_{2\ell-1}}$
+%	
+%	Vectors:$\honshr{\ewit_a}[\cdot,\cdot,k_u] \; \forall a\in\{x,y,z\}$ $ \honshr{P}[\cdot,k_u]$, $\honshr{z}$, $\honshr{V_u}$.
+%	
+%	$\Sim$ does the following:
+%	\begin{itemize}
+%		%-------
+%		\item[--] $\Sim$ picks $\rho, r, Q, \tau, \gamma, \beta, \delta, \beta_x, \beta_y, \beta_z$ uniformly at random from their respective domains.
+%		%-------
+%		\item[--] $\Sim$ picks $\ewit_a[\cdot,\cdot, k_u]\in \rsc{\alpha}{h,2m-1}$ for all $a\in\{x,y,z\}$  and computes $\honshr{\ewit_a}[\cdot,\cdot,k_u]= \ewit_a[\cdot, \cdot, k_u] - \corshr{\ewit_a}[\cdot, \cdot, k_u]$ $\forall a\in\{x,y,z\},\; u\in[t]$.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{\comoracle_a}[\cdot,k_u]$ which is commitment of $\honshr{\ewit_a}[\cdot, \cdot,k_u]$ $\forall u\in[t], a\in\{x,y,z\}$.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{\tilde{\ewit}}[\cdot,k_u]=\sum_{i\in[p]} \rho_i \honshr{\ewit_x}[i,\cdot,k_u]+ \rho_{p+i} \honshr{\ewit_y}[i,\cdot,k_u]+ \rho_{2p+i} \honshr{\ewit_z}[i,\cdot,k_u]$ and $\honshr{\tilde{c_{k_u}}}$, which is commitment of $\honshr{\tilde{\ewit}}[\cdot,k_u]$, for all $u\in [t]$.
+%		%-------
+%		\item[--] $\Sim$ picks $\honshr{\tilde{c_1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ such that 
+%		%-------
+%		$\honshr{\tilde{c}_{k_u}} = \prod_{a\in[\ell]} (\honshr{\tilde{c}_{a}})^{\Lambda_{n,\ell}^T[a,k_u]} \; \forall u\in[t]$.
+%		
+%		\item[--] $\Sim$ picks $\honshr{\comoracle_a}[\cdot, k]$ such that 
+%		
+%		$\honshr{\tilde{c_k}} = \prod_{i\in[p]} (\honshr{\comoracle_x}[i,k])^{\rho_i}\cdot(\honshr{\comoracle_y}[i,k])^{\rho_{p+i}}\cdot(\honshr{\comoracle_z}[i,k])^{\rho_{2p+i}}$ $\forall k\notin\{k_u:u\in[t]\}$.
+%		%-------
+%		\item[--] $\Sim$ sends $\honshr{\comoracle_a}$ for all $a\in\{x,y,z\}$ and $\honshr{\tilde{c_1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ to the aggregator.
+%		%-------
+%		\item[--] $\Sim$ picks $z$ from $\FF^{2m-1}$ such that $z[j]=0\; \forall j\in[m]$. Then $\Sim$ splits $z$ into $\honshr{z}$ and $\corshr{z}$ such that $\honshr{z}+\corshr{z} = z$.
+%		%-------
+%		\item[--] $\Sim$ computes $\corshr{\ewit_x\cdot\ewit_y}[\cdot,\cdot,k_u]$ from $\corshr{\ewit_x}, \corshr{\ewit_y}$ and $\honshr{\ewit_x}[\cdot,\cdot,k_u]\; \honshr{\ewit_y}[\cdot,\cdot,k_u]$ and picks $\corshr{\ewit_x\cdot\ewit_y}[i,\cdot,k]$ $\in \rsc{\alpha}{h,2m-1}$ uniformly for $k\notin \{k_u:u\in[t]\}$ and compute such that 
+%		
+%		$\{(\sum_{i\in[p]}r_i\corshr{\ewit_x\cdot\ewit_y}[i,\cdot,\cdot])\varphi\}[j]=z[j] -\honshr{z}[j]+\{(\sum_{i\in[p]}r_i\corshr{\ewit_z}[i,\cdot,\cdot])\varphi\}[j]$ $\forall j\in[m]$.
+%		It is easy to see that picking such $\corshr{\ewit_x\cdot\ewit_y}[\cdot,\cdot,k]$ can be done efficiently.
+%		%-------
+%		\item[--] $\Sim$ calls $\Sim_{M}$ on input $\corshr{\ewit_x}, \corshr{\ewit_y}$ and $\corshr{\ewit_x\cdot\ewit_y}$ and gets a valid transcript of the interaction among the provers.
+%		%-------
+%		\item[--] $\Sim$ computes $\honshr{P}[\cdot,k_u]$ from $\corshr{\ewit_x}$, $\corshr{\ewit_y}$ and 
+%		
+%		\noindent$\honshr{\ewit_x}[\cdot,\cdot,k_u]$, $\honshr{\ewit_y}[\cdot,\cdot,k_u]$ for all $u\in[t]$ and $\honshr{c_{k_u}}$, commitments of $\honshr{P}[\cdot,k_u]$.
+%		
+%		\item[--] picks $\honshr{c_0}$, $\honshr{d_0}$ uniformly and picks
+%		$\honshr{c_1}, \ldots, \honshr{c_{2\ell-1}}$ such that:\\
+%		$\honshr{c_{k_u}} = \prod_{a\in[2\ell-1]}(\honshr{c_a})^{\Lambda_{n,2\ell-1}^T[a,k_u]}$ $\forall u\in[t]$\\
+%		$\cm = (\honshr{c_0})^{\beta}\prod_{a\in[2\ell-1]}(\honshr{c_a})^{\varphi_a}$
+%		%-------
+%		\item[--] $\Sim$ sends $\honshr{c_0}, \honshr{c_1}, \ldots, \honshr{c_{2\ell-1}}, \honshr{d_0}$ to the aggregator.
+%		%-------
+%		\item[--] $\Sim$ sends $\honshr{\ewit_a}[\cdot,j_u,k_u]$ for all $a\in\{x,y,z\}$ and $\honshr{P}[\cdot,k_u]$, as responses to the $Q$.
+%		%-------
+%		\item[--] $\Sim$ finally sends $\honshr{z}$ and $\honshr{V_u}$ corresponding to the challenges $\delta$ and $\beta_x, \beta_y, \beta_z$.
+%		%-------
+%	\end{itemize}
+%	The view generated by $\Sim$ is indistinguishable from a transcript of an honest execution. 
+%\end{proof}
+%%-------
+%Since DP-$\name$ is the combination of linear check and quadratic check, simulator for the complete protocol follows the same strategies of the simulators described in Lemma: \ref{lem:WHlin} and \ref{lem:WHquad}. So, the DP-$\name$ described in Figure: \ref{fig:dpgraphene} has the witness hiding property.
+%
+%\begin{lemma}
+%	Let $\Pi_{Mult}$ be a secure protocol described in Lemma: \ref{lem:WHquad}, and $\Pi_{Mult}$ is used in DP-$\grapheneRCS$ in step 5, then $\exists$ simulator $\Sim$ such that $\Sim$ can generate a view of the adversary which is indistinguishable from the view of the adversary in an honest execution.
+%\end{lemma}
+%
+%\begin{proof}
+%	$\Sim$ starts with picking the verifier's randomness and does the same as simulators for the Linear check, Lemma: \ref{lem:WHlin} and the Quadratic check, Lemma: \ref{lem:WHquad} do. This generates an indistinguishable of the adversary.
+%\end{proof}
+%%---------------------------------------------------------
+
+In Section~\ref{app:graphene_zk}, we proved that the single prover protocol $\name$ described in Figure~\ref{fig:graphene} has zero-knowledge property, see Lemma~\ref{lem:simgraphene}.
+%, and each component of $\name$, Linear Check and Quadratic Check has zero-knowledge property, see Lemma~\ref{lem:simlincheck} and ~\ref{lem:simlincheck} respectively. Then by Lemma~\ref{lem:ZK}, DP-$\name$ has zero-knowledge property.
+%-------
+
+\begin{lemma}\label{lem:simdpgraphene}
+	There exists a simulator $\Sim$ that outputs a perfectly indistinguishable extended view of the verifier in an honest execution of the protocol DP-$\grapheneRCS$ for $t\leq b$.
+\end{lemma}
+%-------
+\begin{proof}
+Proof of the Lemma is evident from Lemma~\ref{lem:ZK} and Lemma~\ref{lem:simgraphene}.
+\end{proof}
+%-------
+%-------------------------
+
+\noindent\textit{\textbf{Witness Hiding and Witness Hiding with Collusion:}} In our work, we are mainly concern about building a public coin proof system, more specifically NIZK, so that anyone can verify the proof, so any prover can play a verifier's role and learn nothing. Therefore Witness Hiding and Witness Hiding with Collusion are the same in this setting. 
+%-------
+
+We will separate the set of provers into 2 classes: honest($H$) and corrupt($C$). Note that $|H|+|C|=\Num$ and $|C|<t$, for some $t<\Num$. In Linear Check, since there is no interaction among the provers other than the aggregator, it suffices to generate the view of the aggregator. For the Quadratic check, we need that the multiplications among the provers are executed securely. 
+%-------
+\begin{lemma}\label{lem:WHlin}
+	For the Distributed Linear Check protocol (Figure~\ref{fig:distlincheck}), there exists a polynomial-time simulator $\Sim$ corresponding to a subset of $t$ provers out of $\Num$ ($t < \Num$) provers controlled by a semi-honest PPT adversary $\Adv$ such that $\Sim$ generates a view of $\Adv$ which is indistinguishable from a real view of $\Adv$.
+\end{lemma}
+%-------
+\begin{proof}
+	Let $C$ be the set of all corrupt provers and $H$ be the set of all honest provers. 
+	%-------
+	Case:1 Let the output of the protocol be ``reject'', then $\Sim$ picks all the components of the view of the corrupt parties uniformly at random from the appropriate domains, which is indistinguishable from an honest execution.
+	%-------
+	
+	Case 2: Let the output of the protocol be ``accept''. Then input for $\Sim$ consists of $\shr{\ewit} \; \forall \xi\in C$ and shares of $0^{2m-1}$. Without loss of generality, we can assume that there are 2 parties, $C$ and $H$. Also, assume that the adversary controls the aggregator. The view of $\Adv$ consists of:
+	%-------
+	
+	verifier's randomness: $\{\rho, r, Q=\{(j_u,k_u):u\in[t]\}, \delta, \beta\}$
+	%-------
+	
+	commitments: $\honshr{\comoracle}$, $\honshr{\tilde{c}_1},\ldots,\honshr{\tilde{c}_{\ell}},$ $\honshr{c_0}, \honshr{c_1}, \ldots,$ $\honshr{c_{s+\ell-1}}, \honshr{d_0}$
+	%-------
+	
+	vectors: $\honshr{\ewit}[\cdot,j_u,k_u], \honshr{P}[\cdot,k_u], \honshr{z} \text{ and } \honshr{V_u}$
+	%-------
+	
+	$\Sim$ does the following: 
+	%-------
+	\begin{itemize}
+		%-------
+		\item[--] $\Sim$ picks uniformly at random the challenges on behalf of the verifier from the respective domains i.e. $\{\rho, r, Q=\{(j_u,k_u):u\in[t]\}, \delta, \beta\}$.
+		%-------
+		\item[--] Then $\Sim$ picks $\ewit[\cdot,\cdot,k_u]$ such that $\ewit[i,\cdot, k_u] \in \rsc{\alpha}{h,2m-1}$ and computes $\honshr{\ewit}[\cdot, \cdot, k_u] = \ewit[\cdot,\cdot, k_u] - \corshr{\ewit}[\cdot, \cdot,k_u]$.
+		%-------
+		\item[--] $\Sim$ computes $\honshr{\comoracle}[\cdot,k_u]$ which is commitment of $\honshr{\ewit}[\cdot, \cdot, k_u]$
+		%-------
+		\item[--] $\Sim$ computes $\honshr{\tilde{\ewit}}[\cdot,k_u] = \sum_{i \in [p]} \rho_i\honshr{\ewit}[i,\cdot,k_u]$ and $\honshr{\tilde{c}_{k_u}}$ which is commitment of $\honshr{\tilde{\ewit}}[\cdot,k_u]$, for all $u\in[t]$.
+		%-------
+		\item[--] $\Sim$ picks $\honshr{\tilde{c}_1},\ldots,\honshr{\tilde{c}_{\ell}}$ such that\\
+		$\honshr{\tilde{c}_{k_u}} = \prod_{a\in[\ell]} (\honshr{\tilde{c}_{a}})^{\Lambda_{n,\ell}^T[a,k_u]} \; \forall u\in[t]$. $\Sim$ can do this efficiently since $\Lambda_{n,\ell}^T$ is a full rank matrix.
+		%-------
+		\item[--] $\Sim$ picks $\honshr{\comoracle}[\cdot,k]$ such that\\
+		$\honshr{\tilde{c}_k} = \prod_{i\in[p]} (\honshr{\comoracle}[i,k])^{\rho_i} \; \forall k\notin \{k_u:u\in[t]\}$. 
+		%-------
+		\item[--] $\Sim$ sends $\honshr{\comoracle}, \honshr{\tilde{c}_{1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ to the aggregator.
+		%-------
+		\item[--] $\Sim$ computes\\
+		$\honshr{P}[j,k_u] = \sum_{i\in[p]} R^i(\alpha_j, \eta_{k_u})\cdot \honshr{U}[i,j,k_u] \; \forall u\in[t]$ and $\honshr{c_{k_u}}$ which is commitment of $\honshr{P}[\cdot,k_u]$.
+		%-------
+		\item[--] $\Sim$ picks $\honshr{c_0},\;\honshr{d_0}$ uniformly at random and picks $\honshr{c_1}, \ldots, \honshr{c_{s+\ell-1}}$ subject to the following constraints:\\
+		$\honshr{c_{k_u}} = \prod_{a\in[s+\ell-1]}(\honshr{c_a})^{\Lambda_{n,s+\ell-1}^T[a,k_u]} \; \forall u\in[t]\\
+		\honshr{\cm} = (\honshr{c_0})^{\beta}\prod_{a\in[s+\ell-1]} (\honshr{c_a})^{\varphi_a}$\\
+		$\Sim$ can efficiently perform this since $\Lambda_{n,s+\ell-1}^T$ is full rank matrix.
+		%-------
+		\item[--] $\Sim$ sends $\honshr{c_0}, \honshr{c_1},\ldots, \honshr{c_{s+\ell-1}}, \honshr{d_0}$ to the aggregator.
+		%-------
+		\item[--] According to the challenge $Q$, $\Sim$ sends $\honshr{\ewit}[\cdot, j_u,k_u]$, $\honshr{P}[\cdot,k_u]$ to the aggregator.
+		%-------
+		\item[--] $\Sim$ computes $\honshr{z}$ in the following way:
+		$\Sim$ computes \\
+		%\begin{align*}
+		$\sum_{j\in[m]}\corshr{z}[j] 
+		=\sum_{j\in[m]} (\beta \corshr{P_0}+\corshr{\overline{P}}\varphi + \corshr{0})[j]$
+		%\end{align*} 
+		$\Sim$ knows $\corshr{0}$ and from $\corshr{\ewit}$ and $r$, $\Sim$ can obtain $\corshr{P}$ completely. Only unknown term is $\corshr{P_0}$, but note that $\sum_{j\in[m]}\corshr{P_0}[j] = 0$, hence $\Sim$ can compute $\sum_{j\in[m]}\corshr{z}[j] = L$ (say).
+		$\Sim$ picks $\honshr{z}$ uniformly from $\FF^{2m-1}$ satisfying $\sum_{j\in[m]} \honshr{z}[j]= r^Tb-L$.
+		%-------
+		\item[--] Corresponding to the challenge $\delta$, $\Sim$ computes $\honshr{V_u} = \sum_{i\in[p]} \delta_i\cdot \honshr{\ewit}[i,\cdot, k_u]$.
+		%-------
+		\item[--] Finally, $\Sim$ sends $\honshr{z}, \honshr{V_u}$ to the aggregator.
+		%-------
+	\end{itemize}
+	%-------
+	The transcript generated by $\Sim$ is perfectly indistinguishable from an honest execution of the protocol. Hence the linear check described in Figure: \ref{fig:distlincheck} has witness hiding property.
+\end{proof}
+%-------
+
+The distributed quadratic check protocol described in Figure: \ref{fig:distquadcheck} has witness hiding property if the multiplication of the secrets held by the provers is performed securely. Let $\Pi_{\sf Mult}$ is a secure $\FMult$ protocol used there, which can withstand $t$ corrupted parties, then distributed quadratic has witness hiding property against $t$ corrupted provers. The following lemma ensures the claim. 
+%-------
+\begin{lemma}\label{lem:WHquad}
+	Let $\Pi_{Mult}$ be a $\Num$-party $t$-secure protocol where the inputs of the $\xi$th party are $\shr{\bf a}, \shr{\bf b}$ and the protocol outputs $\shr{(\sum_{\xi\in[\Num]} \shr{\bf a}) \cdot (\sum_{\xi\in[\Num]} \shr{\bf b})}$ to $\distprover$, where ${\bf a}, {\bf b}$ are vectors of length $2m-1$. Then corresponding to a subset of $t$ provers corrupted semi-honestly by an PPT adversary $\Adv$, there exists a polynomial-time simulator $\Sim$ that takes private values of the provers controlled by $\Adv$ as input and the output is indistinguishable from the view of $\Adv$ in the Distributed Quadratic Check protocol, Figure~\ref{fig:distquadcheck}.
+\end{lemma}
+%-------
+\begin{proof}
+	Since $\Pi_{Mult}$ is a secure protocol, then there is a simulator $\Sim_{M}$ which can generate a view that is indistinguishable from an honest execution of the protocol. $\Sim$ takes inputs of the corrupt parties and output of the protocol to simulate the view. Similar to the Lemma: \ref{lem:WHlin}, we will consider $C$ as the set of corrupt parties and $H$ as the set of honest parties. We will follow the same notations. 
+	
+	The view of $\Adv$ in the distributed quadratic check consists of :
+	
+	Verifier's Randomness: $\rho, r, Q, \tau, \gamma, \beta, \delta, \beta_x, \beta_y, \beta_z$
+	
+	Commitments: $\honshr{\comoracle_a}\; \forall a\in \{x,y,z\}$, $\honshr{\tilde{c_1}}$, $\ldots,$ $\honshr{\tilde{c}_{\ell}}$, $\honshr{c_0}$, $\ldots, \honshr{c_{2\ell-1}}$
+	
+	Vectors:$\honshr{\ewit_a}[\cdot,\cdot,k_u] \; \forall a\in\{x,y,z\}$, $ \honshr{P}[\cdot,k_u]$, $\honshr{z}$, $\honshr{V_u}$.
+	
+	$\Sim$ does the following:
+	\begin{itemize}
+		%-------
+		\item[--] $\Sim$ picks $\rho, r, Q, \tau, \gamma, \beta, \delta, \beta_x, \beta_y, \beta_z$ uniformly at random from their respective domains.
+		%-------
+		\item[--] $\Sim$ picks $\ewit_a[\cdot,\cdot, k_u]\in \rsc{\alpha}{h,2m-1}$ for all $a\in\{x,y,z\}$  and computes $\honshr{\ewit_a}[\cdot,\cdot,k_u]= \ewit_a[\cdot, \cdot, k_u] - \corshr{\ewit_a}[\cdot, \cdot, k_u]$ $\forall a\in\{x,y,z\},\; u\in[t]$.
+		%-------
+		\item[--] $\Sim$ computes $\honshr{\comoracle_a}[\cdot,k_u]$ which is commitment of $\honshr{\ewit_a}[\cdot, \cdot,k_u]$ $\forall u\in[t], a\in\{x,y,z\}$.
+		%-------
+		\item[--] $\Sim$ computes $\honshr{\tilde{\ewit}}[\cdot,k_u]=\sum_{i\in[p]} \rho_i \honshr{\ewit_x}[i,\cdot,k_u]+ \rho_{p+i} \honshr{\ewit_y}[i,\cdot,k_u]+ \rho_{2p+i} \honshr{\ewit_z}[i,\cdot,k_u]$ and $\honshr{\tilde{c_{k_u}}}$, which is commitment of $\honshr{\tilde{\ewit}}[\cdot,k_u]$, for all $u\in [t]$.
+		%-------
+		\item[--] $\Sim$ picks $\honshr{\tilde{c_1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ such that 
+		%-------
+		$\honshr{\tilde{c}_{k_u}} = \prod_{a\in[\ell]} (\honshr{\tilde{c}_{a}})^{\Lambda_{n,\ell}^T[a,k_u]} \; \forall u\in[t]$.
+		$\Sim$ can pick such $\tilde{c}$ efficiently due to the fact that $\Lambda_{n,\ell}^T$ is a full rank matrix.
+		%-------
+		\item[--] $\Sim$ picks $\honshr{\comoracle_a}[\cdot, k]$ such that 
+		
+		$\honshr{\tilde{c_k}} = \prod_{i\in[p]} (\honshr{\comoracle_x}[i,k])^{\rho_i}\cdot(\honshr{\comoracle_y}[i,k])^{\rho_{p+i}}\cdot(\honshr{\comoracle_z}[i,k])^{\rho_{2p+i}}$ $\forall k\notin\{k_u:u\in[t]\}$.
+		%-------
+		\item[--] $\Sim$ sends $\honshr{\comoracle_a}$ for all $a\in\{x,y,z\}$ and $\honshr{\tilde{c_1}}, \ldots, \honshr{\tilde{c}_{\ell}}$ to the aggregator.
+		%-------
+		\item[--] $\Sim$ picks $z$ from $\FF^{2m-1}$ such that $z[j]=0\; \forall j\in[m]$. Then $\Sim$ splits $z$ into $\honshr{z}$ and $\corshr{z}$ such that $\honshr{z}+\corshr{z} = z$.
+		%-------
+		\item[--] $\Sim$ computes $\corshr{\ewit_x\cdot\ewit_y}[\cdot,\cdot,k_u]$ from $\corshr{\ewit_x}, \corshr{\ewit_y}$ and $\honshr{\ewit_x}[\cdot,\cdot,k_u]\; \honshr{\ewit_y}[\cdot,\cdot,k_u]$ and picks $\corshr{\ewit_x\cdot\ewit_y}[i,\cdot,k]$ $\in \rsc{\alpha}{h,2m-1}$ uniformly for $k\notin \{k_u:u\in[t]\}$ and compute such that 
+		
+		$\{(\sum_{i\in[p]}r_i\corshr{\ewit_x\cdot\ewit_y}[i,\cdot,\cdot])\varphi\}[j]=z[j] -\honshr{z}[j]+\{(\sum_{i\in[p]}r_i\corshr{\ewit_z}[i,\cdot,\cdot])\varphi\}[j]$ $\forall j\in[m]$.
+		It is easy to see that picking such $\corshr{\ewit_x\cdot\ewit_y}[\cdot,\cdot,k]$ can be done efficiently.
+		%-------
+		\item[--] $\Sim$ calls $\Sim_{M}$ on input $\corshr{\ewit_x}, \corshr{\ewit_y}$ and $\corshr{\ewit_x\cdot\ewit_y}$ and gets a valid transcript of the interaction among the provers.
+		%-------
+		\item[--] $\Sim$ computes $\honshr{P}[\cdot,k_u]$ from $\corshr{\ewit_x}$, $\corshr{\ewit_y}$ and 
+		
+		\noindent$\honshr{\ewit_x}[\cdot,\cdot,k_u]$, $\honshr{\ewit_y}[\cdot,\cdot,k_u]$ for all $u\in[t]$ and $\honshr{c_{k_u}}$, commitments of $\honshr{P}[\cdot,k_u]$.
+		
+		\item[--] picks $\honshr{c_0}$, $\honshr{d_0}$ uniformly and picks
+		$\honshr{c_1}, \ldots, \honshr{c_{2\ell-1}}$ such that:\\
+		$\honshr{c_{k_u}} = \prod_{a\in[2\ell-1]}(\honshr{c_a})^{\Lambda_{n,2\ell-1}^T[a,k_u]}$ $\forall u\in[t]$\\
+		$\cm = (\honshr{c_0})^{\beta}\prod_{a\in[2\ell-1]}(\honshr{c_a})^{\varphi_a}$
+		%-------
+		\item[--] $\Sim$ sends $\honshr{c_0}, \honshr{c_1}, \ldots, \honshr{c_{2\ell-1}}, \honshr{d_0}$ to the aggregator.
+		%-------
+		\item[--] $\Sim$ sends $\honshr{\ewit_a}[\cdot,j_u,k_u]$ for all $a\in\{x,y,z\}$ and $\honshr{P}[\cdot,k_u]$, as responses to the $Q$.
+		%-------
+		\item[--] $\Sim$ finally sends $\honshr{z}$ and $\honshr{V_u}$ corresponding to the challenges $\delta$ and $\beta_x, \beta_y, \beta_z$.
+		%-------
+	\end{itemize}
+	The view generated by $\Sim$ is indistinguishable from a transcript of an honest execution. 
+\end{proof}
+%-------
+Since DP-$\name$ is the combination of linear check and quadratic check, the simulator for the complete protocol follows the same strategies of the simulators described in Lemma: \ref{lem:WHlin} and \ref{lem:WHquad}. So, the DP-$\name$ described in Figure: \ref{fig:dpgraphene} has the witness hiding property.
+
+\begin{lemma}
+	Let $\Pi_{Mult}$ be a secure protocol described in Lemma: \ref{lem:WHquad}, and $\Pi_{Mult}$ is used in DP-$\grapheneRCS$ in step 5, then $\exists$ polynomial-time simulator $\Sim$ such that $\Sim$ can generate a view of the adversary $\Adv$ which is indistinguishable from the view of $\Adv$ in a real execution of the protocol.
+\end{lemma}
+
+\begin{proof}
+	$\Sim$ starts with picking the verifier's randomness and does the same as simulators for the Linear check, Lemma: \ref{lem:WHlin} and the Quadratic check, Lemma: \ref{lem:WHquad} do. Therefore the transcript generated by $\Sim$ is indistinguishable from the adversary's view.
+\end{proof}
+%---------------------------------------------------------

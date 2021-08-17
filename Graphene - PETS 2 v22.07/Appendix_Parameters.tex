@@ -1,0 +1,24 @@
+\subsection{Performance Parameters for Ligero and Bulletproofs}\label{sec:performance}
+%We summarize the performance parameters for Ligero ~\cite{ligero}, and 
+%Bulletproofs ~\cite{bulletproofs} that we use to derive our estimates in 
+%Figure ~\ref{fig:standalonecompare}. Let $N$ denote the size of extended
+%witness.
+
+\noindent{\bf Ligero}: Let $m,s$ be such that $N=ms$. Let $t$ be a parameter,
+and let $\ell=s+t$, $n=O(\ell)$ and $e\leq (n-\ell)/4$
+Then the performance parameters for Ligero are then given by:
+$\zkcomm=n+6\ell+4s+4mt+5t-5$,
+ $t_\prover=O(N)\cfop+4m(\cfft(s)+\cfft(n))$,
+$t_\verifier=O(N)+4m\cfft(s)$,
+$\kappa_{lg}=(1-e/n)^t+5((2\ell+e)/n)^t$.
+
+\noindent{\bf Bulletproofs}:
+$\zkcomm=2\log(N)+13$, $t_\prover=9N\cexp +
+2\cmexp(2N)+3\cmexp(N)$, $t_\verifier=N\cexp + \cmexp(2N)$, $\kappa_{bp}=N/|\FF|$.
+
+For computing prover communication in distributed setting we use the expressions:
+$\prcomm=MPC(\Num,\max(N_s,4m\ell),1)+\Num\times
+[(4pn+5\ell+s+2)\bitsG+(4pt+4m+h)\bitsF]$, for $\dpname$ and
+$\prcomm=MPC(\Num,N_s,1)+\Num\times [8\bitsG + N\bitsF]$ for Bulletproofs. Here
+$MPC(\Num,N_s,1)$ denotes communication in an $\Num$ party MPC with circuit size
+$N_s$ and depth as 1.
