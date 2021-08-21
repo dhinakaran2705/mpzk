@@ -4,24 +4,43 @@ In Ligero~\cite{ligero}, an extended witness is viewed as a matrix of size $\sqr
 (ii) We split the extended witness into three dimensions that aids in verification time while retaining the communication complexity proportional to the smallest dimension.
 %-------------
 
-Further, we give a generic construction from an IOP-based proof system to obtain another proof system that offers DPZK. For most of the protocols, the communication cost among the provers is expensive. Our protocol $\name$ provides a much efficient construction of the distributed prover version. 
+Further, we give a generic construction from an IOP-based proof system to obtain another proof system that offers DPZK. For most of the protocols, the communication cost among the provers is expensive. Our protocol $\name$ provides a much efficient construction of the distributed prover version.
+Below we provide a construction of the compiler that takes an IOP-based proof system outputs a secure IOP-based proof system. The compiler requires an homomorphic commitment. We instantiate this by using Pedersen commitment.
 %-------------
-\begin{lemma}[Compiler]\label{lemma:compiler}
-	Let $\langle \prover, \verifier \rangle$ be an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{Or}$ is the oracle construction algorithm. Then $\exists$ an IOP-based zero-knowledge proof system $\langle \prover', \verifier' \rangle$ with an homomorphic oracle construction algorithm $\mathsf{H}$ such that it supports DPZK.
+
+\paragraph*{Compiler} Let $\langle \prover, \verifier \rangle$ be an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{Or}$ is the oracle construction algorithm. 
+Furthermore, consider $\langle \prover, \verifier \rangle$ be an $r$ round protocol and consider at the $i$th round $\prover$ sends $m_i$ to $\verifier$ and sets $\pi_i$ as the oracle. Note that $m_i$ and $\pi_i$ are functions of the statement $x$, (extended) witness $\wit$, $\prover$'s randomness $r_i$, previous messages and oracles $(m_1, \ldots, m_{i-1}, \pi_1, \ldots, \pi_{i-1})$, and $\verifier$'s challenges.
+Let $\verifier$ sends $c_i$ as challenge message and queries $j$th location of the oracle $\pi_i$.
+
+On input $\langle \prover, \verifier \rangle$, the compiler outputs a protocol $\langle \prover', \verifier' \rangle$, where $\langle \prover', \verifier' \rangle$ is obtained in the following way:
+at $i$th round the prover $\prover'$ sets $m'_i = m_i$ and $\pi' = \comm(\pi_i, r_i)$, where $\comm(\cdot)$ is any homomorphic commitment scheme applied on each part of $\pi_i$. In particular, we instantiate $\comm$ by using Pedersen commitment scheme. Therefore, the new oracle construction algorithm is $\mathsf{H}(\pi_i) = \mathsf{Or}(\comm(\pi_i, r_i))$.
+
+$\prover'$ sends $m'_i$ to $\verifier'$ and performs $\mathsf{H}$ to set the oracle for $i$th round. Furthermore, for every oracle query $j'$ by the verifier $\verifier'$, $\prover'$ sends $\open(\pi'_i[j'])$ to $\verifier'$.
+
+$\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to the oracle, $\verifier'$ receives $\pi'_i[j']$ from oracle and $\open(\pi'_i[j'])$ from $\prover'$. $\verifier'$ checks if the opening of $\pi'_i[j']$ are correct or not, followed by the verification algorithm of $\verifier$. 
+%-------------
+
+%-------------
+\begin{lemma}\label{lemma:compiler}
+	Let $\langle \prover, \verifier \rangle$ be an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{Or}$ is the oracle construction algorithm. Then the protocol $\langle \prover', \verifier' \rangle$ obtained by using the above compiler is also an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{H}$ is the oracle construction algorithm.
 \end{lemma}
 %---
 \begin{proof}
-	Let $\langle \prover, \verifier \rangle$ be an $r$ round protocol. Furthermore, consider at the $i$th round $\prover$ sends $m_i$ to $\verifier$ and sets $\pi_i$ as the oracle.
-	%---
 	
-	Note that $m_i$ and $\pi_i$ are functions of the statement $x$, (extended) witness $\wit$, $\prover$'s randomness $r_i$, previous messages and oracles $(m_1, \ldots, m_{i-1}, \pi_1, \ldots, \pi_{i-1})$, and $\verifier$'s challenges.
-	%---
+%	Let $\langle \prover, \verifier \rangle$ be an $r$ round protocol. Furthermore, consider at the $i$th round $\prover$ sends $m_i$ to $\verifier$ and sets $\pi_i$ as the oracle.
+%	%---
+%	
+%	Note that $m_i$ and $\pi_i$ are functions of the statement $x$, (extended) witness $\wit$, $\prover$'s randomness $r_i$, previous messages and oracles $(m_1, \ldots, m_{i-1}, \pi_1, \ldots, \pi_{i-1})$, and $\verifier$'s challenges.
+%	%---
+%	
+%	In the new protocol $\langle \prover', \verifier' \rangle$, $\prover'$ sets $m'_i = m_i$ and $\pi'_i = \comm(\pi_i, r_i)$. Here $\comm(\cdot)$ is any homomorphic commitment scheme. In particular, we instantiate $\comm$ by using Pedersen commitment scheme. Therefore, the new oracle construction algorithm is $\mathsf{H}(\pi_i) = \mathsf{Or}(\comm(\pi_i, r_i))$.
+%	%---
+%	Similarly, the verification algorithm changes in the following way:
+%	If $\verifier$ queries $j$th position to the oracle $\pi_i$, then $\verifier'$ queries the same position and receives $\open(\pi'_i[j])$, followed by the same computation of $\verifier$.
+%	%----
 	
-	In the new protocol $\langle \prover', \verifier' \rangle$, $\prover'$ sets $m'_i = m_i$ and $\pi'_i = \comm(\pi_i, r_i)$. Here $\comm(\cdot)$ is any homomorphic commitment scheme. In particular, we instantiate $\comm$ by using Pedersen commitment scheme. Therefore, the new oracle construction algorithm is $\mathsf{H}(\pi_i) = \mathsf{Or}(\comm(\pi_i, r_i))$.
-	%---
-	Similarly, the verification algorithm changes in the following way:
-	If $\verifier$ queries $j$th position to the oracle $\pi_i$, then $\verifier'$ queries the same position and receives $\open(\pi'_i[j])$, followed by the same computation of $\verifier$.
-	%----
+	
+	
 	
 	\textit{Completeness} of $\langle \prover', \verifier' \rangle$ holds directly from the completeness of $\langle \prover, \verifier \rangle$. Consider an instance $x$, where $R(x,\wit) = 1$ for the Relation $R$ and $\prover'$ has the witness $\wit$. 
 	Now in $\langle \prover, \verifier \rangle$, $\prover$ sends the messages $m_i$ that is the same as the messages of $\langle \prover', \verifier' \rangle$, and for the oracle instead of $\mathsf{H}(\pi_i)$, $\prover$ executes $\mathsf{Or}(\pi_i)$. Since $\langle \prover, \verifier \rangle$ is complete, and the proof is correct. Therefore $\verifier$ accepts the proof. Hence, the proof given by $\prover'$ is also accepting, as the verification algorithm is the same. This ensures the completeness property.
@@ -56,8 +75,14 @@ Further, we give a generic construction from an IOP-based proof system to obtain
 	
 	$\Sim'$ executes $\Sim$. If $\tau$ is the transcript generated by $\Sim$, and if $\pi_i$ be the part of $\tau$ which is an oracle set by $\prover$ at $i$th round of the protocol. Then $\Sim'$ commits to $\pi_i$ and gets $\pi'_i$. Finally the simulated transcript, $\tau'$, generated by $\Sim'$ by replacing $\pi_i$ with $\pi'_i$ is indistinguishable from a real execution of $\langle \prover', \verifier' \rangle$. This ensures the zero-knowledge property.
 	%---
+\end{proof}
+
+\begin{lemma}\label{lemma:generic_dpzk}
+	Let $\langle \prover', \verifier' \rangle$ be an IOP-based protocol obtained by using the above mentioned compiler. If the witness, $\wit$, is shared among $\Num$ provers $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ additively, then $\langle \prover', \verifier' \rangle$ relies $\Func_{DPZK}$ functionality securely.
+\end{lemma}
 	
-	Construction of $\DPZK$ version: Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\cdot)$ for $\pi_i$. Let $\Partyset = \{\prover_{1}, \ldots, \prover_{\Num}\}$ be the set of $\Num$ provers, where at most $t (<n)$ can be corrupted. Parties in $\Partyset$ execute a $t$-secure MPC for the function $m_i(\cdot)$ and $\pi_i(\cdot)$ to get $\shareA{m_i}$ and $\shareA{\pi_i}$, where $\shareA{x}$ represents $t$-out of $n$ sharing of $x$. Provers locally compute $\shareA{\pi'_i}$ and send $\shareA{m_i}, \shareA{\pi'_i}$ to an aggregator $\Ag$.
+\begin{proof}
+	Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\cdot)$ for $\pi_i$. Let $\Partyset = \{\prover_{1}, \ldots, \prover_{\Num}\}$ be the set of $\Num$ provers, where at most $t (<n)$ can be corrupted. Parties in $\Partyset$ execute a $t$-secure MPC for the function $m_i(\cdot)$ and $\pi_i(\cdot)$ to get $\shareA{m_i}$ and $\shareA{\pi_i}$, where $\shareA{x}$ represents $t$-out of $n$ sharing of $x$. Provers locally compute $\shareA{\pi'_i}$ and send $\shareA{m_i}, \shareA{\pi'_i}$ to an aggregator $\Ag$.
 	
 	$\Ag$ obtains $m_i = \sum \shareA{m_i}$ and $\pi'_i = \prod \shareA{\pi'_i}$. It sets $\pi'_i$ as the oracle and sends $m_i$ to $\verifier$.
 	
@@ -98,7 +123,8 @@ Further, we give a generic construction from an IOP-based proof system to obtain
 	Here note that, the view generated by $\Sim$ is indistinguishable from a real execution of the protocol. This can be established by the following argument:
 	\begin{align*}
 	& \SimV_1 || \ldots ||\SimV_i || \RealV_{i+1}|| \ldots || \RealV_r \\
-	\approx\; & \SimV_1 || \ldots ||\RealV_i || \RealV_{i+1}|| \ldots || \RealV_r 
+	\approx\; 
+	& \SimV_1 || \ldots ||\RealV_i || \RealV_{i+1}|| \ldots || \RealV_r 
 	\end{align*}
 	Where $\SimV_i$ represents the simulated view of the $i$th round and analogously $\RealV_i$ represents the real view of the $i$th round.
 	Now using hybrid argument we get \textit{simulated view} $\approx$ \textit{real view}.
@@ -107,9 +133,9 @@ Further, we give a generic construction from an IOP-based proof system to obtain
 The compiler preserves the proof size and round complexity of the underlying protocol. The overhead of the computational complexity depends on the oracle size and round complexity of the protocol. If $\langle \prover, \verifier \rangle$ has an oracle of size $|\pi_i|$ in the $i$th round, then the prover's complexity in $\langle \prover', \verifier' \rangle$ incurs an additional $|\pi_i|$ group exponentiations in the $i$th round. Similarly, if the verifier in $\langle \prover, \verifier \rangle$ makes $t$ many queries to the oracle $\pi_i$, that adds $t$ group exponentiations in the verifier's complexity in $\langle \prover', \verifier' \rangle$.
 %------
 
-In Aurora~\cite{aurora}, the size of the oracle is $O(N)$, the proof size is $O(\log^2 N)$, and number of rounds is $O(\log N)$. Aurora is an IOP-based proof system where almost all the messages from $\prover$ to $\verifier$ are set as oracles, and $\verifier$ makes a few oracle-queries complete the verification.
+In Aurora~\cite{aurora}, the size of the oracle is $O(N)$, the proof size is $O(\log^2 N)$, and number of rounds is $O(\log N)$. Aurora is an IOP-based proof system where almost all the messages from $\prover$ to $\verifier$ are set as oracles, and $\verifier$ makes oracle-queries to complete the verification.
 %----
-We can convert Aurora using our compiler such that it supports DPZK, we call the distributed version to be D-Aurora. The compiled version retains the Oracle size, proof size, and number of rounds. However, the prover time and the verification time increase by $O(N\log N)$ group exponentiations. Since all the oracle construction and validation need $O(N)$ group exponentiations in every round. The distributed version of it needs secure evaluation of a depth one circuit with $O(N)$ multiplication gates in each round.
+We can convert Aurora using our compiler such that it supports DPZK, we call the distributed version to be D-Aurora. The compiled version retains the Oracle size, proof size, and number of rounds. However, the prover time and the verification time increase by $O(N\log N)$ group exponentiations. Since all the oracle construction and validation need $O(N)$ group exponentiations in every round. The distributed version of it needs secure evaluation of circuits with at least depth one and $O(N)$ multiplication gates in each round.
 %----
 
 Similarly, for Ligero~\cite{ligero}, Ligero++~\cite{ligero++}, our compiler provides protocols with  prover time $O(N\log N)$ field multiplication plus $O(N)$ group exponentiations, and verification time $O(N)$ field multiplication plus $O(N)$ group exponentiations. Note that the proof size of the protocols remains the same in the new compiled protocols. We call the distributed versions as D-Ligero and D-Ligero++ respectively.
@@ -121,6 +147,51 @@ Using the compiler directly on Ligero++~\cite{ligero++} gives 2D version of our 
 %----
 We use a similar approach to~\cite{bootle2020linear, bootle2020zero}, where the witness is viewed as a multi-dimensional matrix. In our construction, we restrict to 3 dimensions since, among these dimensions, only the smallest one contributes to the proof size, while the remaining two aid in better verification time. In our setting, we explored the scenarios by increasing the number of dimensions. Those approaches lead to more complicated and costlier proof-generation and verification protocols without any more improvements. \cite{bootle2020zero} provides linear-time prover with poly-logarithmic verification, but a major drawback of this work is that the soundness error is $O(1)$. Furthermore,~\cite{bootle2020linear} obtain linear-time prover by using linear-time encodable codes. For that, they use a linear code provided by~\cite{druk2014linear}, whose decoding is conjectured intractable. Due to this property, ~\cite{bootle2020linear} does not satisfy the proof of knowledge property.
 
+\subsection*{Optimized D-Ligero:}
+From the above compiler, we see how we can obtain a secure DPZK protocol from Ligero. In the compiled protocol, we observe that each entry of the oracle is committed. Therefore the oracle size remains the same as the oracle size of the base Ligero protocol. However, this can be optimized further, and this optimization aids in reducing the proof size by overcoming the bottleneck of $O(\sqrt{N})$.
+%--- 
+
+The proof for an R1CS instance in Ligero constitutes of the check if the witness $\wit$ satisfies the following conditions: $x = A \wit \land y = B \wit \land z = C \wit \land x \circ y = z$, where is $A, B, C$ matrices are dependent on the R1CS instance. The above check is segmented into three checks: (i) Interleaved check, (ii) Linear check, and (iii) Quadratic check. 
+%---
+
+In Ligero, $\prover$ rewrites the vectors $\wit, x, y, z$ as matrices in a canonical way, further encodes these matrices using RS-encoding by encoding each row of the matrices. Finally, it sets each column of these matrices as oracles. The oracle in Ligero is a matrix, and each location of the oracle contains a column of the matrix.
+%---
+In the interleaved check, $\prover$ proves that the rows of the oracle matrices are codewords. To do that, it provides a random linear combination of the rows of the matrices, where the coefficients for the linear combination are picked by $\verifier$. Therefore, if one or more rows in the matrices are not correct, codeword in the linear combination is not a codeword with high probability. Furthermore, $\verifier$ queries the oracle with few indices (the number of queries is bounded by the security parameter $t$ for zero-knowledge) and receives the columns with corresponding indices. Upon receiving the columns, $\verifier$ performs the same linear combination and checks with the row received from $\prover$.
+%---
+In the linear check, $\prover$ proves the knowledge of a vector $x$ such that $Ax = b$ holds for public matrix $A$ and vector $b$. This check is reduced to a probabilistic check $r^TAx = r^T b$, where $r$ is a random vector picked by $\verifier$. $\prover$ computes a polynomial $q(x)$ such that the sum of the evaluations on publicly known points is equal to $r^Tb$, and sends this $q(x)$ to $\verifier$. $\verifier$ checks if the above condition holds or not, it further checks if $q(x)$ is constructed correctly from $r, A$, and $\wit$. To check this, $\verifier$ queries some locations of the oracle.
+%---
+In the quadratic check, $\prover$ proves that $x \circ y = z$, where the corresponding encoded values are set as oracles. $\verifier$ gives a randomly sampled challenge vector $r$ to $\prover$. $\prover$ constructs a polynomial $q(x)$ using the challenge $r$ and the polynomials used in the encoding of $x, y, z$. This polynomial should evaluate to $0$ on publicly known points. $\prover$ sends the polynomial $q(x)$ to $\verifier$. Upon receiving $q(x)$, $\verifier$ checks if the above condition is true or not. Furthermore, it checks if $q(x)$ is correctly constructed or not. For this, it queries some locations of the oracles.
+%---
+
+In D-Ligero, each entry of each oracle is committed using Pedersen commitment. $\verifier$ receives the committed values of all the entries corresponding to the queried locations in each column.
+%---
+Observe that, in this construction, we can replace the Pedersen commitment with the Pedersen vector commitment. Instead of committing to individual entries separately, we can commit to each column separately. Now, corresponding to a column, there is only one commitment, which gives an oracle, a row vector. With this modification, the verification algorithm does not change. Therefore soundness and zero-knowledge remain unaffected.
+%---  
+We further leverage the commitment scheme by using inner product arguments instead of opening columns. With this modification, we overcome the bottleneck of $O(\sqrt{N})$. This idea is in line with Ligero++. We use the inner product argument from Bulletproofs.
+%---
+
+For Interleaved check, $\verifier$ receives commitments of the chosen columns by the oracle. The linear combination check on the columns can be viewed as $\innp{r}{c}$, where $r$ is the challenge vector chosen by $\verifier$, and $c$ is the column. $\verifier$ knows the vector $r$ and the commitment of $c$, $\prover$ knows both $r$ and $c$. $\prover$ and $\verifier$ deterministically computes a commitment of $r$, then $\prover$ uses $r, c$ as a witness for the corresponding inner product argument. Note that the above setting is the same as bulletproofs inner product argument.
+%---
+For Linear check, $\verifier$ receives the polynomial $p(x)$, where $p(x) = \sum_i s_i(x) f_i(x)$, where $f_i(x)$ is the polynomial used in encoding $i$th row of $x$ and $s_i(\zeta_j) = R_{ij}$, where $R$ is the canonical matrix form of the vector $R = r^TA$ and $\zeta_j$'s are publicly known points used for encoding (the interpolation domain). $\verifier$ evaluates $p(x)$ on $\zeta$s and checks if it sums up to $r^Tb$ or not. Furthermore, it needs to check if $p(x)$ is well-formed or not, i.e. $p(\eta_j) = \sum_i s_i(\eta_j) \ewit[i,j]$, where $\eta$s are the public points used in encoding (evaluation point), and $\ewit[\cdot,j]$ is the $j$th column in the oracle matrix. This check can be viewed as $p(\eta_j) = \innp{s_j}{\ewit[\cdot,j]}$, where $s_j = (s_1(\eta_j), \ldots, s_m(\eta_j))$, considering $m$ as the number of rows. Similar to the interleaved check, we check this using bulletproofs inner product argument.
+%---
+For Quadratic check, consider, $f^x_i(x), f^y_i(x), f^z_i(x)$ are the polynomials used in encoding of $x, y, z$ and $\ewit^x[\cdot,j], \ewit^y[\cdot,j], \ewit^z[\cdot, j]$ are the $j$ the columns of the oracles corresponding to $x, y, z$. Similar to the linear check, $\zeta$s, $\eta$s are the set of points used for interpolation and evaluation in the encoding respectively.  $\verifier$ gives a random vector $r$ as a challenge to $\prover$. $\prover$ computes $p(x) = \sum_i r_i [ f^x_i (x) \cdot f^y_i(x) - f^z_i(x)]$ and sends $p(x)$ to $\verifier$. Note that, $p(\zeta_j) = 0$, $\verifier$ checks this. To ensure the correct computation of $p(x)$, $\verifier$ checks $p(\eta_j) = \sum_i r_i [ \ewit^x[i,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j]]$. This can be viewed as $p(\eta_j) = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j])}$. Unfortunately, we cannot use bulletproofs inner product argument directly here, since the commitment of $\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j]$ is not available to $\verifier$. To use inner product argument, we see the above equation as follows:
+%----
+\begin{align*}
+	p(x) & = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j])} \\
+	& = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j])} - \innp{r}{\ewit^z[\cdot,j]} \\
+	& = \innp{(r \circ \ewit^x[\cdot,j])}{ \ewit^y[\cdot,j]} - \innp{r}{\ewit^z[\cdot,j]} \\
+	& = \innp{(r \circ \ewit^x[\cdot,j] || r)}{(  \ewit^y[\cdot,j] || - \ewit^z[\cdot,j])} \\
+\end{align*}
+%----
+Since, $r$ is available to both $\prover$ and $\verifier$ and the commitments of $ \ewit^x[\cdot,j],  \ewit^y[\cdot,j],  \ewit^z[\cdot,j]$ is available to both $\prover$ and $\verifier$ they obtain the commitments of both $(r \circ \ewit^x[\cdot,j] || r)$ and $ (\ewit^y[\cdot,j] || - \ewit^z[\cdot,j] )$ and perform the inner product check.
+%----
+Let $\epsilon_L$ and $\epsilon_B$ be the soundness error of Ligero and Bulletproofs inner product argument. Then, the modified protocol's soundness error is $O(\epsilon_L + \epsilon_B)$. However, zero-knowledge remains unharmed since, in the modified protocol, the verifier is not learning anything additional. 
+%----
+Note that, in the modified protocol, we can elongate the column size and shorten the row size. Let the row size be $n$, and the column size be $m$, then the proof size is $O(n + \log (m))$ since the proof size of the inner product argument in bulletproofs is $\log (N)$ for $N$ sized vector.
+%---
+However, setting $m$ to be arbitrarily large increases verification time. 
+%---
+To obtain better proof size and verification time simultaneously, we optimize further by adjoining an additional dimension. The details are given in Section~\ref{sec:graphenec}.
 %\pnote{To add: 1. different amalgamations of MPC and ZK to achieve DPZK fails.
 %	i) MPC-in-the head, ii) MIP, iii) trusted set-up run via MPC
 %	 2. Gate by gate construction of ZK fails to provide DPZK. 3. Compare with tensor query based construction, the recent work that augment the zero-knowledge that does not provide proof of knowledge. 4. Address UC notion in the definition.}
