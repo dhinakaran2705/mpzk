@@ -316,15 +316,15 @@ In Table ~\ref{tab:SPZK}, we compare the different metrics of efficiency for bot
 			\hline
 			Protocols &  $\zkcomm$ & $\zkrounds$ & $t_\prover$ & $t_\verifier$ & $\prrounds$ & $\prcomm$ \\
 			\hline
-			D-Ligero & $O(\sqrt{N})$ & $O(1)$ & $O(N) E+ O(N\log (N))M$ &$O(N)E+ O(N)M$ & $2$ & $ O(\Num \cdot N + \Num^2\cdot \max(N_s, \sqrt{N}))$\\
+			D-Ligero & $O(\sqrt{N})$ & $O(1)$ & $O(N) E+ O(N\log (N))M$ &$O(N)E+ O(N)M$ & $1$ & $ O(\Num \cdot N + \Num^2\cdot \max(N_s, \sqrt{N}))$\\
 			\hline
-			D-Ligero++ & $O(\log^2{(N)})$ & $O(\log (N))$ & $O(N\log(N)) E+ O(N\log (N))M$ &$O(N\log (N))E+ O(N)M$ & $\log (N)$ & $ O((\Num\cdot N + \Num^2\cdot N)\log (N))$\\
+			D-Ligero++ & $O(\log^2{(N)})$ & $O(\log (N))$ & $O(N\log(N)) E+ O(N\log (N))M$ &$O(N\log (N))E+ O(N)M$ & $\log (N)$ & $ \Omega((\Num\cdot N + \Num^2\cdot N)\log (N))$\\
 			\hline
-			D-Aurora & $O(\log^2{(N)})$ & $O(\log (N))$ & $O(N\log (N)) E+ O(N\log (N))M$ &$O(N\log(N))E+ O(N)M$ & $\log (N)$ & $ O((\Num\cdot N + \Num^2\cdot N)\log (N))$\\
+			D-Aurora & $O(\log^2{(N)})$ & $O(\log (N))$ & $O(N\log (N)) E+ O(N\log (N))M$ &$O(N\log(N))E+ O(N)M$ & $\log (N)$ & $ \Omega((\Num\cdot N + \Num^2\cdot N)\log (N))$\\
 			\hline
-			D-Bulletproofs & $O(\log (N))$ & $O(\log(N))$ & $O(N)E$ & $O(N)E$ & 2 & $ O(\Num\cdot N + \Num^2\cdot N_s)$ \\
+			D-Bulletproofs & $O(\log (N))$ & $O(\log(N))$ & $O(N)E$ & $O(N)E$ & 1 & $ O(\Num\cdot N + \Num^2\cdot N_s)$ \\
 			\hline
-			\name & $O(N^{1/c})$ & $O(\log(N))$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 2 & $ O(\Num\cdot N^{1-2/c} + \Num^2\cdot \max(N_s,N^{1-2/c}))$ \\
+			\name & $O(N^{1/c})$ & $O(\log(N))$ & $O(\frac{N}{\log(N)})E + O(N\log(N))M$ & $O(N^{1-2/c})E + O(N)M$ & 1 & $ O(\Num\cdot N^{1-2/c} + \Num^2\cdot \max(N_s,N^{1-2/c}))$ \\
 			\hline
 			%&computation & communi- cation & MPC rounds& & & \\ 
 			\hline
