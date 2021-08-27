@@ -22,6 +22,37 @@ $\prover'$ sends $m'_i$ to $\verifier'$ and performs $\mathsf{H}$ to set the ora
 $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to the oracle, $\verifier'$ receives $\pi'_i[j']$ from the oracle and $\open(\pi'_i[j'])$ from $\prover'$. $\verifier'$ checks if the opening of $\pi'_i[j']$ is correct or not, followed by the verification algorithm of $\verifier$. 
 %-------------
 
+\textbf{Compiler from $\innp{\prover}{\verifier}$ to $\innp{\prover'}{\verifier'}$:}
+\begin{itemize}
+	%------
+	\item[--] $\prover'$ initialize $\prover$ with the input $\stmt$ and $\wit$ and $\verifier'$ initialize $\verifier$ with the input $\stmt$. Furthermore, $\prover'$ and $\verifier'$ have common (untrusted) set up which consists of group description $\GG$ and generators $g, h$ for Pedersen commitment.
+	%------
+	\item[--] Let $r$ = number of rounds of $\innp{\prover}{\verifier}$.
+	For $i = 1$ to $r$, $\prover'$ and $\verifier'$ do the following: 
+	%------
+	\begin{itemize}
+		%----
+		\item $\prover'$ runs $i$th round of $\prover$ using $\st^p_{i-1}$, where $st^p_{i-1}$ is the state of $\prover$'s $i-1$th round and $\st^p_0 = \{\stmt, \wit\}$. $\prover'$ obtains $\{\pi_i, m_i\}$ by running $\prover$'s $i$th round. Let $r_i$ be the randomness used by $\prover$ in the $i$th round's computation.
+		%----
+		\item Let $\pi_i[j]$ be the vector at the $j$th location. $\prover'$ computes $\pi'_i[j][k] = \comm(\pi_i[j][k], \rho[k])$ for all $j,k$, where $\pi_i[j][k]$ is the $k$th component of $\pi_i[j]$ and $\rho[k]$ is the randomness used for the commitment.
+		%----
+		\item $\prover'$ sets $\st^p_i = \st^p_{i-1} \cup \{\pi_i, m_i, r_i\}$. \pnote{include challenges from $\verifier$}
+		%----
+		\item $\prover'$ sets $\pi'_i$ as the oracle and sends $m_i$ to $\verifier'$.
+		%----
+		\item $\verifier'$ runs $i$th round of $\verifier$ using $\st^v_{i-1}$, where $st^v_{i-1}$ is the state of $\verifier$'s $i-1$th round and $\st^v_0 = \{\stmt\}$. Let $\verifier$ outputs $c_i$ as the challenge and queries the $j$th location. Let $J$ be the set of all queried locations.
+		%----
+		\item $\verifier'$ sends $c_i$ to $\prover'$ and queries $j$th location of the oracle. $\verifier'$ sets $\st^v_{i} = \st^v_{i-1} \cup \{c_i, J\}$.
+		%----
+		\item $\prover'$ sends $\open(\pi'_i[j][k])$ to $\verifier'$, for all $j\in J$ and for all $k$.
+		%----
+		\item $\verifier'$ receives $m_i$, $\open(\pi'_i[j][k])$ for all $k$ and for all $j\in J$ from $\prover'$. Further it receives $\pi'_i[j]$ from the oracle. It checks if all the openings are correct or not. If yes, it updates $\st^v_{i} = st^v_{i} \cup \{m_i, \{\open(\pi'_i[j][k])\}_{j\in J, k}\}$.
+	\end{itemize} 
+	%------
+	\item[--] $\verifier'$ runs $\verifier$'s verification algorithm with the input $\st^v_r$.
+\end{itemize}
+
+
 %-------------
 \begin{lemma}\label{lemma:compiler}
 	Let $\langle \prover, \verifier \rangle$ be an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{Or}$ is the oracle construction algorithm. Then the protocol $\langle \prover', \verifier' \rangle$ obtained by using the above compiler is also an IOP-based zero-knowledge proof system with proof of knowledge property, where $\mathsf{H}$ is the oracle construction algorithm.
@@ -84,6 +115,28 @@ $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to
 Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\cdot)$ for $\pi_i$. Let $\Partyset = \{\prover_{1}, \ldots, \prover_{\Num}\}$ be the set of $\Num$ provers, where at most $t (<\Num)$ can be corrupted. Parties in $\Partyset$ execute a $t$-secure MPC for the function $m_i(\cdot)$ and $\pi_i(\cdot)$ to get $\shareA{m_i}$ and $\shareA{\pi_i}$, where $\shareA{x}$ represents $t$-out of $n$ sharing of $x$. Provers locally compute $\shareA{\pi'_i}$ and send $\shareA{m_i}, \shareA{\pi'_i}$ to an aggregator $\Ag$.
 
 $\Ag$ obtains $m_i = \sum \shareA{m_i}$ and $\pi'_i = \prod \shareA{\pi'_i}$. It sets $\pi'_i$ as the oracle and sends $m_i$ to $\verifier$. $\verifier$ performs the verification algorithm of $\langle \prover, \verifier \rangle$.
+
+\textbf{$\innp{\disPN}{\verifier}$ from $\innp{\prover}{\verifier}$:}
+\begin{itemize}
+	%----
+	\item[--] Initiate $\Num + 1$ party protocol with $\Num$ copies of $\prover$, say $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ and one $\verifier$. $\prover_\xi$ in $\Partyset$ starts the protocol with inputs $(\stmt, \wit_\xi)$ and $\verifier$'s input is $\stmt$.
+	%----
+	\item[--] Let $r$ = number of rounds of $\innp{\prover}{\verifier}$. 
+	For $i = 1$ to $r$, parties do the following:
+	%----
+	\begin{itemize}
+		%----
+		\item If in $\innp{\prover}{\verifier}$, $\prover$ sends $m_i$ to $\verifier$ and sets $\pi_i$ as oracle and let $m_i(\cdot)$be the corresponding functions to compute $m_i$ and $\pi_i$ respectively. Then, parties in $\Partyset$ run a secure MPC $\Pi_{m_i}$ for $m_i(\cdot)$. The input of $\prover$ in $\Pi_{m_i}$ are $\st^{\distprover}_{i-1}$, where $\st^{\distprover}_{0} = \{\stmt, \wit_{\xi}\}$ for all $\xi \in [\Num]$. $\prover_{\xi}$ obtains $\shareA{m_i}$.
+		%----
+		\item $\prover_{\xi}$ constructs the oracle $\shareA{\pi_i}$ from $\shareA{m_i}$ and sends it to $\Ag$, a chosen party from $\Partyset$.
+		%----
+		\item $\Ag$ combines $\shareA{\pi_i}$ to obtain $\pi_i$. $\Ag$ sets $\pi_i$ as oracle. Further, it receives messages $\shareA{m_i}$ from $\prover_{\xi}$. It combines and obtains $m_i$ and sends it to $\verifier$. 
+		%----
+		\item $\verifier$ of $(\Num + 1)$ party protocol runs $\verifier$ algorithm.
+		%----
+	\end{itemize}	
+	%----
+\end{itemize}
 
 \begin{lemma}\label{lemma:generic_dpzk}
 	Let $\langle \prover', \verifier' \rangle$ be an IOP-based protocol obtained by using the above mentioned compiler. If the witness, $\wit$, is shared among $\Num$ provers $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ additively, then $\langle \disPpN, \verifier' \rangle$ relies $\Func_{DPZK}$ functionality securely.
