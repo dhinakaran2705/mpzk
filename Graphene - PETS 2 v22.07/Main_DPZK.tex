@@ -77,6 +77,16 @@ When $I$ is  $\{\prover_1,\ldots,\prover_\Num\}$, $\{\verifier\}$, a proper $t$-
 \end{definition}
 %--------
 
+{\bf Soundness with With Extract (SoWE)} If $\Adv$ be the adversary corrupting parties in $\Partyset = \{ \prover_1, \ldots, \prover_{\Num}\}$ and $\Pi_\DPZK$ is secure against $\Adv$. Then, by the security definition, there exists a simulator, emulates the verifier, outputs an indistinguishable view. If $\Adv$ interacts with $\verifier$ in such a way that leads to accept, then the simulator should be able to extract the input of $\Adv$ such the output of the functionality is accept. We call such a simulator ``extractor''. 
+That is, if $\Pi_{\DPZK}$ is secure against an adversary $\Adv$ that corrupts $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ and outputs an accepting proof for a statement $\stmt$ and relation $R$, then there exists an extractor $\extrac$ that acts as $\verifier$ and extracts a witness $\wit$ such that $R(\stmt, \wit) = 1$.
+
+{\bf Zero-Knowledge (ZK)} If $\Adv$ corrupts the verifier $\verifier$, then we say $\Pi_{\DPZK}$ has zero-knowledge property if there exists a simulator $\Sim$ that outputs a transcript that is indistinguishable from a real transcript. A non-colluding verifier learns nothing more than the statement's assertion, not even the number of provers in the protocol. Therefore the simulated transcript remains independent of the number of provers.  
+
+{\bf Witness-Hiding (WH)} $\Pi_{\DPZK}$ is said to have witness hiding property if an adversary $\Adv$, corrupting $t( < \Num)$ out of $\Num$ provers, learns nothing about the honest provers' inputs. Then there exists a simulator $\Sim$, acting as the honest provers and the verifier, which generates an indistinguishable view of the corrupted provers.
+
+{\bf Witness-hiding with collusion (WHwC)} $\Pi_{\DPZK}$ has witness hiding with collusion property if there exists a simulator $\Sim$, corresponding to an adversary corrupting $t$ provers and the verifier, that plays the role of the honest provers and generates an indistinguishable view of the corrupted parties.
+%--------
+
 While we give a very strong definition as above, motivated by several practical aspects, we relax the assumption on adversarial power and will focus on a subset of the above properties for our constructions. We elaborate below on this.
 %--------
 
