@@ -1,32 +1,67 @@
-%---------
-In Ligero~\cite{ligero}, an extended witness is viewed as a matrix of size $O(\sqrt{N}) \times O(\sqrt{N})$. To do that, first $\ell$ entries are set as the first row of the matrix, next $\ell$ entries form the second row and so on. This way a matrix is formed which has, say $m$ rows and $\ell$ columns, where $m = \ell = O(\sqrt{N})$. We are calling this as canonical matrix form. 
-Then each row of the matrix is encoded. Then in that protocol, the prover is required to communicate messages, one of which is the size of a row and $O(1)$ many columns of the encoded extended witness. This imposes a natural restriction on Ligero as they cannot skew the dimensions to reduce the proof size. Among the two dimensions, the largest dimension becomes the dominating factor that makes $\sqrt{N}$ is the best achievable communication complexity in Ligero. This bottleneck was resolved in Ligero++~\cite{ligero++}. They replace the communication of one dimension by using the inner product argument. More precisely, they rely on the inner product argument proposed in Virgo~\cite{Virgo}, which in turn relies on the Aurora proof system. Our optimization over Ligero is in a similar direction. We present the extended witness as a cube (3D matrix). One extra dimension brings more flexibility to a better trade-off between the communication complexity and the verification time. The key differences from Ligero/Ligero++ are the following.
-(i) We use bulletproofs based inner product argument on reducing the communication complexity, and also, this is mainly used to facilitate distributed prover version that others fail to achieve.
-(ii) We split the extended witness into three dimensions that aids in verification time while retaining the communication complexity proportional to the smallest dimension.
+%-------------
+In recent advancements in zero-knowledge, protocols in IOP paradigm, such as Ligero~\cite{ligero}, Ligero++~\cite{ligero++}, Aurora~\cite{aurora} to name a few, bring efficiency in proof size, proof generation time and verification time. Most of the IOP-based protocols work with only symmetric keys, which leads to better efficiency. Therefore in search of efficient DPZK, we looked into the IOP-based paradigm. Designing a DPZK directly from an IOP-based protocol faces the following challenges depending on the approach. (i) If each prover sends their oracle individually, that requires each prover to communicate with the verifier. It violates the zero-knowledge requirement of DPZK. Furthermore, it increases the proof size and verification time by a factor of the number of provers. (ii) If all the provers send their messages to one designated prover, called aggregator, aggregates and set up the oracle in every round. In this case, the aggregator learns the private input of an honest prover, which defies the privacy among the provers. Therefore it is needed that an aggregator should be able to combine the messages received from the provers to set up the oracle. However, without knowing the witness, it is also required that a corrupt prover should not be able to deviate from the messages once it is sent to the aggregator. A homomorphic commitment fulfills these requirements, which can be instantiated by Pedersen commitment or Pedersen vector commitment. (iii) Finally, it need not be the case that oracles in every round are linear functions of the witness. If not, then the oracle construction may involve interactions among the provers in a privacy-preserving manner. To tackle that, we use secure multiparty computation (MPC). Therefore, the protocols with fewer oracles/rounds are more likely to provide a better DPZK. Below we discuss a compiler that compiles a protocol to support DPZK.  
 %-------------
 \subsection{Compiler:}\label{sec:compiler_construction}
-We give a generic construction from an IOP-based proof system to obtain another proof system that offers DPZK. The compiled protocol has homomorphic oracles. For most of the protocols, the communication cost among the provers is expensive. Our protocol $\name$ provides a much efficient construction of the distributed prover version.
-Below we provide a construction of the compiler that takes an IOP-based proof system outputs a secure IOP-based proof system. The compiler requires an homomorphic commitment. We instantiate this by using Pedersen commitment.
+We give a generic construction from an IOP-based proof system to obtain another proof system that is suitable for distributed proof generation. The compiled protocol has homomorphic oracles. For most of the protocols, the communication cost among the provers is expensive. Our protocol $\name$ provides a much efficient construction of the distributed prover version.
+Below we provide a construction of the compiler that takes an IOP-based proof system outputs a secure IOP-based proof system. The compiler requires an homomorphic functional commitment scheme for linear functions. Below we recall the notions of functional commitment for linear functions and IOPs. For more details in functional commitment check~\cite{functionalcom} and in IOPs check~\cite{BCS16}.
+%We instantiate this by using Pedersen commitment.
 %-------------
+\paragraph*{Functional Commitment for linear functions}
+Let $\calD$ be a domain and consider linear functions $\innp{\cdot}{\cdot} : \calD^n \times \calD^n \rightarrow \calD$ defined by $\innp{{\bf x}}{{\bf m}} = \sum_{i=1}^n x_im_i$ for ${\bf x, m} \in  \calD^n$ with ${\bf x} = (x_1, \ldots , x_n)$, ${\bf m} = (m_1, \ldots, m_n)$. 
+A functional commitment scheme $\FC$ is a tuple of four probabilistic polynomial-time algorithms - $(\setup, \comm, \open, \verif)$.
 
-\paragraph*{Interactive Oracle Proofs (IOP)} Let $\innp{\prover}{\verifier}$ be a $r$-round IOP-based zero-knowledge proof system. Let $\st^p_0 = \{\stmt, \wit\}$, $\st^v_0 = \{\stmt\}$, $f_0 = \bot$ and $\rho_p, \rho_v$ are the randomness used by $\prover$ and $\verifier$ respectively.
+\noindent$\setup(1^\secp, 1^n):$ takes in a security parameter $\secp \in \NN$, size of the message $n \in \poly$ and outputs a commitment key $CK$.\\
+%----
+\noindent$\comm(CK, {\bf m}):$ takes commitment key $CK$ and a $n$ length message ${\bf m}$ as input. It outputs a commitment $C$ for ${\bf m}$ and auxiliary information denotes $\aux$.\\
+%----
+\noindent$\open(CK, C, \aux, {\bf x}):$ takes as input the commitment key $CK$, a commitment $C$ (to ${\bf m}$), auxiliary information (possibly containing ${\bf m}$) and a vector ${\bf x} \in \calD^n$; computes a witness
+$W_y$ for $y = \innp{{\bf x}}{{\bf m}}$ i.e., $W_y$ is a witness for the fact that the linear function defined by ${\bf x}$ when evaluated on ${\bf m}$ gives $y$.\\
+%----
+\noindent$\verif(CK, C, W_y, {\bf x}, y):$ takes as input the commitment key $CK$, a commitment $C$, a witness $W_y$, a vector ${\bf x} \in \calD^n$ and $y \in \calD$; outputs $W_y$ is a witness for $C$ being a
+commitment for some ${\bf m} \in \calD^n$ such that $\innp{{\bf x}}{{\bf m}} = y$ and outputs $0$ otherwise.
+
+{\it Correctness: } For every $CK \leftarrow \setup(1^\secp, 1^n)$, for all ${\bf x, m} \in \calD^n$, if $(C, \aux) \leftarrow \comm(CK, {\bf m})$ and $W_y \leftarrow \open(CK, C, \aux, {\bf x})$, then $\verif(CK, C, W_y, {\bf x}, y) = 1$ with probability 1.
+
+
+{\it Hiding: } For a key $CK$ generated by an honest setup, for all ${\bf m_1, m_2} \in \calD^n$ with ${\bf m_1} \neq {\bf m_2}$, the two distributions $\{CK, \comm(CK, {\bf m_1})\}$ and $\{CK, \comm(CK, {\bf m_2})\}$ are indistinguishable.
+
+{\it Function binding: } A functional commitment scheme $\FC = (\setup, \comm, \open, \verif)$ for $(\calD, n,\innp{\cdot}{\cdot})$ is said to be computationally binding if any PPT adversary $\Adv$ has negligible advantage in winning the following game.
+\begin{enumerate}
+	%----
+	\item The challenger generates $CK$ by running $\setup(1^\secp, 1^n)$ and gives $CK$ to $\Adv$.
+	%----
+	\item The adversary $\Adv$ outputs a commitment $C$, a vector ${\bf x} \in \calD^n$, two values $y, y' \in \calD$ and two witnesses $W_y, W_{y'}$ . We say that $\Adv$ wins the game if the following conditions hold.
+	\begin{itemize}
+		\item $y' = y$;
+		%----
+		\item $\verif(CK, C, W_y, {\bf x}, y) = \verif(CK, C, W_{y'} , {\bf x}, y') = 1$.
+	\end{itemize}
+\end{enumerate}
+
+
+\paragraph*{Interactive Oracle Proofs (IOP)} Let $\innp{\prover}{\verifier}$ be a $r$-round IOP-based zero-knowledge proof system. Let $\st^p_0 = \{\stmt, \wit\}$, $\st^v_0 = \{\stmt\}$, $f_0 = \bot$ and $\rho_p, \rho_v$ be the randomness used by $\prover$ and $\verifier$ respectively.
 Then for $i = 1$ to $r$, in the $i$th round: (i) $\verifier$ computes $(c_i,\st^v_i) = V^{f_0, f_1, \ldots, f_{i-1}}(\st^v_{i-1}, \rho_v)$ and sends $c_i$ to $\prover$. 
 (ii) $\prover$ computes $(f_i, \st^p_i) = P(c_1, \ldots, c_i, \st^p_{i-1}, \rho_p)$.
-The output of the protocol is $b := V^{f_0, f_1, \ldots, f_{r}}(\st^v_{r}, \rho_v)$, and $b$ belongs to $\{0,1\}$.
+The output of the protocol is $b := V^{f_0, f_1, \ldots, f_{r}}(\st^v_{r}, \rho_v)$, and $b$ belongs to $\{0,1\}$. $\innp{\prover}{\verifier}$ has the following properties.\\
+{\em Completeness:} For every $(\stmt, \wit) \in R$, $\innp{\prover(\stmt, \wit)}{\verifier(\stmt)}$ outputs $b = 1$ with probability $1$.\\
+{\em Proof of knowledge:} $\innp{\prover}{\verifier}$ has proof of knowledge property if there exists a probabilistic polynomial-time algorithm $\extrac$ (extractor) and a negligible funtion $\mu$ such that, for every $\stmt$ and $\prover^\ast$, $\Pr[(\stmt, \extrac^{\prover^\ast}(\stmt)) \in R] \geq \Pr[\innp{\prover^\ast}{\verifier(\stmt)} = 1] - \mu(|\stmt|)$.\\
+{\em Zero knowledge:} $\innp{\prover}{\verifier}$ has zero knowledge property if there exists a probabilistic polynomial-time algorithm $\Sim$ (simulator) such that for every $(\stmt, \wit) \in R$, it generates a transcript $\tau$ which is indistinguishable from a transcript of $\innp{\prover(\stmt, \wit)}{\verifier(\stmt)}$ to any PPT distinguisher.
 
-\paragraph*{Homomorphic IOP} Let $\innp{\prover}{\verifier}$ be an IOP-based zero-knowledge proof system with proof of knowledge property. Generally, in IOP-based protocols, in every round the prover sets a new oracle and the verifier queries some at some locations of these oracles. All the communications from the prover to the verifier happen via oracle. We can classify the messages from the prover to the verifier into two classes: i) messages that are completely revealed to the verifier, we are calling it $m_i$ for $i$th round, ii) some chosen locations of the messages are opened to the verifier, we are denoting it by $\pi_i$ for the $i$th round.
+
+\paragraph*{Homomorphic IOP} Let $\innp{\prover}{\verifier}$ be an IOP-based zero-knowledge proof system with proof of knowledge property. In general, the prover in an IOP protocols provides oracle access to its messages in each round, while the verifier makes bounded number of queries to these oracles. We can classify the messages from the prover to the verifier into two classes: i) messages that are entirely revealed to the verifier, we are calling it $m_i$ for $i$th round, ii) some chosen locations of the messages are opened to the verifier, we are denoting it by $\pi_i$ for the $i$th round.
 Furthermore, consider $\innp{\prover}{\verifier}$ be an $r$ round protocol and consider at the $i$th round $\prover$ sends $f_i = (m_i, \pi_i)$. Where $m_i$ is opened to $\verifier$ and it receives some locations of $\pi_i$ depending on its choice indices. 
 %Note that $m_i$ and $\pi_i$ are functions of the statement $\stmt$, (extended) witness $\wit$, $\prover$'s randomness $r_i$, and $\verifier$'s challenges.
 %Let $\verifier$ sends $c_i$ as challenge message and queries $j$th location of the oracle $\pi_i$.
 
-On input $\innp{\prover}{\verifier}$, the compiler outputs a protocol $\innp{\prover'}{\verifier'}$, where $\innp{\prover'}{\verifier'}$ is obtained in the following way: $\prover'$ and $\verifier'$ run $\prover$ and $\verifier$ algorithms respectively, in a state preserving manner. That is $\prover'$ runs $\prover$'s first round and stores the state of $\prover$, upon receiving the challenge from $\verifier'$, $\prover'$ runs the next round of $\prover$ with the prior round's state and stores the state of the new round also. $\prover'$ follows this for all rounds. $\verifier'$ does the same for $\verifier$. 
+The compiler takes an IOP-based zero knowledge protocol $\innp{\prover}{\verifier}$ and an homomorphic functional commitment scheme $\comm(\cdot)$. It outputs a protocol $\innp{\prover'}{\verifier'}$, where $\innp{\prover'}{\verifier'}$ is obtained in the following way: $\prover'$ and $\verifier'$ run $\prover$ and $\verifier$ algorithms respectively, in a state preserving manner. That is, $\prover'$ runs $\prover$'s first round and stores the state of $\prover$. Upon receiving the challenge from $\verifier'$, $\prover'$ runs the next round of $\prover$ with the prior round's state and updates the state. $\prover'$ follows this for all rounds. $\verifier'$ does the same for $\verifier$. 
+ 
 %----
-At $i$th round, $\prover'$ sets $\pi'_i = \comm(\pi_i, r_i)$, where $\comm(\cdot)$ is any homomorphic commitment scheme applied on each part of $\pi_i$. In particular, we instantiate $\comm$ by using Pedersen commitment scheme. 
+At $i$th round, $\prover'$ sets $\pi'_i = \comm(CK,\pi_i)$.
 %Therefore, the new oracle construction algorithm is $\mathsf{H}(\pi_i) = \mathsf{Or}(\comm(\pi_i, r_i))$.
 
-$\prover'$ sends $f_i = (m_i, \pi'_i)$. $\verifier'$ has oracle access to $f_i$ such that it gets $m_i$ in clear and queries limited number of locations of $\pi'_i$. According to the queried locations, $\prover'$ provides opening of those locations. That is, if $\verifier'$ queries $j$ then $\prover'$ sends $\open(\pi'_i[j])$ to $\verifier'$.
+$\prover'$ sends $f'_i = (m_i, \pi'_i)$. $\verifier'$ has oracle access to $f'_i$ such that it gets $m_i$ in clear and queries limited number of locations of $\pi'_i$. According to the queried locations, $\prover'$ provides opening of those locations. That is, if $\verifier'$ queries $j$ then $\prover'$ sends $\open(CK, \pi'_i[j], \aux, 1)$ to $\verifier'$.
 
-$\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to the oracle, $\verifier'$ receives $\pi'_i[j']$ from the oracle and $\open(\pi'_i[j'])$ from $\prover'$. Further $\verifier'$ receives $m_i$ from $\prover'$. $\verifier'$ checks if the opening of $\pi'_i[j']$ is correct or not, followed by the verification algorithm of $\verifier$. 
+$\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to the oracle, $\verifier'$ receives $\pi'_i[j']$ from the oracle and $W_{i,j} = \open(CK, \pi'_i[j'], \aux, 1)$ from $\prover'$. Further $\verifier'$ receives $m_i$ from $\prover'$. $\verifier'$ checks if $\verif(CK, \pi'_i[j'], W_{i,j}, 1, \pi_i[j']) = 1$, followed by the verification algorithm of $\verifier$.
 %-------------
 
 \textbf{Compiler from $\innp{\prover}{\verifier}$ to $\innp{\prover'}{\verifier'}$:}
@@ -42,14 +77,16 @@ $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to
 		%----
 		\item $\verifier'$ computes $(c_i,\st^v_i) = V^{f'_0, f'_1, \ldots, f'_{i-1}}(st^v_{i-1}, \rho_v)$ and sends $c_i$ to $\prover'$.
 		%----
-		\item $\prover'$ computes $(f_i,\st^p_i) = P(c_1, \ldots, c_{i}, \st^p_i, \rho_p)$. Where $f_i = (m_i, \pi_i)$.
+		\item $\prover'$ computes $(f_i,\st^p_i) = P(c_1, \ldots, c_{i}, \st^p_{i-1}, \rho_p)$. Where $f_i = (m_i, \pi_i)$.
 		%\item $\prover'$ runs $i$th round of $\prover$ using $\st^p_{i-1}$, where $st^p_{i-1}$ is the state of $\prover$'s $i-1$th round and $\st^p_0 = \{\stmt, \wit\}$. $\prover'$ obtains $\{\pi_i, m_i\}$ by running $\prover$'s $i$th round. Let $\rho_p$ be the randomness used by $\prover$.% in the $i$th round's computation.
 		%----
-		\item Let $\pi_i[j]$ be the vector at the $j$th location. $\prover'$ computes $\pi'_i[j][k] = \comm(\pi_i[j][k], \omega_p[k])$ for all $j,k$, where $\pi_i[j][k]$ is the $k$th component of $\pi_i[j]$. and $\omega[k]$ is the randomness used for the commitment.
+		\item $\prover'$ computes $\pi'_i[j] = \comm(Ck, \pi_i[j])$ for all $j$. %and $\omega[k]$ is the randomness used for the commitment.
 		%----
 		\item $\prover'$ sends $f'_i = (m_i, \pi'_i)$.
 		%----
-		\item $\prover'$ sends $\open(\pi'_i[j][k])$ to $\verifier'$, for all $j\in J$ and for all $k$, where $J$ is the set of queried indices. 
+		\item $\prover'$ sends $W_{i,j} = \open(CK, \pi'_i[j], \aux)$ to $\verifier'$, for all $j\in J$ and for all $k$, where $J$ is the set of queried indices.
+		%----
+		\item $\verifier'$ checks $\verif(CK, \pi'_i[j], W_{i,j}, \pi_i[j]) = 1$.
 		%----
 	\end{itemize} 
 	%------
@@ -79,36 +116,49 @@ $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to
 	
 	
 	
-	\textit{Completeness} of $\langle \prover', \verifier' \rangle$ holds directly from the completeness of $\langle \prover, \verifier \rangle$. 
+	\noindent{\bf Completeness} of $\langle \prover', \verifier' \rangle$ holds directly from the completeness of $\langle \prover, \verifier \rangle$. 
 	Consider an instance $\stmt$, where $R(\stmt,\wit) = 1$ for the Relation $R$ and $\prover'$ has the witness $\wit$. 
-	Now in $\innp{\prover}{\verifier}$, $\prover$ sets $(m_i, \pi_i)$ as oracle, where $m_i$ is send to $\verifier$ in clear and $\verifier$ queries some of locations of $\pi_i$. Whereas, in $\innp{\prover'}{\verifier'}$, $\prover'$ sets $(m_i, \pi'_i)$ as oracle. 
+	Now in $\innp{\prover}{\verifier}$, $\prover$ sends $f_i = (m_i, \pi_i)$, where $m_i$ is send to $\verifier$ in clear and $\verifier$ queries some of locations of $\pi_i$. Whereas, in $\innp{\prover'}{\verifier'}$, $\prover'$ sends $f'_i = (m_i, \pi'_i)$. 
 	Similar to $\verifier$, $\verifier'$ receives $m_i$. In $\innp{\prover}{\verifier}$, $\verifier$ receives $\pi_i[j]$ depending on the $\verifier$'s choice of $j$. 
 	However, in $\innp{\prover'}{\verifier'}$, $\verifier'$ receives $\pi'_i[j]$ corresponding to it's choice, where $\pi'_i[j]$ is the commitment of $\pi_i[j]$ and gets the corresponding opening from $\prover'$. 
-	$\verifier'$ performs an additional check to verify if the above opening is correct or not, and for an honest prover, the opening is always correct.
-	Now, $\verifier$ and $\verifier'$ hold the same data and perform the same verification. 
-	Therefore, if the completeness of $\innp{\prover}{\verifier}$ holds, then so does the completeness of $\innp{\prover'}{\verifier'}$.
-	The above argument ensures the completeness property.
+	$\verifier'$ performs $\verif$ to check if the above opening is correct or not, and for an honest prover, the opening is always correct.
+	Now, $\verifier$ and $\verifier'$ hold the same data and perform the same verification. If $\verifier$ outputs $b = 1$, then $\verifier'$ also outputs $b = 1$. Therefore completeness holds for $\innp{\prover'}{\verifier'}$.
 	
-	\textit{Proof of knowledge} of $\innp{\prover'}{\verifier'}$ holds due to the proof of knowledge property of $\innp{\prover}{\verifier}$ and the binding property of the commitment scheme.
+	\noindent{\bf Proof of knowledge} of $\innp{\prover'}{\verifier'}$ holds due to the proof of knowledge property of $\innp{\prover}{\verifier}$ and the binding property of the commitment scheme.
 	
-	Let $\extrac$ be the extractor that interacts with a prover $\prover$, and if the interaction is accepting, then $\extrac$ outputs a witness. We will use $\extrac$ to design an extractor $\extrac'$ for $\innp{\prover'}{\verifier'}$. $\extrac'$ works in the following way:
-	%---
-	\begin{itemize}
-		%----
-		\item[--] $\extrac'$ interacts with the prover $\prover'$ on behalf of the verifier $\verifier'$ and interacts with $\extrac$ on behalf of the prover $\prover$.
-		%----
-		\item[--] If $\prover'$ sends a message $m$ then $\extrac'$ sends $m$ to $\extrac$. 
-		%----
-		\item[--] If $\extrac$ makes any oracle query, then $\extrac'$ does the same oracle query. Let $\extrac$ queries for $j$. Then $\extrac'$ queries $j$ to the oracle and gets $\pi'[j]$ and receives $\pi^\ast[j] = \open(\pi'[j])$ from $\prover'$. 
-		Note that, $\pi^\ast[j] = \pi[j]$ with high probability. If not, that is, either $\prover'$ commits to $\pi[j]$ but opens to a different value $\pi^\ast[j]$ with non-negligible probability. That is, $\prover'$ breaks the binding property of the commitment scheme, or if $\prover'$ does not commit to $\pi[j]$ that leads to verification failed due to the soundness property of the underlying protocol $\innp{\prover}{\verifier}$.
-		Therefore $\extrac'$ sends $\pi^\ast$ to $\extrac$ as oracle response.
-		%----
-		\item[--] If $\extrac$ sends a challenge $c$ to $\extrac'$, then $\extrac'$ forwards $c$ to $\prover'$.
-		%----
-		\item[--] Finally, $\extrac'$ outputs whatever $\extrac$ outputs. 
-	\end{itemize}
+	Let $\prover'^\ast$ be a prover such that $\innp{\prover'^\ast}{\verifier'(\stmt)} = 1$. We claim that there is an PPT extractor $\extrac'$ that extracts a witness $\wit$ corresponding to the statement $\stmt$ with very high probability.\\
+	%
+	Case I: $\prover'^\ast$ opens $\pi'_i[j]$ to $\pi_i[j]$ for all $i,j$. Then consider a prover $\prover^\ast$ sends $f_i = (m_i,\pi_i)$ where  $\prover'^\ast$ sends $f'_i = (m_i,\pi'_i)$ and $\pi_i = \open(\pi'_i)$.
+	$\verifier'$ in $\innp{\prover'^\ast}{\verifier'}$ and $\verifier$ in $\innp{\prover^\ast}{\verifier}$ performs the same verification. Since $\innp{\prover'^\ast}{\verifier'(\stmt)} = 1$, therefore $\innp{\prover^\ast}{\verifier(\stmt)} = 1$. By the proof of knowledge property of $\innp{\prover}{\verifier}$, there is an PPT extractor $\extrac$ that extracts a witness $\wit$ with very high probability. $\extrac'$ runs the same algorithm and outputs $\wit$ with the same probability.\\
+	%
+	Case II: $\prover'^\ast$ opens at least one $\pi'_i[j]$ for some $i,j$ to some value $\pi^\ast_i[j]$ such that $\pi^\ast_i[j] \neq \pi_i[j]$. 
+	This breaks the binding property of the commitment scheme.
 	
-	Let $\epsilon_z$ be the soundness error of $\innp{\prover}{\verifier}$ and $\epsilon_c$ be the soundness of the binding property of the commitment scheme $\comm$. Then the soundness of $\innp{\prover'}{\verifier'}$ is $O(\epsilon_z + \epsilon_c)$.
+%	Let $\extrac$ be the extractor that interacts with a prover $\prover$, and if the interaction is accepting, then $\extrac$ outputs a witness. We will use $\extrac$ to design an extractor $\extrac'$ for $\innp{\prover'}{\verifier'}$. $\extrac'$ works in the following way:
+%	%---
+%	\begin{itemize}
+%		%----
+%		\item[--] $\extrac'$ interacts with the prover $\prover'$ on behalf of the verifier $\verifier'$ and interacts with $\extrac$ on behalf of the prover $\prover$.
+%		%----
+%		\item[--] If $\prover'$ sends a message $m$ then $\extrac'$ sends $m$ to $\extrac$. 
+%		%----
+%		\item[--] If $\extrac$ makes any oracle query, then $\extrac'$ does the same oracle query. Let $\extrac$ queries for $j$. Then $\extrac'$ queries $j$ to the oracle and gets $\pi'[j]$ and receives $\pi^\ast[j] = \open(CK, \pi'[j], \aux, 1)$ from $\prover'$. 
+%		Note that, $\pi^\ast[j] = \pi[j]$ with high probability. If not, that is, either $\prover'$ commits to $\pi[j]$ but opens to a different value $\pi^\ast[j]$ with non-negligible probability. That is, $\prover'$ breaks the binding property of the commitment scheme, or if $\prover'$ does not commit to $\pi[j]$ that leads to verification failed due to the soundness property of the underlying protocol $\innp{\prover}{\verifier}$.
+%		Therefore $\extrac'$ sends $\pi^\ast$ to $\extrac$ as oracle response.
+%		%----
+%		\item[--] If $\extrac$ sends a challenge $c$ to $\extrac'$, then $\extrac'$ forwards $c$ to $\prover'$.
+%		%----
+%		\item[--] Finally, $\extrac'$ outputs whatever $\extrac$ outputs. 
+%	\end{itemize}
+	
+	Therefore, 
+	$\Pr[(\stmt, \extrac'^{\prover'^\ast}(\stmt)) \in R] = \Pr[(\stmt, \extrac^{\prover^\ast}(\stmt)) \in R] - O(|\stmt|) \epsilon_c$, 
+	where $\epsilon_c$ is the probability that any PPT algorithm can break the binding property of $\comm$.
+	$\Pr[\innp{\prover'^\ast}{\verifier'(\stmt)} = 1] = \Pr[\innp{\prover^\ast}{\verifier(\stmt)} = 1]$.
+	Due to the proof of knowledge property of $\innp{\prover}{\verifier}$, we have 
+	$\Pr[(\stmt, \extrac^{\prover^\ast}(\stmt)) \in R] \geq \Pr[\innp{\prover^\ast}{\verifier(\stmt)} = 1] - \mu(|\stmt|)$.
+	Hence, 
+	$\Pr[(\stmt, \extrac'^{\prover'^\ast}(\stmt)) \in R] \geq \Pr[\innp{\prover'^\ast}{\verifier'(\stmt)} = 1] - O(|\stmt|) \epsilon_c - \mu(|\stmt|)$. Set $\mu'(\stmt) = O(|\stmt|) \epsilon_c + \mu(|\stmt|)$. Since $\mu'$ is a negligible function, therefore $\innp{\prover'}{\verifier'}$ has the proof of knowledge property.
 	
 %	Let $\prover'^\ast$ does not have a correct witness corresponding to a statement $x$. But $\langle \prover'^\ast, \verifier' \rangle$ accepts with non-negligible probability.
 %	Now we will use $\prover'^\ast$ to construct $\prover^\ast$ that can make $\langle \prover, \verifier \rangle$ output accept without the knowledge of a correct witness.
@@ -116,7 +166,7 @@ $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to
 %	
 %	The above reduction fails if $\prover'^\ast$ opens $\pi'_i$ to different values, which is possible with negligible probability due to the binding property of the commitment scheme. 
 	
-	\textit{Zero-knowledge} of $\langle \prover', \verifier' \rangle$ holds directly from the zero-knowledge property of $\langle \prover, \verifier \rangle$. 
+	\noindent{\bf Zero-knowledge} of $\langle \prover', \verifier' \rangle$ holds directly from the zero-knowledge property of $\langle \prover, \verifier \rangle$. 
 	
 	Since $\langle \prover, \verifier \rangle$ has zero-knowledge property, therefore $\exists$ a simulator $\Sim$ that generates a transcript that is indistinguishable from a real transcript. 
 	Using $\Sim$, we will construct a new simulator $\Sim'$. 
@@ -125,12 +175,14 @@ $\verifier'$ sets the challenge $c'_i = c_i$ and $j' = j$. Upon querying $j'$ to
 	%---
 \end{proof}
 
-\paragraph*{$\innp{\disPN}{\verifier}$} 
+\paragraph*{Distributed proof generation} 
 %Let $\langle \prover, \verifier \rangle$ be an IOP-based zero-knowledge proof system with homomorphic oracle algorithm. Then consider a $(\Num + 1)$ party protocol such that among these one is verifier $\verifier$, say $(\Num + 1)$th party and remaining $\Num$ parties, say $\Partyset = \{ \prover_1, \ldots, \prover_{\Num}\}$ are copies of prover $\prover$ but the witness of $\prover$ in $\langle \prover, \verifier \rangle$ additively shared among the parties in $\Partyset$. 
 %------
-Let $\innp{\prover}{\verifier}$ be an IOP-based zero-knowledge proof system. Then consider a $(\Num + 1)$ party protocol such that among these one is verifier $\verifier$, say $(\Num + 1)$th party and remaining $\Num$ parties, say $\Partyset = \{ \prover_1, \ldots, \prover_{\Num}\}$ are copies of prover $\prover$ and $\distprover$ has input $\stmt, \wit_\xi$ for all $\xi \in \Num$. $\verifier$ has input $\stmt$.
+Let $\innp{\prover}{\verifier}$ be an IOP-based zero-knowledge proof system. We define a $(\Num + 1)$ party protocol $\innp{\disPN}{\verifier}$ with one verifier $\verifier$ and $\Num$ identical copies of $\prover$ algorithm, say $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$. In this protocol $\verifier$ receives messages from one designated party, $\Ag$, from $\Partyset$ and parties in $\Partyset$ can interact among themselves. In $\innp{\disPN}{\verifier}$, $\distprover$ has input $\stmt, \wit_\xi$ for all $\xi \in \Num$ and $\verifier$ has input $\stmt$.
 %------
-Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\cdot)$ for $\pi_i$. Let $\Partyset = \{\prover_{1}, \ldots, \prover_{\Num}\}$ be the set of $\Num$ provers, where at most $t (<\Num)$ can be corrupted. Parties in $\Partyset$ execute a $t$-secure MPC for the function $m_i(\cdot)$ and $\pi_i(\cdot)$ to get $\shareA{m_i}$ and $\shareA{\pi_i}$, where $\shareA{x}$ represents $t$-out of $n$ sharing of $x$. At the $i$th round, the messages $m_i,\pi_i$ may or may not be linear functions of the witness. If it is not a linear function, then the corresponding computation requires interaction among the provers. Let $\Pi_i$ be the algorithm executed jointly by $\Partyset$ to prepare linear sharing of $f_i = (m_i, \pi_i)$. $\Pi_i$ takes $\{\st^{\distprover}_{i-1}\}_{\xi \in [\Num]}$ as input, where $\st^{\distprover}_{0} = \{\stmt, \wit_{\xi}\}$ for all $\xi \in [\Num]$.
+Since $(f_i, \st^p_i) = P(c_1, \ldots, c_i, \st^p_{i-1}, \rho_{p})$, parties in $\Partyset$ jointly compute $P(\cdot)$ with public inputs $c_1, \ldots, c_i$ and $\distprover$'s private input $\{\st^{\distprover}_{i-1}, \rho_{\distprover}\}$. To obtain a linear sharing of $(f_i, \st^p_i)$, parties in $\Partyset$ perform a $t$-secure MPC, where at most $t(<\Num)$ parties can be corrupted. For $\xi \in [\Num]$, each $\distprover$ obtains $(\shareA{f_i}, \shareA{\st^{p}_i})$ where $\shareA{\cdot}$ is a $t$-out of $n$ sharing. If $P(\cdot)$ is a linear function then no interaction is required among the provers, but $P(\cdot)$ need not be a linear function, in such a case communication among the parties in $\Partyset$ is required. 
+
+%Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\cdot)$ for $\pi_i$. Let $\Partyset = \{\prover_{1}, \ldots, \prover_{\Num}\}$ be the set of $\Num$ provers, where at most $t (<\Num)$ can be corrupted. Parties in $\Partyset$ execute a $t$-secure MPC for the function $m_i(\cdot)$ and $\pi_i(\cdot)$ to get $\shareA{m_i}$ and $\shareA{\pi_i}$, where $\shareA{x}$ represents $t$-out of $n$ sharing of $x$. At the $i$th round, the messages $m_i,\pi_i$ may or may not be linear functions of the witness. If it is not a linear function, then the corresponding computation requires interaction among the provers. Let $\Pi_i$ be the algorithm executed jointly by $\Partyset$ to prepare linear sharing of $f_i = (m_i, \pi_i)$. $\Pi_i$ takes $\{\st^{\distprover}_{i-1}\}_{\xi \in [\Num]}$ as input, where $\st^{\distprover}_{0} = \{\stmt, \wit_{\xi}\}$ for all $\xi \in [\Num]$.
 %Provers locally compute $\shareA{\pi'_i}$ and send $\shareA{m_i}, \shareA{\pi'_i}$ to an aggregator $\Ag$.
 
 %$\Ag$ obtains $m_i = \sum \shareA{m_i}$ and $\pi'_i = \prod \shareA{\pi'_i}$. It sets $\pi'_i$ as the oracle and sends $m_i$ to $\verifier$. $\verifier$ performs the verification algorithm of $\langle \prover, \verifier \rangle$.
@@ -150,7 +202,7 @@ Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\c
 		\item $\verifier'$ computes $(c_i,\st^v_i) = V^{f'_0, f'_1, \ldots, f'_{i-1}}(st^v_{i-1}, \rho_v)$ and sends $c_i$ to all parties in $\Partyset$.
 		%----
 		\item Parties in $\Partyset$ jointly perform 
-		\\$(f_i, \st^p_i) = P(c_1,\ldots, c_i, \{\st^{\distprover}_i , \rho_{\distprover}\}_{\xi \in [\Num]})$. $\distprover$ obtains a linear sharing of $(f_i, \st^p_i)$, say $(\shareA{f_i}, \shareA{\st^p_i})$.
+		\\$(f_i, \st^p_i) = P(c_1,\ldots, c_i, \{\st^{\distprover}_{i-1} , \rho_{\distprover}\}_{\xi \in [\Num]})$. $\distprover$ obtains a linear sharing of $(f_i, \st^p_i)$, say $(\shareA{f_i}, \shareA{\st^p_i})$.
 		%----
 		%\item If in $\innp{\prover}{\verifier}$, $\prover$ sends messages $f_i = (m_i, \pi_i)$. Then, parties in $\Partyset$ run $\Pi_i$.
 		%$\distprover$ obtains $\shareA{m_i}_{\xi}$ and $\shareA{\pi_i}_{\xi}$.
@@ -165,39 +217,54 @@ Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\c
 		%\item $\distprover$ updates $\st^{\distprover}_{i} = \st^{\distprover}_{i-1} \cup \{ (\shareA{m_i}_{\xi}, \shareA{\pi_i}_{\xi}, c_i)\}$.
 	\end{itemize}	
 	%----
-	\item[--] $\verifier'$ outputs $b = V^{f'_0, f'_1, \ldots, f_r} ( \st^v_r , \rho_v)$.
+	\item[--] $\verifier$ outputs $b = V^{f_0, f_1, \ldots, f_r} ( \st^v_r , \rho_v)$.
 	%----
 \end{itemize}
 
 \begin{lemma}\label{lemma:generic_dpzk}
-	Let $\innp{\prover'}{\verifier'}$ be an homomorphic IOP-based protocol obtained by using the above mentioned compiler. If the witness, $\wit$, is shared among $\Num$ provers $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ additively, then $\innp{\disPpN}{\verifier'}$ efficiently realizes $\Func_{DPZK}$ functionality.
+	Let $\innp{\prover'}{\verifier'}$ be an homomorphic IOP-based protocol obtained by using the above mentioned compiler. If the witness, $\wit$, is shared among $\Num$ provers $\Partyset = \{\prover_1, \ldots, \prover_{\Num}\}$ additively, then $\innp{\disPpN}{\verifier'}$  realizes $\Func_{DPZK}$ functionality securely.
 \end{lemma}
 	
 \begin{proof}
-	In $\innp{\disPpN}{\verifier'}$, $\distprover'$ obtains $\shareA{f_i}_{\xi} = (\shareA{m_i}_{\xi}, \shareA{\pi_i}_{\xi})$. $\distprover'$ commits to $\shareA{\pi_i}_{\xi}$ and obtains $\shareA{\pi'_i}_{\xi}$. $\distprover'$ sends $\shareA{f'_i}_{\xi} = (\shareA{m_i}_{\xi}, \shareA{\pi'_i}_{\xi})$. Due to the linearity $\shareA{\cdot}$, the combine operation for $\Ag$ is simple. $\Ag$ computes $m_i = \sum_{\xi\in [\Num]} \shareA{m_i}$ and $\pi'_i = \prod_{\xi \in [\Num]} \shareA{\pi'_i}$ and sends $f'_i = (m_i,\pi'_i)$.
+	In $\innp{\disPpN}{\verifier'}$, $\distprover'$ obtains $\shareA{f_i}_{\xi} = (\shareA{m_i}_{\xi}, \shareA{\pi_i}_{\xi})$. $\distprover'$ commits to $\shareA{\pi_i}_{\xi}$ and obtains $\shareA{\pi'_i}_{\xi}$. $\distprover'$ sends $\shareA{f'_i}_{\xi} = (\shareA{m_i}_{\xi}, \shareA{\pi'_i}_{\xi})$. Due to the linearity of $\shareA{\cdot}$, the combine operation for $\Ag$ is simple. $\Ag$ computes $m_i = \sum_{\xi\in [\Num]} \shareA{m_i}$ and $\pi'_i = \prod_{\xi \in [\Num]} \shareA{\pi'_i}$ and sends $f'_i = (m_i,\pi'_i)$.
 	Let $J$ be the set of indices queried by $\verifier'$, where $|J|$ is bounded by the query complexity $q$ of $\innp{\prover}{\verifier}$. In response to these queries, $\distprover'$ sends the corresponding openings. That is, $\distprover'$ sends $\open(\shareA{\pi'_i}[j]) = \shareA{\pi_i}[j]$ to $\Ag$, for all $j \in J$. $\Ag$ sends $\pi_i[j] = \sum_{\xi\in [\Num]} \shareA{\pi_i}[j]$ to $\verifier'$.
 	
-	\textit{Soundness with Witness Extraction:}
-	
+	\noindent{\bf Soundness with Witness Extraction:}
+	%-----
 	Claim: The above construction of $\innp{\disPpN}{\verifier'}$ has Soundness with Witness Extraction (SoWE) property if $\innp{\prover'}{\verifier'}$ has proof of knowledge property. 
+	%-----
 	
-	Let $\extrac$ be the extractor of $\innp{\prover'}{\verifier'}$. Therefore $\prover'$ interacts with $\extrac$ and $\extrac$ outputs a correct witness if the interaction is accepting. Using $\extrac$, we will construct $\extrac_{DP}$ for the distributed version.
+	Let $\Partyset^\ast$ be a set of $\Num$ provers such that $\innp{\disPpAN}{\verifier'(\stmt)} = 1$. Let $\prover'^\ast$ be a prover that sends $f'_i = (m_i, \pi'_i)$ where $\Ag$ in $\innp{\disPpAN}{\verifier}$ sends the same $f'_i$. 
+	$\innp{\prover'^\ast}{\verifier'} = 1$ since the verification in both $\innp{\disPpN}{\verifier'}$ and $\innp{\prover'}{\verifier'}$ are the same. Due to the proof of knowledge property of $\innp{\prover'}{\verifier'}$, there is an PPT extractor $\extrac'$ that outputs $\wit$ with high probability. $\extrac_{DP}$ be the required that runs $\extrac'$ and outputs $\wit$ with the same probability as above.
 	
-	$\extrac_{DP}$ works as follows:
-	\begin{itemize}
-		%------
-		\item[--] If $\extrac$ sends a challenge $c_i$ to $\prover'$, $\extrac_{DP}$ sends $c_i$ to all in $\Partyset$.
-		%------
-		\item[--] If $\extrac$ rewinds $\prover'$, then $\extrac_{DP}$ rewinds $\Ag$ and parties in $\Partyset$. That is, upon rewinding, if $\prover'$ recomputes $f_i$, then parties in $\Partyset$ re-execute $\Pi_i$, and if $\prover'$ sends $j$th opening of $\pi'_i$ then each $\distprover'$ sends $j$th opening of $\shareA{\pi'_i}$, i.e., $\shareA{\pi_i}[j]$ to $\Ag$ and $\Ag$ sends $\sum_{\xi\in [\Num]} \shareA{\pi_i}[j] = \pi_i[j]$.
-		%------
-		\item[--] If $\extrac_{DP}$ receives $a_i$ from $\Ag$, it sends the same to $\extrac$.
-		%------
-		\item[--] $\extrac_{DP}$ gets $\extrac$'s output and outputs the same.
-		%------
-	\end{itemize}
+	Therefore, $\Pr[(\stmt, \extrac_{DP}^{\Partyset^\ast}(\stmt)) \in R] = \Pr[(\stmt, \extrac'^{\prover'^\ast}(\stmt)) \in R]$.
+	Since $\innp{\prover'^\ast}{\verifier'}$ has proof of knowledge property, therefore $\Pr[(\stmt, \extrac'^{\prover'^\ast}(\stmt)) \in R] \geq \Pr[\innp{\prover'^\ast}{\verifier'(\stmt)} = 1] - \mu'(|\stmt|)$ and 
+	$\Pr[\innp{\disPpAN}{\verifier'(\stmt)} = 1] = \Pr[\innp{\prover'^\ast}{\verifier'(\stmt)} = 1]$.
+	Hence, $\Pr[(\stmt, \extrac_{DP}^{\Partyset^\ast}(\stmt)) \in R] \geq \Pr[\innp{\disPpAN}{\verifier'(\stmt)} = 1] - \mu'(|\stmt|)$.
 	
-	Since, $\extrac$ outputs a witness with high probability if the interaction with $\prover'$ is accepting. Therefore, $\extrac_{DP}$ outputs a witness with high probability if the interaction with $\Partyset$ and $\Ag$ is accepting. 
 	
+	
+%	Let $\extrac$ be the extractor of $\innp{\prover'}{\verifier'}$. Therefore $\prover'$ interacts with $\extrac$ and $\extrac$ outputs a correct witness if the interaction is accepting. Using $\extrac$, we will construct $\extrac_{DP}$ for the distributed version.
+%	
+%	$\extrac_{DP}$ works as follows:
+%	\begin{itemize}
+%		%------
+%		\item[--] If $\extrac$ sends a challenge $c_i$ to $\prover'$, $\extrac_{DP}$ sends $c_i$ to all in $\Partyset$.
+%		%------
+%		\item[--] If $\extrac$ rewinds $\prover'$, then $\extrac_{DP}$ rewinds $\Ag$ and parties in $\Partyset$. That is, upon rewinding, if $\prover'$ recomputes $f_i$, then parties in $\Partyset$ re-execute $\Pi_i$, and if $\prover'$ sends $j$th opening of $\pi'_i$ then each $\distprover'$ sends $j$th opening of $\shareA{\pi'_i}$, i.e., $\shareA{\pi_i}[j]$ to $\Ag$ and $\Ag$ sends $\sum_{\xi\in [\Num]} \shareA{\pi_i}[j] = \pi_i[j]$.
+%		%------
+%		\item[--] If $\extrac_{DP}$ receives $a_i$ from $\Ag$, it sends the same to $\extrac$.
+%		%------
+%		\item[--] $\extrac_{DP}$ gets $\extrac$'s output and outputs the same.
+%		%------
+%	\end{itemize}
+%	
+%	Since, $\extrac$ outputs a witness with high probability if the interaction with $\prover'$ is accepting. Therefore, $\extrac_{DP}$ outputs a witness with high probability if the interaction with $\Partyset$ and $\Ag$ is accepting. 
+%	
+%	Therefore, $\Pr[(\stmt, \extrac_{DP}^{\Partyset}(\stmt)) \in R] = \Pr[(\stmt, \extrac'^{\prover'}(\stmt)) \in R]$.
+%	Since $\innp{\prover'}{\verifier'}$ has proof of knowledge property, therefore $\Pr[(\stmt, \extrac'^{\prover'}(\stmt)) \in R] \geq \Pr[\innp{\prover'}{\verifier'(\stmt)} = 1] - \mu'(|\stmt|)$ and 
+%	$\Pr[\innp{\disPpAN}{\verifier'(\stmt)} = 1] = \Pr[\innp{\prover'^\ast}{\verifier'(\stmt)} = 1]$. Hence, $\Pr[(\stmt, \extrac_{DP}^{\Partyset}(\stmt)) \in R] \geq \Pr[\innp{\disPpN}{\verifier'(\stmt)} = 1] - \mu'(|\stmt|)$.
+%	This proves the soundness with witness extraction property of $\innp{\disPpN}{\verifier'}$.
 	
 	
 	
@@ -207,13 +274,13 @@ Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\c
 	
 	%Note that $\extrac$ can extract a correct witness with high probability. Therefore, $\extrac_{DP}$'s output is also a correct witness with high probability.
 	
-	\textit{Zero-Knowledge:}
-	
+	\noindent{\bf Zero-Knowledge:}
+	%-----
 	Since in $\langle \disPpN, \verifier' \rangle$, the verifier's view does not change, therefore the same simulator works for the distributed prover setting also. Hence the zero-knowledge property is obvious.
 	
-	\textit{Witness Hiding:} 
-	
-	Let at the $i$th round, provers run $t$-secure MPCs, $\Pi_{m_i}$, to obtain $\shareA{m_i}$ and $\Pi_{\pi_i}$, to obtain $\shareA{\pi_i}$such that $\sum \shareA{m_i} = m_i$ and $\sum \shareA{\pi_i} = \pi_i$.
+	\noindent{\bf Witness Hiding:} 
+	%-----
+	Let at the $i$th round, provers run $t$-secure MPC, $\Pi_P$, to obtain $\shareA{f_i}$ and $\shareA{\st^p_i}$ such that $\sum \shareA{m_i} = m_i$ and $\sum \shareA{\pi_i} = \pi_i$, where $f_i = (m_i, \pi_i)$.
 	
 	Corresponding to a corrupted set $C$ of $t$ provers, $\Sim$ does the following:
 	\begin{itemize}
@@ -222,13 +289,13 @@ Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\c
 		%---
 		\item[--] On behalf of the verifier, $\Sim$ sets the challenge $c_i$ obtained from the transcript $\tau$, and corresponding response $m_i$ and $\{\pi_i[j]\}_{j\in J}$, where $J$ be the set of queried locations. $\Sim$ picks a $\pi_i$ that is consistent with $\{\pi_i[j]\}_{j\in J}$. This is possible due to the bounded independence property, that is $\pi_i$ remains random (independent of the witness $\wit$) even after revealing $|J|$ locations of $\pi_i$.
 		%---
-		\item[--] If provers run MPCs, $\Pi_{m_i}$ and $\Pi_{\pi_i}$ to obtain $\shareA{m_i}$ and $\shareA{\pi_i}$, and $\Sim_{m_i}$, $\Sim_{\pi_i}$ be the corresponding simulators. Consider $\{st^i_j\}_{j\in C}$ be the inputs of the corrupted parties to the protocols $\Pi_{m_i}$ and $\Pi_{\pi_i}$. Then $\Sim$ executes $\Sim_{m_i}$, $\Sim_{\pi_i}$  with inputs $\{st^i_j\}_{j\in C}$, $\shareA{m_i}$ and $\shareA{\pi_i}$ correspondingly.
+		\item[--] If provers run MPC, $\Pi_{P}$ to obtain $\shareA{f_i}$ and $\shareA{\st^p_i}$, and $\Sim_{P}$ be the simulator. Consider $\{st^j_{i-1}\}_{j\in C}$ be the inputs of the corrupted parties to the protocols $\Pi_{P}$. Then $\Sim$ executes $\Sim_{P}$ with inputs $\{st^j_{i-1}\}_{j\in C}$, $\shareA{f_i}$ and $\shareA{\st^p_i}$ correspondingly.
 		%---
 		\item[--] Finally, $\Sim$ sends $\{\shareA{m_i}_j\}_{j\notin C}$ and $\{\shareA{\pi'_i}_j\}_{j\notin C}$to $\Ag$.
 		%---
 	\end{itemize}
 	%---
-	Here note that the view generated by $\Sim$ is indistinguishable from a real execution of the protocol. The following argument can establish this:
+	Here note that the view generated by $\Sim$ is indistinguishable from a real execution of the protocol. We establish this by the following argument.
 	\begin{align*}
 	& \SimV_1 || \ldots ||\SimV_i || \RealV_{i+1}|| \ldots || \RealV_r \\
 	\approx\; 
@@ -240,73 +307,18 @@ Let $m_i(\cdot)$ be the function to generate $m_i$ and correspondingly $\pi_i(\c
 	Privacy against $\Ag$: $\Ag$'s view consists of $(\shareA{m_i}, \shareA{\pi'_i})$ and $\open(\shareA{\pi'_i}[j]) = \shareA{\pi_i}[j]$ for all $j \in J$, where $|J|$ is bounded by the query complexity. 
 	The simulator runs the zero knowledge simulator interally and obtains $m_i$ and $\pi_i[j]$. It creates additive sharing of $m_i$ and $\pi_i[j]$, that is, $\shareA{m_i}$ and $\shareA{\pi_i}[j]$. The simulator picks $\shareA{\pi_i}$ such that the obtained values are consistent. This is possible since the number of opened values are bounded by query complexity and that ensures it does not leak any information about the underlying message. Then the simulator commits to $\shareA{\pi_i}$ and obtains $\shareA{\pi'_i}$. This simulated view is indistinguishable from a real world $\Ag$'s view.
 \end{proof}
+
+The compiler preserves the proof size and round complexity of the underlying protocol. The overhead of the computational complexity depends on the oracle size and round complexity of the protocol. If $\innp{\prover}{\verifier}$ has an oracle of size $|\pi_i|$ in the $i$th round, then the prover's complexity in $\innp{\prover'}{\verifier'}$ incurs an additional $|\pi_i|$ group exponentiations in the $i$th round. Similarly, if the verifier in $\innp{\prover}{\verifier}$ makes $q$ many queries to the oracle $\pi_i$, that adds $q$ group exponentiations in the verifier's complexity in $\innp{\prover'}{\verifier'}$. In general, $\innp{\disPpN}{\verifier'}$ may require $O(N)$ multiplication in each round for most of the protocols.
+%Below we instantiate few state of the art protocols' compiled version and discuss their drawbacks.
 %------
-\subsection{Instantiations:}\label{sec:instantiations}
-The compiler preserves the proof size and round complexity of the underlying protocol. The overhead of the computational complexity depends on the oracle size and round complexity of the protocol. If $\langle \prover, \verifier \rangle$ has an oracle of size $|\pi_i|$ in the $i$th round, then the prover's complexity in $\langle \prover', \verifier' \rangle$ incurs an additional $|\pi_i|$ group exponentiations in the $i$th round. Similarly, if the verifier in $\langle \prover, \verifier \rangle$ makes $t$ many queries to the oracle $\pi_i$, that adds $t$ group exponentiations in the verifier's complexity in $\langle \prover', \verifier' \rangle$. In general, $\langle \disPpN, \verifier' \rangle$ may require $O(N)$ multiplication in each round for most of the protocols.
-Below we instantiate few state of the art protocols' compiled version and discuss their drawbacks.
+
+
+
+%\subsection{Instantiations:}\label{sec:instantiations}
+
 %------
-\paragraph*{D-Aurora:}
-In Aurora~\cite{aurora}, the size of the oracle is $O(N)$, the proof size is $O(\log^2 N)$, and number of rounds is $O(\log N)$. Aurora is an IOP-based proof system where almost all the messages from $\prover$ to $\verifier$ are set as oracles, and $\verifier$ makes oracle-queries to complete the verification.
-%----
-We can convert Aurora using our compiler such that it supports DPZK, we call the distributed version to be D-Aurora. The compiled version retains the Oracle size, proof size, and number of rounds. However, the prover time and the verification time increase by $O(N\log N)$ group exponentiations. Since all the oracle construction and validation need $O(N)$ group exponentiations in every round. The distributed version of it needs secure evaluation of circuits with at least depth one and $O(N)$ multiplication gates in each round.
-%----
-\paragraph*{D-Ligero:}
-Similarly, for Ligero~\cite{ligero}, Ligero++~\cite{ligero++}, our compiler provides protocols with  prover time $O(N\log N)$ field multiplication plus $O(N)$ group exponentiations, and verification time $O(N)$ field multiplication plus $O(N)$ group exponentiations. Note that the proof size of the protocols remains the same in the new compiled protocols. We call the distributed versions as D-Ligero and D-Ligero++ respectively. Since Ligero++ uses inner product of Virgo, which is similar to Aurora, therefore D-Ligero++ is similar to D-Aurora.
-%---
 
-From the above compiler, we see how we can obtain a secure DPZK protocol from Ligero. In the compiled protocol, we observe that each entry of the oracle is committed. Therefore the oracle size remains the same as the oracle size of the base Ligero protocol. However, this can be optimized further, and this optimization aids in reducing the proof size by overcoming the bottleneck of $O(\sqrt{N})$.
-%--- 
 
-The proof for an R1CS instance in Ligero constitutes of the check if the witness $\wit$ satisfies the following condition: $x = A \wit \land y = B \wit \land z = C \wit \land x \circ y = z$, where is $A, B, C$ matrices are dependent on the R1CS instance. The above check is segmented into three checks: (i) Interleaved check, (ii) Linear check, and (iii) Quadratic check. 
-%---
-
-In Ligero, $\prover$ rewrites the vectors $\wit, x, y, z$ as matrices in a canonical way, further encodes these matrices using RS-encoding by encoding each row of the matrices. Finally, it sets each column of these matrices as oracles. The oracle in Ligero is a matrix, and each location of the oracle contains a column of the matrix.
-%---
-In the interleaved check, $\prover$ proves that the rows of the oracle matrices are codewords. To do that, it provides a random linear combination of the rows of the matrices, where the coefficients for the linear combination are picked by $\verifier$. Therefore, if one or more rows in the matrices are not correct codewords, then the linear combination is not a codeword with high probability. Furthermore, $\verifier$ queries the oracle with few indices (the number of queries is bounded by the security parameter $t$ for zero-knowledge) and receives the corresponding columns. Upon receiving the columns, $\verifier$ performs the same linear combination and checks with the row received from $\prover$.
-%---
-In the linear check, $\prover$ proves the knowledge of a vector $x$ such that $Ax = b$ holds for public matrix $A$ and vector $b$. This check is reduced to a probabilistic check $r^TAx = r^T b$, where $r$ is a random vector picked by $\verifier$. $\prover$ computes a polynomial $p(x)$ such that the sum of the evaluations on publicly known points is equal to $r^Tb$, and sends this $p(x)$ to $\verifier$. $\verifier$ checks if the above condition holds or not, it further checks if $p(x)$ is constructed correctly from $r, A$, and $\wit$. To check this, $\verifier$ queries some locations of the oracle.
-%---
-In the quadratic check, $\prover$ proves that $x \circ y = z$, where the corresponding encoded values are set as oracles. $\verifier$ gives a randomly sampled challenge vector $r$ to $\prover$. $\prover$ constructs a polynomial $p(x)$ using the challenge $r$ and the polynomials used in the encoding of $x, y, z$. This polynomial should evaluate to $0$ on publicly known points. $\prover$ sends the polynomial $p(x)$ to $\verifier$. Upon receiving $p(x)$, $\verifier$ checks if the above condition is true or not. Furthermore, it checks if $p(x)$ is correctly constructed or not. For this, it queries some locations of the oracles.
-%---
-
-In D-Ligero, each entry of each oracle is committed using Pedersen commitment. $\verifier$ receives the committed values of all the entries corresponding to the queried locations in each column.
-%---
-Observe that, in this construction, we can replace the Pedersen commitment with the Pedersen vector commitment. Instead of committing to individual entries separately, we can commit to each column separately. Now, corresponding to a column, there is only one commitment, which gives an oracle, a row vector. With this modification, the verification algorithm does not change. Therefore soundness and zero-knowledge remain unaffected.
-%---  
-We further leverage the commitment scheme by using inner product arguments instead of opening columns. With this modification, we overcome the bottleneck of $O(\sqrt{N})$. This idea is in line with Ligero++. We use the inner product argument from Bulletproofs.
-%---
-
-For Interleaved check, $\verifier$ receives commitments of the chosen columns by the oracle. The linear combination check on the columns can be viewed as $\innp{r}{c}$, where $r$ is the challenge vector chosen by $\verifier$, and $c$ is the column. $\verifier$ knows the vector $r$ and the commitment of $c$, $\prover$ knows both $r$ and $c$. $\prover$ and $\verifier$ deterministically computes a commitment of $r$, then $\prover$ uses $r, c$ as a witness for the corresponding inner product argument. Note that the above setting is the same as bulletproofs inner product argument.
-%---
-For Linear check, $\verifier$ receives the polynomial $p(x)$, where $p(x) = \sum_i s_i(x) f_i(x)$, where $f_i(x)$ is the polynomial used in encoding $i$th row of $x$ and $s_i(\zeta_j) = R_{ij}$, where $R$ is the canonical matrix form of the vector $R = r^TA$ and $\zeta$'s are publicly known points used for encoding (the interpolation domain). $\verifier$ evaluates $p(x)$ on $\zeta$'s and checks if it sums up to $r^Tb$. Furthermore, it needs to check if $p(x)$ is well-formed or not, i.e. $p(\eta_j) = \sum_i s_i(\eta_j) \ewit[i,j]$, where $\eta$'s are the public points used in encoding (evaluation point), and $\ewit[\cdot,j]$ is the $j$th column in the oracle matrix. This check can be viewed as $p(\eta_j) = \innp{s_j}{\ewit[\cdot,j]}$, where $s_j = (s_1(\eta_j), \ldots, s_m(\eta_j))$, considering $m$ as the number of rows. Similar to the interleaved check, we check this using bulletproofs inner product argument.
-%---
-For Quadratic check, consider, $f^x_i(x), f^y_i(x), f^z_i(x)$ are the polynomials used in encoding of $x, y, z$ and $\ewit^x[\cdot,j], \ewit^y[\cdot,j], \ewit^z[\cdot, j]$ are the $j$ the columns of the oracles corresponding to $x, y, z$. Similar to the linear check, $\zeta$'s, $\eta$'s are the set of points used for interpolation and evaluation in the encoding respectively.  $\verifier$ gives a random vector $r$ as a challenge to $\prover$. $\prover$ computes $p(x) = \sum_i r_i [ f^x_i (x) \cdot f^y_i(x) - f^z_i(x)]$ and sends $p(x)$ to $\verifier$. Note that $p(\zeta_j) = 0$, $\verifier$ checks this. To ensure the correct computation of $p(x)$, $\verifier$ checks $p(\eta_j) = \sum_i r_i [ \ewit^x[i,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j]]$. This can be viewed as $p(\eta_j) = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j])}$. Unfortunately, we cannot use bulletproofs inner product argument directly here, since the commitment of $\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j]$ is not available to $\verifier$. To use inner product argument, we see the above equation as follows:
-%----
-\begin{align*}
-p(x) & = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j] - \ewit^z[\cdot,j])} \\
-& = \innp{r}{(\ewit^x[\cdot,j] \cdot \ewit^y[\cdot,j])} - \innp{r}{\ewit^z[\cdot,j]} \\
-& = \innp{(r \circ \ewit^x[\cdot,j])}{ \ewit^y[\cdot,j]} - \innp{r}{\ewit^z[\cdot,j]} \\
-& = \innp{(r \circ \ewit^x[\cdot,j] || r)}{(  \ewit^y[\cdot,j] || - \ewit^z[\cdot,j])} \\
-\end{align*}
-%----
-Since, $r$ is available to both $\prover$ and $\verifier$ and the commitments of $ \ewit^x[\cdot,j],  \ewit^y[\cdot,j],  \ewit^z[\cdot,j]$ are available to both $\prover$ and $\verifier$. They obtain the commitments of both $(r \circ \ewit^x[\cdot,j] || r)$ and $ (\ewit^y[\cdot,j] || - \ewit^z[\cdot,j] )$ and perform the inner product check.
-%----
-Let $\epsilon_L$ and $\epsilon_B$ be the soundness error of Ligero and Bulletproofs inner product argument, respectively. Then, the modified protocol's soundness error is $O(\epsilon_L + \epsilon_B)$. However, zero-knowledge remains unharmed since, in the modified protocol, the verifier is not learning anything additional. 
-%----
-Note that in the modified protocol, we can elongate the column size and shorten the row size. Let the row size be $n$, and the column size be $m$, then the proof size is $O(n + \log (m))$ since the proof size of the inner product argument in bulletproofs is $\log (N)$ for $N$ sized vector.
-%---
-However, setting $m$ to be arbitrarily large increases verification time. 
-%---
-To obtain better proof size and verification time simultaneously, we optimize further by adjoining an additional dimension. The details are given in Section~\ref{sec:graphenec}.
-
-%----
-%We provide construction of a new proof system which can be obtained from Ligero/Ligero++~\cite{ligero,ligero++} using our compiler and some additional optimization. The rationale behind opting for Ligero style proof system is that it does not have many oracles. Therefore the conversion is less costly.
-%%----
-%Using the compiler directly on Ligero++~\cite{ligero++} gives 2D version of our construction where the Virgo~\cite{Virgo} inner product is replaced by Bulletproofs~\cite{bulletproofs} inner product. We optimize further in our construction by adjoining additional dimension which aids in better trade-off between proof size and verification time. 
-%----
-We use a similar approach to~\cite{bootle2020linear, bootle2020zero}, where the witness is viewed as a multi-dimensional matrix. In our construction, we restrict to 3 dimensions since, among these dimensions, only the smallest one contributes to the proof size, while the remaining two aid in better verification time. Moreover, constructions with higher dimensions require more rounds and oracles. We opt Ligero-style protocol because it has very few rounds, and the number of oracles is also significantly less, which helps to obtain an efficient DPZK. The protocols with higher dimensions may lose efficiency.
-%----
-In our setting, we explored the scenarios by increasing the number of dimensions. Those approaches lead to more complicated and costlier proof-generation and verification protocols without any more improvements. \cite{bootle2020zero} provides linear-time prover with poly-logarithmic verification, but a major drawback of this work is that the soundness error is $O(1)$. Furthermore,~\cite{bootle2020linear} obtain linear-time prover by using linear-time encodable codes. For that, they use a linear code provided by~\cite{druk2014linear}, whose decoding is conjectured intractable. Due to this property, ~\cite{bootle2020linear} does not satisfy the proof of knowledge property.
 
 
 %\pnote{To add: 1. different amalgamations of MPC and ZK to achieve DPZK fails.

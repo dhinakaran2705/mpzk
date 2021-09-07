@@ -1,6 +1,123 @@
-\subsection{Coding Theory Results}\label{subsec:coding_theory}
+%----------------------------------------------------------------
+\subsection{Basic Notations}\label{sec:basicnotation}
+%------
+In this section, we describe the notation that will be followed in rest of the
+paper. We will often recall the notation in appropriate places. 
+We use $[n]$ to
+denote the set $\{1,\ldots,n\}$. All the arithmetic circuits and constraint
+systems are assumed to be defined over finite field denoted by $\FF$. For a
+vector $x\in \FF^m$,  $x_i$ and $x[i]$ represent the $i^{th}$
+component of $x$ for $i\in [m]$. % and $x[1\mbox{:}m']$ stands for the the first $m'$ elements of $x$, where $m' \leq m$.
+For an $m\times n$ matrix over
+$\FF$, we use (a) $A[i,j]$ to denote $(i,j)^{th}$ entry, (b) $A[i,\cdot]$
+to denote the $i^{th}$ row of %, (c) $A[\cdot,j]$ to denote $j^{th}$ column, (d) $A[1\mbox{:}m',1\mbox{:}n']$ to denote the sub-matrix consisting of first $m'$ rows and $n'$ columns
+$A$. Similarly, for an $p\times m\times n$  matrix $X$, we use (a) $X[i,j,k]$ to
+denote the $(i,j,k)^{th}$ entry, (b)  $X[i,\cdot,\cdot]$ to denote
+the $m\times n$ matrix $Y$ given by $Y[j,k] := X[i,j,k]$, 
+(c) and analogously $X[\cdot,j,\cdot]$ and $X[\cdot,\cdot,k]$ to denote $n\times p$ and $p\times m$
+matrices respectively.  We will refer to sub-matrices $X[i,\cdot,\cdot]$ as {\em slices} of
+$X$, sub-matrices $X[\cdot,j,\cdot]$ as {\em slabs}  of $X$ and sub-matrices $X[\cdot,\cdot,k]$ as the {\em planes} of $X$. 
+$X^T$ denotes transpose of a  two dimensional matrix $X$. Inner-product of two vectors $X,Y$ is denoted as $\langle X,Y\rangle$.
+Inner-product of two three or two dimensional  matrices $X$ and $Y$, denoted as 
+$\langle X,Y\rangle$,  implies the inner-product of the corresponding one-dimensional vectors obtained from unrolling  the matrices.
+
+
+Throughout the paper we use several distance metrics on vectors and matrices,
+which we now introduce. For two vectors $x,y$ of length $n$, we define
+$\Delta(x,y)=|\{i\in [n]: x_i\neq y_i\}|$. For two $m\times n$ matrices $A,B$ we
+define $\Delta_1(A,B)=|\{j\in [n]: A[\cdot,j]\neq B[\cdot,j]\}|$ and
+$\Delta_2(A,B)=|\{i\in [m]: A[i,\cdot]\neq B[i,\cdot]\}|$. For $p\times m\times
+n$ matrices $X$ and $Y$, we define $\Delta_1(X,Y)=\{k\in
+[n]:X[\cdot,\cdot,k]\neq Y[\cdot,\cdot,k]\}$ (no of planes that are different between the two matrices). Similarly we define $\Delta_2(X,Y)
+= |\{j\in [m]: X[\cdot,j,\cdot]\neq Y[\cdot,j,\cdot]\}|$  (no of slabs that are different between the two matrices). Let $u$ be a vector
+and $S$ be a set of vectors. We use $d(u,S) := \min\{\Delta(u,v):v\in S\}$ to
+denote distance between $u$ and $S$. Similarly for a matrix (two or three
+dimensional) $U$ and a set of matrices $\mc{M}$, we define $d_i(U,\mc{M}) :=
+\min\{\Delta_i(U,M): M\in \mc{M}\}$ for $i=1,2$.
+
+We use $\sample$ to denote drawing from a distribution uniformly at random.
+%---------
+\subsection{Coding Theory primitives}\label{subsec:coding_theory}
+%\subsection{Linear Codes}
+\begin{definition}[Linear Codes]\label{defn:lincode}
+	Let $n,k,d$ be positive integers with $n\geq k$ and $\FF$ be a finite field. We
+	call $L\subseteq \FF^n$ to be an $[n,k,d]$ linear code if $L$ is a $k$-dimensional
+	subspace of $\FF^n$ and $d$ is the minimum value of $\Delta(x,y)$ for distinct
+	$x,y\in L$. Elements of $L$ are conventionally called {\em codewords}.
+\end{definition}
+%-------------------------
+
+For an $[n,k,d]$ code $L$, an $n\times k$ matrix $\calG$ is called a {\em
+	generator matrix} for $L$ iff (i) $\calG x\in L$ for all $x \in \bbF^k$ and (ii)
+$\calG x\neq \calG y$ for $x\neq y$. Clearly, such a matrix $\calG$ has rank
+$k$. Similarly an $n\times (n-k)$ matrix $\calH$ such that $y^T \calH = 0$ for
+all $y\in L$ is called a {\em parity check} matrix for $L$. It is known
+that the above two matrices exist for any $[n,k,d]$ linear code $L$. We will
+assume that description of the linear code $L$ includes a generator matrix
+$\calG$ and a parity check matrix $\calH$.
+%-------------------------
+
+\begin{definition}[Interleaved Code]\label{defn:interleavedcode}
+	For an $[n,k,d]$ linear code $L$ and a positive integer $m$, we define a {\em row interleaved code} $\ric{L}{m}$ to be the set of $m\times n$ matrices $A$ such that each row of $A$ is a codeword in $L$. Similarly, we define a {\em column interleaved code} $\cic{L}{m}$ to be the set of $n\times m$ matrices $B$ such that each column of $B$ is a codeword in $L$.
+\end{definition}
+%-------------------------
+
+For  an  $[n,k,d]$ linear code $L$ over $\FF$, one can view $\ric{L}{m}$ as
+an $[mn,mk,d]$ linear code over  $\FF$ or alternatively,  as an $[n,k,d]$ code over $\HH$, where $\HH\cong \FF^m$. 
+
+Analogous to the row interleaved code, a column interleaved code $\cic{L}{m}$ 
+can be viewed as an $[n,k,d]$ code over $\bbF^m$ by viewing each row of the
+codeword $B\in \cic{L}{m}$ as an element in $\bbF^m$. Here the distance metric
+for $\ric{L}{m}$ is given by the matrix distance $\Delta_1$, while the distance
+metric for $\cic{L}{m}$ is given by the matrix distance $\Delta_2$ as defined in
+Section \ref{sec:basicnotation}.  
+%-----------------------
+
+\begin{definition}[Product Code]\label{defn:productcode}
+	Let $L_i$ be an $[n_i,k_i,d_i]$-linear code for $i=1,2$. We define the product
+	code $L_1\otimes L_2$ to be the code consisting of $n_2\times n_1$ matrices $A$
+	such that each row of $A$ is a codeword in $L_1$ and each column of $A$ is a
+	codeword in $L_2$.
+\end{definition}
+%-----------------------
+
+Note that by definition, the product code $L_1\otimes L_2$ is a row interleaved
+code of $L_1$ and a column interleaved code of $L_2$, i.e $L_1\otimes L_2 =
+\ric{L_1}{n_2}\cap \cic{L_2}{n_1}$. For $A,A'\in L_1\otimes L_2$, we define
+$\dham_1(A,A')=|\{i\in [n_1]: A[\cdot,i]\neq A'[\cdot,i]\}|$ and
+$\dham_2(A,A')=|\{i\in [n_2]: A[i,\cdot]\neq A'[i,\cdot]\}|$. The distance
+$\dham_1$ corresponds to distance function of the code $\ric{L}{n_2}$, where we
+view $A,A'$ as codewords in $\ric{L}{n_2}$. Similarly, the distance $\dham_2$
+corresponds to the distance function of the code $\cic{L}{n_1}$.
+%----------------------
+
+\begin{definition}[Reed-Solomon Code]\label{defn:rscode}
+	An $[n,k]$-Reed Solomon Code $L\subseteq \bbF^n$ consists of vectors $(p(\eta_1),\ldots,p(\eta_n))$ for polynomials $p\in \bbF[x]$ of degree less than $k$ where $\eta_1,\ldots,\eta_n$ are distinct points in $\FF$. We will use
+	$\rsc{\eta}{n,k}$ to denote the Reed Solomon code with $\bm{\eta}=(\eta_1,\ldots,\eta_n)$ and $deg(p)<k$. 
+\end{definition}
+
+\begin{lemma}[\cite{CodingTheory}]\label{lem:bicdecoding}
+	Suppose	a matrix $U^\ast\in \FF^{h\times n}$ satisfies $d_1(U^\ast, \ric{\rsc{\eta}{n,\ell}}{h})<e_1 \leq n-\ell$ and $d_2(U^\ast, \cic{ \rsc{\alpha}{h,m}}{n})<e_2 \leq h-m$. Then, there exists $U\in \rsc{\eta}{n,\ell} \otimes \rsc{\alpha}{h,m}$ and sets $S_1\subseteq [n]$, $S_2\subseteq [h]$ with $|S_1|>n-e_1$ and $|S_2|>h-e_2$ such that $U^\ast[i,j]=U[i,j]$ for $(i,j)\in S_1\times S_2$.
+\end{lemma}
+%----------------------------------------
+
+\subsection{Coding Theory Results for our Constructions}\label{new_result_coding_theory}
+%--------------
+The following coding theoretic result is the key to testing proximity of a three-dimensional matrix to a well-formed encoding. 
+\begin{proposition}[3D Compression]\label{lem:3dcompression}
+	Let $L$ be an $[n,k,d]$ code over $\FF$, and $\mc{C} :=
+	\ric{L}{m}$ be a row interleaved code of $L$. Let $\mc{C}^p$ denote the set of
+	$p\times m\times n$ matrices $U$ over $\FF$ such that $U[i,\cdot,\cdot]\in
+	\mc{C}$ for all $i\in [p]$. Let $U^\ast$ be a
+	$p\times m\times n$ matrix such that $d_1(U^\ast,\mc{C}^p)>e$.  Then for any
+	$m\times n$ matrix $u_0$ over $\FF$, we have 
+	\[ \prob{d_1\left(u_0 + \sum_{i=1}^p r_iU^\ast[i,\cdot,\cdot], \mc{C}\right)\leq e}\leq
+	\frac{d}{|\FF|}\]  
+	for a uniformly sampled $(r_1,\ldots,r_p)\sample \FF^p$. 
+\end{proposition}
+%-------------
 %------------
-\paragraph*{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
+%\paragraph*{Proof of Proposition \ref{lem:3dcompression}} \label{app:ProofofLem3dcompression}
 %-------
 We need several observations to prove the proposition, which we present next.
 Throughout this section, let $L$ be a linear $[n,k,d]$ code over a field $\HH$ and let $\FF\subseteq \HH$ be a subfield.  Let $m\geq 1$ be an integer, and let $\mc{C}$ denote the row interleaved code $\ric{L}{m}$. For a matrix $U\in \HH^{m\times n}$ and a vector $u_0\in \HH^n$, let $\aff{u_0}{U}$ denote the affine space as:
@@ -148,8 +265,37 @@ We are now in a position to prove Proposition \ref{lem:3dcompression}.
 \end{proof}
 %---------
 
-\paragraph*{Commitment and Inner-Product Argument}
-As described in Section~\ref{sec:prelim}, in our work we are using Pedersen vector commitment scheme, $\comm$ with message space $\FF^m$, commitment space $\GG$ and randomness space $\FF$. For a set of generators $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment randomness $r\in \FF$ is given by $\comm(x,r)=h^r \prod_{i=1}^m (g_i)^{x_i} $. This commitment is homomorphic with $\calC=\GG$ as the commitment space. This is a non-interactive perfectly hiding and computationally binding commitment scheme.
+%\paragraph*{Commitment and Inner-Product Argument}
+\subsection{Vector Commitment Schemes and Inner-product Arguments}
+%-------------
+We define an interactive protocol that allows proving inner-product relation over committed vectors. For this we are using Pedersen vector commitment scheme $\comm$.
+%, where the commitment corresponds to a non-interactive perfectly hiding and computationally binding commitment scheme, with an additional property of homomorphicity.  We use Pedersen vector commitment scheme $\comm$ with message space $\FF^m$, commitment space $\GG$ and randomness space $\FF$. For a set of generators $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment randomness $r\in \FF$ is given by $\comm(x,r)=h^r \prod_{i=1}^m (g_i)^{x_i} $. This commitment is homomorphic with $\calC=\GG$ as the commitment space.
+%---------
+
+We now define the language for inner-product w.r.t. the above  as $\calL \subseteq \FF^m \times \calC \times \FF$ given by:
+%------
+\begin{equation*}
+%\begin{aligned}[c]
+\begin{array}{l}
+\calL = \{(x,c,z):\exists \; y,r \text{ s.t. } 
+c=\com(y,r)  \text{ and } \innp{x}{y}=z\} 
+%\end{aligned}
+\end{array}
+\end{equation*}
+%-------
+%The $\NP$ relation $\calR_\sigma$ for the language $\calL_\sigma$ consists of pairs $(\stmt,\wit)$ with $\stmt=(c_1,c_2,v)$ and $\wit=(x_1,x_2,r_1,r_2)$ such that $c_1=\com(x_1,r_1)$, $c_2=\com(x_2,r_2)$ and $\innp{x_1}{x_2}=v$.
+%-------
+%Interestingly, the inner-product argument is used to save on communication. Proving an inner-product statement requires sending $y$ on clear which costs more than the argument-size. Our language for inner-product is a simpler version of the one defined in ~\cite{bulletproofs}, where the first argument is also hidden in a commitment. 
+Our language for inner-product is a simpler version of the one defined in ~\cite{bulletproofs}, where the first argument is also hidden in a commitment. The inner product argument is used to reduce the communication.
+%---------------------------
+
+%We mention some instantiations inner-product arguments in Appendix~\ref{inner-product-instan}.  
+We use inner-product argument from Bulletproofs~\cite{bulletproofs}. Notably, we use a variant of inner-product where one of the vector is public and the other one is private. $\innerproduct(\mathsf{pp}, x, \cm, v ; z)$ is the notation we will be using through out the paper, where the public parameter $\mathsf{pp}$  consists of group description and generator, $x$ is a public vector and $\cm$ is the commitment of the private vector $z$ such that $\innp{x}{z} = v$.
+
+
+
+
+In our work, we are using Pedersen vector commitment scheme, $\comm$ with message space $\FF^m$, commitment space $\GG$ and randomness space $\FF$. For a set of generators $\bm{g}=(g_1,\ldots,g_m,h)$, the commitment of vector $x\in \FF^m$ with commitment randomness $r\in \FF$ is given by $\comm(x,r)=h^r \prod_{i=1}^m (g_i)^{x_i} $. This commitment is homomorphic with $\calC=\GG$ as the commitment space. This is a non-interactive perfectly hiding and computationally binding commitment scheme.
 
 \begin{definition}[Inner-product Argument \cite{InnerProductDLS,bulletproofs} ]\label{defn:innerproductarg} 
 	We call an interactive protocol $\innp{\pip}{\vip}$ consisting of $\ppt$ interactive algorithms $\pip$ and $\vip$ an inner-product argument for commitment scheme $(\gen,\com)$ if it recognizes the language $\calL$ as defined previously. Namely, $\innp{\pip}{\vip}$ satisfies the following:
