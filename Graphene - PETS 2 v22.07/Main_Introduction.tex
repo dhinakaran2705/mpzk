@@ -19,11 +19,9 @@ zero-knowledge protocols} ($\DPZK$) where multiple co-opetitive entities each po
 data want to prove to a verifier that their secret data together satisfies a
 predicate of common interest. This is to be done without revealing any information
 about their sensitive data to each other or to the verifier. We illustrate
-through some  real-world applications: %potential
+through some real-world applications: %potential
 %------
 \begin{itemize}
-	%-----
-	\item[-] In privacy-preserving server outsourced computation, it is assumed that the number of corrupted parties can be at most $t$, where $t<n/2$, for the honest majority setting and $t<n-1$ for the dishonest majority setting and $n$ is the number of servers. The protocols in these settings do not consider the scenario where the corruption exceeds $t$. In such a case, neither correctness nor privacy is ensured. So, suppose a user gets the output from the servers. In that case, there is no way to verify the correctness of the output, especially if the function is evaluated on inputs of multiple parties. In such a scenario, protocols can be enhanced by attaching a proof produced by all the servers stating the correctness of the computation. Here the statement would be the evaluated function, and the transcripts of each server become the share of the global witness. If the proof is valid, then the user is ensured that the output is indeed correct.
 	%-----
 	\item[-] A simple but pertinent scenario is of a \textit{joint loan application} by an association of companies from a particular industry. The loan issuer has a set of financial requirements that it wants the association to satisfy, but there is no single trusted entity to act as the prover whom all the companies are willing to provide their sensitive business information with.
 	%-----
@@ -31,18 +29,21 @@ through some  real-world applications: %potential
 	%-----
 	\item[-] In trade logistics business networks \cite{scbn, e2open, tradelens}, a major reason for businesses to enter these networks is to benefit from cross-industry statistics. Publishing these statistics in a publicly verifiable manner without having a single trusted entity is another embodiment of this setting.
 	%-----
+%	\item[-] In privacy-preserving server outsourced computation, it is assumed that the number of corrupted parties can be at most $t$, where $t<n/2$, for the honest majority setting and $t<n-1$ for the dishonest majority setting and $n$ is the number of servers. The protocols in these settings do not consider the scenario where the corruption exceeds $t$. In such a case, neither correctness nor privacy is ensured. So, suppose a user gets the output from the servers. In that case, there is no way to verify the correctness of the output, especially if the function is evaluated on inputs of multiple parties. In such a scenario, protocols can be enhanced by attaching a proof produced by all the servers stating the correctness of the computation. Here the statement would be the evaluated function, and the transcripts of each server become the share of the global witness. If the proof is valid, then the user is ensured that the output is indeed correct.
+	%-----
+	\item[-] More generally, in privacy-preserving server outsourced computations on sensitive data from data owner(s), it is typically assumed that the number of corrupt servers $t$ is $<n/2$ in the honest majority setting and $<n-1$ in the dishonest majority setting with $n$ being the number of servers. The protocols in these settings do not consider the scenario where the number of corrupt servers exceeds $t$, with neither correctness nor privacy ensured in that case. Hence, when a user gets the output from the servers there is no way to verify the correctness of the output, especially if the function is evaluated on inputs of multiple data owners. In such a scenario, protocols can be enhanced by attaching a proof produced by all the servers stating the correctness of the computation. Here the statement would be the evaluated function, and the transcripts of each server become the share of the global witness. If the proof is valid, then the user is ensured that the output is indeed correct.
 \end{itemize}
 
 Formally, we have multiple provers $\prover_1, \ldots, \prover_{\Num}$
 respectively possessing witnesses $\wit_1, \ldots, \wit_{\Num}$. For a predicate
 $C$ the provers wish to prove to a verifier that $C(\wit_1,\cdots,\wit_{\Num}) = 1$.  
 A natural solution for distributed
-proof generation is to start with the prover algorithm with a single prover
+proof generation is to start with the prover algorithm of a single prover
 protocol and run this algorithm between multiple provers using multi-party
-computation (MPC). This generic construction was discussed by Pedersen in
-~\cite{Ped92}. However, the generic construction is likely to be concretely
+computation (MPC). This generic construction was discussed by Pedersen~\cite{Ped92}. 
+However, the generic construction is likely to be concretely
 inefficient, as implementing high level abstractions such as fields, groups and
-generic algorithms like $\fft$ etc to compute the next prover message as an
+generic algorithms like $\fft$ used in modern zero-knowledge proof protocols to compute the next prover message as an
 arithmetic circuit is challenging, and would lead to large circuit
 representations. Running multiparty computation over such circuits with several
 parties would incur more overheads.
@@ -59,15 +60,17 @@ being honest ~\cite{trinocchio}. The goal of this paper is to address the
 aforementioned shortcomings.
 
 \paragraph*{Our contributions}
+\begin{itemize}
 %----------
-In this work, we provide a formal definition of distributed prover zero-knowledge (DPZK) in the real-ideal world paradigm. Furthermore, we identify and motivate relevant efficiency parameters to measure the efficiency of a DPZK protocol. In the next section, we elaborate more on the new efficiency parameters.
+\item We provide a formal definition of distributed prover zero-knowledge (DPZK) in the real-ideal world paradigm. Furthermore, we identify and motivate relevant efficiency parameters to measure the efficiency of a DPZK protocol. %In the next section, we elaborate more on the new efficiency parameters.
 %----------
-We present a compiler that takes any IOP-based zero-knowledge protocol and converts it to an ``MPC-friendly'' zero-knowledge that supports DPZK.
+\item We present a compiler that takes any IOP-based zero-knowledge protocol and converts it to an ``MPC-friendly'' zero-knowledge that supports DPZK.
 %----------
-Finally, we produce a protocol obtained via compiling a Ligero-style proof system using our compiler. It is optimized further to attain comparable efficiency with state-of-the-art protocols while achieving DPZK.
+\item Finally, we produce a protocol, \name, obtained via compiling a Ligero-style proof system using our compiler. It is optimized further to attain comparable efficiency with state-of-the-art protocols while achieving DPZK.
 %----------
 The discussions will focus on {\em public-coin honest-verifier} protocols with a transparent setup, which is essentially the setting for real-world applications we envisage: 1) protocols with such verifiers can be converted to succinct non-interactive arguments (zk-SNARGs) via the Fiat-Shamir and like transforms \cite{FS86, BCS16}, and 2) generating the parameters of the protocol should ideally {\em not} involve a trusted third party. In this work, we provide an honest verifier zero-knowledge protocol motivated by applications, however using known transformations, such as~\cite{hubavcek2018efficiency}, we can obtain a zero-knowledge protocol while preserving the round complexity and the efficiency of both prover and verifier.
 %----------
+\end{itemize}
 %\pnote{old version below}
 %We design zero knowledge protocols which enable efficient distributed proof generation, informally an ``MPC-friendly'' proof generation, while supporting \textit{arbitrary} predicates. %The proof generation algorithm is usually measured for efficiency in terms of number of group operations and number of rounds of interaction with the verifier.
 %Our work first identifies and motivates relevant efficiency parameters that a

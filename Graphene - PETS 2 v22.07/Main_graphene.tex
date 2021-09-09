@@ -1,5 +1,5 @@
 %-------
-\subsection{Linear Check}\label{subsec:lincheck}
+\subsubsection{Linear Check}\label{subsec:lincheck}
 In this section, we will give an overview of the working of the linear check protocol that is used to construct the \name. In the linear check protocol a prover proves knowledge of a witness $\wit$ satisfying a linear constraint of the form $A \wit = b$ for some \textit{public} $A \in \FF^{M \times N}$ and $b \in \FF^M$. 
 The verifier needs to check that $A \wit = b$ holds, this check can be probabilistically reduced to check $r^T A \wit = r^T b$, for a randomly chosen $r$. To do that, the verifier $\verifier$ picks a random $r\sample \FF^M$ and sends to the prover $\prover$ as a challenge. Now $\prover$ needs to show that $\innp{r^T A}{\wit} = r^T b$. Lets call $R = r^T A$.
 %-----
@@ -57,7 +57,7 @@ The checks for each $u\in [t]$ can be aggregated, leading to one inner-product c
 It can be seen that for an honest computation, both the commitments open to the vector $\sum_{i\in [p]}\rho_iV_{iu}$ where $V_{iu}=(\ewit[i,1,k_u],\ldots,\ewit[i,m,k_u])$.
 %--------------
 %-------
-\subsection{Quadratic Check}\label{subsec:quadcheck}
+\subsubsection{Quadratic Check}\label{subsec:quadcheck}
 Here we will describe the quadratic check protocol, which aids in validating the honest evaluation of the circuit's multiplication gates. $\prover$ proves the knowledge of $\wit_x, \; \wit_y$ and $\wit_z$ in $\FF^N$ satisfying $\wit_x \circ \wit_y = \wit_z$. This protocol is similar to the linear check protocol, described in Section~\ref{subsec:lincheck}. Here also it has 3 stages, i) Reduction to inner product argument, ii) Consistency of the oracle and the intermediate matrix $P$, and iii) Proximity check.
 Here $\verifier$ checks if the polynomials $Q^i = Q^i_x \cdot Q^i_y - Q^i_z$ interpolate to ${\bm 0}^{m \times s}$ on the set $\{(\alpha_j, \zeta_k): j \in [m], k \in [s] \}$ for all $i \in [p]$. In three simple steps, we derive a simple probabilistic check below compressing in all the three dimensions. 
 %-----
@@ -92,7 +92,7 @@ by sending commitments $\tilde{\bm{c}}=(\tilde{c}_1,\ldots,\tilde{c}_\ell)$, whi
 %------
 \end{align}
 %----------
-\subsection{Graphene}\label{subsec:graphene}
+\subsubsection{Graphene}\label{subsec:graphene}
 We use the linear and quadratic check protocols from Section~\ref{subsec:lincheck} and Section~\ref{subsec:quadcheck} respectively to describe an efficient protocol for rank one constraint system (R1CS). Let $A,B$ and $C$ be $M\times N$ matrices. We prove existence of $\wit\in \FF^N$ satisfying $A\wit\circ B\wit=C\wit$ by showing existence of $\wit_x,\wit_y,\wit_z$ and $\wit\in \FF^N$ satisfying the linear relations $A\wit=\wit_x$, $B\wit=\wit_y$ and $C\wit=\wit_z$ and a quadratic relation $\wit_x\circ\wit_y=\wit_z$. We probabilistically reduce the three linear relations to the linear relation:
 %---------
 \begin{align}\label{eq:comblincheck}

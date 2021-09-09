@@ -30,10 +30,12 @@ The proof of knowledge property of the single prover version suffices the {SoWE}
 	%\smallskip
 	%-------
 	
-	Let $\innp{\prover}{\verifier}$ has proof of knowledge property, that is, there exists an extractor $\extrac_{POK}$ for $\innp{\prover}{\verifier}$ such that it can extract a witness with very high probability. 
-	We will use this to build an extractor $\extrac_{SoWE}$ for $\Pi$.
-	$\extrac_{SoWE}$ interacts with the provers as a verifier and interacts with $\extrac_{POK}$ as a prover.
-	Suppose the aggregator $\Ag$ sends $m$ to $\extrac_{SoWE}$, it forwards the same $m$ to $\extrac_{POK}$. If $\extrac_{POK}$ sends a challenge $c$, $\extrac_{SoWE}$ publishes the same challenge to all the provers. Furthermore, if $\extrac_{POK}$ asks to rewind the prover, $\extrac_{SoWE}$ does the same. Finally, if the interaction is accepting, $\extrac_{POK}$ outputs a valid witness with a very high probability. Therefore, $\extrac_{SoWE}$ returns $\extrac_{POK}$'s output. Hence, $\extrac_{SoWE}$ outputs a valid witness with a very high probability.
+	The converse part follows directly from the proof of Soundness with Witness Extraction of Lemma~\ref{lemma:generic_dpzk}.
+%----
+%	Let $\innp{\prover}{\verifier}$ has proof of knowledge property, that is, there exists an extractor $\extrac_{POK}$ for $\innp{\prover}{\verifier}$ such that it can extract a witness with very high probability. 
+%	We will use this to build an extractor $\extrac_{SoWE}$ for $\Pi$.
+%	$\extrac_{SoWE}$ interacts with the provers as a verifier and interacts with $\extrac_{POK}$ as a prover.
+%	Suppose the aggregator $\Ag$ sends $m$ to $\extrac_{SoWE}$, it forwards the same $m$ to $\extrac_{POK}$. If $\extrac_{POK}$ sends a challenge $c$, $\extrac_{SoWE}$ publishes the same challenge to all the provers. Furthermore, if $\extrac_{POK}$ asks to rewind the prover, $\extrac_{SoWE}$ does the same. Finally, if the interaction is accepting, $\extrac_{POK}$ outputs a valid witness with a very high probability. Therefore, $\extrac_{SoWE}$ returns $\extrac_{POK}$'s output. Hence, $\extrac_{SoWE}$ outputs a valid witness with a very high probability.
 \end{proof}
 %-------
 In Figure~\ref{fig:distlincheck}, Figure~\ref{fig:distquadcheck}, we described Distributed Linear Check and Distributed Quadratic Check respectively. The single prover versions of the above checks are described in Figure~\ref{fig:linearcheck} and Figure~\ref{fig:quadcheck} respectively. We proved that Linear check and Quadratic Check have proof of knowledge property, see Lemma~\ref{lem:linearcheck_sound} and Lemma~\ref{lem:quadcheck_sound}. Then by Lemma~\ref{lem:SoWE}, Distributed Linear Check and Distributed Quadratic Check has Soundness with Witness Extraction property (SoWE). Our protocol $\name$, Figure~\ref{fig:graphene}, has the distributed version, DP-$\name$, Figure~\ref{fig:dpgraphene}, for R1CS circuits. We proved in Lemma~\ref{lem:graphene_sound} that $\name$ has Proof of Knowledge property, then by Lemma~\ref{lem:SoWE}, DP-$\name$ has Soundness with Witness Extraction property. 
@@ -59,9 +61,10 @@ In other words, there exists a simulator $\Sim_{DP}$ that generates a transcript
 	Note that, if $\Pi$ has ZK property, then $\innp{\prover}{\verifier}$ has zero knowledge property, as $\innp{\prover}{\verifier}$ is a special case of $\Pi$, where $\Num=1$. 
 	%-------
 	
-	Let $\innp{\prover}{\verifier}$ has zero-knowledge property, that is, there is a polynomial-time simulator $\Sim_{SP}$ which, without knowing the witness, can generate a transcript that is indistinguishable from a transcript of the protocol execution. 
-	
-	Since the verifier's view in the $\DPZK$ protocol is the same as the view in the single prover protocol. Therefore the simulator for the single prover version works for the $\DPZK$ version as well.
+	The argument for the converse part is the same as the proof of zero-knowledge of Lemma~\ref{lemma:generic_dpzk}.
+%	Let $\innp{\prover}{\verifier}$ has zero-knowledge property, that is, there is a polynomial-time simulator $\Sim_{SP}$ which, without knowing the witness, can generate a transcript that is indistinguishable from a transcript of the protocol execution. 
+%	
+%	Since the verifier's view in the $\DPZK$ protocol is the same as the view in the single prover protocol. Therefore the simulator for the single prover version works for the $\DPZK$ version as well.
 %	Let at the $i$th round of the protocol, $\xi$th prover's message is $\shr{m_i}$. In the $\DPZK$ protocol two things can happen at this stage: a) the verifier receives $\shr{m_i}$ and combines using some deterministic function $f_i(\cdot)$ and obtain $m_i$ or b) provers interact in a secure way so that an aggregator $\Ag$ obtains $m_i$ and sends $m_i$ to the verifier.
 %	Simulator outputs accordingly. 
 %	%-------
@@ -327,6 +330,8 @@ Proof of the Lemma is evident from Lemma~\ref{lem:ZK} and Lemma~\ref{lem:simgrap
 
 \noindent\textit{\textbf{Witness Hiding and Witness Hiding with Collusion:}} In our work, we are mainly concern about building a public coin proof system, more specifically NIZK, so that anyone can verify the proof, so any prover can play a verifier's role and learn nothing. Therefore Witness Hiding and Witness Hiding with Collusion are the same in this setting. 
 %-------
+
+Though the proof of Witness Hiding property is similar to the Witness Hiding proof of Lemma~\ref{lemma:generic_dpzk}, we provide a detailed proof for our protocol here.
 
 We will separate the set of provers into 2 classes: honest($H$) and corrupt($C$). Note that $|H|+|C|=\Num$ and $|C|<t$, for some $t<\Num$. In Linear Check, since there is no interaction among the provers other than the aggregator, it suffices to generate the view of the aggregator. For the Quadratic check, we need that the multiplications among the provers are executed securely. 
 %-------
